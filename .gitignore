@@ -1,0 +1,19 @@
+# Ambiente virtual
+AmbienteVirtual/
+venv/
+env/
+
+# Arquivos Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+
+# Configs do VSCode (se estiver usando)
+.vscode/
+
+# Node modules do frontend (se usar npm)
+frontend/node_modules/
+
+# Build do React
+frontend/build/
