@@ -6,7 +6,7 @@ router = DefaultRouter() # cria um router para o viewset | Cria o crud para o en
 router.register(r'entregadores', views.EntregadorViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    path('', include(router.urls)),  # raiz do app já é /api/
     path('cadastro/', views.cadastro_entregador, name='cadastro_entregador'),
     path('cadastro/sucesso/', views.cadastro_sucesso, name='cadastro_sucesso'),
 ]

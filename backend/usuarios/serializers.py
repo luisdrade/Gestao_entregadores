@@ -4,19 +4,16 @@ from .models import Entregador
 class EntregadorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Entregador
-        fields = ['id', 'nome', 'cpf', 'telefone', 'email', 'is_active']
-        read_only_fields = ['id'] # campos que não podem ser alterados
-        extra_kwargs = {
-            'password': {'write_only': True} # campo que não pode ser lido
-        }
+        fields = ['id', 'nome', 'cpf', 'telefone', 'email', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        password = validated_data.pop('password', None)
-        instance = self.Meta.model(**validated_data)
-        if password is not None:
-            instance.set_password(password) # criptografa a senha
-        instance.save()
-        return instance
+        password = validated_data.pop('password')
+        user = Entregador(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+
 
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
