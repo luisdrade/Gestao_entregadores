@@ -21,6 +21,8 @@ class Entregador(AbstractBaseUser, PermissionsMixin):
     cpf = models.CharField(max_length=14, unique=True)
     telefone = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
+    username = models.CharField(max_length=150, unique=True, blank=True, null=True)
+
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -28,7 +30,7 @@ class Entregador(AbstractBaseUser, PermissionsMixin):
     objects = UsuarioManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nome', 'cpf', 'telefone']
+    REQUIRED_FIELDS = ['nome', 'cpf', 'telefone', 'username']
 
     def __str__(self):
         return self.email
