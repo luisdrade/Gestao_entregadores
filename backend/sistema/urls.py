@@ -20,8 +20,19 @@ from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshVie
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('usuarios.urls')),  # mudando aqui
+
+    # Suas APIs existentes
+    path('api/', include('usuarios.urls')),
+
+    # Endpoints de autenticação (login/logout/cadastro/change password)
+    path('api/auth/', include('dj_rest_auth.urls')),
+
+    # Registro de novos usuários
+    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
+
+    # Endpoints de login social
+    path('api/auth/social/', include('allauth.socialaccount.urls')),
     
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    #app de usuarios
+    path('usuarios/', include('usuarios.urls')),
 ]
