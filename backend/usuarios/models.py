@@ -22,6 +22,7 @@ class Entregador(AbstractBaseUser, PermissionsMixin):
     telefone = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=True, blank=True, null=True)
+    data_nascimento = models.DateField(null=True, blank=True)
 
 
     is_active = models.BooleanField(default=True)
