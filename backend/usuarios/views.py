@@ -8,6 +8,8 @@ from rest_framework import viewsets, permissions, status # viewsets Organiza a l
 from rest_framework.response import Response # Formata as respostas da API
 from rest_framework.decorators import action # Adiciona funcionalidades extras
 from django.contrib.auth import get_user_model # Acessa o modelo de usuário
+
+from rest_framework.views import APIView
 from .serializers import EntregadorSerializer 
 
 def cadastro_entregador(request):
@@ -69,3 +71,11 @@ def create(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class EntregadorMeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        serializer = EntregadorSerializer(request.user)
+        return Response(serializer.data)
+    

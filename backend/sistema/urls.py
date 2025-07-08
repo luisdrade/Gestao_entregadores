@@ -24,15 +24,11 @@ urlpatterns = [
     # Suas APIs existentes
     path('api/', include('usuarios.urls')),
 
-    # Endpoints de autenticação (login/logout/cadastro/change password)
-    path('api/auth/', include('dj_rest_auth.urls')),
-
-    # Registro de novos usuários
-    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
-
-    # Endpoints de login social
-    path('api/auth/social/', include('allauth.socialaccount.urls')),
+    # Endpoints REST de autenticação e social login
+    path('api/auth/', include('dj_rest_auth.urls')),             # login/logout/password reset
+    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # registro e verificação de email
     
     #app de usuarios
     path('usuarios/', include('usuarios.urls')),
+    
 ]

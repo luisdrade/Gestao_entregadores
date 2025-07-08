@@ -46,9 +46,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'dj_rest_auth',
+    'dj_rest_auth.registration',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',    
+    'social_django',
     
     #provedores de autenticação social
     'allauth.socialaccount.providers.google',
@@ -152,15 +154,21 @@ AUTH_USER_MODEL = 'usuarios.Entregador'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',                   # Login padrão por usuário/senha
     'allauth.account.auth_backends.AuthenticationBackend',         # Login REDES SOCIAIS
 )
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '862844595304-5v4jdmv0gsvt1gleiehkq514r768pqbj.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
