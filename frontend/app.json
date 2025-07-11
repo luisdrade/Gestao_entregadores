@@ -1,0 +1,10 @@
+{
+    "expo": {
+      "name": "Gestao Entregadores",
+      "slug": "gestao-entregadores",
+      "version": "1.0.0",
+      "scheme": "gestaoentregas",
+      "platforms": ["ios", "android", "web"],
+      "sdkVersion": "53.0.0"
+    }
+  }
