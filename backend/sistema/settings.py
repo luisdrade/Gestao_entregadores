@@ -50,12 +50,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',    
-    'social_django',
     
     #provedores de autenticação social
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.linkedin_oauth2',
     
     #apps do projeto
     'corsheaders',
@@ -63,7 +60,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -76,6 +72,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
 ROOT_URLCONF = 'sistema.urls'
 
 TEMPLATES = [
@@ -157,19 +155,45 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 SITE_ID = 1
 
-AUTHENTICATION_BACKENDS = (
-    'social_core.backends.google.GoogleOAuth2',
-    'django.contrib.auth.backends.ModelBackend',                   # Login padrão por usuário/senha
-    'allauth.account.auth_backends.AuthenticationBackend',         # Login REDES SOCIAIS
-)
+# Configuração do allauth
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '862844595304-5v4jdmv0gsvt1gleiehkq514r768pqbj.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+# Configurações do allauth
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
 
+# Configuração do Google OAuth2
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'APP': {
+            'client_id': '862844595304-5v4jdmv0gsvt1gleiehkq514r768pqbj.apps.googleusercontent.com',
+            'secret': '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',
+        }
+    }
+}
+
+# Configuração do JWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
@@ -177,3 +201,7 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+# Configuração do dj-rest-auth
+REST_USE_JWT = True
+JWT_AUTH_COOKIE = 'jwt-auth'
