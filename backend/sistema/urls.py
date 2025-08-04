@@ -31,4 +31,6 @@ urlpatterns = [
     #app de usuarios
     path('usuarios/', include('usuarios.urls')),
     
+    path('api/auth/google/', include('usuarios.urls')),
+    
 ]

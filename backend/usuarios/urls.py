@@ -10,10 +10,10 @@ router.register(r'entregadores', views.EntregadorViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),  # raiz do app já é /api/
-    path('social/google/', GoogleLogin.as_view(), name='google_login'),
     path('cadastro/', views.cadastro_entregador, name='cadastro_entregador'),
     path('cadastro/sucesso/', views.cadastro_sucesso, name='cadastro_sucesso'),
     
     path('entregadores/me/', EntregadorMeView.as_view(), name='entregador_me'), # EntregadorMeView para ver o usuário logado
 
+    path('google-login/', GoogleLogin.as_view(), name='google_login'),
 ]
