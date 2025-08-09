@@ -1,8 +1,11 @@
+#serializers
+
 from rest_framework import serializers
 from .models import Entregador
 import uuid
 
 class EntregadorSerializer(serializers.ModelSerializer):
+    data_nascimento = serializers.DateField(required=False, allow_null=True)
     class Meta:
         model = Entregador
         fields = ['id', 'nome', 'cpf', 'telefone', 'email', 'password', 'data_nascimento']
@@ -10,6 +13,7 @@ class EntregadorSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         password = validated_data.pop('password')
+
 
         # Geração automática do username se não for enviado
         if 'username' not in validated_data or validated_data.get('username') is None:

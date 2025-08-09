@@ -10,6 +10,8 @@ from rest_framework.decorators import action # Adiciona funcionalidades extras
 from django.contrib.auth import get_user_model # Acessa o modelo de usuário
 
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import EntregadorSerializer 
 
 import requests
@@ -46,12 +48,16 @@ class EntregadorViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
 
+
+class EntregadorMeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
 def create(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
     # Cria o objeto mas ainda não salva no banco
-    user = serializer.save(commit=False)
+    user = serializer.save()
 
     # Criptografa a senha
     user.set_password(serializer.validated_data['password'])
@@ -75,12 +81,19 @@ def create(self, request, *args, **kwargs):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class EntregadorMeView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         serializer = EntregadorSerializer(request.user)
         return Response(serializer.data)
+    
+    
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # Apaga o token do usuário logado
+        request.user.auth_token.delete()
+        return Response({"detail": "Logout realizado com sucesso"})
     
 class GoogleLogin(APIView):
     def post(self, request):
