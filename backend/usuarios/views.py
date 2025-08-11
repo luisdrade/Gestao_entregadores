@@ -17,6 +17,60 @@ from .serializers import EntregadorSerializer
 import requests
 from allauth.socialaccount.models import SocialAccount
 
+# Views de autenticação customizadas
+class TestView(APIView):
+    permission_classes = [permissions.AllowAny]
+    
+    def get(self, request):
+        return Response({'message': 'Backend funcionando!'})
+
+class LoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        
+        try:
+            user = Entregador.objects.get(email=email)
+            if user.check_password(password):
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'token': str(refresh.access_token),
+                    'user': {
+                        'id': user.id,
+                        'nome': user.nome,
+                        'email': user.email,
+                        'cpf': user.cpf,
+                        'telefone': user.telefone,
+                    }
+                })
+            else:
+                return Response({'error': 'Senha incorreta'}, status=status.HTTP_400_BAD_REQUEST)
+        except Entregador.DoesNotExist:
+            return Response({'error': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+class RegisterView(APIView):
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request):
+        serializer = EntregadorSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'message': 'Usuário criado com sucesso',
+                'token': str(refresh.access_token),
+                'user': {
+                    'id': user.id,
+                    'nome': user.nome,
+                    'email': user.email,
+                    'cpf': user.cpf,
+                    'telefone': user.telefone,
+                }
+            }, status=status.HTTP_201_CREATED)
+        return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
 def cadastro_entregador(request):
     if request.method == 'POST':
         form = EntregadorForm(request.POST)

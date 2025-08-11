@@ -10,12 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-import dj_database_url
 from pathlib import Path
 from datetime import timedelta
-import os 
-
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,8 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-_oafv#ud2k32sm!yt@#(1uja)sa!m6*k*0^2q94-y)v^n9!b^!'
-
-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -63,10 +57,13 @@ INSTALLED_APPS = [
     #apps do projeto
     'corsheaders',
     'usuarios',
+    'cadastro_veiculo',
+    'comunidade',
+    'registro_entregadespesa',
+    'relatorios_dashboard',
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -76,7 +73,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -107,9 +103,14 @@ WSGI_APPLICATION = 'sistema.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'gestao_entregadores',     
+        'USER': 'root',                    
+        'PASSWORD': 'root',              
+        'HOST': 'localhost',               
+        'PORT': '3306',
+    }
 }
 
 
@@ -148,7 +149,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_URL = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -160,8 +160,8 @@ AUTH_USER_MODEL = 'usuarios.Entregador'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -187,7 +187,10 @@ ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
 # Configuração do Google OAuth2
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'SCOPE': ['profile','email',],
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
         'AUTH_PARAMS': {
             'access_type': 'online',
         },

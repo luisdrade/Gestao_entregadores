@@ -1,10 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-from .views_social import GoogleLogin
-
-from .views import EntregadorMeView
-from .views import LogoutView
+from .views import EntregadorMeView, LogoutView, LoginView, RegisterView, TestView
 
 
 router = DefaultRouter() # cria um router para o viewset | Cria o crud para o entregador
@@ -15,8 +12,14 @@ urlpatterns = [
     path('cadastro/', views.cadastro_entregador, name='cadastro_entregador'),
     path('cadastro/sucesso/', views.cadastro_sucesso, name='cadastro_sucesso'),
     
+    # Endpoint de teste
+    path('test/', TestView.as_view(), name='test'),
+    
+    # Endpoints de autenticação customizados
+    path('auth/login/', LoginView.as_view(), name='login'),
+    path('auth/register/', RegisterView.as_view(), name='register'),
+    
     path('entregadores/me/', EntregadorMeView.as_view(), name='entregador_me'), # EntregadorMeView para ver o usuário logado
 
-    path('google-login/', GoogleLogin.as_view(), name='google_login'),
     path('logout/', LogoutView.as_view(), name='logout'),
 ]
