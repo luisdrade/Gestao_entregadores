@@ -10,11 +10,11 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -27,14 +27,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.luisdrade.gestaoentregadores"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "assets/favicon.png"
     },
     "plugins": [
       "expo-web-browser",
@@ -44,13 +44,11 @@
           "iosUrlScheme": "com.googleusercontent.apps.862844595304-01174lc2pl1jsvfbn7ccch388bjki020"
         }
       ]
-
     ],
     "extra": {
       "eas": {
         "projectId": "216c92ea-ff73-4990-9b61-eea3beaab217"
       }
     }
-    
   }
 }
