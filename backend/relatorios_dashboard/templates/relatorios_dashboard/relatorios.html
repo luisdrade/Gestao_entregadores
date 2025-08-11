@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatórios</title>
+</head>
+<body>
+        <nav style="background-color: #f0f0f0; padding: 15px; margin-bottom: 30px;">
+    <a href="{% url 'relatorios_dashboard:dashboard' %}" style="margin-right: 20px;">🏠 Dashboard</a>
+    <a href="/cadastro-veiculo/" style="margin-right: 20px;">🚗 Cadastro de Veículo</a>
+    <a href="/registro/" style="margin-right: 20px;">📦 Registro de Entregas</a>
+    <a href="/relatorios/" style="margin-right: 20px;">📊 Relatórios</a>
+    <a href="/comunidade/" style="margin-right: 20px;">🧑‍🤝‍🧑 Comunidade</a>
+</nav>
+
+    <h1>Relatório Detalhado - Últimos 7 Dias</h1>
+
+    <p>De: {{ data_inicio }} até {{ data_fim }}</p>
+
+    <h3>Resumo Geral</h3>
+    <ul>
+        <li>Total de Ganhos: R$ {{ total_ganho }}</li>
+        <li>Total de Despesas: R$ {{ total_despesa }}</li>
+        <li><strong>Lucro Total: R$ {{ lucro }}</strong></li>
+    </ul>
+
+    <h3>Registros</h3>
+    {% if registros %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Tipo de Rendimento</th>
+                    <th>Pacotes Entregues</th>
+                    <th>Pacotes Não Entregues</th>
+                    <th>Ganho</th>
+                    <th>Despesa</th>
+                    <th>Lucro</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registro in registros %}
+                    <tr>
+                        <td>{{ registro.data }}</td>
+                        <td>{{ registro.get_tipo_rendimento_display }}</td>
+                        <td>{{ registro.pacotes_entregues }}</td>
+                        <td>{{ registro.pacotes_nao_entregues }}</td>
+                        <td>R$ {{ registro.calcular_ganho }}</td>
+                        <td>R$ {{ registro.valor_despesa }}</td>
+                        <td>R$ {{ registro.calcular_lucro }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum registro disponível.</p>
+    {% endif %}
+
+    <p><a href="{% url 'relatorios_dashboard:dashboard' %}">Voltar para o Dashboard</a></p>
+</body>
+</html>

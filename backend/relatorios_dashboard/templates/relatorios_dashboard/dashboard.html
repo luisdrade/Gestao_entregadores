@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Sistema de Entregas</title>
+</head>
+<body>
+    <nav style="background-color: #f0f0f0; padding: 15px; margin-bottom: 30px;">
+    <a href="{% url 'relatorios_dashboard:dashboard' %}" style="margin-right: 20px;">🏠 Dashboard</a>
+    <a href="/cadastro-veiculo/" style="margin-right: 20px;">🚗 Cadastro de Veículo</a>
+    <a href="/registro/" style="margin-right: 20px;">📦 Registro de Entregas</a>
+    <a href="/relatorios/" style="margin-right: 20px;">📊 Relatórios</a>
+    <a href="/comunidade/" style="margin-right: 20px;">🧑‍🤝‍🧑 Comunidade</a>
+    </nav>
+
+    <h1>Dashboard</h1>
+
+    <h2>Resumo Rápido</h2>
+    <ul>
+        <li>Total de Veículos Cadastrados: {{ total_veiculos }}</li>
+        <li>Total de Ganhos (últimos 7 dias): R$ {{ total_ganho }}</li>
+        <li>Total de Despesas (últimos 7 dias): R$ {{ total_despesa }}</li>
+        <li><strong>Lucro (últimos 7 dias): R$ {{ lucro }}</strong></li>
+    </ul>
+
+    <hr>
+
+    <h2>Últimos Registros</h2>
+    {% if ultimos_registros %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Tipo</th>
+                    <th>Ganho</th>
+                    <th>Despesa</th>
+                    <th>Lucro</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registro in ultimos_registros %}
+                    <tr>
+                        <td>{{ registro.data }}</td>
+                        <td>{{ registro.get_tipo_rendimento_display }}</td>
+                        <td>R$ {{ registro.calcular_ganho }}</td>
+                        <td>R$ {{ registro.valor_despesa }}</td>
+                        <td>R$ {{ registro.calcular_lucro }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum registro encontrado nos últimos dias.</p>
+    {% endif %}
+
+    <hr>
+
+    <p><a href="{% url 'relatorios_dashboard:relatorios' %}">Ver relatório detalhado</a></p>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cadastro de Veículo</title>
+</head>
+<body>
+<nav style="background-color: #f0f0f0; padding: 15px; margin-bottom: 30px;">
+    <a href="{% url 'relatorios_dashboard:dashboard' %}" style="margin-right: 20px;">🏠 Dashboard</a>
+    <a href="/cadastro-veiculo/" style="margin-right: 20px;">🚗 Cadastro de Veículo</a>
+    <a href="/registro/" style="margin-right: 20px;">📦 Registro de Entregas</a>
+    <a href="/relatorios/" style="margin-right: 20px;">📊 Relatórios</a>
+    <a href="/comunidade/" style="margin-right: 20px;">🧑‍🤝‍🧑 Comunidade</a>
+</nav>
+
+    <h1>Cadastro de Veículo</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salvar</button>
+    </form>
+
+    <hr>
+
+    <h2>Veículos Cadastrados</h2>
+    <ul>
+        {% for veiculo in veiculos %}
+            <li>{{ veiculo.modelo }} - {{ veiculo.placa }} - {{veiculo.categoria}}</li>
+        {% empty %}
+            <li>Nenhum veículo cadastrado ainda.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
