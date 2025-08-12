@@ -21,16 +21,10 @@ export default function HomeScreen() {
 
   const menuItems = [
     {
-      title: 'Cadastro de Veículos',
-      description: 'Gerencie seus veículos',
-      icon: '🚗',
-      route: '/(home)/veiculos',
-    },
-    {
       title: 'Entregas e Despesas',
       description: 'Registre entregas e despesas',
       icon: '📦',
-      route: '/(home)/entregas',
+      route: '/(home)/calculos/entregas',
     },
     {
       title: 'Relatórios',
@@ -43,6 +37,12 @@ export default function HomeScreen() {
       description: 'Conecte-se com outros entregadores',
       icon: '👥',
       route: '/(home)/comunidade',
+    },
+    {
+      title: 'Perfil',
+      description: 'Atualize sua conta',
+      icon: '',
+      route: '/(home)/profile/perfil',
     },
   ];
 
@@ -61,6 +61,25 @@ export default function HomeScreen() {
         </Text>
       </View>
 
+      {/* Quick Stats */}
+      <View style={styles.statsContainer}>
+        <Text style={styles.statsTitle}>Resumo Rápido</Text>
+        <View style={styles.statsGrid}>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>0</Text>
+            <Text style={styles.statLabel}>Entregas Hoje</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>R$ 0,00</Text>
+            <Text style={styles.statLabel}>Ganhos Hoje</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>0</Text>
+            <Text style={styles.statLabel}>Veículos</Text>
+          </View>
+        </View>
+      </View>
+
       {/* Content */}
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.menuGrid}>
@@ -77,24 +96,7 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        {/* Quick Stats */}
-        <View style={styles.statsContainer}>
-          <Text style={styles.statsTitle}>Resumo Rápido</Text>
-          <View style={styles.statsGrid}>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>0</Text>
-              <Text style={styles.statLabel}>Entregas Hoje</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>R$ 0,00</Text>
-              <Text style={styles.statLabel}>Ganhos Hoje</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>0</Text>
-              <Text style={styles.statLabel}>Veículos</Text>
-            </View>
-          </View>
-        </View>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -220,3 +222,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+

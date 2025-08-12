@@ -152,3 +152,4 @@ Os tokens são armazenados no AsyncStorage e automaticamente incluídos nas requ
 - Certifique-se de que o backend está rodando na porta 8000
 - Para desenvolvimento em dispositivo físico, ajuste o IP no arquivo de configuração
 - O sistema usa AsyncStorage para persistir dados de autenticação
+
