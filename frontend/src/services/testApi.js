@@ -1,24 +1,24 @@
-import { api } from './api';
+import axios from 'axios';
 
+// Configuração base da API de teste
+const testApi = axios.create({
+  baseURL: 'http://192.168.0.115:8000/registro/api',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Função de teste simples
 export const testApiConnection = async () => {
   try {
-    console.log('Testando conexão com a API...');
-    const response = await api.get('/test/');
-    console.log('Resposta do teste:', response.data);
+    const response = await testApi.get('/dashboard-data/');
     return { success: true, data: response.data };
   } catch (error) {
-    console.error('Erro no teste da API:', error);
-    console.error('Detalhes do erro:', {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
-      config: {
-        url: error.config?.url,
-        method: error.config?.method,
-        baseURL: error.config?.baseURL,
-      }
-    });
     return { success: false, error: error.message };
   }
 };
+
+export default testApi;
+
 

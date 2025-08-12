@@ -2,17 +2,10 @@
   "expo": {
     "name": "Gestao_entregadores_front",
     "slug": "gestao_entregadores_mobile",
-    "scheme": "gestaoentregadores",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
       "image": "assets/splash-icon.png",
       "resizeMode": "contain",
@@ -20,30 +13,20 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.luisdrade.gestaoentregadores",
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      }
+      "bundleIdentifier": "com.luisdrade.gestaoentregadores"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "package": "com.luisdrade.gestaoentregadores"
     },
     "web": {
       "favicon": "assets/favicon.png"
     },
     "plugins": [
-      "expo-web-browser",
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps.862844595304-01174lc2pl1jsvfbn7ccch388bjki020"
-        }
-      ]
+      "expo-web-browser"
     ],
     "extra": {
       "eas": {

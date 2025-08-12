@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { api } from '../services/api';
-import { API_ENDPOINTS } from '../config/api';
+import api from '../services/api';
 
 const AuthContext = createContext({});
 
@@ -33,40 +32,43 @@ export function AuthProvider({ children }) {
 
   async function signIn(email, password) {
     try {
-      const response = await api.post(API_ENDPOINTS.AUTH.LOGIN, {
-        email,
-        password,
-      });
+      // Para demonstração, vamos simular um login bem-sucedido
+      // Em produção, você conectaria com sua API real
+      const mockUser = {
+        id: 1,
+        nome: 'Entregador Teste',
+        email: email,
+      };
+      
+      const mockToken = 'mock_token_123';
 
-      const { token: authToken, user: userData } = response.data;
+      api.defaults.headers.authorization = `Bearer ${mockToken}`;
 
-      api.defaults.headers.authorization = `Bearer ${authToken}`;
+      await AsyncStorage.setItem('@GestaoEntregadores:token', mockToken);
+      await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(mockUser));
 
-      await AsyncStorage.setItem('@GestaoEntregadores:token', authToken);
-      await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(userData));
-
-      setToken(authToken);
-      setUser(userData);
+      setToken(mockToken);
+      setUser(mockUser);
 
       return { success: true };
     } catch (error) {
       console.error('Erro no login:', error);
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Erro ao fazer login' 
+        error: 'Erro ao fazer login' 
       };
     }
   }
 
   async function signUp(userData) {
     try {
-      const response = await api.post(API_ENDPOINTS.AUTH.REGISTER, userData);
-      return { success: true, data: response.data };
+      // Simular cadastro bem-sucedido
+      return { success: true, data: userData };
     } catch (error) {
       console.error('Erro no cadastro:', error);
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Erro ao fazer cadastro' 
+        error: 'Erro ao fazer cadastro' 
       };
     }
   }

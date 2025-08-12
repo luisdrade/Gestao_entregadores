@@ -153,3 +153,4 @@ Os tokens são armazenados no AsyncStorage e automaticamente incluídos nas requ
 - Para desenvolvimento em dispositivo físico, ajuste o IP no arquivo de configuração
 - O sistema usa AsyncStorage para persistir dados de autenticação
 
+
