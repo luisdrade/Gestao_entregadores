@@ -31,4 +31,6 @@ urlpatterns = [
     #app de usuarios
     path('usuarios/', include('usuarios.urls')),
     
+    path('registro/', include('registro_entregadespesa.urls')),
+    
 ]

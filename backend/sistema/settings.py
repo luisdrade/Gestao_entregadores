@@ -105,7 +105,7 @@ WSGI_APPLICATION = 'sistema.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'gestao_entregadores',     
+        'NAME': 'Banco_EntregasPlus',     
         'USER': 'root',                    
         'PASSWORD': 'root',              
         'HOST': 'localhost',               
