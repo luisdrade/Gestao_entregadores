@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
-import BottomTabBar from '../../components/BottomTabBar';
+import BottomTabBar from '../../components/_NavBar_Inferior';
 
 export default function HomeLayout() {
   return (
