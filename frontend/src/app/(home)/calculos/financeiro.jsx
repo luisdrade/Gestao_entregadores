@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { registroDespesa } from '../../services/api';
+import { registroDespesa } from '../../../services/api';
 
 export default function FinanceiroScreen() {
   const router = useRouter();
@@ -88,10 +88,10 @@ export default function FinanceiroScreen() {
 
       {/* Navigation Bar */}
       <View style={styles.navBar}>
-        <TouchableOpacity style={styles.navTab} onPress={() => router.push('/(home)/home')}>
+        <TouchableOpacity style={styles.navTab} onPress={() => router.push('../home')}>
           <Text style={styles.navTabText}>Dashboard</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navTab} onPress={() => router.push('/(home)/trabalhado')}>
+        <TouchableOpacity style={styles.navTab} onPress={() => router.push('../calculos/trabalhado')}>
           <Text style={styles.navTabText}>Trabalhado</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.navTab, styles.activeTab]}>
@@ -103,7 +103,11 @@ export default function FinanceiroScreen() {
       </View>
 
       {/* Content */}
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.content} 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.title}>Registre suas despesas</Text>
 
         <View style={styles.form}>
@@ -240,6 +244,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
+  },
+  scrollContent: {
+    paddingBottom: 100, // Espaço para a barra inferior
   },
   title: {
     fontSize: 20,

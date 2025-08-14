@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    paddingBottom: 100, // Espaço para a barra inferior
   },
   placeholderText: {
     fontSize: 24,
@@ -76,5 +77,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
 

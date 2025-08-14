@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { registroTrabalho } from '../../services/api';
+import { registroTrabalho } from '../../../services/api';
 
 export default function TrabalhadoScreen() {
   const router = useRouter();
@@ -97,15 +97,15 @@ export default function TrabalhadoScreen() {
         </View>
       </View>
 
-      {/* Navigation Bar */}
+      {/* NavBar */}
       <View style={styles.navBar}>
-        <TouchableOpacity style={styles.navTab} onPress={() => router.push('/(home)/home')}>
-          <Text style={styles.navTabText}>Dashboard</Text>
+        <TouchableOpacity style={styles.navTab} onPress={() => router.push('../home')}>
+          <Text style={[styles.navTabText, styles.activeTabText]}>Dashboard</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.navTab, styles.activeTab]}>
-          <Text style={[styles.navTabText, styles.activeTabText]}>Trabalhado</Text>
+        <TouchableOpacity style={styles.navTab} onPress={'/trabalhado'}>
+          <Text style={styles.navTabText}>Trabalhado</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navTab} onPress={() => router.push('/(home)/financeiro')}>
+        <TouchableOpacity style={styles.navTab} onPress={() => router.push('../calculos/financeiro')}>
           <Text style={styles.navTabText}>Financeiro</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navTab} onPress={() => router.push('/(home)/relatorios')}>
@@ -113,8 +113,13 @@ export default function TrabalhadoScreen() {
         </TouchableOpacity>
       </View>
 
+
       {/* Content */}
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.content} 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.title}>Registre seu dia de trabalho</Text>
 
         <View style={styles.form}>
@@ -293,6 +298,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
+  },
+  scrollContent: {
+    paddingBottom: 100, // Espaço para a barra inferior
   },
   title: {
     fontSize: 20,
