@@ -13,6 +13,7 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { registroDespesa } from '../../../services/api';
+import TopNavBar from '../../../components/_NavBar_Superior';
 
 export default function FinanceiroScreen() {
   const router = useRouter();
@@ -87,20 +88,7 @@ export default function FinanceiroScreen() {
       </View>
 
       {/* Navigation Bar */}
-      <View style={styles.navBar}>
-        <TouchableOpacity style={styles.navTab} onPress={() => router.push('../home')}>
-          <Text style={styles.navTabText}>Dashboard</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navTab} onPress={() => router.push('../calculos/trabalhado')}>
-          <Text style={styles.navTabText}>Trabalhado</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.navTab, styles.activeTab]}>
-          <Text style={[styles.navTabText, styles.activeTabText]}>Financeiro</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navTab} onPress={() => router.push('/(home)/relatorios')}>
-          <Text style={styles.navTabText}>Relatórios</Text>
-        </TouchableOpacity>
-      </View>
+      <TopNavBar />
 
       {/* Content */}
       <ScrollView 
@@ -215,32 +203,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 20,
   },
-  navBar: {
-    flexDirection: 'row',
-    backgroundColor: '#f8f9fa',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e9ecef',
-  },
-  navTab: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 10,
-  },
-  activeTab: {
-    borderBottomWidth: 2,
-    borderBottomColor: '#000',
-  },
-  navTabText: {
-    fontSize: 14,
-    color: '#6c757d',
-    fontWeight: '500',
-  },
-  activeTabText: {
-    color: '#000',
-    fontWeight: '600',
-  },
+
   content: {
     flex: 1,
     padding: 20,

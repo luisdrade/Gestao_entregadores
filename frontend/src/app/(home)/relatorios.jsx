@@ -7,17 +7,12 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import TopNavBar from '../../components/_NavBar_Superior';
 
 export default function RelatoriosScreen() {
   const router = useRouter();
 
-  const handleRegistrarTrabalhado = () => {
-    router.push('/(home)/calculos/trabalhado');
-  };
 
-  const handleRegistrarDespesas = () => {
-    router.push('/(home)/calculos/financeiro');
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -30,20 +25,7 @@ export default function RelatoriosScreen() {
       </View>
 
       {/* NavBar */}
-      <View style={styles.navBar}>
-        <TouchableOpacity style={[styles.navTab, styles.activeTab]}>
-          <Text style={[styles.navTabText, styles.activeTabText]}>Dashboard</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navTab} onPress={handleRegistrarTrabalhado}>
-          <Text style={styles.navTabText}>Trabalhado</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navTab} onPress={handleRegistrarDespesas}>
-          <Text style={styles.navTabText}>Financeiro</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navTab} onPress={() => router.push('/(home)/relatorios')}>
-          <Text style={styles.navTabText}>Relatórios</Text>
-        </TouchableOpacity>
-      </View>
+      <TopNavBar />
 
       {/* Content */}
       <View style={styles.content}>
@@ -95,33 +77,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     opacity: 0.9,
   },
-  navBar: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  navTab: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-    marginHorizontal: 5,
-  },
-  activeTab: {
-    borderBottomWidth: 2,
-    borderBottomColor: '#007AFF',
-  },
-  navTabText: {
-    fontSize: 14,
-    color: '#666',
-    fontWeight: '500',
-  },
-  activeTabText: {
-    color: '#007AFF',
-    fontWeight: 'bold',
-  },
+
   statsContainer: {
     backgroundColor: '#fff',
     borderRadius: 12,

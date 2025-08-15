@@ -28,22 +28,6 @@ export default function BottomTabBar() {
 
             {/* Conteúdo da barra */}
             <View style={styles.content}>
-                {/* Botão Home */}
-                <TouchableOpacity
-                    style={[styles.tabButton, HomeActive && styles.activeTab]}
-                    onPress={handleHomePress}
-                >
-                    <View style={styles.iconContainer}>
-                        <Ionicons
-                            name="home"
-                            size={24}
-                            color={HomeActive ? '#007AFF' : '#666'}
-                        />
-                    </View>
-                    <Text style={[styles.tabText, HomeActive && styles.activeTabText]}>
-                        home
-                    </Text>
-                </TouchableOpacity>
 
                 {/* Botão Profile */}
                 <TouchableOpacity
@@ -61,6 +45,25 @@ export default function BottomTabBar() {
                         profile
                     </Text>
                 </TouchableOpacity>
+                
+                {/* Botão Home */}
+                <TouchableOpacity
+                    style={[styles.tabButton, HomeActive && styles.activeTab]}
+                    onPress={handleHomePress}
+                >
+                    <View style={styles.iconContainer}>
+                        <Ionicons
+                            name="home"
+                            size={24}
+                            color={HomeActive ? '#007AFF' : '#666'}
+                        />
+                    </View>
+                    <Text style={[styles.tabText, HomeActive && styles.activeTabText]}>
+                        home
+                    </Text>
+                </TouchableOpacity>
+
+
 
                 {/* Botão comunidade */}
                 <TouchableOpacity
@@ -98,15 +101,9 @@ const styles = StyleSheet.create({
         right: 0,
         zIndex: 1000,
     },
-    wavyLine: {
-        height: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingTop: 4,
-    },
     content: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         alignItems: 'center',
         paddingHorizontal: 40,
         paddingVertical: 12,
