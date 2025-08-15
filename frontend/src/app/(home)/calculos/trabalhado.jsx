@@ -22,6 +22,9 @@ export default function TrabalhadoScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [timePickerMode, setTimePickerMode] = useState(''); // 'inicio' ou 'fim'
+  const [selectedTime, setSelectedTime] = useState({ hora: 0, minuto: 0 });
   const [formData, setFormData] = useState({
     data: '',
     horaInicio: '',
@@ -57,6 +60,39 @@ export default function TrabalhadoScreen() {
 
   const hideDatePickerModal = () => {
     setShowDatePicker(false);
+  };
+
+  const showTimePickerModal = (mode) => {
+    setTimePickerMode(mode);
+    // Se já existe um horário, vamos carregá-lo
+    if (mode === 'inicio' && formData.horaInicio) {
+      const [hora, minuto] = formData.horaInicio.split(':');
+      setSelectedTime({ hora: parseInt(hora), minuto: parseInt(minuto) });
+    } else if (mode === 'fim' && formData.horaFim) {
+      const [hora, minuto] = formData.horaFim.split(':');
+      setSelectedTime({ hora: parseInt(hora), minuto: parseInt(minuto) });
+    } else {
+      setSelectedTime({ hora: 0, minuto: 0 });
+    }
+    setShowTimePicker(true);
+  };
+
+  const hideTimePickerModal = () => {
+    setShowTimePicker(false);
+  };
+
+  const confirmTime = () => {
+    const hora = selectedTime.hora.toString().padStart(2, '0');
+    const minuto = selectedTime.minuto.toString().padStart(2, '0');
+    const timeString = `${hora}:${minuto}`;
+    
+    if (timePickerMode === 'inicio') {
+      handleInputChange('horaInicio', timeString);
+    } else if (timePickerMode === 'fim') {
+      handleInputChange('horaFim', timeString);
+    }
+    
+    hideTimePickerModal();
   };
 
   const confirmDate = () => {
@@ -306,35 +342,95 @@ export default function TrabalhadoScreen() {
             </View>
           </Modal>
 
+          {/* Modal de seleção de horário */}
+          <Modal
+            visible={showTimePicker}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={hideTimePickerModal}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>
+                  {timePickerMode === 'inicio' ? 'Hora de Início' : 'Hora de Fim'}
+                </Text>
+                
+                {/* Inputs para hora e minuto */}
+                <View style={styles.timeInputsRow}>
+                  <View style={styles.timeInputContainer}>
+                    <Text style={styles.timeInputLabel}>Hora</Text>
+                    <TextInput
+                      style={styles.timeInputField}
+                      placeholder="00"
+                      value={selectedTime.hora.toString()}
+                      onChangeText={(text) => {
+                        const hora = parseInt(text) || 0;
+                        if (hora >= 0 && hora <= 23) {
+                          setSelectedTime(prev => ({ ...prev, hora }));
+                        }
+                      }}
+                      keyboardType="numeric"
+                      maxLength={2}
+                    />
+                  </View>
+                  
+                  <Text style={styles.timeSeparator}>:</Text>
+                  
+                  <View style={styles.timeInputContainer}>
+                    <Text style={styles.timeInputLabel}>Minuto</Text>
+                    <TextInput
+                      style={styles.timeInputField}
+                      placeholder="00"
+                      value={selectedTime.minuto.toString()}
+                      onChangeText={(text) => {
+                        const minuto = parseInt(text) || 0;
+                        if (minuto >= 0 && minuto <= 59) {
+                          setSelectedTime(prev => ({ ...prev, minuto }));
+                        }
+                      }}
+                      keyboardType="numeric"
+                      maxLength={2}
+                    />
+                  </View>
+                </View>
+                
+                <TouchableOpacity style={styles.confirmButton} onPress={confirmTime}>
+                  <Text style={styles.confirmButtonText}>Confirmar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.cancelButton} onPress={hideTimePickerModal}>
+                  <Text style={styles.cancelButtonText}>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+
           {/* Horários */}
           <View style={styles.row}>
             <View style={[styles.inputContainer, styles.halfWidth]}>
               <Text style={styles.label}>Hora início *</Text>
-              <View style={[styles.inputWithIcon, errors.horaInicio && styles.inputError]}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="HH:MM"
-                  value={formData.horaInicio}
-                  onChangeText={(value) => handleInputChange('horaInicio', value)}
-                  placeholderTextColor="#666"
-                />
+              <TouchableOpacity 
+                style={[styles.inputWithIcon, errors.horaInicio && styles.inputError]}
+                onPress={() => showTimePickerModal('inicio')}
+              >
+                <Text style={[styles.timeInput, !formData.horaInicio && styles.placeholderText]}>
+                  {formData.horaInicio || "HH:MM"}
+                </Text>
                 <Ionicons name="time" size={20} color="#666" style={styles.inputIcon} />
-              </View>
+              </TouchableOpacity>
               {errors.horaInicio && <Text style={styles.errorText}>{errors.horaInicio}</Text>}
             </View>
 
             <View style={[styles.inputContainer, styles.halfWidth]}>
               <Text style={styles.label}>Hora Fim *</Text>
-              <View style={[styles.inputWithIcon, errors.horaFim && styles.inputError]}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="HH:MM"
-                  value={formData.horaFim}
-                  onChangeText={(value) => handleInputChange('horaFim', value)}
-                  placeholderTextColor="#666"
-                />
+              <TouchableOpacity 
+                style={[styles.inputWithIcon, errors.horaFim && styles.inputError]}
+                onPress={() => showTimePickerModal('fim')}
+              >
+                <Text style={[styles.timeInput, !formData.horaFim && styles.placeholderText]}>
+                  {formData.horaFim || "HH:MM"}
+                </Text>
                 <Ionicons name="time" size={20} color="#666" style={styles.inputIcon} />
-              </View>
+              </TouchableOpacity>
               {errors.horaFim && <Text style={styles.errorText}>{errors.horaFim}</Text>}
             </View>
           </View>
@@ -612,5 +708,44 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     textAlign: 'center',
     width: '100%',
+  },
+  timeInput: {
+    flex: 1,
+    padding: 15,
+    fontSize: 16,
+    color: '#000',
+  },
+  timeInputsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 20,
+  },
+  timeInputContainer: {
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  timeInputLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 8,
+  },
+  timeInputField: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    textAlign: 'center',
+    width: 80,
+  },
+  timeSeparator: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#000',
+    marginHorizontal: 10,
   },
 });
