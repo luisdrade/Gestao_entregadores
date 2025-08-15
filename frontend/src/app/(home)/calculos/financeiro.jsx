@@ -15,6 +15,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { registroDespesa } from '../../../services/api';
 import TopNavBar from '../../../components/_NavBar_Superior';
+import DatePicker from '../../../components/_DataComp';
 
 export default function FinanceiroScreen() {
   const router = useRouter();
@@ -38,7 +39,7 @@ export default function FinanceiroScreen() {
       ...prev,
       [field]: value
     }));
-    
+
     // Limpar erro do campo quando o usuário começa a digitar
     if (errors[field]) {
       setErrors(prev => ({
@@ -137,7 +138,7 @@ export default function FinanceiroScreen() {
       };
 
       const result = await registroDespesa(apiData);
-      
+
       if (result.success) {
         Alert.alert('Sucesso', result.message, [
           {
@@ -172,7 +173,7 @@ export default function FinanceiroScreen() {
     // Remove tudo que não é número
     const numericValue = value.replace(/[^0-9]/g, '');
     if (numericValue === '') return '';
-    
+
     // Converte para centavos e formata
     const floatValue = parseFloat(numericValue) / 100;
     return floatValue.toFixed(2);
@@ -199,8 +200,8 @@ export default function FinanceiroScreen() {
       <TopNavBar />
 
       {/* Content */}
-      <ScrollView 
-        style={styles.content} 
+      <ScrollView
+        style={styles.content}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
@@ -210,21 +211,21 @@ export default function FinanceiroScreen() {
           {/* Tipo de despesa */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Tipo de despesa *</Text>
-            
+
             {/* Campo de seleção */}
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.selectField, errors.tipoDespesa && styles.inputError]}
               onPress={() => setShowExpenseTypeModal(true)}
             >
               <Text style={[
-                styles.selectText, 
+                styles.selectText,
                 !selectedExpenseType && styles.placeholderText
               ]}>
                 {selectedExpenseType || "Selecione o tipo de despesa"}
               </Text>
               <Ionicons name="chevron-down" size={20} color="#666" />
             </TouchableOpacity>
-            
+
             {errors.tipoDespesa && <Text style={styles.errorText}>{errors.tipoDespesa}</Text>}
           </View>
 
@@ -238,7 +239,7 @@ export default function FinanceiroScreen() {
             <View style={styles.modalOverlay}>
               <View style={styles.modalContent}>
                 <Text style={styles.modalTitle}>Selecione o tipo de despesa</Text>
-                
+
                 <ScrollView style={styles.optionsList} showsVerticalScrollIndicator={false}>
                   {expenseTypes.length === 0 ? (
                     <View style={styles.emptyState}>
@@ -270,12 +271,12 @@ export default function FinanceiroScreen() {
                           )}
                         </TouchableOpacity>
                       ))}
-                      
+
                       {/* Separador */}
                       <View style={styles.separator} />
                     </>
                   )}
-                  
+
                   {/* Opção para adicionar novo tipo */}
                   <TouchableOpacity
                     style={styles.addNewOption}
@@ -285,9 +286,9 @@ export default function FinanceiroScreen() {
                     <Text style={styles.addNewOptionText}>Adicionar novo tipo</Text>
                   </TouchableOpacity>
                 </ScrollView>
-                
-                <TouchableOpacity 
-                  style={styles.cancelButton} 
+
+                <TouchableOpacity
+                  style={styles.cancelButton}
                   onPress={() => setShowExpenseTypeModal(false)}
                 >
                   <Text style={styles.cancelButtonText}>Cancelar</Text>
@@ -330,24 +331,17 @@ export default function FinanceiroScreen() {
           </View>
 
           {/* Data */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Data da despesa *</Text>
-            <View style={[styles.inputWithIcon, errors.data && styles.inputError]}>
-              <TextInput
-                style={styles.input}
-                placeholder="DD/MM/AAAA"
-                value={formData.data}
-                onChangeText={(value) => handleInputChange('data', value)}
-                placeholderTextColor="#666"
-              />
-              <Ionicons name="calendar" size={20} color="#666" style={styles.inputIcon} />
-            </View>
-            {errors.data && <Text style={styles.errorText}>{errors.data}</Text>}
-          </View>
+          <DatePicker
+            value={formData.data}
+            onDateChange={(date) => handleInputChange('data', date)}
+            label="Data"
+            error={!!errors.data}
+            errorMessage={errors.data}
+          />
 
           {/* Botão de registro */}
-          <TouchableOpacity 
-            style={[styles.registerButton, isLoading && styles.buttonDisabled]} 
+          <TouchableOpacity
+            style={[styles.registerButton, isLoading && styles.buttonDisabled]}
             onPress={handleRegistrar}
             disabled={isLoading}
           >

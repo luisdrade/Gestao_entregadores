@@ -16,8 +16,8 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { registroTrabalho } from '../../../services/api';
 import TopNavBar from '../../../components/_NavBar_Superior';
-import DatePicker from '../../../components/DatePicker';
-import TimePicker from '../../../components/TimePicker';
+import DatePicker from '../../../components/_DataComp';
+import TimePicker from '../../../components/_HoraComp';
 
 export default function TrabalhadoScreen() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function TrabalhadoScreen() {
       ...prev,
       [field]: value
     }));
-    
+
     // Limpar erro do campo quando o usuário começa a digitar
     if (errors[field]) {
       setErrors(prev => ({
@@ -162,7 +162,7 @@ export default function TrabalhadoScreen() {
       };
 
       const result = await registroTrabalho(apiData);
-      
+
       if (result.success) {
         Alert.alert('Sucesso', result.message, [
           {
@@ -200,7 +200,7 @@ export default function TrabalhadoScreen() {
     // Remove tudo que não é número
     const numericValue = value.replace(/[^0-9]/g, '');
     if (numericValue === '') return '';
-    
+
     // Converte para centavos e formata
     const floatValue = parseFloat(numericValue) / 100;
     return floatValue.toFixed(2);
@@ -227,8 +227,8 @@ export default function TrabalhadoScreen() {
       <TopNavBar />
 
       {/* Content */}
-      <ScrollView 
-        style={styles.content} 
+      <ScrollView
+        style={styles.content}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
@@ -243,10 +243,6 @@ export default function TrabalhadoScreen() {
             error={!!errors.data}
             errorMessage={errors.data}
           />
-
-
-
-
 
           {/* Horários */}
           <View style={styles.row}>
@@ -300,10 +296,10 @@ export default function TrabalhadoScreen() {
             </View>
           </View>
 
-           {/* Tipo de Pagamento */}
-           <View style={styles.inputContainer}>
+          {/* Tipo de Pagamento */}
+          <View style={styles.inputContainer}>
             <Text style={styles.label}>Tipo do Pagamento</Text>
-            
+
             <View style={styles.paymentTypeContainer}>
               <TouchableOpacity
                 style={[
@@ -313,10 +309,10 @@ export default function TrabalhadoScreen() {
                 ]}
                 onPress={() => selectPaymentType('Diária')}
               >
-                <Ionicons 
-                  name="calendar" 
-                  size={20} 
-                  color={selectedPaymentType === 'Diária' ? '#fff' : '#007AFF'} 
+                <Ionicons
+                  name="calendar"
+                  size={20}
+                  color={selectedPaymentType === 'Diária' ? '#fff' : '#007AFF'}
                 />
                 <Text style={[
                   styles.paymentTypeText,
@@ -334,10 +330,10 @@ export default function TrabalhadoScreen() {
                 ]}
                 onPress={() => selectPaymentType('Por Pacote')}
               >
-                <Ionicons 
-                  name="cube" 
-                  size={20} 
-                  color={selectedPaymentType === 'Por Pacote' ? '#fff' : '#007AFF'} 
+                <Ionicons
+                  name="cube"
+                  size={20}
+                  color={selectedPaymentType === 'Por Pacote' ? '#fff' : '#007AFF'}
                 />
                 <Text style={[
                   styles.paymentTypeText,
@@ -347,7 +343,7 @@ export default function TrabalhadoScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
-            
+
             {errors.tipoPagamento && <Text style={styles.errorText}>{errors.tipoPagamento}</Text>}
           </View>
 
@@ -386,7 +382,7 @@ export default function TrabalhadoScreen() {
                 <Text style={styles.currencySymbol}>R$</Text>
               </View>
               {errors.valor && <Text style={styles.errorText}>{errors.valor}</Text>}
-              
+
               {/* Campo de valor total calculado (somente leitura) */}
               <View style={styles.totalValueContainer}>
                 <Text style={styles.totalValueLabel}>Valor total calculado:</Text>
@@ -396,8 +392,8 @@ export default function TrabalhadoScreen() {
           )}
 
           {/* Botão de registro */}
-          <TouchableOpacity 
-            style={[styles.registerButton, isLoading && styles.buttonDisabled]} 
+          <TouchableOpacity
+            style={[styles.registerButton, isLoading && styles.buttonDisabled]}
             onPress={handleRegistrar}
             disabled={isLoading}
           >
