@@ -106,3 +106,28 @@ def dashboard_data(request):
             return JsonResponse({'success': False, 'error': str(e)})
     
     return JsonResponse({'success': False, 'error': 'Método não permitido'})
+
+@csrf_exempt
+def test_connection(request):
+    """View simples para testar conexão com o banco"""
+    if request.method == 'GET':
+        try:
+            # Teste simples de conexão com o banco
+            from django.db import connection
+            cursor = connection.cursor()
+            cursor.execute("SELECT 1")
+            result = cursor.fetchone()
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Conexão com banco OK!',
+                'test_query': result[0],
+                'database': connection.settings_dict['ENGINE']
+            })
+        except Exception as e:
+            return JsonResponse({
+                'success': False, 
+                'error': f'Erro na conexão com banco: {str(e)}'
+            })
+    
+    return JsonResponse({'success': False, 'error': 'Método não permitido'})

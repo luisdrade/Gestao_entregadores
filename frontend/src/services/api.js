@@ -4,7 +4,7 @@ import { API_CONFIG } from '../config/api';
 
 // Configuração base da API
 export const api = axios.create({
-  baseURL: API_CONFIG.BASE_URL || 'http://192.168.137.1:8000/registro/api',
+  baseURL: API_CONFIG.BASE_URL || 'http://192.168.0.110:8000',
   timeout: API_CONFIG.TIMEOUT || 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -48,3 +48,51 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Função para registro de trabalho
+export const registroTrabalho = async (dados) => {
+  try {
+    const response = await api.post('/registro/api/registro-trabalho/', dados);
+    return {
+      success: true,
+      message: 'Trabalho registrado com sucesso!',
+      data: response.data
+    };
+  } catch (error) {
+    console.error('Erro ao registrar trabalho:', error);
+    if (error.response?.data) {
+      return {
+        success: false,
+        error: error.response.data.message || 'Erro ao registrar trabalho'
+      };
+    }
+    return {
+      success: false,
+      error: 'Erro de conexão. Verifique sua internet.'
+    };
+  }
+};
+
+// Função para registro de despesa
+export const registroDespesa = async (dados) => {
+  try {
+    const response = await api.post('/registro/api/registro-despesa/', dados);
+    return {
+      success: true,
+      message: 'Despesa registrada com sucesso!',
+      data: response.data
+    };
+  } catch (error) {
+    console.error('Erro ao registrar despesa:', error);
+    if (error.response?.data) {
+      return {
+        success: false,
+        error: error.response.data.message || 'Erro ao registrar despesa'
+      };
+    }
+    return {
+      success: false,
+      error: 'Erro de conexão. Verifique sua internet.'
+    };
+  }
+};

@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import TopNavBar from '../../components/_NavBar_Superior';
+import ApiTest from '../../components/ApiTest';
 
 export default function RelatoriosScreen() {
   const router = useRouter();
@@ -35,6 +36,9 @@ export default function RelatoriosScreen() {
         <Text style={styles.subtitle}>
           Aqui você poderá visualizar seus relatórios e estatísticas
         </Text>
+        
+        {/* Componente de teste da API */}
+        <ApiTest />
       </View>
     </SafeAreaView>
   );

@@ -25,17 +25,53 @@ export default function FinanceiroScreen() {
     data: '',
   });
 
+  const [errors, setErrors] = useState({});
+
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+    
+    // Limpar erro do campo quando o usuário começa a digitar
+    if (errors[field]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: null
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.tipoDespesa.trim()) {
+      newErrors.tipoDespesa = 'Tipo de despesa é obrigatório';
+    }
+
+    if (!formData.descricao.trim()) {
+      newErrors.descricao = 'Descrição é obrigatória';
+    } else if (formData.descricao.trim().length < 5) {
+      newErrors.descricao = 'Descrição deve ter pelo menos 5 caracteres';
+    }
+
+    if (!formData.valor.trim()) {
+      newErrors.valor = 'Valor é obrigatório';
+    } else if (isNaN(formData.valor) || parseFloat(formData.valor) <= 0) {
+      newErrors.valor = 'Valor deve ser um número positivo';
+    }
+
+    if (!formData.data.trim()) {
+      newErrors.data = 'Data é obrigatória';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleRegistrar = async () => {
-    // Validação básica
-    if (!formData.tipoDespesa || !formData.descricao || !formData.valor || !formData.data) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos');
+    if (!validateForm()) {
+      Alert.alert('Erro de Validação', 'Por favor, corrija os erros nos campos destacados.');
       return;
     }
 
@@ -52,20 +88,26 @@ export default function FinanceiroScreen() {
       const result = await registroDespesa(apiData);
       
       if (result.success) {
-        Alert.alert('Sucesso', result.message);
-        
-        // Limpar formulário
-        setFormData({
-          tipoDespesa: '',
-          descricao: '',
-          valor: '',
-          data: '',
-        });
+        Alert.alert('Sucesso', result.message, [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Limpar formulário
+              setFormData({
+                tipoDespesa: '',
+                descricao: '',
+                valor: '',
+                data: '',
+              });
+              setErrors({});
+            }
+          }
+        ]);
       } else {
         Alert.alert('Erro', result.error || 'Erro ao registrar despesa');
       }
     } catch (error) {
-      Alert.alert('Erro', error.message || 'Erro inesperado ao registrar despesa');
+      Alert.alert('Erro', 'Erro inesperado ao registrar despesa. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
@@ -75,12 +117,27 @@ export default function FinanceiroScreen() {
     router.back();
   };
 
+  const formatCurrency = (value) => {
+    // Remove tudo que não é número
+    const numericValue = value.replace(/[^0-9]/g, '');
+    if (numericValue === '') return '';
+    
+    // Converte para centavos e formata
+    const floatValue = parseFloat(numericValue) / 100;
+    return floatValue.toFixed(2);
+  };
+
+  const handleCurrencyChange = (value) => {
+    const formatted = formatCurrency(value);
+    handleInputChange('valor', formatted);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>Gerenciamento</Text>
+          <Text style={styles.headerTitle}>Registro de Despesas</Text>
           <TouchableOpacity style={styles.backButton} onPress={handleBack}>
             <Ionicons name="arrow-back" size={20} color="#fff" />
           </TouchableOpacity>
@@ -101,62 +158,67 @@ export default function FinanceiroScreen() {
         <View style={styles.form}>
           {/* Tipo de despesa */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Tipo de despesa</Text>
-            <View style={styles.inputWithIcon}>
+            <Text style={styles.label}>Tipo de despesa *</Text>
+            <View style={[styles.inputWithIcon, errors.tipoDespesa && styles.inputError]}>
               <TextInput
                 style={styles.input}
-                placeholder="Tipo de despesa"
+                placeholder="Ex: Combustível, Manutenção, Alimentação"
                 value={formData.tipoDespesa}
                 onChangeText={(value) => handleInputChange('tipoDespesa', value)}
                 placeholderTextColor="#666"
               />
-              <Ionicons name="chevron-down" size={20} color="#666" style={styles.inputIcon} />
+              <Ionicons name="pricetag" size={20} color="#666" style={styles.inputIcon} />
             </View>
+            {errors.tipoDespesa && <Text style={styles.errorText}>{errors.tipoDespesa}</Text>}
           </View>
 
           {/* Descrição */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Descrição</Text>
+            <Text style={styles.label}>Descrição *</Text>
             <TextInput
-              style={styles.input}
-              placeholder="Descrição"
+              style={[styles.input, styles.textArea, errors.descricao && styles.inputError]}
+              placeholder="Descreva detalhadamente a despesa realizada"
               value={formData.descricao}
               onChangeText={(value) => handleInputChange('descricao', value)}
               placeholderTextColor="#666"
               multiline
               numberOfLines={3}
+              textAlignVertical="top"
             />
+            {errors.descricao && <Text style={styles.errorText}>{errors.descricao}</Text>}
           </View>
 
           {/* Valor */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Valor</Text>
-            <View style={styles.inputWithIcon}>
+            <Text style={styles.label}>Valor da despesa *</Text>
+            <View style={[styles.inputWithIcon, errors.valor && styles.inputError]}>
               <TextInput
                 style={styles.input}
-                placeholder="Valor"
+                placeholder="0,00"
                 value={formData.valor}
-                onChangeText={(value) => handleInputChange('valor', value)}
+                onChangeText={handleCurrencyChange}
                 keyboardType="numeric"
                 placeholderTextColor="#666"
               />
               <Text style={styles.currencySymbol}>R$</Text>
             </View>
+            {errors.valor && <Text style={styles.errorText}>{errors.valor}</Text>}
           </View>
 
           {/* Data */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Data</Text>
-            <View style={styles.inputWithIcon}>
+            <Text style={styles.label}>Data da despesa *</Text>
+            <View style={[styles.inputWithIcon, errors.data && styles.inputError]}>
               <TextInput
                 style={styles.input}
-                placeholder="Data"
+                placeholder="DD/MM/AAAA"
                 value={formData.data}
                 onChangeText={(value) => handleInputChange('data', value)}
                 placeholderTextColor="#666"
               />
               <Ionicons name="calendar" size={20} color="#666" style={styles.inputIcon} />
             </View>
+            {errors.data && <Text style={styles.errorText}>{errors.data}</Text>}
           </View>
 
           {/* Botão de registro */}
@@ -272,5 +334,18 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     backgroundColor: '#ccc',
+  },
+  inputError: {
+    borderColor: '#FF6B6B',
+    borderWidth: 2,
+  },
+  errorText: {
+    color: '#FF6B6B',
+    fontSize: 12,
+    marginTop: 5,
+  },
+  textArea: {
+    minHeight: 80,
+    paddingTop: 15,
   },
 });

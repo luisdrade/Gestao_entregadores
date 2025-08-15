@@ -17,9 +17,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView, )
+from django.http import JsonResponse
+
+def test_root(request):
+    """View simples para testar se o Django está funcionando"""
+    return JsonResponse({
+        'success': True,
+        'message': 'Django está funcionando!',
+        'status': 'OK'
+    })
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # Teste de conexão na raiz
+    path('', test_root, name='test_root'),
 
     # Suas APIs existentes
     path('api/', include('usuarios.urls')),
