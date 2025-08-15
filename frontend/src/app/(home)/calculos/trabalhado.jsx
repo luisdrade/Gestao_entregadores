@@ -25,6 +25,8 @@ export default function TrabalhadoScreen() {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [timePickerMode, setTimePickerMode] = useState(''); // 'inicio' ou 'fim'
   const [selectedTime, setSelectedTime] = useState({ hora: 0, minuto: 0 });
+  const [selectedPaymentType, setSelectedPaymentType] = useState('');
+  const [valorPacote, setValorPacote] = useState('');
   const [formData, setFormData] = useState({
     data: '',
     horaInicio: '',
@@ -93,6 +95,36 @@ export default function TrabalhadoScreen() {
     }
     
     hideTimePickerModal();
+  };
+
+  const selectPaymentType = (type) => {
+    setSelectedPaymentType(type);
+    handleInputChange('tipoPagamento', type);
+    // Limpar valores quando mudar o tipo de pagamento
+    handleInputChange('valor', '');
+    setValorPacote('');
+  };
+
+  const handleValorPacoteChange = (value) => {
+    setValorPacote(value);
+    // Calcular valor total automaticamente
+    if (formData.quantidadeEntregues && value) {
+      const quantidade = parseInt(formData.quantidadeEntregues) || 0;
+      const valorUnitario = parseFloat(value) || 0;
+      const valorTotal = (quantidade * valorUnitario).toFixed(2);
+      handleInputChange('valor', valorTotal);
+    }
+  };
+
+  const handleQuantidadeEntreguesChange = (value) => {
+    handleInputChange('quantidadeEntregues', value);
+    // Recalcular valor total se for por pacote
+    if (selectedPaymentType === 'Por Pacote' && valorPacote) {
+      const quantidade = parseInt(value) || 0;
+      const valorUnitario = parseFloat(valorPacote) || 0;
+      const valorTotal = (quantidade * valorUnitario).toFixed(2);
+      handleInputChange('valor', valorTotal);
+    }
   };
 
   const confirmDate = () => {
@@ -443,7 +475,7 @@ export default function TrabalhadoScreen() {
                 style={[styles.input, errors.quantidadeEntregues && styles.inputError]}
                 placeholder="0"
                 value={formData.quantidadeEntregues}
-                onChangeText={(value) => handleInputChange('quantidadeEntregues', value)}
+                onChangeText={handleQuantidadeEntreguesChange}
                 keyboardType="numeric"
                 placeholderTextColor="#666"
               />
@@ -467,36 +499,97 @@ export default function TrabalhadoScreen() {
            {/* Tipo de Pagamento */}
            <View style={styles.inputContainer}>
             <Text style={styles.label}>Tipo do Pagamento *</Text>
-            <View style={[styles.inputWithIcon, errors.tipoPagamento && styles.inputError]}>
-              <TextInput
-                style={styles.input}
-                placeholder="Diária ou por pacote"
-                value={formData.tipoPagamento}
-                onChangeText={(value) => handleInputChange('tipoPagamento', value)}
-                placeholderTextColor="#666"
-              />
-              <Ionicons name="pricetag" size={20} color="#666" style={styles.inputIcon} />
+            
+            <View style={styles.paymentTypeContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.paymentTypeButton,
+                  selectedPaymentType === 'Diária' && styles.paymentTypeButtonSelected,
+                  errors.tipoPagamento && styles.inputError
+                ]}
+                onPress={() => selectPaymentType('Diária')}
+              >
+                <Ionicons 
+                  name="calendar" 
+                  size={20} 
+                  color={selectedPaymentType === 'Diária' ? '#fff' : '#007AFF'} 
+                />
+                <Text style={[
+                  styles.paymentTypeText,
+                  selectedPaymentType === 'Diária' && styles.paymentTypeTextSelected
+                ]}>
+                  Diária
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.paymentTypeButton,
+                  selectedPaymentType === 'Por Pacote' && styles.paymentTypeButtonSelected,
+                  errors.tipoPagamento && styles.inputError
+                ]}
+                onPress={() => selectPaymentType('Por Pacote')}
+              >
+                <Ionicons 
+                  name="cube" 
+                  size={20} 
+                  color={selectedPaymentType === 'Por Pacote' ? '#fff' : '#007AFF'} 
+                />
+                <Text style={[
+                  styles.paymentTypeText,
+                  selectedPaymentType === 'Por Pacote' && styles.paymentTypeTextSelected
+                ]}>
+                  Por Pacote
+                </Text>
+              </TouchableOpacity>
             </View>
+            
             {errors.tipoPagamento && <Text style={styles.errorText}>{errors.tipoPagamento}</Text>}
           </View>
 
 
-          {/* Valor */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Valor recebido *</Text>
-            <View style={[styles.inputWithIcon, errors.valor && styles.inputError]}>
-              <TextInput
-                style={styles.input}
-                placeholder="0,00"
-                value={formData.valor}
-                onChangeText={handleCurrencyChange}
-                keyboardType="numeric"
-                placeholderTextColor="#666"
-              />
-              <Text style={styles.currencySymbol}>R$</Text>
+          {/* Campo de Valor Dinâmico */}
+          {selectedPaymentType === 'Diária' && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Valor do dia *</Text>
+              <View style={[styles.inputWithIcon, errors.valor && styles.inputError]}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="0,00"
+                  value={formData.valor}
+                  onChangeText={handleCurrencyChange}
+                  keyboardType="numeric"
+                  placeholderTextColor="#666"
+                />
+                <Text style={styles.currencySymbol}>R$</Text>
+              </View>
+              {errors.valor && <Text style={styles.errorText}>{errors.valor}</Text>}
             </View>
-            {errors.valor && <Text style={styles.errorText}>{errors.valor}</Text>}
-          </View>
+          )}
+
+          {selectedPaymentType === 'Por Pacote' && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Valor do pacote *</Text>
+              <View style={[styles.inputWithIcon, errors.valor && styles.inputError]}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="0,00"
+                  value={valorPacote}
+                  onChangeText={handleValorPacoteChange}
+                  keyboardType="numeric"
+                  placeholderTextColor="#666"
+                />
+                <Text style={styles.currencySymbol}>R$</Text>
+              </View>
+              {errors.valor && <Text style={styles.errorText}>{errors.valor}</Text>}
+              
+              {/* Campo de valor total calculado (somente leitura) */}
+              <View style={styles.totalValueContainer}>
+                <Text style={styles.totalValueLabel}>Valor total calculado:</Text>
+                <Text style={styles.totalValueText}>R$ {formData.valor || '0,00'}</Text>
+              </View>
+            </View>
+          )}
 
           {/* Botão de registro */}
           <TouchableOpacity 
@@ -747,5 +840,52 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000',
     marginHorizontal: 10,
+  },
+  paymentTypeContainer: {
+    flexDirection: 'row',
+    gap: 15,
+  },
+  paymentTypeButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    gap: 8,
+  },
+  paymentTypeButtonSelected: {
+    backgroundColor: '#007AFF',
+    borderColor: '#007AFF',
+  },
+  paymentTypeText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#007AFF',
+  },
+  paymentTypeTextSelected: {
+    color: '#fff',
+  },
+  totalValueContainer: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: 8,
+    padding: 15,
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  totalValueLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#666',
+    marginBottom: 5,
+  },
+  totalValueText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#007AFF',
   },
 });
