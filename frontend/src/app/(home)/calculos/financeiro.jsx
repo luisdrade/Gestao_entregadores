@@ -58,12 +58,12 @@ export default function FinanceiroScreen() {
     }
   };
 
-  const handleAddNewExpenseType = () => {
+  const handleAddNovaDespesa = () => {
     setShowExpenseTypeModal(false);
     // Registrar função global para receber o novo tipo
     global.addExpenseType = addExpenseType;
     // Navegar para página de cadastro de tipo de despesa
-    router.push('/(home)/calculos/cadastro-tipo-despesa');
+    router.push('/(home)/calculos/cadastroDespesa');
   };
 
   // Função para carregar tipos de despesa salvos
@@ -279,7 +279,7 @@ export default function FinanceiroScreen() {
                   {/* Opção para adicionar novo tipo */}
                   <TouchableOpacity
                     style={styles.addNewOption}
-                    onPress={handleAddNewExpenseType}
+                    onPress={handleAddNovaDespesa}
                   >
                     <Ionicons name="add-circle" size={20} color="#007AFF" />
                     <Text style={styles.addNewOptionText}>Adicionar novo tipo</Text>

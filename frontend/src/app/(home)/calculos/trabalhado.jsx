@@ -16,15 +16,13 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { registroTrabalho } from '../../../services/api';
 import TopNavBar from '../../../components/_NavBar_Superior';
+import DatePicker from '../../../components/DatePicker';
+import TimePicker from '../../../components/TimePicker';
 
 export default function TrabalhadoScreen() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [timePickerMode, setTimePickerMode] = useState(''); // 'inicio' ou 'fim'
-  const [selectedTime, setSelectedTime] = useState({ hora: 0, minuto: 0 });
+
   const [selectedPaymentType, setSelectedPaymentType] = useState('');
   const [valorPacote, setValorPacote] = useState('');
   const [formData, setFormData] = useState({
@@ -56,46 +54,7 @@ export default function TrabalhadoScreen() {
 
 
 
-  const showDatePickerModal = () => {
-    setShowDatePicker(true);
-  };
 
-  const hideDatePickerModal = () => {
-    setShowDatePicker(false);
-  };
-
-  const showTimePickerModal = (mode) => {
-    setTimePickerMode(mode);
-    // Se já existe um horário, vamos carregá-lo
-    if (mode === 'inicio' && formData.horaInicio) {
-      const [hora, minuto] = formData.horaInicio.split(':');
-      setSelectedTime({ hora: parseInt(hora), minuto: parseInt(minuto) });
-    } else if (mode === 'fim' && formData.horaFim) {
-      const [hora, minuto] = formData.horaFim.split(':');
-      setSelectedTime({ hora: parseInt(hora), minuto: parseInt(minuto) });
-    } else {
-      setSelectedTime({ hora: 0, minuto: 0 });
-    }
-    setShowTimePicker(true);
-  };
-
-  const hideTimePickerModal = () => {
-    setShowTimePicker(false);
-  };
-
-  const confirmTime = () => {
-    const hora = selectedTime.hora.toString().padStart(2, '0');
-    const minuto = selectedTime.minuto.toString().padStart(2, '0');
-    const timeString = `${hora}:${minuto}`;
-    
-    if (timePickerMode === 'inicio') {
-      handleInputChange('horaInicio', timeString);
-    } else if (timePickerMode === 'fim') {
-      handleInputChange('horaFim', timeString);
-    }
-    
-    hideTimePickerModal();
-  };
 
   const selectPaymentType = (type) => {
     setSelectedPaymentType(type);
@@ -127,15 +86,7 @@ export default function TrabalhadoScreen() {
     }
   };
 
-  const confirmDate = () => {
-    // Formatar a data para DD/MM/AAAA
-    const day = selectedDate.getDate().toString().padStart(2, '0');
-    const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
-    const year = selectedDate.getFullYear();
-    const formattedDate = `${day}/${month}/${year}`;
-    handleInputChange('data', formattedDate);
-    hideDatePickerModal();
-  };
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -285,185 +236,38 @@ export default function TrabalhadoScreen() {
 
         <View style={styles.form}>
           {/* Data */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Data</Text>
-            <TouchableOpacity 
-              style={[styles.inputWithIcon, errors.data && styles.inputError]}
-              onPress={showDatePickerModal}
-            >
-              <Text style={[styles.dateInput, !formData.data && styles.placeholderText]}>
-                {formData.data || "DD/MM/AAAA"}
-              </Text>
-              <Ionicons name="calendar" size={20} color="#666" style={styles.inputIcon} />
-            </TouchableOpacity>
-            {errors.data && <Text style={styles.errorText}>{errors.data}</Text>}
-          </View>
+          <DatePicker
+            value={formData.data}
+            onDateChange={(date) => handleInputChange('data', date)}
+            label="Data"
+            error={!!errors.data}
+            errorMessage={errors.data}
+          />
 
-          {/* Modal de seleção de data */}
-          <Modal
-            visible={showDatePicker}
-            animationType="slide"
-            transparent={true}
-            onRequestClose={hideDatePickerModal}
-          >
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Selecione a data</Text>
-                
-                {/* Inputs para dia, mês e ano */}
-                <View style={styles.dateInputsRow}>
-                  <View style={styles.dateInputContainer}>
-                    <Text style={styles.dateInputLabel}>Dia</Text>
-                    <TextInput
-                      style={styles.dateInputField}
-                      placeholder="DD"
-                      value={selectedDate.getDate().toString()}
-                      onChangeText={(text) => {
-                        const day = parseInt(text) || 1;
-                        const newDate = new Date(selectedDate);
-                        newDate.setDate(day);
-                        setSelectedDate(newDate);
-                      }}
-                      keyboardType="numeric"
-                      maxLength={2}
-                    />
-                  </View>
-                  
-                  <View style={styles.dateInputContainer}>
-                    <Text style={styles.dateInputLabel}>Mês</Text>
-                    <TextInput
-                      style={styles.dateInputField}
-                      placeholder="MM"
-                      value={(selectedDate.getMonth() + 1).toString()}
-                      onChangeText={(text) => {
-                        const month = parseInt(text) || 1;
-                        const newDate = new Date(selectedDate);
-                        newDate.setMonth(month - 1);
-                        setSelectedDate(newDate);
-                      }}
-                      keyboardType="numeric"
-                      maxLength={2}
-                    />
-                  </View>
-                  
-                  <View style={styles.dateInputContainer}>
-                    <Text style={styles.dateInputLabel}>Ano</Text>
-                    <TextInput
-                      style={styles.dateInputField}
-                      placeholder="AAAA"
-                      value={selectedDate.getFullYear().toString()}
-                      onChangeText={(text) => {
-                        const year = parseInt(text) || 2024;
-                        const newDate = new Date(selectedDate);
-                        newDate.setFullYear(year);
-                        setSelectedDate(newDate);
-                      }}
-                      keyboardType="numeric"
-                      maxLength={4}
-                    />
-                  </View>
-                </View>
-                
-                <TouchableOpacity style={styles.confirmButton} onPress={confirmDate}>
-                  <Text style={styles.confirmButtonText}>Confirmar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.cancelButton} onPress={hideDatePickerModal}>
-                  <Text style={styles.cancelButtonText}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
 
-          {/* Modal de seleção de horário */}
-          <Modal
-            visible={showTimePicker}
-            animationType="slide"
-            transparent={true}
-            onRequestClose={hideTimePickerModal}
-          >
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>
-                  {timePickerMode === 'inicio' ? 'Hora de Início' : 'Hora de Fim'}
-                </Text>
-                
-                {/* Inputs para hora e minuto */}
-                <View style={styles.timeInputsRow}>
-                  <View style={styles.timeInputContainer}>
-                    <Text style={styles.timeInputLabel}>Hora</Text>
-                    <TextInput
-                      style={styles.timeInputField}
-                      placeholder="00"
-                      value={selectedTime.hora.toString()}
-                      onChangeText={(text) => {
-                        const hora = parseInt(text) || 0;
-                        if (hora >= 0 && hora <= 23) {
-                          setSelectedTime(prev => ({ ...prev, hora }));
-                        }
-                      }}
-                      keyboardType="numeric"
-                      maxLength={2}
-                    />
-                  </View>
-                  
-                  <Text style={styles.timeSeparator}>:</Text>
-                  
-                  <View style={styles.timeInputContainer}>
-                    <Text style={styles.timeInputLabel}>Minuto</Text>
-                    <TextInput
-                      style={styles.timeInputField}
-                      placeholder="00"
-                      value={selectedTime.minuto.toString()}
-                      onChangeText={(text) => {
-                        const minuto = parseInt(text) || 0;
-                        if (minuto >= 0 && minuto <= 59) {
-                          setSelectedTime(prev => ({ ...prev, minuto }));
-                        }
-                      }}
-                      keyboardType="numeric"
-                      maxLength={2}
-                    />
-                  </View>
-                </View>
-                
-                <TouchableOpacity style={styles.confirmButton} onPress={confirmTime}>
-                  <Text style={styles.confirmButtonText}>Confirmar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.cancelButton} onPress={hideTimePickerModal}>
-                  <Text style={styles.cancelButtonText}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+
+
 
           {/* Horários */}
           <View style={styles.row}>
-            <View style={[styles.inputContainer, styles.halfWidth]}>
-              <Text style={styles.label}>Hora início</Text>
-              <TouchableOpacity 
-                style={[styles.inputWithIcon, errors.horaInicio && styles.inputError]}
-                onPress={() => showTimePickerModal('inicio')}
-              >
-                <Text style={[styles.timeInput, !formData.horaInicio && styles.placeholderText]}>
-                  {formData.horaInicio || "HH:MM"}
-                </Text>
-                <Ionicons name="time" size={20} color="#666" style={styles.inputIcon} />
-              </TouchableOpacity>
-              {errors.horaInicio && <Text style={styles.errorText}>{errors.horaInicio}</Text>}
+            <View style={styles.halfWidth}>
+              <TimePicker
+                value={formData.horaInicio}
+                onTimeChange={(time) => handleInputChange('horaInicio', time)}
+                label="Hora início"
+                error={!!errors.horaInicio}
+                errorMessage={errors.horaInicio}
+              />
             </View>
 
-            <View style={[styles.inputContainer, styles.halfWidth]}>
-              <Text style={styles.label}>Hora Fim</Text>
-              <TouchableOpacity 
-                style={[styles.inputWithIcon, errors.horaFim && styles.inputError]}
-                onPress={() => showTimePickerModal('fim')}
-              >
-                <Text style={[styles.timeInput, !formData.horaFim && styles.placeholderText]}>
-                  {formData.horaFim || "HH:MM"}
-                </Text>
-                <Ionicons name="time" size={20} color="#666" style={styles.inputIcon} />
-              </TouchableOpacity>
-              {errors.horaFim && <Text style={styles.errorText}>{errors.horaFim}</Text>}
+            <View style={styles.halfWidth}>
+              <TimePicker
+                value={formData.horaFim}
+                onTimeChange={(time) => handleInputChange('horaFim', time)}
+                label="Hora Fim"
+                error={!!errors.horaFim}
+                errorMessage={errors.horaFim}
+              />
             </View>
           </View>
 
@@ -683,15 +487,7 @@ const styles = StyleSheet.create({
   inputIcon: {
     marginRight: 15,
   },
-  dateInput: {
-    flex: 1,
-    padding: 15,
-    fontSize: 16,
-    color: '#000',
-  },
-  placeholderText: {
-    color: '#666',
-  },
+
   currencySymbol: {
     fontSize: 16,
     color: '#666',
@@ -730,117 +526,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
   },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-    width: '80%',
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 20,
-  },
-  confirmButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 15,
-    width: '100%',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  confirmButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  cancelButton: {
-    backgroundColor: '#ccc',
-    borderRadius: 8,
-    padding: 15,
-    width: '100%',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  cancelButtonText: {
-    color: '#000',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  dateInputsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 20,
-  },
-  dateInputContainer: {
-    flex: 1,
-    alignItems: 'center',
-    marginHorizontal: 5,
-  },
-  dateInputLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000',
-    marginBottom: 8,
-  },
-  dateInputField: {
-    backgroundColor: '#f8f9fa',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    textAlign: 'center',
-    width: '100%',
-  },
-  timeInput: {
-    flex: 1,
-    padding: 15,
-    fontSize: 16,
-    color: '#000',
-  },
-  timeInputsRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 20,
-  },
-  timeInputContainer: {
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  timeInputLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000',
-    marginBottom: 8,
-  },
-  timeInputField: {
-    backgroundColor: '#f8f9fa',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    textAlign: 'center',
-    width: 80,
-  },
-  timeSeparator: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
-    marginHorizontal: 10,
-  },
+
   paymentTypeContainer: {
     flexDirection: 'row',
     gap: 15,
