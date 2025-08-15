@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Alert,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,6 +19,8 @@ import TopNavBar from '../../../components/_NavBar_Superior';
 export default function FinanceiroScreen() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [showExpenseTypeModal, setShowExpenseTypeModal] = useState(false);
+  const [selectedExpenseType, setSelectedExpenseType] = useState('');
   const [formData, setFormData] = useState({
     tipoDespesa: '',
     descricao: '',
@@ -26,6 +29,9 @@ export default function FinanceiroScreen() {
   });
 
   const [errors, setErrors] = useState({});
+
+  // Tipos de despesa personalizados (começam vazios)
+  const [expenseTypes, setExpenseTypes] = useState([]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -41,6 +47,51 @@ export default function FinanceiroScreen() {
       }));
     }
   };
+
+  const selectExpenseType = (type) => {
+    if (type === 'Adicionar despesa') {
+      setShowExpenseTypeModal(true);
+    } else {
+      setSelectedExpenseType(type);
+      handleInputChange('tipoDespesa', type);
+      setShowExpenseTypeModal(false);
+    }
+  };
+
+  const handleAddNewExpenseType = () => {
+    setShowExpenseTypeModal(false);
+    // Registrar função global para receber o novo tipo
+    global.addExpenseType = addExpenseType;
+    // Navegar para página de cadastro de tipo de despesa
+    router.push('/(home)/calculos/cadastro-tipo-despesa');
+  };
+
+  // Função para carregar tipos de despesa salvos
+  const loadExpenseTypes = () => {
+    try {
+      // TODO: Implementar chamada para API para carregar tipos de despesa
+      // Por enquanto, vamos usar AsyncStorage para persistir localmente
+      // const savedTypes = await AsyncStorage.getItem('expenseTypes');
+      // if (savedTypes) {
+      //   setExpenseTypes(JSON.parse(savedTypes));
+      // }
+    } catch (error) {
+      console.log('Erro ao carregar tipos de despesa:', error);
+    }
+  };
+
+  // Função para adicionar novo tipo de despesa à lista
+  const addExpenseType = (newType) => {
+    setExpenseTypes(prev => [...prev, newType]);
+    // TODO: Salvar na API e AsyncStorage
+  };
+
+  // Carregar tipos quando o componente montar
+  React.useEffect(() => {
+    loadExpenseTypes();
+  }, []);
+
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -159,18 +210,91 @@ export default function FinanceiroScreen() {
           {/* Tipo de despesa */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Tipo de despesa *</Text>
-            <View style={[styles.inputWithIcon, errors.tipoDespesa && styles.inputError]}>
-              <TextInput
-                style={styles.input}
-                placeholder="Ex: Combustível, Manutenção, Alimentação"
-                value={formData.tipoDespesa}
-                onChangeText={(value) => handleInputChange('tipoDespesa', value)}
-                placeholderTextColor="#666"
-              />
-              <Ionicons name="pricetag" size={20} color="#666" style={styles.inputIcon} />
-            </View>
+            
+            {/* Campo de seleção */}
+            <TouchableOpacity 
+              style={[styles.selectField, errors.tipoDespesa && styles.inputError]}
+              onPress={() => setShowExpenseTypeModal(true)}
+            >
+              <Text style={[
+                styles.selectText, 
+                !selectedExpenseType && styles.placeholderText
+              ]}>
+                {selectedExpenseType || "Selecione o tipo de despesa"}
+              </Text>
+              <Ionicons name="chevron-down" size={20} color="#666" />
+            </TouchableOpacity>
+            
             {errors.tipoDespesa && <Text style={styles.errorText}>{errors.tipoDespesa}</Text>}
           </View>
+
+          {/* Modal de seleção de tipo de despesa */}
+          <Modal
+            visible={showExpenseTypeModal}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setShowExpenseTypeModal(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Selecione o tipo de despesa</Text>
+                
+                <ScrollView style={styles.optionsList} showsVerticalScrollIndicator={false}>
+                  {expenseTypes.length === 0 ? (
+                    <View style={styles.emptyState}>
+                      <Ionicons name="document-outline" size={48} color="#ccc" />
+                      <Text style={styles.emptyStateText}>Nenhum tipo de despesa cadastrado</Text>
+                      <Text style={styles.emptyStateSubtext}>
+                        Clique em "Adicionar novo tipo" para começar
+                      </Text>
+                    </View>
+                  ) : (
+                    <>
+                      {expenseTypes.map((type, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          style={[
+                            styles.optionItem,
+                            selectedExpenseType === type && styles.optionItemSelected
+                          ]}
+                          onPress={() => selectExpenseType(type)}
+                        >
+                          <Text style={[
+                            styles.optionText,
+                            selectedExpenseType === type && styles.optionTextSelected
+                          ]}>
+                            {type}
+                          </Text>
+                          {selectedExpenseType === type && (
+                            <Ionicons name="checkmark" size={20} color="#007AFF" />
+                          )}
+                        </TouchableOpacity>
+                      ))}
+                      
+                      {/* Separador */}
+                      <View style={styles.separator} />
+                    </>
+                  )}
+                  
+                  {/* Opção para adicionar novo tipo */}
+                  <TouchableOpacity
+                    style={styles.addNewOption}
+                    onPress={handleAddNewExpenseType}
+                  >
+                    <Ionicons name="add-circle" size={20} color="#007AFF" />
+                    <Text style={styles.addNewOptionText}>Adicionar novo tipo</Text>
+                  </TouchableOpacity>
+                </ScrollView>
+                
+                <TouchableOpacity 
+                  style={styles.cancelButton} 
+                  onPress={() => setShowExpenseTypeModal(false)}
+                >
+                  <Text style={styles.cancelButtonText}>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
 
           {/* Descrição */}
           <View style={styles.inputContainer}>
@@ -347,5 +471,113 @@ const styles = StyleSheet.create({
   textArea: {
     minHeight: 80,
     paddingTop: 15,
+  },
+  selectField: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  selectText: {
+    fontSize: 16,
+    color: '#000',
+    flex: 1,
+  },
+  placeholderText: {
+    color: '#666',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    width: '90%',
+    maxHeight: '80%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  optionsList: {
+    maxHeight: 300,
+  },
+  optionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  optionItemSelected: {
+    backgroundColor: '#f8f9fa',
+  },
+  optionText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  optionTextSelected: {
+    fontWeight: '600',
+    color: '#007AFF',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#ddd',
+    marginVertical: 10,
+  },
+  addNewOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  addNewOptionText: {
+    fontSize: 16,
+    color: '#007AFF',
+    fontWeight: '600',
+    marginLeft: 10,
+  },
+  cancelButton: {
+    backgroundColor: '#ccc',
+    borderRadius: 8,
+    padding: 15,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  cancelButtonText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  emptyState: {
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  emptyStateText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#666',
+    marginTop: 15,
+    textAlign: 'center',
+  },
+  emptyStateSubtext: {
+    fontSize: 14,
+    color: '#999',
+    marginTop: 8,
+    textAlign: 'center',
   },
 });

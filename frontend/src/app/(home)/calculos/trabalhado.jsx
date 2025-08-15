@@ -286,7 +286,7 @@ export default function TrabalhadoScreen() {
         <View style={styles.form}>
           {/* Data */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Data *</Text>
+            <Text style={styles.label}>Data</Text>
             <TouchableOpacity 
               style={[styles.inputWithIcon, errors.data && styles.inputError]}
               onPress={showDatePickerModal}
@@ -439,7 +439,7 @@ export default function TrabalhadoScreen() {
           {/* Horários */}
           <View style={styles.row}>
             <View style={[styles.inputContainer, styles.halfWidth]}>
-              <Text style={styles.label}>Hora início *</Text>
+              <Text style={styles.label}>Hora início</Text>
               <TouchableOpacity 
                 style={[styles.inputWithIcon, errors.horaInicio && styles.inputError]}
                 onPress={() => showTimePickerModal('inicio')}
@@ -453,7 +453,7 @@ export default function TrabalhadoScreen() {
             </View>
 
             <View style={[styles.inputContainer, styles.halfWidth]}>
-              <Text style={styles.label}>Hora Fim *</Text>
+              <Text style={styles.label}>Hora Fim</Text>
               <TouchableOpacity 
                 style={[styles.inputWithIcon, errors.horaFim && styles.inputError]}
                 onPress={() => showTimePickerModal('fim')}
@@ -470,7 +470,7 @@ export default function TrabalhadoScreen() {
           {/* Quantidades */}
           <View style={styles.row}>
             <View style={[styles.inputContainer, styles.halfWidth]}>
-              <Text style={styles.label}>Entregas realizadas *</Text>
+              <Text style={styles.label}>Entregas realizadas</Text>
               <TextInput
                 style={[styles.input, errors.quantidadeEntregues && styles.inputError]}
                 placeholder="0"
@@ -483,7 +483,7 @@ export default function TrabalhadoScreen() {
             </View>
 
             <View style={[styles.inputContainer, styles.halfWidth]}>
-              <Text style={styles.label}>Entregas não realizadas *</Text>
+              <Text style={styles.label}>Entregas não realizadas</Text>
               <TextInput
                 style={[styles.input, errors.quantidadeNaoEntregues && styles.inputError]}
                 placeholder="0"
@@ -498,7 +498,7 @@ export default function TrabalhadoScreen() {
 
            {/* Tipo de Pagamento */}
            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Tipo do Pagamento *</Text>
+            <Text style={styles.label}>Tipo do Pagamento</Text>
             
             <View style={styles.paymentTypeContainer}>
               <TouchableOpacity
@@ -551,7 +551,7 @@ export default function TrabalhadoScreen() {
           {/* Campo de Valor Dinâmico */}
           {selectedPaymentType === 'Diária' && (
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Valor do dia *</Text>
+              <Text style={styles.label}>Valor do dia</Text>
               <View style={[styles.inputWithIcon, errors.valor && styles.inputError]}>
                 <TextInput
                   style={styles.input}
@@ -569,7 +569,7 @@ export default function TrabalhadoScreen() {
 
           {selectedPaymentType === 'Por Pacote' && (
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Valor do pacote *</Text>
+              <Text style={styles.label}>Valor do pacote</Text>
               <View style={[styles.inputWithIcon, errors.valor && styles.inputError]}>
                 <TextInput
                   style={styles.input}
@@ -657,7 +657,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   label: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: '600',
     color: '#000',
     marginBottom: 8,
