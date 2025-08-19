@@ -15,10 +15,10 @@ export const API_CONFIG = {
 // Endpoints da API
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: '/auth/login/',
-    REGISTER: '/auth/register/',
-    FORGOT_PASSWORD: '/auth/password/reset/',
-    REFRESH_TOKEN: '/auth/token/refresh/',
+    LOGIN: '/api/auth/login/',
+    REGISTER: '/api/auth/register/',
+    FORGOT_PASSWORD: '/api/auth/password/reset/',
+    REFRESH_TOKEN: '/api/auth/token/refresh/',
   },
   VEHICLES: {
     LIST: '/veiculos/',
@@ -37,9 +37,9 @@ export const API_ENDPOINTS = {
   EXPENSES: {
     LIST: '/despesas/',
     CREATE: '/despesas/',
-    DETAIL: (id) => `/despesas/${id}/`,
-    UPDATE: (id) => `/despesas/${id}/`,
-    DELETE: (id) => `/despesas/${id}/`,
+    DETAIL: (id) => `/entregas/${id}/`,
+    UPDATE: (id) => `/entregas/${id}/`,
+    DELETE: (id) => `/entregas/${id}/`,
   },
   REPORTS: {
     DASHBOARD: '/relatorios/dashboard/',
