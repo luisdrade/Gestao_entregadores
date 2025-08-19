@@ -27,11 +27,26 @@ def test_root(request):
         'status': 'OK'
     })
 
+def test_api(request):
+    """View simples para testar se a API está funcionando"""
+    return JsonResponse({
+        'success': True,
+        'message': 'API está funcionando!',
+        'endpoints': {
+            'test_connection': '/registro/api/test-connection/',
+            'registro_trabalho': '/registro/api/registro-trabalho/',
+            'registro_despesa': '/registro/api/registro-despesa/',
+        }
+    })
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Teste de conexão na raiz
     path('', test_root, name='test_root'),
+    
+    # Teste da API
+    path('api/test/', test_api, name='test_api'),
 
     # Suas APIs existentes
     path('api/', include('usuarios.urls')),
