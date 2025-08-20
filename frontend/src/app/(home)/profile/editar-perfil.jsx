@@ -9,31 +9,97 @@ import {
   SafeAreaView,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../../../services/api';
 import DatePicker from '../../../components/_DataComp';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import { TextInputMask } from 'react-native-masked-text';
+
+// Schema de validação
+const validationSchema = Yup.object().shape({
+  nome: Yup.string()
+    .trim()
+    .min(2, 'Nome deve ter pelo menos 2 caracteres')
+    .max(100, 'Nome deve ter no máximo 100 caracteres')
+    .required('Nome é obrigatório'),
+  email: Yup.string()
+    .trim()
+    .email('Email inválido')
+    .max(150, 'Email deve ter no máximo 150 caracteres')
+    .required('Email é obrigatório'),
+  telefone: Yup.string()
+    .trim()
+    .min(14, 'Telefone deve ter pelo menos 14 caracteres')
+    .max(15, 'Telefone deve ter no máximo 15 caracteres')
+    .required('Telefone é obrigatório'),
+  cpf: Yup.string()
+    .trim()
+    .min(14, 'CPF deve ter pelo menos 14 caracteres')
+    .max(14, 'CPF deve ter no máximo 14 caracteres')
+    .required('CPF é obrigatório'),
+  dataNascimento: Yup.string()
+    .trim()
+    .required('Data de nascimento é obrigatória')
+    .test('valid-date', 'Data de nascimento inválida', function(value) {
+      if (!value) return false;
+      
+      // Verificar formato DD/MM/AAAA
+      const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+      if (!dateRegex.test(value)) return false;
+      
+      const [, day, month, year] = value.match(dateRegex);
+      const dayNum = parseInt(day);
+      const monthNum = parseInt(month);
+      const yearNum = parseInt(year);
+      
+      // Verificar se é uma data válida
+      const date = new Date(yearNum, monthNum - 1, dayNum);
+      if (date.getDate() !== dayNum || date.getMonth() !== monthNum - 1 || date.getFullYear() !== yearNum) {
+        return false;
+      }
+      
+      // Verificar se não é uma data futura
+      const today = new Date();
+      if (date > today) return false;
+      
+      // Verificar se não é muito antiga (mais de 120 anos)
+      const minYear = today.getFullYear() - 120;
+      if (yearNum < minYear) return false;
+      
+      return true;
+    }),
+  endereco: Yup.string()
+    .trim()
+    .min(10, 'Endereço deve ter pelo menos 10 caracteres')
+    .max(200, 'Endereço deve ter no máximo 200 caracteres')
+    .required('Endereço é obrigatório'),
+  cep: Yup.string()
+    .trim()
+    .min(8, 'CEP deve ter pelo menos 8 caracteres')
+    .max(9, 'CEP deve ter no máximo 9 caracteres')
+    .required('CEP é obrigatório'),
+  cidade: Yup.string()
+    .trim()
+    .min(2, 'Cidade deve ter pelo menos 2 caracteres')
+    .max(100, 'Cidade deve ter no máximo 100 caracteres')
+    .required('Cidade é obrigatória'),
+  estado: Yup.string()
+    .trim()
+    .min(2, 'Estado deve ter pelo menos 2 caracteres')
+    .max(2, 'Estado deve ter no máximo 2 caracteres')
+    .required('Estado é obrigatório'),
+});
 
 export default function EditarPerfilScreen() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(null);
-  
-  const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    telefone: '',
-    cpf: '',
-    dataNascimento: '',
-    endereco: '',
-    cep: '',
-    cidade: '',
-    estado: ''
-  });
-
-  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     loadUserData();
@@ -45,19 +111,6 @@ export default function EditarPerfilScreen() {
       if (storedUser) {
         const userData = JSON.parse(storedUser);
         setUser(userData);
-        
-        // Preencher formulário com dados existentes
-        setFormData({
-          nome: userData.nome || '',
-          email: userData.email || '',
-          telefone: userData.telefone || '',
-          cpf: userData.cpf || '',
-          dataNascimento: userData.dataNascimento || '',
-          endereco: userData.endereco || '',
-          cep: userData.cep || '',
-          cidade: userData.cidade || '',
-          estado: userData.estado || ''
-        });
       }
     } catch (error) {
       console.error('Erro ao carregar dados do usuário:', error);
@@ -65,115 +118,11 @@ export default function EditarPerfilScreen() {
     }
   };
 
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-    
-    // Limpar erro do campo quando o usuário começa a digitar
-    if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: null
-      }));
-    }
-  };
-
-  // Função específica para mudança de data
-  const handleDateChange = (date) => {
-    handleInputChange('dataNascimento', date);
-  };
-
-  // Validar data de nascimento
-  const validateDate = (dateString) => {
-    if (!dateString) return false;
-    
-    // Verificar formato DD/MM/AAAA
-    const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-    if (!dateRegex.test(dateString)) return false;
-    
-    const [, day, month, year] = dateString.match(dateRegex);
-    const dayNum = parseInt(day);
-    const monthNum = parseInt(month);
-    const yearNum = parseInt(year);
-    
-    // Verificar se é uma data válida
-    const date = new Date(yearNum, monthNum - 1, dayNum);
-    if (date.getDate() !== dayNum || date.getMonth() !== monthNum - 1 || date.getFullYear() !== yearNum) {
-      return false;
-    }
-    
-    // Verificar se não é uma data futura
-    const today = new Date();
-    if (date > today) return false;
-    
-    // Verificar se não é muito antiga (mais de 120 anos)
-    const minYear = today.getFullYear() - 120;
-    if (yearNum < minYear) return false;
-    
-    return true;
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.nome.trim()) {
-      newErrors.nome = 'Nome é obrigatório';
-    } else if (formData.nome.trim().length < 3) {
-      newErrors.nome = 'Nome deve ter pelo menos 3 caracteres';
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email é obrigatório';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email inválido';
-    }
-
-    if (!formData.telefone.trim()) {
-      newErrors.telefone = 'Telefone é obrigatório';
-    }
-
-    if (!formData.cpf.trim()) {
-      newErrors.cpf = 'CPF é obrigatório';
-    }
-
-    if (!formData.dataNascimento.trim()) {
-      newErrors.dataNascimento = 'Data de nascimento é obrigatória';
-    } else if (!validateDate(formData.dataNascimento)) {
-      newErrors.dataNascimento = 'Data de nascimento inválida';
-    }
-
-    if (!formData.endereco.trim()) {
-      newErrors.endereco = 'Endereço é obrigatório';
-    }
-
-    if (!formData.cep.trim()) {
-      newErrors.cep = 'CEP é obrigatório';
-    }
-
-    if (!formData.cidade.trim()) {
-      newErrors.cidade = 'Cidade é obrigatória';
-    }
-
-    if (!formData.estado.trim()) {
-      newErrors.estado = 'Estado é obrigatório';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSalvar = async () => {
-    if (!validateForm()) {
-      Alert.alert('Erro de Validação', 'Por favor, corrija os erros nos campos destacados.');
-      return;
-    }
-
+  const handleSalvar = async (values, { setSubmitting, setFieldError }) => {
     setIsLoading(true);
     try {
       // Preparar dados para envio (converter data de DD/MM/AAAA para YYYY-MM-DD)
-      const dataToSend = { ...formData };
+      const dataToSend = { ...values };
       
       if (dataToSend.dataNascimento) {
         const [day, month, year] = dataToSend.dataNascimento.split('/');
@@ -212,9 +161,20 @@ export default function EditarPerfilScreen() {
     } catch (error) {
       console.error('Erro ao salvar perfil:', error);
       console.error('Detalhes do erro:', error.response?.data);
-      Alert.alert('Erro', `Erro ao atualizar perfil: ${error.response?.data?.message || error.message}`);
+      
+      // Tratar erros específicos do backend
+      if (error.response?.data?.errors) {
+        // Se o backend retornou erros de validação específicos
+        Object.keys(error.response.data.errors).forEach(field => {
+          const fieldName = field === 'data_nascimento' ? 'dataNascimento' : field;
+          setFieldError(fieldName, error.response.data.errors[field][0]);
+        });
+      } else {
+        Alert.alert('Erro', `Erro ao atualizar perfil: ${error.response?.data?.message || error.message}`);
+      }
     } finally {
       setIsLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -232,6 +192,19 @@ export default function EditarPerfilScreen() {
     );
   }
 
+  // Valores iniciais para o Formik
+  const initialValues = {
+    nome: user.nome || '',
+    email: user.email || '',
+    telefone: user.telefone || '',
+    cpf: user.cpf || '',
+    dataNascimento: user.dataNascimento || '',
+    endereco: user.endereco || '',
+    cep: user.cep || '',
+    cidade: user.cidade || '',
+    estado: user.estado || ''
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -246,153 +219,236 @@ export default function EditarPerfilScreen() {
       </View>
 
       {/* Content */}
-      <ScrollView 
-        style={styles.content} 
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView 
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <Text style={styles.title}>Edite suas informações pessoais</Text>
+        <ScrollView 
+          style={styles.content} 
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.title}>Edite suas informações pessoais</Text>
 
-        <View style={styles.form}>
-          {/* Nome */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Nome completo *</Text>
-            <TextInput
-              style={[styles.input, errors.nome && styles.inputError]}
-              placeholder="Digite seu nome completo"
-              value={formData.nome}
-              onChangeText={(value) => handleInputChange('nome', value)}
-              placeholderTextColor="#666"
-            />
-            {errors.nome && <Text style={styles.errorText}>{errors.nome}</Text>}
-          </View>
-
-          {/* Email */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email *</Text>
-            <TextInput
-              style={[styles.input, errors.email && styles.inputError]}
-              placeholder="Digite seu email"
-              value={formData.email}
-              onChangeText={(value) => handleInputChange('email', value)}
-              placeholderTextColor="#666"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-            {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-          </View>
-
-          {/* Telefone */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Telefone *</Text>
-            <TextInput
-              style={[styles.input, errors.telefone && styles.inputError]}
-              placeholder="(11) 99999-9999"
-              value={formData.telefone}
-              onChangeText={(value) => handleInputChange('telefone', value)}
-              placeholderTextColor="#666"
-              keyboardType="phone-pad"
-            />
-            {errors.telefone && <Text style={styles.errorText}>{errors.telefone}</Text>}
-          </View>
-
-          {/* CPF */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>CPF *</Text>
-            <TextInput
-              style={[styles.input, errors.cpf && styles.inputError]}
-              placeholder="123.456.789-00"
-              value={formData.cpf}
-              onChangeText={(value) => handleInputChange('cpf', value)}
-              placeholderTextColor="#666"
-              keyboardType="numeric"
-            />
-            {errors.cpf && <Text style={styles.errorText}>{errors.cpf}</Text>}
-          </View>
-
-          {/* Data de Nascimento - Usando o componente DatePicker */}
-          <DatePicker
-            value={formData.dataNascimento}
-            onDateChange={handleDateChange}
-            placeholder="DD/MM/AAAA"
-            label="Data de Nascimento *"
-            error={!!errors.dataNascimento}
-            errorMessage={errors.dataNascimento}
-            style={styles.datePickerContainer}
-          />
-
-          {/* Endereço */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Endereço *</Text>
-            <TextInput
-              style={[styles.input, styles.textArea, errors.endereco && styles.inputError]}
-              placeholder="Rua, número, bairro"
-              value={formData.endereco}
-              onChangeText={(value) => handleInputChange('endereco', value)}
-              placeholderTextColor="#666"
-              multiline
-              numberOfLines={2}
-            />
-            {errors.endereco && <Text style={styles.errorText}>{errors.endereco}</Text>}
-          </View>
-
-          {/* CEP, Cidade e Estado em linha */}
-          <View style={styles.row}>
-            <View style={[styles.inputContainer, styles.halfWidth]}>
-              <Text style={styles.label}>CEP *</Text>
-              <TextInput
-                style={[styles.input, errors.cep && styles.inputError]}
-                placeholder="01234-567"
-                value={formData.cep}
-                onChangeText={(value) => handleInputChange('cep', value)}
-                placeholderTextColor="#666"
-                keyboardType="numeric"
-              />
-              {errors.cep && <Text style={styles.errorText}>{errors.cep}</Text>}
-            </View>
-
-            <View style={[styles.inputContainer, styles.halfWidth]}>
-              <Text style={styles.label}>Cidade *</Text>
-              <TextInput
-                style={[styles.input, errors.cidade && styles.inputError]}
-                placeholder="São Paulo"
-                value={formData.cidade}
-                onChangeText={(value) => handleInputChange('cidade', value)}
-                placeholderTextColor="#666"
-              />
-              {errors.cidade && <Text style={styles.errorText}>{errors.cidade}</Text>}
-            </View>
-          </View>
-
-          {/* Estado */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Estado *</Text>
-            <TextInput
-              style={[styles.input, errors.estado && styles.inputError]}
-              placeholder="SP"
-              value={formData.estado}
-              onChangeText={(value) => handleInputChange('estado', value)}
-              placeholderTextColor="#666"
-              maxLength={2}
-              autoCapitalize="characters"
-            />
-            {errors.estado && <Text style={styles.errorText}>{errors.estado}</Text>}
-          </View>
-
-          {/* Botão de salvar */}
-          <TouchableOpacity 
-            style={[styles.saveButton, isLoading && styles.buttonDisabled]} 
-            onPress={handleSalvar}
-            disabled={isLoading}
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSalvar}
           >
-            {isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.saveButtonText}>Salvar Alterações</Text>
+            {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
+              <View style={styles.form}>
+                {Object.keys(errors).length > 0 && (
+                  <View style={styles.errorSummary}>
+                    <Ionicons name="warning" size={20} color="#FF6B6B" />
+                    <Text style={styles.errorSummaryText}>
+                      {Object.keys(errors).length} campo(s) com erro(s) para corrigir
+                    </Text>
+                  </View>
+                )}
+
+                {/* Nome */}
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Nome completo *</Text>
+                  <TextInput
+                    style={[
+                      styles.input, 
+                      touched.nome && errors.nome && styles.inputError
+                    ]}
+                    placeholder="Digite seu nome completo"
+                    value={values.nome}
+                    onChangeText={handleChange('nome')}
+                    onBlur={handleBlur('nome')}
+                    placeholderTextColor="#666"
+                  />
+                  {touched.nome && errors.nome && (
+                    <Text style={styles.errorText}>{errors.nome}</Text>
+                  )}
+                </View>
+
+                {/* Email */}
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Email *</Text>
+                  <TextInput
+                    style={[
+                      styles.input, 
+                      touched.email && errors.email && styles.inputError
+                    ]}
+                    placeholder="Digite seu email"
+                    value={values.email}
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
+                    placeholderTextColor="#666"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                  {touched.email && errors.email && (
+                    <Text style={styles.errorText}>{errors.email}</Text>
+                  )}
+                </View>
+
+                {/* Telefone */}
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Telefone *</Text>
+                  <TextInputMask
+                    type={'cel-phone'}
+                    options={{ maskType: 'BRL', withDDD: true, dddMask: '(99) ' }}
+                    placeholder="(11) 99999-9999"
+                    style={[
+                      styles.input, 
+                      touched.telefone && errors.telefone && styles.inputError
+                    ]}
+                    keyboardType="phone-pad"
+                    value={values.telefone}
+                    onChangeText={text => setFieldValue('telefone', text)}
+                    onBlur={handleBlur('telefone')}
+                    placeholderTextColor="#666"
+                  />
+                  {touched.telefone && errors.telefone && (
+                    <Text style={styles.errorText}>{errors.telefone}</Text>
+                  )}
+                </View>
+
+                {/* CPF */}
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>CPF *</Text>
+                  <TextInputMask
+                    type={'cpf'}
+                    placeholder="123.456.789-00"
+                    style={[
+                      styles.input, 
+                      touched.cpf && errors.cpf && styles.inputError
+                    ]}
+                    keyboardType="numeric"
+                    value={values.cpf}
+                    onChangeText={text => setFieldValue('cpf', text)}
+                    onBlur={handleBlur('cpf')}
+                    placeholderTextColor="#666"
+                  />
+                  {touched.cpf && errors.cpf && (
+                    <Text style={styles.errorText}>{errors.cpf}</Text>
+                  )}
+                </View>
+
+                {/* Data de Nascimento */}
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Data de Nascimento *</Text>
+                  <DatePicker
+                    value={values.dataNascimento}
+                    onDateChange={(date) => setFieldValue('dataNascimento', date)}
+                    placeholder="DD/MM/AAAA"
+                    error={touched.dataNascimento && !!errors.dataNascimento}
+                    errorMessage={touched.dataNascimento && errors.dataNascimento}
+                    style={styles.datePickerContainer}
+                  />
+                </View>
+
+                {/* Endereço */}
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Endereço *</Text>
+                  <TextInput
+                    style={[
+                      styles.input, 
+                      styles.textArea, 
+                      touched.endereco && errors.endereco && styles.inputError
+                    ]}
+                    placeholder="Rua, número, bairro"
+                    value={values.endereco}
+                    onChangeText={handleChange('endereco')}
+                    onBlur={handleBlur('endereco')}
+                    placeholderTextColor="#666"
+                    multiline
+                    numberOfLines={2}
+                  />
+                  {touched.endereco && errors.endereco && (
+                    <Text style={styles.errorText}>{errors.endereco}</Text>
+                  )}
+                </View>
+
+                {/* CEP, Cidade e Estado em linha */}
+                <View style={styles.row}>
+                  <View style={[styles.inputContainer, styles.halfWidth]}>
+                    <Text style={styles.label}>CEP *</Text>
+                    <TextInputMask
+                      type={'zip-code'}
+                      placeholder="01234-567"
+                      style={[
+                        styles.input, 
+                        touched.cep && errors.cep && styles.inputError
+                      ]}
+                      keyboardType="numeric"
+                      value={values.cep}
+                      onChangeText={text => setFieldValue('cep', text)}
+                      onBlur={handleBlur('cep')}
+                      placeholderTextColor="#666"
+                    />
+                    {touched.cep && errors.cep && (
+                      <Text style={styles.errorText}>{errors.cep}</Text>
+                    )}
+                  </View>
+
+                  <View style={[styles.inputContainer, styles.halfWidth]}>
+                    <Text style={styles.label}>Cidade *</Text>
+                    <TextInput
+                      style={[
+                        styles.input, 
+                        touched.cidade && errors.cidade && styles.inputError
+                      ]}
+                      placeholder="São Paulo"
+                      value={values.cidade}
+                      onChangeText={handleChange('cidade')}
+                      onBlur={handleBlur('cidade')}
+                      placeholderTextColor="#666"
+                    />
+                    {touched.cidade && errors.cidade && (
+                      <Text style={styles.errorText}>{errors.cidade}</Text>
+                    )}
+                  </View>
+                </View>
+
+                {/* Estado */}
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Estado *</Text>
+                  <TextInput
+                    style={[
+                      styles.input, 
+                      touched.estado && errors.estado && styles.inputError
+                    ]}
+                    placeholder="SP"
+                    value={values.estado}
+                    onChangeText={handleChange('estado')}
+                    onBlur={handleBlur('estado')}
+                    placeholderTextColor="#666"
+                    maxLength={2}
+                    autoCapitalize="characters"
+                  />
+                  {touched.estado && errors.estado && (
+                    <Text style={styles.errorText}>{errors.estado}</Text>
+                  )}
+                </View>
+
+                {/* Botão de salvar */}
+                <TouchableOpacity 
+                  style={[
+                    styles.saveButton, 
+                    isLoading && styles.buttonDisabled,
+                    !isLoading && Object.keys(errors).length > 0 && styles.buttonWithErrors
+                  ]} 
+                  onPress={handleSubmit}
+                  disabled={isLoading || Object.keys(errors).length > 0}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.saveButtonText}>
+                      {Object.keys(errors).length > 0 ? 'Corrija os erros' : 'Salvar Alterações'}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
             )}
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+          </Formik>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -497,7 +553,29 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     backgroundColor: '#ccc',
   },
+  buttonWithErrors: {
+    backgroundColor: '#FF6B6B',
+  },
   datePickerContainer: {
     marginTop: 10,
+  },
+  keyboardContainer: {
+    flex: 1,
+  },
+  errorSummary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFBEB',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
+  },
+  errorSummaryText: {
+    color: '#991B1B',
+    fontSize: 14,
+    marginLeft: 8,
+    fontWeight: '600',
   },
 });
