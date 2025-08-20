@@ -48,15 +48,12 @@ urlpatterns = [
     # Teste da API
     path('api/test/', test_api, name='test_api'),
 
-    # Suas APIs existentes
+    # API de usuários
     path('api/', include('usuarios.urls')),
 
     # Endpoints REST de autenticação e social login
     path('api/auth/', include('dj_rest_auth.urls')),             # login/logout/password reset
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # registro e verificação de email
-    
-    #app de usuarios
-    path('usuarios/', include('usuarios.urls')),
     
     path('registro/', include('registro_entregadespesa.urls')),
     

@@ -19,7 +19,13 @@ export default function DatePicker({
   style = {}
 }) {
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(value ? new Date(value) : new Date());
+  
+  // Inicializar com data atual
+  const getInitialDate = () => {
+    return new Date();
+  };
+
+  const [selectedDate, setSelectedDate] = useState(getInitialDate());
 
   const showDatePickerModal = () => {
     setShowDatePicker(true);
@@ -149,7 +155,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   label: {
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: '600',
     color: '#000',
     marginBottom: 8,

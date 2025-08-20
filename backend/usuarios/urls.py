@@ -22,4 +22,7 @@ urlpatterns = [
     path('entregadores/me/', EntregadorMeView.as_view(), name='entregador_me'), # EntregadorMeView para ver o usuário logado
 
     path('logout/', LogoutView.as_view(), name='logout'),
+    
+    # Endpoint para verificar username (mantido para compatibilidade)
+    path('check-username/<str:username>/', views.check_username, name='check_username'),
 ]

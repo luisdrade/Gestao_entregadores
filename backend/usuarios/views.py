@@ -3,6 +3,18 @@ from .forms import EntregadorForm
 from .models import Entregador
 
 from django.http import HttpResponse
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+import json
 
 from rest_framework import viewsets, permissions, status # viewsets Organiza a lógica da API | permissions Controla o acesso | status Gerencia o status da resposta
 from rest_framework.response import Response # Formata as respostas da API
@@ -102,39 +114,28 @@ class EntregadorViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
 
+    def update(self, request, *args, **kwargs):
+        """Atualiza os dados de um entregador"""
+        try:
+            instance = self.get_object()
+            serializer = self.get_serializer(instance, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            
+            return Response({
+                'success': True,
+                'message': 'Perfil atualizado com sucesso',
+                'user': serializer.data
+            })
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': f'Erro ao atualizar perfil: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class EntregadorMeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
-def create(self, request, *args, **kwargs):
-    serializer = self.get_serializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-
-    # Cria o objeto mas ainda não salva no banco
-    user = serializer.save()
-
-    # Criptografa a senha
-    user.set_password(serializer.validated_data['password'])
-
-    user.save()
-
-    headers = self.get_success_headers(serializer.data)
-    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
     def get(self, request):
         serializer = EntregadorSerializer(request.user)
@@ -196,3 +197,22 @@ class GoogleLogin(APIView):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         })
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def check_username(request, username):
+    """
+    Verifica se um username está disponível
+    """
+    try:
+        # Verificar se o username já existe
+        exists = Entregador.objects.filter(username=username).exists()
+        
+        return Response({
+            'available': not exists,
+            'username': username
+        })
+    except Exception as e:
+        return Response({
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

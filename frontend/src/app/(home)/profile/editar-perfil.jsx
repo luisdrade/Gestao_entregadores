@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,24 +12,58 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import TopNavBar from '../../../components/_NavBar_Superior';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { api } from '../../../services/api';
+import DatePicker from '../../../components/_DataComp';
 
 export default function EditarPerfilScreen() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  
   const [formData, setFormData] = useState({
-    nome: 'João Silva',
-    email: 'joao@email.com',
-    telefone: '(11) 99999-9999',
-    cpf: '123.456.789-00',
-    dataNascimento: '15/03/1990',
-    endereco: 'Rua das Flores, 123 - São Paulo/SP',
-    cep: '01234-567',
-    cidade: 'São Paulo',
-    estado: 'SP'
+    nome: '',
+    email: '',
+    telefone: '',
+    cpf: '',
+    dataNascimento: '',
+    endereco: '',
+    cep: '',
+    cidade: '',
+    estado: ''
   });
 
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem('@GestaoEntregadores:user');
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+        
+        // Preencher formulário com dados existentes
+        setFormData({
+          nome: userData.nome || '',
+          email: userData.email || '',
+          telefone: userData.telefone || '',
+          cpf: userData.cpf || '',
+          dataNascimento: userData.dataNascimento || '',
+          endereco: userData.endereco || '',
+          cep: userData.cep || '',
+          cidade: userData.cidade || '',
+          estado: userData.estado || ''
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dados do usuário:', error);
+      Alert.alert('Erro', 'Erro ao carregar dados do usuário');
+    }
+  };
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -44,6 +78,41 @@ export default function EditarPerfilScreen() {
         [field]: null
       }));
     }
+  };
+
+  // Função específica para mudança de data
+  const handleDateChange = (date) => {
+    handleInputChange('dataNascimento', date);
+  };
+
+  // Validar data de nascimento
+  const validateDate = (dateString) => {
+    if (!dateString) return false;
+    
+    // Verificar formato DD/MM/AAAA
+    const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    if (!dateRegex.test(dateString)) return false;
+    
+    const [, day, month, year] = dateString.match(dateRegex);
+    const dayNum = parseInt(day);
+    const monthNum = parseInt(month);
+    const yearNum = parseInt(year);
+    
+    // Verificar se é uma data válida
+    const date = new Date(yearNum, monthNum - 1, dayNum);
+    if (date.getDate() !== dayNum || date.getMonth() !== monthNum - 1 || date.getFullYear() !== yearNum) {
+      return false;
+    }
+    
+    // Verificar se não é uma data futura
+    const today = new Date();
+    if (date > today) return false;
+    
+    // Verificar se não é muito antiga (mais de 120 anos)
+    const minYear = today.getFullYear() - 120;
+    if (yearNum < minYear) return false;
+    
+    return true;
   };
 
   const validateForm = () => {
@@ -71,6 +140,8 @@ export default function EditarPerfilScreen() {
 
     if (!formData.dataNascimento.trim()) {
       newErrors.dataNascimento = 'Data de nascimento é obrigatória';
+    } else if (!validateDate(formData.dataNascimento)) {
+      newErrors.dataNascimento = 'Data de nascimento inválida';
     }
 
     if (!formData.endereco.trim()) {
@@ -101,19 +172,47 @@ export default function EditarPerfilScreen() {
 
     setIsLoading(true);
     try {
-      // TODO: Implementar chamada para API para salvar o perfil
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Preparar dados para envio (converter data de DD/MM/AAAA para YYYY-MM-DD)
+      const dataToSend = { ...formData };
       
-      Alert.alert('Sucesso', 'Perfil atualizado com sucesso!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            router.back();
+      if (dataToSend.dataNascimento) {
+        const [day, month, year] = dataToSend.dataNascimento.split('/');
+        dataToSend.data_nascimento = `${year}-${month}-${day}`;
+        delete dataToSend.dataNascimento; // Remover campo antigo
+      }
+
+      console.log('Dados a serem enviados:', dataToSend);
+
+      // Salvar no backend
+      const response = await api.put(`/api/entregadores/${user.id}/`, dataToSend);
+      
+      console.log('Resposta do backend:', response.data);
+      
+      if (response.data.success) {
+        // Atualizar dados locais com a resposta do backend
+        const updatedUserData = {
+          ...user,
+          ...response.data.user
+        };
+        
+        // Atualizar AsyncStorage
+        await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(updatedUserData));
+        
+        Alert.alert('Sucesso', 'Perfil atualizado com sucesso!', [
+          {
+            text: 'OK',
+            onPress: () => {
+              router.back();
+            }
           }
-        }
-      ]);
+        ]);
+      } else {
+        throw new Error(response.data.message || 'Erro ao atualizar perfil');
+      }
     } catch (error) {
-      Alert.alert('Erro', 'Erro inesperado ao atualizar perfil. Tente novamente.');
+      console.error('Erro ao salvar perfil:', error);
+      console.error('Detalhes do erro:', error.response?.data);
+      Alert.alert('Erro', `Erro ao atualizar perfil: ${error.response?.data?.message || error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -122,6 +221,16 @@ export default function EditarPerfilScreen() {
   const handleBack = () => {
     router.back();
   };
+
+  if (!user) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Carregando...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -201,19 +310,16 @@ export default function EditarPerfilScreen() {
             {errors.cpf && <Text style={styles.errorText}>{errors.cpf}</Text>}
           </View>
 
-          {/* Data de Nascimento */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Data de Nascimento *</Text>
-            <TextInput
-              style={[styles.input, errors.dataNascimento && styles.inputError]}
-              placeholder="DD/MM/AAAA"
-              value={formData.dataNascimento}
-              onChangeText={(value) => handleInputChange('dataNascimento', value)}
-              placeholderTextColor="#666"
-              keyboardType="numeric"
-            />
-            {errors.dataNascimento && <Text style={styles.errorText}>{errors.dataNascimento}</Text>}
-          </View>
+          {/* Data de Nascimento - Usando o componente DatePicker */}
+          <DatePicker
+            value={formData.dataNascimento}
+            onDateChange={handleDateChange}
+            placeholder="DD/MM/AAAA"
+            label="Data de Nascimento *"
+            error={!!errors.dataNascimento}
+            errorMessage={errors.dataNascimento}
+            style={styles.datePickerContainer}
+          />
 
           {/* Endereço */}
           <View style={styles.inputContainer}>
@@ -318,7 +424,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   placeholder: {
-    width: 36, // Mesmo tamanho do botão voltar para centralizar o título
+    width: 36,
   },
   content: {
     flex: 1,
@@ -390,5 +496,8 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     backgroundColor: '#ccc',
+  },
+  datePickerContainer: {
+    marginTop: 10,
   },
 });
