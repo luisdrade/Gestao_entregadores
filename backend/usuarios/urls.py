@@ -25,4 +25,7 @@ urlpatterns = [
     
     # Endpoint para verificar username (mantido para compatibilidade)
     path('check-username/<str:username>/', views.check_username, name='check_username'),
+    
+    # Endpoint para alterar senha
+    path('change-password/<int:pk>/', views.change_password, name='change_password'),
 ]

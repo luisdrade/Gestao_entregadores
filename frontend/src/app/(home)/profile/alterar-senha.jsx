@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,36 +12,51 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { api } from '../../../services/api';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+// Schema de validação
+const validationSchema = Yup.object().shape({
+  senhaAtual: Yup.string()
+    .trim()
+    .min(1, 'Senha atual é obrigatória')
+    .required('Senha atual é obrigatória'),
+  novaSenha: Yup.string()
+    .trim()
+    .min(6, 'Nova senha deve ter pelo menos 6 caracteres')
+    .required('Nova senha é obrigatória'),
+  confirmarSenha: Yup.string()
+    .trim()
+    .oneOf([Yup.ref('novaSenha'), null], 'As senhas não coincidem')
+    .required('Confirmação de senha é obrigatória'),
+});
 
 export default function AlterarSenhaScreen() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState(null);
   const [showPasswords, setShowPasswords] = useState({
     senhaAtual: false,
     novaSenha: false,
     confirmarSenha: false,
   });
-  
-  const [formData, setFormData] = useState({
-    senhaAtual: '',
-    novaSenha: '',
-    confirmarSenha: '',
-  });
 
-  const [errors, setErrors] = useState({});
+  useEffect(() => {
+    loadUserData();
+  }, []);
 
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-    
-    // Limpar erro do campo quando o usuário começa a digitar
-    if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: null
-      }));
+  const loadUserData = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem('@GestaoEntregadores:user');
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dados do usuário:', error);
+      Alert.alert('Erro', 'Erro ao carregar dados do usuário');
     }
   };
 
@@ -52,69 +67,80 @@ export default function AlterarSenhaScreen() {
     }));
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.senhaAtual.trim()) {
-      newErrors.senhaAtual = 'Senha atual é obrigatória';
-    }
-
-    if (!formData.novaSenha.trim()) {
-      newErrors.novaSenha = 'Nova senha é obrigatória';
-    } else if (formData.novaSenha.length < 6) {
-      newErrors.novaSenha = 'Nova senha deve ter pelo menos 6 caracteres';
-    }
-
-    if (!formData.confirmarSenha.trim()) {
-      newErrors.confirmarSenha = 'Confirmação de senha é obrigatória';
-    } else if (formData.novaSenha !== formData.confirmarSenha) {
-      newErrors.confirmarSenha = 'As senhas não coincidem';
-    }
-
-    if (formData.senhaAtual === formData.novaSenha) {
-      newErrors.novaSenha = 'A nova senha deve ser diferente da atual';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleAlterarSenha = async () => {
-    if (!validateForm()) {
-      Alert.alert('Erro de Validação', 'Por favor, corrija os erros nos campos destacados.');
+  const handleAlterarSenha = async (values, { setSubmitting, setFieldError, resetForm }) => {
+    if (!user) {
+      Alert.alert('Erro', 'Usuário não encontrado');
       return;
     }
 
     setIsLoading(true);
     try {
-      // TODO: Implementar chamada para API para alterar a senha
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Alterando senha para usuário:', user.id);
       
-      Alert.alert('Sucesso', 'Senha alterada com sucesso!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            // Limpar formulário
-            setFormData({
-              senhaAtual: '',
-              novaSenha: '',
-              confirmarSenha: '',
-            });
-            setErrors({});
-            router.back();
+      // Chamada para API para alterar a senha
+      const response = await api.put(`/api/change-password/${user.id}/`, {
+        senhaAtual: values.senhaAtual,
+        novaSenha: values.novaSenha
+      });
+      
+      console.log('Resposta da API:', response.data);
+      
+      if (response.data.success) {
+        Alert.alert('Sucesso', 'Senha alterada com sucesso!', [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Limpar formulário
+              resetForm();
+              setShowPasswords({
+                senhaAtual: false,
+                novaSenha: false,
+                confirmarSenha: false,
+              });
+              router.back();
+            }
           }
-        }
-      ]);
+        ]);
+      } else {
+        throw new Error(response.data.message || 'Erro ao alterar senha');
+      }
     } catch (error) {
-      Alert.alert('Erro', 'Erro inesperado ao alterar senha. Tente novamente.');
+      console.error('Erro ao alterar senha:', error);
+      console.error('Detalhes do erro:', error.response?.data);
+      
+      // Tratar erros específicos do backend
+      if (error.response?.data?.message) {
+        const errorMessage = error.response.data.message;
+        
+        if (errorMessage.includes('Senha atual incorreta')) {
+          setFieldError('senhaAtual', 'Senha atual incorreta');
+        } else if (errorMessage.includes('nova senha deve ser diferente')) {
+          setFieldError('novaSenha', 'A nova senha deve ser diferente da atual');
+        } else {
+          Alert.alert('Erro', errorMessage);
+        }
+      } else {
+        Alert.alert('Erro', 'Erro inesperado ao alterar senha. Tente novamente.');
+      }
     } finally {
       setIsLoading(false);
+      setSubmitting(false);
     }
   };
 
   const handleBack = () => {
     router.back();
   };
+
+  if (!user) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Carregando...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -138,116 +164,151 @@ export default function AlterarSenhaScreen() {
         <Text style={styles.title}>Altere sua senha</Text>
         <Text style={styles.subtitle}>Digite sua senha atual e a nova senha desejada</Text>
 
-        <View style={styles.form}>
-          {/* Senha Atual */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Senha Atual *</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={[styles.passwordInput, errors.senhaAtual && styles.inputError]}
-                placeholder="Digite sua senha atual"
-                value={formData.senhaAtual}
-                onChangeText={(value) => handleInputChange('senhaAtual', value)}
-                placeholderTextColor="#666"
-                secureTextEntry={!showPasswords.senhaAtual}
-              />
+        <Formik
+          initialValues={{
+            senhaAtual: '',
+            novaSenha: '',
+            confirmarSenha: '',
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleAlterarSenha}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
+            <View style={styles.form}>
+              {/* Senha Atual */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Senha Atual *</Text>
+                <View style={[
+                  styles.passwordContainer, 
+                  touched.senhaAtual && errors.senhaAtual && styles.inputError
+                ]}>
+                  <TextInput
+                    style={styles.passwordInput}
+                    placeholder="Digite sua senha atual"
+                    value={values.senhaAtual}
+                    onChangeText={handleChange('senhaAtual')}
+                    onBlur={handleBlur('senhaAtual')}
+                    placeholderTextColor="#666"
+                    secureTextEntry={!showPasswords.senhaAtual}
+                  />
+                  <TouchableOpacity 
+                    style={styles.eyeButton}
+                    onPress={() => togglePasswordVisibility('senhaAtual')}
+                  >
+                    <Ionicons 
+                      name={showPasswords.senhaAtual ? "eye-off" : "eye"} 
+                      size={20} 
+                      color="#666" 
+                    />
+                  </TouchableOpacity>
+                </View>
+                {touched.senhaAtual && errors.senhaAtual && (
+                  <Text style={styles.errorText}>{errors.senhaAtual}</Text>
+                )}
+              </View>
+
+              {/* Nova Senha */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Nova Senha *</Text>
+                <View style={[
+                  styles.passwordContainer, 
+                  touched.novaSenha && errors.novaSenha && styles.inputError
+                ]}>
+                  <TextInput
+                    style={styles.passwordInput}
+                    placeholder="Digite a nova senha"
+                    value={values.novaSenha}
+                    onChangeText={handleChange('novaSenha')}
+                    onBlur={handleBlur('novaSenha')}
+                    placeholderTextColor="#666"
+                    secureTextEntry={!showPasswords.novaSenha}
+                  />
+                  <TouchableOpacity 
+                    style={styles.eyeButton}
+                    onPress={() => togglePasswordVisibility('novaSenha')}
+                  >
+                    <Ionicons 
+                      name={showPasswords.novaSenha ? "eye-off" : "eye"} 
+                      size={20} 
+                      color="#666" 
+                    />
+                  </TouchableOpacity>
+                </View>
+                {touched.novaSenha && errors.novaSenha && (
+                  <Text style={styles.errorText}>{errors.novaSenha}</Text>
+                )}
+                <Text style={styles.helpText}>Mínimo de 6 caracteres</Text>
+              </View>
+
+              {/* Confirmar Nova Senha */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Confirmar Nova Senha *</Text>
+                <View style={[
+                  styles.passwordContainer, 
+                  touched.confirmarSenha && errors.confirmarSenha && styles.inputError
+                ]}>
+                  <TextInput
+                    style={styles.passwordInput}
+                    placeholder="Confirme a nova senha"
+                    value={values.confirmarSenha}
+                    onChangeText={handleChange('confirmarSenha')}
+                    onBlur={handleBlur('confirmarSenha')}
+                    placeholderTextColor="#666"
+                    secureTextEntry={!showPasswords.confirmarSenha}
+                  />
+                  <TouchableOpacity 
+                    style={styles.eyeButton}
+                    onPress={() => togglePasswordVisibility('confirmarSenha')}
+                  >
+                    <Ionicons 
+                      name={showPasswords.confirmarSenha ? "eye-off" : "eye"} 
+                      size={20} 
+                      color="#666" 
+                    />
+                  </TouchableOpacity>
+                </View>
+                {touched.confirmarSenha && errors.confirmarSenha && (
+                  <Text style={styles.errorText}>{errors.confirmarSenha}</Text>
+                )}
+              </View>
+
+              {/* Dicas de Segurança */}
+              <View style={styles.securityTips}>
+                <Text style={styles.securityTitle}>Dicas para uma senha segura:</Text>
+                <View style={styles.tipItem}>
+                  <Ionicons name="checkmark-circle" size={16} color="#34C759" />
+                  <Text style={styles.tipText}>Use pelo menos 6 caracteres</Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Ionicons name="checkmark-circle" size={16} color="#34C759" />
+                  <Text style={styles.tipText}>Combine letras, números e símbolos</Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Ionicons name="checkmark-circle" size={16} color="#34C759" />
+                  <Text style={styles.tipText}>Evite informações pessoais</Text>
+                </View>
+              </View>
+
+              {/* Botão de alterar senha */}
               <TouchableOpacity 
-                style={styles.eyeButton}
-                onPress={() => togglePasswordVisibility('senhaAtual')}
+                style={[
+                  styles.changeButton, 
+                  (isLoading || Object.keys(errors).length > 0) && styles.buttonDisabled
+                ]} 
+                onPress={handleSubmit}
+                disabled={isLoading || Object.keys(errors).length > 0}
               >
-                <Ionicons 
-                  name={showPasswords.senhaAtual ? "eye-off" : "eye"} 
-                  size={20} 
-                  color="#666" 
-                />
+                {isLoading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.changeButtonText}>
+                    {Object.keys(errors).length > 0 ? 'Corrija os erros' : 'Alterar Senha'}
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
-            {errors.senhaAtual && <Text style={styles.errorText}>{errors.senhaAtual}</Text>}
-          </View>
-
-          {/* Nova Senha */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Nova Senha *</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={[styles.passwordInput, errors.novaSenha && styles.inputError]}
-                placeholder="Digite a nova senha"
-                value={formData.novaSenha}
-                onChangeText={(value) => handleInputChange('novaSenha', value)}
-                placeholderTextColor="#666"
-                secureTextEntry={!showPasswords.novaSenha}
-              />
-              <TouchableOpacity 
-                style={styles.eyeButton}
-                onPress={() => togglePasswordVisibility('novaSenha')}
-              >
-                <Ionicons 
-                  name={showPasswords.novaSenha ? "eye-off" : "eye"} 
-                  size={20} 
-                  color="#666" 
-                />
-              </TouchableOpacity>
-            </View>
-            {errors.novaSenha && <Text style={styles.errorText}>{errors.novaSenha}</Text>}
-            <Text style={styles.helpText}>Mínimo de 6 caracteres</Text>
-          </View>
-
-          {/* Confirmar Nova Senha */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Confirmar Nova Senha *</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={[styles.passwordInput, errors.confirmarSenha && styles.inputError]}
-                placeholder="Confirme a nova senha"
-                value={formData.confirmarSenha}
-                onChangeText={(value) => handleInputChange('confirmarSenha', value)}
-                placeholderTextColor="#666"
-                secureTextEntry={!showPasswords.confirmarSenha}
-              />
-              <TouchableOpacity 
-                style={styles.eyeButton}
-                onPress={() => togglePasswordVisibility('confirmarSenha')}
-              >
-                <Ionicons 
-                  name={showPasswords.confirmarSenha ? "eye-off" : "eye"} 
-                  size={20} 
-                  color="#666" 
-                />
-              </TouchableOpacity>
-            </View>
-            {errors.confirmarSenha && <Text style={styles.errorText}>{errors.confirmarSenha}</Text>}
-          </View>
-
-          {/* Dicas de Segurança */}
-          <View style={styles.securityTips}>
-            <Text style={styles.securityTitle}>Dicas para uma senha segura:</Text>
-            <View style={styles.tipItem}>
-              <Ionicons name="checkmark-circle" size={16} color="#34C759" />
-              <Text style={styles.tipText}>Use pelo menos 6 caracteres</Text>
-            </View>
-            <View style={styles.tipItem}>
-              <Ionicons name="checkmark-circle" size={16} color="#34C759" />
-              <Text style={styles.tipText}>Combine letras, números e símbolos</Text>
-            </View>
-            <View style={styles.tipItem}>
-              <Ionicons name="checkmark-circle" size={16} color="#34C759" />
-              <Text style={styles.tipText}>Evite informações pessoais</Text>
-            </View>
-          </View>
-
-          {/* Botão de alterar senha */}
-          <TouchableOpacity 
-            style={[styles.changeButton, isLoading && styles.buttonDisabled]} 
-            onPress={handleAlterarSenha}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.changeButtonText}>Alterar Senha</Text>
-            )}
-          </TouchableOpacity>
-        </View>
+          )}
+        </Formik>
       </ScrollView>
     </SafeAreaView>
   );

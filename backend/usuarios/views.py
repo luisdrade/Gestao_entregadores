@@ -216,3 +216,59 @@ def check_username(request, username):
         return Response({
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['PUT'])
+@permission_classes([AllowAny])
+def change_password(request, pk):
+    """
+    Altera a senha de um entregador
+    """
+    try:
+        # Buscar o entregador
+        entregador = Entregador.objects.get(pk=pk)
+        
+        # Dados recebidos
+        data = request.data
+        current_password = data.get('senhaAtual')
+        new_password = data.get('novaSenha')
+        
+        # Validar dados
+        if not current_password or not new_password:
+            return Response({
+                'success': False,
+                'message': 'Senha atual e nova senha são obrigatórias'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verificar se a senha atual está correta
+        if not entregador.check_password(current_password):
+            return Response({
+                'success': False,
+                'message': 'Senha atual incorreta'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verificar se a nova senha é diferente da atual
+        if entregador.check_password(new_password):
+            return Response({
+                'success': False,
+                'message': 'A nova senha deve ser diferente da atual'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Alterar a senha
+        entregador.set_password(new_password)
+        entregador.save()
+        
+        return Response({
+            'success': True,
+            'message': 'Senha alterada com sucesso'
+        })
+        
+    except Entregador.DoesNotExist:
+        return Response({
+            'success': False,
+            'message': 'Entregador não encontrado'
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({
+            'success': False,
+            'message': f'Erro ao alterar senha: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
