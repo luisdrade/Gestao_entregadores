@@ -18,16 +18,12 @@ class EntregadorSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
-        if not password:
-            password = validated_data.pop('senha', None)
-
-        # Geração automática do username se não for enviado
-        if 'username' not in validated_data or validated_data.get('username') is None:
-            validated_data['username'] = str(uuid.uuid4())[:30]  # max 150, mas limitamos por segurança
-
-        user = Entregador(**validated_data)
-        user.set_password(password)
-        user.save()
+        user = Entregador.objects.create_user(**validated_data)
+        
+        if password:
+            user.set_password(password)
+            user.save()
+        
         return user
 
     def update(self, instance, validated_data):

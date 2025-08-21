@@ -51,6 +51,9 @@ urlpatterns = [
     # API de usuários
     path('api/', include('usuarios.urls')),
 
+    # API de veículos
+    path('api/', include('cadastro_veiculo.urls')),
+
     # Endpoints REST de autenticação e social login
     path('api/auth/', include('dj_rest_auth.urls')),             # login/logout/password reset
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # registro e verificação de email
