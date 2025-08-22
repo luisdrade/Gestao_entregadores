@@ -63,8 +63,6 @@ export default function BottomTabBar() {
                     </Text>
                 </TouchableOpacity>
 
-
-
                 {/* Botão comunidade */}
                 <TouchableOpacity
                     style={[styles.tabButton, ComunidadeActive && styles.activeTab]}
@@ -74,10 +72,10 @@ export default function BottomTabBar() {
                         <Ionicons
                             name="people"
                             size={24}
-                            color={HomeActive ? '#007AFF' : '#666'}
+                            color={ComunidadeActive ? '#007AFF' : '#666'}
                         />
                     </View>
-                    <Text style={[styles.tabText, HomeActive && styles.activeTabText]}>
+                    <Text style={[styles.tabText, ComunidadeActive && styles.activeTabText]}>
                         comunity
                     </Text>
                 </TouchableOpacity>
@@ -99,32 +97,34 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        zIndex: 1000,
+        height: 80,
+        paddingBottom: 20,
     },
     content: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        paddingHorizontal: 40,
-        paddingVertical: 12,
+        paddingHorizontal: 20,
     },
     tabButton: {
         alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
         paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 8,
     },
     activeTab: {
-        backgroundColor: 'rgba(0, 122, 255, 0.1)',
+        backgroundColor: 'transparent',
     },
     iconContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
         marginBottom: 4,
     },
     tabText: {
         fontSize: 12,
         color: '#666',
-        fontWeight: '500',
-        textTransform: 'lowercase',
+        textAlign: 'center',
     },
     activeTabText: {
         color: '#007AFF',

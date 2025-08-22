@@ -112,7 +112,6 @@ export default function ProfileScreen() {
         <View style={styles.headerContent}>
           <Text style={styles.headerTitle}>Meu Perfil</Text>
           <TouchableOpacity style={styles.settingsButton} onPress={handleChangePassword}>
-            <Ionicons name="settings-outline" size={24} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
