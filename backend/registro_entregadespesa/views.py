@@ -307,19 +307,106 @@ def registro_despesa(request):
 def dashboard_data(request):
     if request.method == 'GET':
         try:
+            from datetime import datetime, timedelta
+            from django.utils import timezone
+            from django.db.models import Sum, Count, Q
+            
             # Buscar o entregador (em produção, usar autenticação)
             entregador = Entregador.objects.first()  # Placeholder
             
-            # Calcular dados do dashboard
-            registros_trabalho = RegistroTrabalho.objects.filter(entregador=entregador)
-            despesas = Despesa.objects.filter(entregador=entregador)
+            # Parâmetros de período
+            periodo = request.GET.get('periodo', 'mes')  # 'semana' ou 'mes'
             
-            # Dados mockados para demonstração
+            # Calcular datas base
+            hoje = timezone.now().date()
+            if periodo == 'semana':
+                data_inicio = hoje - timedelta(days=7)
+            else:  # mês
+                data_inicio = hoje - timedelta(days=30)
+            
+            # Filtrar registros por período
+            registros_trabalho = RegistroTrabalho.objects.filter(
+                entregador=entregador,
+                data__gte=data_inicio,
+                data__lte=hoje
+            )
+            
+            despesas = Despesa.objects.filter(
+                entregador=entregador,
+                data__gte=data_inicio,
+                data__lte=hoje
+            )
+            
+            # Dados do período selecionado
+            total_entregas_realizadas = registros_trabalho.aggregate(
+                total=Sum('quantidade_entregues')
+            )['total'] or 0
+            
+            total_entregas_nao_realizadas = registros_trabalho.aggregate(
+                total=Sum('quantidade_nao_entregues')
+            )['total'] or 0
+            
+            total_ganhos = registros_trabalho.aggregate(
+                total=Sum('valor')
+            )['total'] or 0
+            
+            total_despesas = despesas.aggregate(
+                total=Sum('valor')
+            )['total'] or 0
+            
+            lucro_liquido = total_ganhos - total_despesas
+            dias_trabalhados = registros_trabalho.count()
+            
+            # Dados de hoje
+            registros_hoje = RegistroTrabalho.objects.filter(
+                entregador=entregador,
+                data=hoje
+            )
+            
+            entregas_hoje = registros_hoje.aggregate(
+                total=Sum('quantidade_entregues')
+            )['total'] or 0
+            
+            nao_entregas_hoje = registros_hoje.aggregate(
+                total=Sum('quantidade_nao_entregues')
+            )['total'] or 0
+            
+            ganhos_hoje = registros_hoje.aggregate(
+                total=Sum('valor')
+            )['total'] or 0
+            
+            despesas_hoje = Despesa.objects.filter(
+                entregador=entregador,
+                data=hoje
+            ).aggregate(
+                total=Sum('valor')
+            )['total'] or 0
+            
+            lucro_hoje = ganhos_hoje - despesas_hoje
+            
             dashboard_data = {
-                'dias_trabalhados': 12,
-                'entregas_realizadas': 1250,
-                'entregas_nao_realizadas': 5,
-                'lucro_liquido': 7500.00
+                # Resumo diário (hoje)
+                'resumo_diario': {
+                    'entregas_hoje': entregas_hoje,
+                    'nao_entregas_hoje': nao_entregas_hoje,
+                    'ganhos_hoje': float(ganhos_hoje),
+                    'despesas_hoje': float(despesas_hoje),
+                    'lucro_hoje': float(lucro_hoje)
+                },
+                
+                # Indicadores de performance (período selecionado)
+                'indicadores_performance': {
+                    'dias_trabalhados': dias_trabalhados,
+                    'entregas_realizadas': total_entregas_realizadas,
+                    'entregas_nao_realizadas': total_entregas_nao_realizadas,
+                    'ganho_total': float(total_ganhos),
+                    'despesas_total': float(total_despesas),
+                    'lucro_liquido': float(lucro_liquido)
+                },
+                
+                'periodo': periodo,
+                'data_inicio': data_inicio.strftime('%d/%m/%Y'),
+                'data_fim': hoje.strftime('%d/%m/%Y')
             }
             
             return JsonResponse({
@@ -354,5 +441,19 @@ def test_connection(request):
                 'success': False, 
                 'error': f'Erro na conexão com banco: {str(e)}'
             })
+    
+    return JsonResponse({'success': False, 'error': 'Método não permitido'})
+
+@csrf_exempt
+def test_dashboard_endpoint(request):
+    """View de teste simples para verificar se o endpoint está funcionando"""
+    if request.method == 'GET':
+        return JsonResponse({
+            'success': True,
+            'message': 'Endpoint do dashboard está funcionando!',
+            'endpoint': 'test-dashboard-endpoint',
+            'method': request.method,
+            'url': request.path
+        })
     
     return JsonResponse({'success': False, 'error': 'Método não permitido'})

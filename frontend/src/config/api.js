@@ -42,7 +42,7 @@ export const API_ENDPOINTS = {
     DELETE: (id) => `/entregas/${id}/`,
   },
   REPORTS: {
-    DASHBOARD: '/relatorios/dashboard/',
+    DASHBOARD: '/registro/api/dashboard-data/',
     DELIVERIES: '/relatorios/entregas/',
     EXPENSES: '/relatorios/despesas/',
   },

@@ -86,10 +86,15 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.56.1:8000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "http://172.18.128.1:3000",
+    "http://172.18.128.1:8000",
+    "http://172.18.128.1:19006",
+    "http://172.18.128.1:19000",
 ]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^http://192\.168\.\d+\.\d+:\d+$",
+    r"^http://172\.18\.\d+\.\d+:\d+$",
     r"^http://localhost:\d+$",
     r"^http://127\.0\.0\.1:\d+$",
 ]
