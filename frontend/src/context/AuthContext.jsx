@@ -18,14 +18,20 @@ export function AuthProvider({ children }) {
     try {
       const storedToken = await AsyncStorage.getItem('@GestaoEntregadores:token');
       const storedUser = await AsyncStorage.getItem('@GestaoEntregadores:user');
+      
+      console.log('🔍 AuthContext - Token armazenado:', !!storedToken);
+      console.log('🔍 AuthContext - Usuário armazenado:', !!storedUser);
 
       if (storedToken && storedUser) {
         api.defaults.headers.authorization = `Bearer ${storedToken}`;
+        console.log('🔍 AuthContext - Header Authorization definido:', api.defaults.headers.authorization);
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
+      } else {
+        console.log('⚠️ AuthContext - Nenhum token ou usuário encontrado no storage');
       }
     } catch (error) {
-      console.error('Erro ao carregar dados armazenados:', error);
+      console.error('❌ AuthContext - Erro ao carregar dados armazenados:', error);
     } finally {
       setLoading(false);
     }

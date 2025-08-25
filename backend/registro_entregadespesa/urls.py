@@ -8,4 +8,5 @@ urlpatterns = [
     path('api/dashboard-data/', views.dashboard_data, name='dashboard_data'),
     path('api/test-connection/', views.test_connection, name='test_connection'),
     path('api/test-dashboard/', views.test_dashboard_endpoint, name='test_dashboard_endpoint'),
+    path('api/test-auth/', views.test_auth, name='test_auth'),
 ]

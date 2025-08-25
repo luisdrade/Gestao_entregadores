@@ -16,15 +16,22 @@ api.interceptors.request.use(
   async (config) => {
     try {
       const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
+      console.log('🔍 Interceptor - Token encontrado:', !!token);
+      console.log('🔍 Interceptor - Token valor:', token ? `${token.substring(0, 20)}...` : 'Nenhum');
+      
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+        console.log('🔍 Interceptor - Header Authorization adicionado:', config.headers.Authorization);
+      } else {
+        console.log('⚠️ Interceptor - Nenhum token encontrado no AsyncStorage');
       }
     } catch (error) {
-      console.error('Erro ao obter token:', error);
+      console.error('❌ Interceptor - Erro ao obter token:', error);
     }
     return config;
   },
   (error) => {
+    console.error('❌ Interceptor - Erro na requisição:', error);
     return Promise.reject(error);
   }
 );

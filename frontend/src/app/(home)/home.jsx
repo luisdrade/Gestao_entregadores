@@ -48,6 +48,13 @@ export default function HomeScreen() {
     try {
       setIsLoading(true);
       
+      // Debug: verificar se o usuário está logado
+      console.log('🔍 Debug - Usuário logado:', user);
+      console.log('🔍 Debug - Token disponível:', !!user?.token);
+      
+      // Debug: verificar headers da API
+      console.log('🔍 Debug - Headers da API:', api.defaults.headers);
+      
       const response = await api.get(`${API_ENDPOINTS.REPORTS.DASHBOARD}?periodo=${periodo}`);
       
       if (response.data.success) {
@@ -57,8 +64,18 @@ export default function HomeScreen() {
         Alert.alert('Erro', 'Falha ao carregar dados do dashboard');
       }
     } catch (error) {
-      console.error('Erro ao carregar dados do dashboard:', error);
-      Alert.alert('Erro', 'Erro de conexão com o servidor');
+      console.error('❌ Erro ao carregar dados do dashboard:', error);
+      console.error('❌ Status do erro:', error.response?.status);
+      console.error('❌ Dados do erro:', error.response?.data);
+      
+      if (error.response?.status === 401) {
+        Alert.alert('Erro de Autenticação', 'Sessão expirada. Faça login novamente.');
+        // Redirecionar para login
+        signOut();
+        router.replace('/');
+      } else {
+        Alert.alert('Erro', 'Erro de conexão com o servidor');
+      }
     } finally {
       setIsLoading(false);
     }

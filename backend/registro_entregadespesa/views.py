@@ -7,6 +7,12 @@ from django.views import View
 import json
 from .models import RegistroEntregaDespesa, RegistroTrabalho, Despesa
 from usuarios.models import Entregador
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import AccessToken
+from django.contrib.auth import get_user_model
 
 @csrf_exempt
 def registro_entrega_despesa(request):
@@ -20,7 +26,8 @@ def registro_entrega_despesa(request):
     
     return JsonResponse({'success': False, 'error': 'Método não permitido'})
 
-@csrf_exempt
+@api_view(['POST', 'GET'])
+@permission_classes([IsAuthenticated])
 def registro_trabalho(request):
     print(f"=== DEBUG: registro_trabalho chamada ===")
     print(f"Método HTTP: {request.method}")
@@ -30,7 +37,7 @@ def registro_trabalho(request):
     
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
+            data = request.data
             print(f"Dados recebidos: {data}")
             
             # Validar dados obrigatórios
@@ -41,18 +48,18 @@ def registro_trabalho(request):
             for campo in campos_obrigatorios:
                 if campo not in data or (data[campo] is None and campo != 'quantidade_nao_entregues'):
                     print(f"Campo obrigatório faltando: {campo}")
-                    return JsonResponse({
+                    return Response({
                         'success': False, 
                         'error': f'Campo obrigatorio nao informado: {campo}'
-                    })
+                    }, status=status.HTTP_400_BAD_REQUEST)
             
             # Validar quantidade_nao_entregues separadamente (pode ser 0)
             if 'quantidade_nao_entregues' not in data:
                 print("Campo obrigatório faltando: quantidade_nao_entregues")
-                return JsonResponse({
+                return Response({
                     'success': False, 
                     'error': 'Campo obrigatorio nao informado: quantidade_nao_entregues'
-                })
+                }, status=status.HTTP_400_BAD_REQUEST)
             
             # Validar se as quantidades são números válidos
             try:
@@ -60,33 +67,26 @@ def registro_trabalho(request):
                 quantidade_nao_entregues = int(data['quantidade_nao_entregues'])
                 
                 if quantidade_entregues < 0:
-                    return JsonResponse({
+                    return Response({
                         'success': False, 
                         'error': 'Quantidade de entregas deve ser maior ou igual a zero'
-                    })
+                    }, status=status.HTTP_400_BAD_REQUEST)
                 
                 if quantidade_nao_entregues < 0:
-                    return JsonResponse({
+                    return Response({
                         'success': False, 
                         'error': 'Quantidade de não entregas deve ser maior ou igual a zero'
-                    })
+                    }, status=status.HTTP_400_BAD_REQUEST)
                     
             except (ValueError, TypeError):
-                return JsonResponse({
+                return Response({
                     'success': False, 
                     'error': 'Quantidades devem ser números válidos'
-                })
+                }, status=status.HTTP_400_BAD_REQUEST)
             
-            # Buscar o entregador (em produção, usar autenticação)
-            entregador = Entregador.objects.first()
-            if not entregador:
-                print("Nenhum entregador encontrado")
-                return JsonResponse({
-                    'success': False, 
-                    'error': 'Nenhum entregador cadastrado no sistema'
-                })
-            
-            print(f"Entregador encontrado: {entregador.nome}")
+            # Usar o usuário autenticado
+            user = request.user
+            print(f"Entregador autenticado: {user.nome}")
             
             # Validar formato da data
             try:
@@ -111,10 +111,10 @@ def registro_trabalho(request):
                 
             except ValueError as e:
                 print(f"Erro na data: {data['data']}")
-                return JsonResponse({
+                return Response({
                     'success': False, 
                     'error': str(e)
-                })
+                }, status=status.HTTP_400_BAD_REQUEST)
             
             # Validar formato das horas
             try:
@@ -123,10 +123,10 @@ def registro_trabalho(request):
                 print(f"Horas validadas: {hora_inicio} - {hora_fim}")
             except ValueError:
                 print(f"Erro nas horas: {data['hora_inicio']} - {data['hora_fim']}")
-                return JsonResponse({
+                return Response({
                     'success': False, 
                     'error': 'Formato de hora invalido. Use HH:MM'
-                })
+                }, status=status.HTTP_400_BAD_REQUEST)
             
             # Criar registro de trabalho
             registro = RegistroTrabalho.objects.create(
@@ -137,23 +137,26 @@ def registro_trabalho(request):
                 quantidade_nao_entregues=quantidade_nao_entregues,
                 tipo_pagamento=data['tipo_pagamento'],
                 valor=float(data['valor']),
-                entregador=entregador
+                entregador=user
             )
             
             print(f"Registro criado com sucesso! ID: {registro.id}")
             
-            return JsonResponse({
+            return Response({
                 'success': True, 
                 'message': 'Dia de trabalho registrado com sucesso',
                 'id': registro.id
-            })
+            }, status=status.HTTP_201_CREATED)
         except Exception as e:
             print(f"Erro na criação: {str(e)}")
-            return JsonResponse({'success': False, 'error': str(e)})
+            return Response({
+                'success': False, 
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     elif request.method == 'GET':
         # Retornar informações sobre o endpoint para teste
-        return JsonResponse({
+        return Response({
             'success': True,
             'message': 'Endpoint de teste - Use POST para registrar trabalho',
             'method': request.method,
@@ -175,9 +178,13 @@ def registro_trabalho(request):
     
     else:
         print(f"Método {request.method} não permitido")
-        return JsonResponse({'success': False, 'error': f'Método {request.method} não permitido'})
+        return Response({
+            'success': False, 
+            'error': f'Método {request.method} não permitido'
+        }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-@csrf_exempt
+@api_view(['POST', 'GET'])
+@permission_classes([IsAuthenticated])
 def registro_despesa(request):
     print(f"=== DEBUG: registro_despesa chamada ===")
     print(f"Método HTTP: {request.method}")
@@ -187,7 +194,7 @@ def registro_despesa(request):
     
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
+            data = request.data
             print(f"Dados recebidos: {data}")
             
             # Validar dados obrigatórios
@@ -196,21 +203,14 @@ def registro_despesa(request):
             for campo in campos_obrigatorios:
                 if campo not in data or not data[campo]:
                     print(f"Campo obrigatório faltando: {campo}")
-                    return JsonResponse({
+                    return Response({
                         'success': False, 
                         'error': f'Campo obrigatorio nao informado: {campo}'
-                    })
+                    }, status=status.HTTP_400_BAD_REQUEST)
             
-            # Buscar o entregador (em produção, usar autenticação)
-            entregador = Entregador.objects.first()
-            if not entregador:
-                print("Nenhum entregador encontrado")
-                return JsonResponse({
-                    'success': False, 
-                    'error': 'Nenhum entregador cadastrado no sistema'
-                })
-            
-            print(f"Entregador encontrado: {entregador.nome}")
+            # Usar o usuário autenticado
+            user = request.user
+            print(f"Entregador autenticado: {user.nome}")
             
             # Validar formato da data
             try:
@@ -235,27 +235,27 @@ def registro_despesa(request):
                 
             except ValueError as e:
                 print(f"Erro na data: {data['data']}")
-                return JsonResponse({
+                return Response({
                     'success': False, 
                     'error': str(e)
-                })
+                }, status=status.HTTP_400_BAD_REQUEST)
             
             # Validar valor
             try:
                 valor = float(data['valor'])
                 if valor <= 0:
                     print(f"Valor inválido: {valor}")
-                    return JsonResponse({
+                    return Response({
                         'success': False, 
                         'error': 'Valor deve ser maior que zero'
-                    })
+                    }, status=status.HTTP_400_BAD_REQUEST)
                 print(f"Valor validado: {valor}")
             except ValueError:
                 print(f"Erro no valor: {data['valor']}")
-                return JsonResponse({
+                return Response({
                     'success': False, 
                     'error': 'Valor invalido'
-                })
+                }, status=status.HTTP_400_BAD_REQUEST)
             
             # Criar registro de despesa
             despesa = Despesa.objects.create(
@@ -263,22 +263,25 @@ def registro_despesa(request):
                 descricao=data['descricao'],
                 valor=valor,
                 data=data_obj,
-                entregador=entregador
+                entregador=user
             )
             
             print(f"Despesa criada com sucesso! ID: {despesa.id}")
             
-            return JsonResponse({
+            return Response({
                 'success': True, 
                 'message': 'Despesa registrada com sucesso',
                 'id': despesa.id
-            })
+            }, status=status.HTTP_201_CREATED)
         except Exception as e:
             print(f"Erro na criação: {str(e)}")
-            return JsonResponse({'success': False, 'error': str(e)})
+            return Response({
+                'success': False, 
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     elif request.method == 'GET':
         # Retornar informações sobre o endpoint para teste
-        return JsonResponse({
+        return Response({
             'success': True,
             'message': 'Endpoint de teste - Use POST para registrar despesa',
             'method': request.method,
@@ -300,10 +303,13 @@ def registro_despesa(request):
     
     else:
         print(f"Método {request.method} não permitido")
-    
-    return JsonResponse({'success': False, 'error': 'Metodo nao permitido'})
+        return Response({
+            'success': False, 
+            'error': f'Método {request.method} não permitido'
+        }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-@csrf_exempt
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def dashboard_data(request):
     if request.method == 'GET':
         try:
@@ -311,11 +317,27 @@ def dashboard_data(request):
             from django.utils import timezone
             from django.db.models import Sum, Count, Q
             
-            # Buscar o entregador (em produção, usar autenticação)
-            entregador = Entregador.objects.first()  # Placeholder
+            # Debug: verificar autenticação
+            print(f"🔍 Backend - Usuário autenticado: {request.user}")
+            print(f"🔍 Backend - ID do usuário: {request.user.id}")
+            print(f"🔍 Backend - Nome do usuário: {request.user.nome}")
+            print(f"🔍 Backend - Email do usuário: {request.user.email}")
+            print(f"🔍 Backend - Headers da requisição: {dict(request.headers)}")
+            
+            # Buscar o entregador autenticado através do token JWT
+            user = request.user
+            if not hasattr(user, 'id'):
+                print("❌ Backend - Usuário não tem ID")
+                return Response({
+                    'success': False, 
+                    'error': 'Usuário não autenticado'
+                }, status=status.HTTP_401_UNAUTHORIZED)
+            
+            print(f"✅ Backend - Usuário validado com sucesso: {user.nome}")
             
             # Parâmetros de período
             periodo = request.GET.get('periodo', 'mes')  # 'semana' ou 'mes'
+            print(f"🔍 Backend - Período solicitado: {periodo}")
             
             # Calcular datas base
             hoje = timezone.now().date()
@@ -324,18 +346,23 @@ def dashboard_data(request):
             else:  # mês
                 data_inicio = hoje - timedelta(days=30)
             
-            # Filtrar registros por período
+            print(f"🔍 Backend - Período calculado: {data_inicio} até {hoje}")
+            
+            # Filtrar registros por período e pelo entregador autenticado
             registros_trabalho = RegistroTrabalho.objects.filter(
-                entregador=entregador,
+                entregador=user,
                 data__gte=data_inicio,
                 data__lte=hoje
             )
             
             despesas = Despesa.objects.filter(
-                entregador=entregador,
+                entregador=user,
                 data__gte=data_inicio,
                 data__lte=hoje
             )
+            
+            print(f"🔍 Backend - Registros encontrados: {registros_trabalho.count()}")
+            print(f"🔍 Backend - Despesas encontradas: {despesas.count()}")
             
             # Dados do período selecionado
             total_entregas_realizadas = registros_trabalho.aggregate(
@@ -359,7 +386,7 @@ def dashboard_data(request):
             
             # Dados de hoje
             registros_hoje = RegistroTrabalho.objects.filter(
-                entregador=entregador,
+                entregador=user,
                 data=hoje
             )
             
@@ -376,7 +403,7 @@ def dashboard_data(request):
             )['total'] or 0
             
             despesas_hoje = Despesa.objects.filter(
-                entregador=entregador,
+                entregador=user,
                 data=hoje
             ).aggregate(
                 total=Sum('valor')
@@ -409,14 +436,20 @@ def dashboard_data(request):
                 'data_fim': hoje.strftime('%d/%m/%Y')
             }
             
-            return JsonResponse({
+            return Response({
                 'success': True,
                 'data': dashboard_data
             })
         except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)})
+            return Response({
+                'success': False, 
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-    return JsonResponse({'success': False, 'error': 'Método não permitido'})
+    return Response({
+        'success': False, 
+        'error': 'Método não permitido'
+    }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @csrf_exempt
 def test_connection(request):
@@ -457,3 +490,24 @@ def test_dashboard_endpoint(request):
         })
     
     return JsonResponse({'success': False, 'error': 'Método não permitido'})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def test_auth(request):
+    """View de teste para verificar se a autenticação JWT está funcionando"""
+    if request.method == 'GET':
+        return Response({
+            'success': True,
+            'message': 'Autenticação JWT funcionando!',
+            'user_id': request.user.id,
+            'user_nome': request.user.nome,
+            'user_email': request.user.email,
+            'endpoint': 'test-auth',
+            'method': request.method,
+            'url': request.path
+        })
+    
+    return Response({
+        'success': False, 
+        'error': 'Método não permitido'
+    }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
