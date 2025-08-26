@@ -14,11 +14,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '../../../services/api';
 import { API_ENDPOINTS } from '../../../config/api';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const authContext = useAuth();
+  const { user, signOut } = authContext;
+  const [loading, setLoading] = useState(false); // Mudado para false já que não carregamos mais dados do AsyncStorage
   const [loadingStats, setLoadingStats] = useState(true);
   const [stats, setStats] = useState({
     totalEntregas: 0,
@@ -29,22 +31,11 @@ export default function ProfileScreen() {
   });
 
   useEffect(() => {
-    loadUserData();
+    console.log('🔍 ProfileScreen - AuthContext completo:', authContext);
+    console.log('🔍 ProfileScreen - Usuário atual:', user);
+    console.log('🔍 ProfileScreen - Função signOut disponível:', !!signOut);
     loadUserStats();
-  }, []);
-
-  const loadUserData = async () => {
-    try {
-      const storedUser = await AsyncStorage.getItem('@GestaoEntregadores:user');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [user, authContext]);
 
   const loadUserStats = async () => {
     try {
@@ -94,6 +85,10 @@ export default function ProfileScreen() {
   };
 
   const handleLogout = async () => {
+    console.log('🔍 ProfileScreen - handleLogout chamado');
+    console.log('🔍 ProfileScreen - Usuário atual:', user);
+    console.log('🔍 ProfileScreen - Função signOut disponível:', !!signOut);
+    
     Alert.alert(
       'Sair da conta',
       'Tem certeza que deseja sair?',
@@ -104,13 +99,18 @@ export default function ProfileScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              await AsyncStorage.removeItem('@GestaoEntregadores:token');
-              await AsyncStorage.removeItem('@GestaoEntregadores:user');
-              setUser(null);
+              console.log('🔄 Iniciando logout...');
+              
+              // Usar a função signOut do contexto
+              await signOut();
+              
+              console.log('✅ Logout realizado com sucesso');
+              
+              // Redirecionar para a tela de login
               router.replace('/');
             } catch (error) {
-              console.error('Erro ao fazer logout:', error);
-              Alert.alert('Erro', 'Erro ao fazer logout');
+              console.error('❌ Erro ao fazer logout:', error);
+              Alert.alert('Erro', 'Erro ao fazer logout. Tente novamente.');
             }
           }
         }
@@ -135,6 +135,7 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
@@ -145,7 +146,11 @@ export default function ProfileScreen() {
       </View>
 
       {/* Content */}
-      <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
+      <ScrollView 
+        style={styles.content} 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Profile Photo Section */}
         <View style={styles.photoSection}>
           <TouchableOpacity style={styles.photoContainer} onPress={handleUploadPhoto}>
@@ -227,11 +232,22 @@ export default function ProfileScreen() {
         </View>
 
         {/* Logout Button */}
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={20} color="#FF3B30" />
-          <Text style={styles.logoutText}>Sair da Conta</Text>
-        </TouchableOpacity>
+        <View style={styles.logoutSection}>
+         
+          <TouchableOpacity 
+            style={styles.logoutButton} 
+            onPress={handleLogout}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="log-out-outline" size={20} color="#fff" />
+            <Text style={styles.logoutText}>Sair da Conta</Text>
+          </TouchableOpacity>
+          
+        </View>
+
       </ScrollView>
+
+      
     </SafeAreaView>
   );
 }
@@ -265,7 +281,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   scrollContent: {
-    paddingBottom: 20, // Add some padding at the bottom for the logout button
+    paddingBottom: 100, // Aumentar padding para garantir que o botão seja visível
   },
   photoSection: {
     alignItems: 'center',
@@ -392,21 +408,27 @@ const styles = StyleSheet.create({
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#FF3B30',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginTop: 10,
-    shadowColor: '#FF3B30',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    paddingVertical: 16,
+    paddingHorizontal: 30,
+    borderRadius: 12,
+    minWidth: 200,
   },
   logoutText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-    marginLeft: 10,
+    marginLeft: 8,
+  },
+  logoutSection: {
+    alignItems: 'center',
+    marginTop: 5,
+    marginBottom: 20, // Adicionar margem inferior
+  },
+  debugText: {
+    fontSize: 14,
+    color: 'red',
+    marginBottom: 10,
   },
 });

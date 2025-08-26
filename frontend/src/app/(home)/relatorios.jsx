@@ -65,17 +65,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
-  logoutButton: {
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
-  },
-  logoutText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
   welcomeText: {
     fontSize: 16,
     color: '#fff',

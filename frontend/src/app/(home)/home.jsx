@@ -16,7 +16,7 @@ import { api } from '../../services/api';
 import { API_ENDPOINTS } from '../../config/api';
 
 export default function HomeScreen() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   const [dashboardData, setDashboardData] = useState({
@@ -71,7 +71,6 @@ export default function HomeScreen() {
       if (error.response?.status === 401) {
         Alert.alert('Erro de Autenticação', 'Sessão expirada. Faça login novamente.');
         // Redirecionar para login
-        signOut();
         router.replace('/');
       } else {
         Alert.alert('Erro', 'Erro de conexão com o servidor');
@@ -79,11 +78,6 @@ export default function HomeScreen() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleLogout = () => {
-    signOut();
-    router.replace('/');
   };
 
   const togglePeriodo = () => {
@@ -112,9 +106,6 @@ export default function HomeScreen() {
         <View style={styles.header}>
           <View style={styles.headerContent}>
             <Text style={styles.headerTitle}>Gestão de Entregadores</Text>
-            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-              <Text style={styles.logoutText}>Sair</Text>
-            </TouchableOpacity>
           </View>
           <Text style={styles.welcomeText}>
             Bem-vindo, {user?.nome || 'Entregador'}!
@@ -235,20 +226,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
-  },
-  logoutButton: {
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
-  },
-  logoutText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
   },
   welcomeText: {
     fontSize: 16,
