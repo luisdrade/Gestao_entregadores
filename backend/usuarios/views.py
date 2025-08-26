@@ -28,6 +28,7 @@ from .serializers import EntregadorSerializer
 
 import requests
 from allauth.socialaccount.models import SocialAccount
+from django.db import models # Adicionado para usar models.Sum
 
 # Views de autenticação customizadas
 class TestView(APIView):
@@ -272,3 +273,68 @@ def change_password(request, pk):
             'success': False,
             'message': f'Erro ao alterar senha: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class EstatisticasUsuarioView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        try:
+            user = request.user
+            
+            # Contar veículos cadastrados
+            from cadastro_veiculo.models import Veiculo
+            veiculos_count = Veiculo.objects.filter(entregador=user).count()
+            
+            # Calcular total de entregas e ganhos
+            from registro_entregadespesa.models import RegistroTrabalho, Despesa
+            
+            # Total de pacotes entregues
+            total_entregas = RegistroTrabalho.objects.filter(
+                entregador=user
+            ).aggregate(
+                total=models.Sum('quantidade_entregues')
+            )['total'] or 0
+            
+            # Total de ganhos (lucro)
+            total_ganhos = 0
+            registros_trabalho = RegistroTrabalho.objects.filter(entregador=user)
+            for registro in registros_trabalho:
+                total_ganhos += float(registro.valor)
+            
+            # Subtrair despesas
+            registros_despesa = Despesa.objects.filter(
+                entregador=user
+            )
+            total_despesas = sum(float(reg.valor) for reg in registros_despesa)
+            
+            lucro_total = total_ganhos - total_despesas
+            
+            # Contar dias únicos trabalhados
+            dias_trabalhados = RegistroTrabalho.objects.filter(
+                entregador=user
+            ).values('data').distinct().count()
+            
+            # Data de primeiro acesso (data de criação da conta)
+            # Usar data atual se não tiver date_joined
+            from datetime import date
+            if hasattr(user, 'date_joined') and user.date_joined:
+                data_primeiro_acesso = user.date_joined.date()
+                dias_conectado = (date.today() - data_primeiro_acesso).days
+            else:
+                # Fallback: usar data atual
+                dias_conectado = 0
+            
+            return Response({
+                'totalEntregas': total_entregas,
+                'totalGanhos': round(lucro_total, 2),
+                'veiculosCadastrados': veiculos_count,
+                'diasTrabalhados': dias_trabalhados,
+                'diasConectado': dias_conectado
+            })
+            
+        except Exception as e:
+            print(f"Erro na view de estatísticas: {str(e)}")
+            return Response(
+                {'error': f'Erro ao buscar estatísticas: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

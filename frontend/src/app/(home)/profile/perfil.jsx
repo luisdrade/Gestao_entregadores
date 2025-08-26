@@ -12,20 +12,25 @@ import {
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import { api } from '../../../services/api';
+import { API_ENDPOINTS } from '../../../config/api';
 
 export default function ProfileScreen() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingStats, setLoadingStats] = useState(true);
   const [stats, setStats] = useState({
-    totalEntregas: 1250,
-    totalGanhos: 8750.00,
-    veiculosCadastrados: 2,
-    diasTrabalhados: 45
+    totalEntregas: 0,
+    totalGanhos: 0,
+    veiculosCadastrados: 0,
+    diasTrabalhados: 0,
+    diasConectado: 0
   });
 
   useEffect(() => {
     loadUserData();
+    loadUserStats();
   }, []);
 
   const loadUserData = async () => {
@@ -38,6 +43,29 @@ export default function ProfileScreen() {
       console.error('Erro ao carregar dados:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadUserStats = async () => {
+    try {
+      setLoadingStats(true);
+      const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
+      if (!token) return;
+
+      const response = await api.get(API_ENDPOINTS.USER.STATISTICS, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.data) {
+        setStats(response.data);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar estatísticas:', error);
+      // Em caso de erro, manter os valores padrão
+    } finally {
+      setLoadingStats(false);
     }
   };
 
@@ -139,28 +167,34 @@ export default function ProfileScreen() {
         {/* Stats Section */}
         <View style={styles.statsSection}>
           <Text style={styles.sectionTitle}>Resumo</Text>
-          <View style={styles.statsGrid}>
-            <View style={styles.statItem}>
-              <Ionicons name="cube-outline" size={24} color="#007AFF" />
-              <Text style={styles.statValue}>{stats.totalEntregas}</Text>
-              <Text style={styles.statLabel}>Entregas</Text>
+          {loadingStats ? (
+            <View style={styles.statsLoading}>
+              <Text style={styles.loadingText}>Carregando estatísticas...</Text>
             </View>
-            <View style={styles.statItem}>
-              <Ionicons name="cash-outline" size={24} color="#34C759" />
-              <Text style={styles.statValue}>R$ {stats.totalGanhos.toFixed(2)}</Text>
-              <Text style={styles.statLabel}>Ganhos</Text>
+          ) : (
+            <View style={styles.statsGrid}>
+              <View style={styles.statItem}>
+                <Ionicons name="cube-outline" size={24} color="#007AFF" />
+                <Text style={styles.statValue}>{stats.totalEntregas}</Text>
+                <Text style={styles.statLabel}>Entregas</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Ionicons name="cash-outline" size={24} color="#34C759" />
+                <Text style={styles.statValue}>R$ {stats.totalGanhos.toFixed(2)}</Text>
+                <Text style={styles.statLabel}>Lucro</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Ionicons name="car-outline" size={24} color="#FF9500" />
+                <Text style={styles.statValue}>{stats.veiculosCadastrados}</Text>
+                <Text style={styles.statLabel}>Veículos</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Ionicons name="calendar-outline" size={24} color="#AF52DE" />
+                <Text style={styles.statValue}>{stats.diasConectado}</Text>
+                <Text style={styles.statLabel}>Dias</Text>
+              </View>
             </View>
-            <View style={styles.statItem}>
-              <Ionicons name="car-outline" size={24} color="#FF9500" />
-              <Text style={styles.statValue}>{stats.veiculosCadastrados}</Text>
-              <Text style={styles.statLabel}>Veículos</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Ionicons name="calendar-outline" size={24} color="#AF52DE" />
-              <Text style={styles.statValue}>{stats.diasTrabalhados}</Text>
-              <Text style={styles.statLabel}>Dias</Text>
-            </View>
-          </View>
+          )}
         </View>
 
         {/* Profile Actions */}
@@ -315,6 +349,16 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 12,
+    color: '#666',
+  },
+  statsLoading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  loadingText: {
+    fontSize: 16,
     color: '#666',
   },
   actionsSection: {

@@ -20,6 +20,12 @@ export const API_ENDPOINTS = {
     FORGOT_PASSWORD: '/api/auth/password/reset/',
     REFRESH_TOKEN: '/api/auth/token/refresh/',
   },
+  USER: {
+    PROFILE: '/api/entregadores/me/',
+    STATISTICS: '/api/estatisticas/',
+    UPDATE_PROFILE: '/api/entregadores/me/',
+    CHANGE_PASSWORD: '/api/usuarios/change-password/',
+  },
   VEHICLES: {
     LIST: '/veiculos/',
     CREATE: '/veiculos/',

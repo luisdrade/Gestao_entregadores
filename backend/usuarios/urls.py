@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-from .views import EntregadorMeView, LogoutView, LoginView, RegisterView, TestView
+from .views import EntregadorMeView, LogoutView, LoginView, RegisterView, TestView, EstatisticasUsuarioView
 
 
 router = DefaultRouter() # cria um router para o viewset | Cria o crud para o entregador
@@ -28,4 +28,7 @@ urlpatterns = [
     
     # Endpoint para alterar senha
     path('change-password/<int:pk>/', views.change_password, name='change_password'),
+    
+    # Endpoint para estatísticas do usuário
+    path('estatisticas/', EstatisticasUsuarioView.as_view(), name='estatisticas_usuario'),
 ]

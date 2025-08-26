@@ -2,6 +2,7 @@
 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+import django.utils.timezone
 
 class UsuarioManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -32,6 +33,8 @@ class Entregador(AbstractBaseUser, PermissionsMixin):
     cidade = models.CharField(max_length=100, null=True, blank=True)
     estado = models.CharField(max_length=2, null=True, blank=True)
 
+    # Campos de sistema
+    date_joined = models.DateTimeField(default=django.utils.timezone.now)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
