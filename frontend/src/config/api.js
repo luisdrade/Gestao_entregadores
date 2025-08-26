@@ -1,7 +1,7 @@
 // Configurações da API
 export const API_CONFIG = {
   // Para desenvolvimento local (web)
-  BASE_URL: 'http://172.18.128.1:8000',
+  BASE_URL: 'http://192.168.0.115:8000',
   
   // Para quando estiver rodando no emulador Android
   // BASE_URL: 'http://10.0.2.2:8000',
