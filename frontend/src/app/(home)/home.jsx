@@ -38,7 +38,6 @@ export default function HomeScreen() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [periodo, setPeriodo] = useState('mes'); // 'semana' ou 'mes'
-  const [periodoInfo, setPeriodoInfo] = useState('');
 
   useEffect(() => {
     loadDashboardData();
@@ -47,19 +46,18 @@ export default function HomeScreen() {
   const loadDashboardData = async () => {
     try {
       setIsLoading(true);
-      
+
       // Debug: verificar se o usuário está logado
       console.log('🔍 Debug - Usuário logado:', user);
       console.log('🔍 Debug - Token disponível:', !!user?.token);
-      
+
       // Debug: verificar headers da API
       console.log('🔍 Debug - Headers da API:', api.defaults.headers);
-      
+
       const response = await api.get(`${API_ENDPOINTS.REPORTS.DASHBOARD}?periodo=${periodo}`);
-      
+
       if (response.data.success) {
         setDashboardData(response.data.data);
-        setPeriodoInfo(`${response.data.data.data_inicio} - ${response.data.data.data_fim}`);
       } else {
         Alert.alert('Erro', 'Falha ao carregar dados do dashboard');
       }
@@ -67,7 +65,7 @@ export default function HomeScreen() {
       console.error('❌ Erro ao carregar dados do dashboard:', error);
       console.error('❌ Status do erro:', error.response?.status);
       console.error('❌ Dados do erro:', error.response?.data);
-      
+
       if (error.response?.status === 401) {
         Alert.alert('Erro de Autenticação', 'Sessão expirada. Faça login novamente.');
         // Redirecionar para login
@@ -114,78 +112,79 @@ export default function HomeScreen() {
 
         {/* NavBar */}
         <TopNavBar />
+        
+        <View>
+          {/* Botão de Período no canto superior direito */}
+          <View style={styles.periodButtonContainer}>
+                         <TouchableOpacity style={styles.periodButton} onPress={togglePeriodo}>
+               <Text style={styles.periodButtonText}>
+                 {periodo === 'mes' ? 'Mês' : 'Semana'}
+               </Text>
+               <Text style={styles.periodButtonIcon}>▼</Text>
+             </TouchableOpacity>
+          </View>
 
-        {/* Seletor de Período */}
-        <View style={styles.periodSelector}>
-          <Text style={styles.periodTitle}>Período de Análise</Text>
-          <TouchableOpacity style={styles.periodToggle} onPress={togglePeriodo}>
-            <Text style={styles.periodToggleText}>
-              {periodo === 'mes' ? 'Mês' : 'Semana'}
-            </Text>
-          </TouchableOpacity>
-          <Text style={styles.periodInfo}>{periodoInfo}</Text>
-        </View>
-
-        {/* Resumo Diário */}
-        <View style={styles.statsContainer}>
-          <Text style={styles.statsTitle}>Resumo Diário (Hoje)</Text>
-          <View style={styles.statsGrid}>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{dashboardData.resumo_diario.entregas_hoje}</Text>
-              <Text style={styles.statLabel}>Entregas Hoje</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{dashboardData.resumo_diario.nao_entregas_hoje}</Text>
-              <Text style={styles.statLabel}>Não Entregas</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{formatCurrency(dashboardData.resumo_diario.lucro_hoje)}</Text>
-              <Text style={styles.statLabel}>Lucro Hoje</Text>
+          {/* Resumo Diário */}
+          <View style={styles.statsContainer}>
+            <Text style={styles.statsTitle}>Resumo Diário (Hoje)</Text>
+            <View style={styles.statsGrid}>
+              <View style={styles.statItem}>
+                <Text style={styles.statNumber}>{dashboardData.resumo_diario.entregas_hoje}</Text>
+                <Text style={styles.statLabel}>Entregas Hoje</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Text style={styles.statNumber}>{dashboardData.resumo_diario.nao_entregas_hoje}</Text>
+                <Text style={styles.statLabel}>Não Entregas</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Text style={styles.statNumber}>{formatCurrency(dashboardData.resumo_diario.lucro_hoje)}</Text>
+                <Text style={styles.statLabel}>Lucro Hoje</Text>
+              </View>
             </View>
           </View>
         </View>
-
+        
         {/* Indicadores de Performance */}
         <View style={styles.kpiContainer}>
-          <Text style={styles.kpiTitle}>Indicadores de Performance ({periodo === 'mes' ? 'Mês' : 'Semana'})</Text>
-          <View style={styles.kpiGrid}>
-            {/* Dias Trabalhados */}
-            <View style={[styles.kpiCard, styles.greenCard]}>
-              <Text style={styles.kpiCardTitle}>Dias Trabalhados</Text>
-              <Text style={styles.kpiCardData}>{dashboardData.indicadores_performance.dias_trabalhados} dias</Text>
-            </View>
+            <Text style={styles.kpiTitle}>Indicadores de Performance ({periodo === 'mes' ? 'Mês' : 'Semana'})</Text>
+            <View style={styles.kpiGrid}>
+              {/* Dias Trabalhados */}
+              <View style={[styles.kpiCard, styles.greenCard]}>
+                <Text style={styles.kpiCardTitle}>Dias Trabalhados</Text>
+                <Text style={styles.kpiCardData}>{dashboardData.indicadores_performance.dias_trabalhados} dias</Text>
+              </View>
 
-            {/* Entregas Realizadas */}
-            <View style={[styles.kpiCard, styles.blueCard]}>
-              <Text style={styles.kpiCardTitle}>Entregas Realizadas</Text>
-              <Text style={styles.kpiCardData}>{dashboardData.indicadores_performance.entregas_realizadas} entregas</Text>
-            </View>
+              {/* Entregas Realizadas */}
+              <View style={[styles.kpiCard, styles.blueCard]}>
+                <Text style={styles.kpiCardTitle}>Entregas Realizadas</Text>
+                <Text style={styles.kpiCardData}>{dashboardData.indicadores_performance.entregas_realizadas} entregas</Text>
+              </View>
 
-            {/* Entregas Não Realizadas */}
-            <View style={[styles.kpiCard, styles.redCard]}>
-              <Text style={styles.kpiCardTitle}>Entregas não realizadas</Text>
-              <Text style={styles.kpiCardData}>{dashboardData.indicadores_performance.entregas_nao_realizadas} entregas</Text>
-            </View>
+              {/* Entregas Não Realizadas */}
+              <View style={[styles.kpiCard, styles.redCard]}>
+                <Text style={styles.kpiCardTitle}>Entregas não realizadas</Text>
+                <Text style={styles.kpiCardData}>{dashboardData.indicadores_performance.entregas_nao_realizadas} entregas</Text>
+              </View>
 
-            {/* Ganho Total */}
-            <View style={[styles.kpiCard, styles.purpleCard]}>
-              <Text style={styles.kpiCardTitle}>Ganho Total</Text>
-              <Text style={styles.kpiCardData}>{formatCurrency(dashboardData.indicadores_performance.ganho_total)}</Text>
-            </View>
+              {/* Ganho Total */}
+              <View style={[styles.kpiCard, styles.purpleCard]}>
+                <Text style={styles.kpiCardTitle}>Ganho Total</Text>
+                <Text style={styles.kpiCardData}>{formatCurrency(dashboardData.indicadores_performance.ganho_total)}</Text>
+              </View>
 
-            {/* Despesas Total */}
-            <View style={[styles.kpiCard, styles.orangeCard]}>
-              <Text style={styles.kpiCardTitle}>Despesas Total</Text>
-              <Text style={styles.kpiCardData}>{formatCurrency(dashboardData.indicadores_performance.despesas_total)}</Text>
-            </View>
+              {/* Despesas Total */}
+              <View style={[styles.kpiCard, styles.orangeCard]}>
+                <Text style={styles.kpiCardTitle}>Despesas Total</Text>
+                <Text style={styles.kpiCardData}>{formatCurrency(dashboardData.indicadores_performance.despesas_total)}</Text>
+              </View>
 
-            {/* Lucro Líquido */}
-            <View style={[styles.kpiCard, styles.tealCard]}>
-              <Text style={styles.kpiCardTitle}>Lucro Líquido</Text>
-              <Text style={styles.kpiCardData}>{formatCurrency(dashboardData.indicadores_performance.lucro_liquido)}</Text>
+              {/* Lucro Líquido */}
+              <View style={[styles.kpiCard, styles.tealCard]}>
+                <Text style={styles.kpiCardTitle}>Lucro Líquido</Text>
+                <Text style={styles.kpiCardData}>{formatCurrency(dashboardData.indicadores_performance.lucro_liquido)}</Text>
+              </View>
             </View>
           </View>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -235,45 +234,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     opacity: 0.9,
   },
-  periodSelector: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
-    margin: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  periodTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  periodToggle: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    alignSelf: 'flex-start',
-    marginBottom: 10,
-  },
-  periodToggleText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  periodInfo: {
-    fontSize: 12,
-    color: '#666',
-    fontStyle: 'italic',
-  },
   statsContainer: {
+    marginTop: 50,
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
@@ -376,6 +338,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#007AFF',
+  },
+  periodButtonContainer: {
+    position: 'absolute',
+    top: 4,
+    left: 20,
+    zIndex: 10,
+    
+  },
+  periodButton: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  periodButtonText: {
+    color: '#333',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  periodButtonIcon: {
+    fontSize: 10,
+    marginLeft: 8,
+    color: '#666',
   },
 });
 
