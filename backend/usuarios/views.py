@@ -395,3 +395,197 @@ class UploadFotoPerfilView(APIView):
                 {'error': f'Erro ao fazer upload da foto: {str(e)}'}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def relatorio_trabalho(request):
+    """Endpoint para relatório de trabalho"""
+    if request.method == 'GET':
+        try:
+            from datetime import datetime, timedelta
+            from django.utils import timezone
+            from django.db.models import Sum, Count, Q, Avg
+            from registro_entregadespesa.models import RegistroTrabalho
+            
+            user = request.user
+            periodo = request.GET.get('periodo', 'mes')  # 'semana', 'mes', 'ano'
+            
+            # Calcular datas base
+            hoje = timezone.now().date()
+            if periodo == 'semana':
+                data_inicio = hoje - timedelta(days=7)
+            elif periodo == 'ano':
+                data_inicio = hoje - timedelta(days=365)
+            else:  # mês
+                data_inicio = hoje - timedelta(days=30)
+            
+            # Filtrar registros por período e pelo entregador autenticado
+            registros_trabalho = RegistroTrabalho.objects.filter(
+                entregador=user,
+                data__gte=data_inicio,
+                data__lte=hoje
+            ).order_by('data')
+            
+            # Calcular estatísticas
+            total_dias = registros_trabalho.count()
+            total_entregas = registros_trabalho.aggregate(
+                total=Sum('quantidade_entregues')
+            )['total'] or 0
+            
+            entregas_realizadas = registros_trabalho.aggregate(
+                total=Sum('quantidade_entregues')
+            )['total'] or 0
+            
+            entregas_nao_realizadas = registros_trabalho.aggregate(
+                total=Sum('quantidade_nao_entregues')
+            )['total'] or 0
+            
+            ganho_total = registros_trabalho.aggregate(
+                total=Sum('valor')
+            )['total'] or 0
+            
+            media_entregas_dia = entregas_realizadas / max(total_dias, 1)
+            
+            # Encontrar melhor e pior dia
+            dias_com_entregas = registros_trabalho.filter(quantidade_entregues__gt=0)
+            if dias_com_entregas.exists():
+                melhor_dia_obj = dias_com_entregas.order_by('-quantidade_entregues').first()
+                pior_dia_obj = dias_com_entregas.order_by('quantidade_entregues').first()
+                melhor_dia = melhor_dia_obj.data.strftime('%d/%m/%Y') if melhor_dia_obj else 'N/A'
+                pior_dia = pior_dia_obj.data.strftime('%d/%m/%Y') if pior_dia_obj else 'N/A'
+            else:
+                melhor_dia = 'N/A'
+                pior_dia = 'N/A'
+            
+            # Lista de dias trabalhados
+            dias_trabalhados = []
+            for registro in registros_trabalho:
+                dias_trabalhados.append({
+                    'data': registro.data.strftime('%Y-%m-%d'),
+                    'entregas': registro.quantidade_entregues,
+                    'ganho': float(registro.valor)
+                })
+            
+            relatorio_data = {
+                'total_dias': total_dias,
+                'total_entregas': total_entregas,
+                'entregas_realizadas': entregas_realizadas,
+                'entregas_nao_realizadas': entregas_nao_realizadas,
+                'ganho_total': float(ganho_total),
+                'media_entregas_dia': float(media_entregas_dia),
+                'melhor_dia': melhor_dia,
+                'pior_dia': pior_dia,
+                'dias_trabalhados': dias_trabalhados
+            }
+            
+            return Response({
+                'success': True,
+                'data': relatorio_data
+            })
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    return Response({
+        'success': False,
+        'error': 'Método não permitido'
+    }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def relatorio_despesas(request):
+    """Endpoint para relatório de despesas"""
+    if request.method == 'GET':
+        try:
+            from datetime import datetime, timedelta
+            from django.utils import timezone
+            from django.db.models import Sum, Count, Q
+            from registro_entregadespesa.models import Despesa
+            
+            user = request.user
+            periodo = request.GET.get('periodo', 'mes')  # 'semana', 'mes', 'ano'
+            
+            # Calcular datas base
+            hoje = timezone.now().date()
+            if periodo == 'semana':
+                data_inicio = hoje - timedelta(days=7)
+            elif periodo == 'ano':
+                data_inicio = hoje - timedelta(days=365)
+            else:  # mês
+                data_inicio = hoje - timedelta(days=30)
+            
+            # Filtrar despesas por período e pelo entregador autenticado
+            despesas = Despesa.objects.filter(
+                entregador=user,
+                data__gte=data_inicio,
+                data__lte=hoje
+            ).order_by('data')
+            
+            # Calcular estatísticas gerais
+            total_despesas = despesas.aggregate(
+                total=Sum('valor')
+            )['total'] or 0
+            
+            dias_com_despesas = despesas.values('data').distinct().count()
+            media_despesas_dia = total_despesas / max(dias_com_despesas, 1)
+            
+            # Maior despesa
+            maior_despesa_obj = despesas.order_by('-valor').first()
+            maior_despesa = float(maior_despesa_obj.valor) if maior_despesa_obj else 0
+            
+            # Despesas por categoria
+            despesas_por_categoria = []
+            categorias = despesas.values('categoria_despesa').distinct()
+            
+            for categoria in categorias:
+                cat_nome = categoria['categoria_despesa']
+                total_cat = despesas.filter(categoria_despesa=cat_nome).aggregate(
+                    total=Sum('valor')
+                )['total'] or 0
+                
+                despesas_por_categoria.append({
+                    'nome': cat_nome,
+                    'total': float(total_cat)
+                })
+            
+            # Ordenar por total (maior para menor)
+            despesas_por_categoria.sort(key=lambda x: x['total'], reverse=True)
+            
+            # Categoria mais cara
+            categoria_mais_cara = despesas_por_categoria[0]['nome'] if despesas_por_categoria else 'N/A'
+            
+            # Despesas por dia
+            despesas_por_dia = []
+            for despesa in despesas:
+                despesas_por_dia.append({
+                    'data': despesa.data.strftime('%Y-%m-%d'),
+                    'categoria': despesa.categoria_despesa,
+                    'valor': float(despesa.valor),
+                    'descricao': despesa.descricao or ''
+                })
+            
+            relatorio_data = {
+                'total_despesas': float(total_despesas),
+                'media_despesas_dia': float(media_despesas_dia),
+                'maior_despesa': float(maior_despesa),
+                'categoria_mais_cara': categoria_mais_cara,
+                'despesas_por_categoria': despesas_por_categoria,
+                'despesas_por_dia': despesas_por_dia
+            }
+            
+            return Response({
+                'success': True,
+                'data': relatorio_data
+            })
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    return Response({
+        'success': False,
+        'error': 'Método não permitido'
+    }, status=status.HTTP_405_METHOD_NOT_ALLOWED)

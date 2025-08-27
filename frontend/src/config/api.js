@@ -1,7 +1,7 @@
 // Configurações da API
 export const API_CONFIG = {
   // Para desenvolvimento local (web)
-  BASE_URL: 'http://192.168.0.115:8000',
+  BASE_URL: 'http://10.250.135.36:8000',
   
   // Para quando estiver rodando no emulador Android
   // BASE_URL: 'http://10.0.2.2:8000',
@@ -52,6 +52,8 @@ export const API_ENDPOINTS = {
     DASHBOARD: '/registro/api/dashboard-data/',
     DELIVERIES: '/relatorios/entregas/',
     EXPENSES: '/relatorios/despesas/',
+    TRABALHO: '/api/relatorios/trabalho/',
+    DESPESAS: '/api/relatorios/despesas/',
   },
   COMMUNITY: {
     POSTS: '/comunidade/posts/',

@@ -511,3 +511,5 @@ def test_auth(request):
         'success': False, 
         'error': 'Método não permitido'
     }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+

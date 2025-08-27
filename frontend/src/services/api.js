@@ -4,7 +4,7 @@ import { API_CONFIG } from '../config/api';
 
 // Configuração base da API
 export const api = axios.create({
-  baseURL: API_CONFIG.BASE_URL || 'http://192.168.0.115:8000',
+  baseURL: API_CONFIG.BASE_URL || 'http://10.250.135.36:8000',
   timeout: API_CONFIG.TIMEOUT || 10000,
   headers: {
     'Content-Type': 'application/json',

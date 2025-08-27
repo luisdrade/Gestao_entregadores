@@ -45,7 +45,7 @@ export default function ProfileScreen() {
 
   const buildPhotoUrl = () => {
     try {
-      const baseUrl = 'http://192.168.0.115:8000'; // Mesmo IP da API_CONFIG
+      const baseUrl = 'http://10.250.135.36:8000'; // Mesmo IP da API_CONFIG
       
       console.log('🔍 buildPhotoUrl - user.foto:', user?.foto);
       console.log('🔍 buildPhotoUrl - stats.foto:', stats?.foto);
