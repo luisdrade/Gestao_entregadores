@@ -33,6 +33,9 @@ class Entregador(AbstractBaseUser, PermissionsMixin):
     cidade = models.CharField(max_length=100, null=True, blank=True)
     estado = models.CharField(max_length=2, null=True, blank=True)
 
+    # Campo de foto
+    foto = models.ImageField(upload_to='fotos_perfil/', null=True, blank=True)
+
     # Campos de sistema
     date_joined = models.DateTimeField(default=django.utils.timezone.now)
     is_active = models.BooleanField(default=True)

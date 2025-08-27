@@ -29,6 +29,9 @@ from .serializers import EntregadorSerializer
 import requests
 from allauth.socialaccount.models import SocialAccount
 from django.db import models # Adicionado para usar models.Sum
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import base64
 
 # Views de autenticação customizadas
 class TestView(APIView):
@@ -329,12 +332,66 @@ class EstatisticasUsuarioView(APIView):
                 'totalGanhos': round(lucro_total, 2),
                 'veiculosCadastrados': veiculos_count,
                 'diasTrabalhados': dias_trabalhados,
-                'diasConectado': dias_conectado
+                'diasConectado': dias_conectado,
+                'foto': user.foto.url if user.foto else None
             })
             
         except Exception as e:
             print(f"Erro na view de estatísticas: {str(e)}")
             return Response(
                 {'error': f'Erro ao buscar estatísticas: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class UploadFotoPerfilView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        try:
+            user = request.user
+            foto_data = request.data.get('foto')
+            
+            if not foto_data:
+                return Response(
+                    {'error': 'Nenhuma foto fornecida'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Decodificar a imagem base64
+            try:
+                # Remover o prefixo data:image/...;base64, se existir
+                if ';base64,' in foto_data:
+                    foto_data = foto_data.split(';base64,')[1]
+                
+                foto_bytes = base64.b64decode(foto_data)
+            except Exception as e:
+                return Response(
+                    {'error': 'Formato de imagem inválido'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Gerar nome único para o arquivo
+            import uuid
+            filename = f"perfil_{user.id}_{uuid.uuid4().hex[:8]}.jpg"
+            
+            # Salvar a imagem
+            if user.foto:
+                # Remover foto antiga se existir
+                if default_storage.exists(user.foto.name):
+                    default_storage.delete(user.foto.name)
+            
+            # Salvar nova foto
+            user.foto.save(filename, ContentFile(foto_bytes), save=True)
+            
+            return Response({
+                'success': True,
+                'message': 'Foto atualizada com sucesso',
+                'foto_url': user.foto.url if user.foto else None
+            })
+            
+        except Exception as e:
+            print(f"Erro ao fazer upload da foto: {str(e)}")
+            return Response(
+                {'error': f'Erro ao fazer upload da foto: {str(e)}'}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )

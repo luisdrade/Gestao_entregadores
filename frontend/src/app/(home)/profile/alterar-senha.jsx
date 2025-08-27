@@ -273,17 +273,17 @@ export default function AlterarSenhaScreen() {
               </View>
 
               {/* Dicas de Segurança */}
-              <View style={styles.securityTips}>
-                <Text style={styles.securityTitle}>Dicas para uma senha segura:</Text>
-                <View style={styles.tipItem}>
+              <View style={styles.containerSegurança}>
+                <Text style={styles.dicasTitle}>Dicas para uma senha segura:</Text>
+                <View style={styles.dicasItem}>
                   <Ionicons name="checkmark-circle" size={16} color="#34C759" />
                   <Text style={styles.tipText}>Use pelo menos 6 caracteres</Text>
                 </View>
-                <View style={styles.tipItem}>
+                <View style={styles.dicasItem}>
                   <Ionicons name="checkmark-circle" size={16} color="#34C759" />
                   <Text style={styles.tipText}>Combine letras, números e símbolos</Text>
                 </View>
-                <View style={styles.tipItem}>
+                <View style={styles.dicasItem}>
                   <Ionicons name="checkmark-circle" size={16} color="#34C759" />
                   <Text style={styles.tipText}>Evite informações pessoais</Text>
                 </View>
@@ -406,19 +406,16 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontStyle: 'italic',
   },
-  securityTips: {
-    backgroundColor: '#f0f8ff',
-    borderRadius: 8,
-    padding: 15,
-    marginTop: 10,
+  containerSegurança: {
+    paddingHorizontal: 15,
   },
-  securityTitle: {
+  dicasTitle: {
     fontSize: 14,
     fontWeight: '600',
     color: '#007AFF',
     marginBottom: 10,
   },
-  tipItem: {
+  dicasItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,

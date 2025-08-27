@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../context/AuthContext';
-import { testApiConnection } from '../services/testApi';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -57,18 +56,10 @@ export default function LoginScreen() {
     router.push('/(auth)/forgot-password');
   };
 
-  const handleTestConnection = async () => {
-    const result = await testApiConnection();
-    if (result.success) {
-      Alert.alert('Sucesso', 'Conexão com o backend funcionando!');
-    } else {
-      Alert.alert('Erro', `Erro na conexão: ${result.error}`);
-    }
-  };
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
+    <KeyboardAvoidingView
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -115,12 +106,6 @@ export default function LoginScreen() {
               <Text style={styles.linkText}>Esqueci minha senha</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.testButton}
-              onPress={handleTestConnection}
-            >
-              <Text style={styles.testButtonText}>Testar Conexão</Text>
-            </TouchableOpacity>
 
             <View style={styles.divider}>
               <View style={styles.dividerLine} />
@@ -202,18 +187,6 @@ const styles = StyleSheet.create({
   linkText: {
     color: '#007AFF',
     fontSize: 14,
-  },
-  testButton: {
-    backgroundColor: '#28a745',
-    borderRadius: 8,
-    padding: 10,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  testButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
   },
   divider: {
     flexDirection: 'row',

@@ -25,6 +25,7 @@ export const API_ENDPOINTS = {
     STATISTICS: '/api/estatisticas/',
     UPDATE_PROFILE: '/api/entregadores/me/',
     CHANGE_PASSWORD: '/api/usuarios/change-password/',
+    UPLOAD_PHOTO: '/api/upload-foto/',
   },
   VEHICLES: {
     LIST: '/veiculos/',

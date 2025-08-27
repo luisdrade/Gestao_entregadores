@@ -64,6 +64,16 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function updateUserPhoto(fotoUrl) {
+    try {
+      const updatedUser = { ...user, foto: fotoUrl };
+      setUser(updatedUser);
+      await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error('Erro ao atualizar foto do usuário:', error);
+    }
+  }
+
   async function signUp(userData) {
     try {
       const response = await api.post(API_ENDPOINTS.AUTH.REGISTER, userData);
@@ -99,6 +109,7 @@ export function AuthProvider({ children }) {
       signIn,
       signUp,
       signOut,
+      updateUserPhoto,
     }}>
       {children}
     </AuthContext.Provider>

@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-from .views import EntregadorMeView, LogoutView, LoginView, RegisterView, TestView, EstatisticasUsuarioView
+from .views import EntregadorMeView, LogoutView, LoginView, RegisterView, TestView, EstatisticasUsuarioView, UploadFotoPerfilView
 
 
 router = DefaultRouter() # cria um router para o viewset | Cria o crud para o entregador
@@ -31,4 +31,7 @@ urlpatterns = [
     
     # Endpoint para estatísticas do usuário
     path('estatisticas/', EstatisticasUsuarioView.as_view(), name='estatisticas_usuario'),
+    
+    # Endpoint para upload de foto de perfil
+    path('upload-foto/', UploadFotoPerfilView.as_view(), name='upload_foto_perfil'),
 ]

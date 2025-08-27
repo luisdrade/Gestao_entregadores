@@ -43,7 +43,8 @@
         {
           "iosUrlScheme": "com.googleusercontent.apps.862844595304-01174lc2pl1jsvfbn7ccch388bjki020"
         }
-      ]
+      ],
+      "expo-router"
     ],
     "extra": {
       "eas": {
