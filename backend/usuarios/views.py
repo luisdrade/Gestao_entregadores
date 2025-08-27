@@ -507,6 +507,8 @@ def relatorio_despesas(request):
             user = request.user
             periodo = request.GET.get('periodo', 'mes')  # 'semana', 'mes', 'ano'
             
+            print(f"🔍 Relatório Despesas - Usuário: {user.nome}, Período: {periodo}")
+            
             # Calcular datas base
             hoje = timezone.now().date()
             if periodo == 'semana':
@@ -523,25 +525,42 @@ def relatorio_despesas(request):
                 data__lte=hoje
             ).order_by('data')
             
+            print(f"🔍 Relatório Despesas - Período: {data_inicio} até {hoje}")
+            print(f"🔍 Relatório Despesas - Despesas encontradas: {despesas.count()}")
+            
             # Calcular estatísticas gerais
             total_despesas = despesas.aggregate(
                 total=Sum('valor')
             )['total'] or 0
             
-            dias_com_despesas = despesas.values('data').distinct().count()
-            media_despesas_dia = total_despesas / max(dias_com_despesas, 1)
+            # Calcular média de despesas por dia (considerando todos os dias do período)
+            dias_periodo = (hoje - data_inicio).days + 1
+            media_despesas_dia = total_despesas / max(dias_periodo, 1)
             
             # Maior despesa
             maior_despesa_obj = despesas.order_by('-valor').first()
             maior_despesa = float(maior_despesa_obj.valor) if maior_despesa_obj else 0
             
+            # Mapeamento de categorias para português
+            categoria_mapping = {
+                'alimentacao': 'Alimentação',
+                'combustivel': 'Combustível',
+                'manutencao': 'Manutenção',
+                'pedagio': 'Pedágio',
+                'estacionamento': 'Estacionamento',
+                'seguro': 'Seguro',
+                'licenciamento': 'Licenciamento',
+                'outros': 'Outros'
+            }
+            
             # Despesas por categoria
             despesas_por_categoria = []
-            categorias = despesas.values('categoria_despesa').distinct()
+            categorias = despesas.values('tipo_despesa').distinct()
             
             for categoria in categorias:
-                cat_nome = categoria['categoria_despesa']
-                total_cat = despesas.filter(categoria_despesa=cat_nome).aggregate(
+                cat_key = categoria['tipo_despesa']
+                cat_nome = categoria_mapping.get(cat_key, cat_key)
+                total_cat = despesas.filter(tipo_despesa=cat_key).aggregate(
                     total=Sum('valor')
                 )['total'] or 0
                 
@@ -561,7 +580,7 @@ def relatorio_despesas(request):
             for despesa in despesas:
                 despesas_por_dia.append({
                     'data': despesa.data.strftime('%Y-%m-%d'),
-                    'categoria': despesa.categoria_despesa,
+                    'categoria': categoria_mapping.get(despesa.tipo_despesa, despesa.tipo_despesa),
                     'valor': float(despesa.valor),
                     'descricao': despesa.descricao or ''
                 })
@@ -574,6 +593,8 @@ def relatorio_despesas(request):
                 'despesas_por_categoria': despesas_por_categoria,
                 'despesas_por_dia': despesas_por_dia
             }
+            
+            print(f"✅ Relatório Despesas - Dados enviados: {relatorio_data}")
             
             return Response({
                 'success': True,

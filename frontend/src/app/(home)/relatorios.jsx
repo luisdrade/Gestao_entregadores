@@ -139,14 +139,14 @@ export default function RelatoriosScreen() {
       </View>
 
       {/* Dias Trabalhados */}
-      <View style={styles.daysContainer}>
+      <View style={styles.diasContainer}>
         <Text style={styles.sectionTitle}>Dias Trabalhados</Text>
         {relatorioData.trabalho.dias_trabalhados.map((dia, index) => (
           <View key={index} style={styles.dayCard}>
-            <Text style={styles.dayDate}>{formatDate(dia.data)}</Text>
-            <View style={styles.dayStats}>
-              <Text style={styles.dayStat}>Entregas: {dia.entregas}</Text>
-              <Text style={styles.dayStat}>Ganho: {formatCurrency(dia.ganho)}</Text>
+            <Text style={styles.diaData}>{formatDate(dia.data)}</Text>
+            <View style={styles.diaStats}>
+              <Text style={styles.diaStat}>Entregas: {dia.entregas}</Text>
+              <Text style={styles.diaStat}>Ganho: {formatCurrency(dia.ganho)}</Text>
             </View>
           </View>
         ))}
@@ -207,7 +207,7 @@ export default function RelatoriosScreen() {
       </View>
 
       {/* Despesas por Dia */}
-      <View style={styles.dailyExpensesContainer}>
+      <View style={styles.container_RelatorioDespesa}>
         <Text style={styles.sectionTitle}>Despesas por Dia</Text>
         {relatorioData.despesas.despesas_por_dia.map((despesa, index) => (
           <View key={index} style={styles.dailyExpenseCard}>
@@ -508,10 +508,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#007AFF',
   },
-  daysContainer: {
+  diasContainer: {
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
+    paddingBottom:100,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -526,15 +527,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
-  dayDate: {
+  diaData: {
     fontSize: 16,
     fontWeight: '500',
     color: '#333',
   },
-  dayStats: {
+  diaStats: {
     alignItems: 'flex-end',
   },
-  dayStat: {
+  diaStat: {
     fontSize: 14,
     color: '#666',
     marginBottom: 2,
@@ -584,10 +585,11 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'right',
   },
-  dailyExpensesContainer: {
+  container_RelatorioDespesa: {
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
+    paddingBottom:100,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
