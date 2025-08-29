@@ -17,7 +17,7 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { api } from '../../../services/api';
+import { api } from '../../../services/clientConfig';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 

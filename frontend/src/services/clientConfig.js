@@ -2,42 +2,42 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_CONFIG } from '../config/api';
 
-// Configuração base da API
-export const api = axios.create({
-  baseURL: API_CONFIG.BASE_URL || 'http://10.250.135.36:8000',
+// ⚡ Cliente HTTP principal da aplicação
+export const httpClient = axios.create({
+  baseURL: API_CONFIG.BASE_URL || 'http://10.20.13.125:8000',
   timeout: API_CONFIG.TIMEOUT || 10000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Interceptor para adicionar token automaticamente
-api.interceptors.request.use(
+// 🔐 Interceptor para adicionar token JWT automaticamente
+httpClient.interceptors.request.use(
   async (config) => {
     try {
       const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
-      console.log('🔍 Interceptor - Token encontrado:', !!token);
-      console.log('🔍 Interceptor - Token valor:', token ? `${token.substring(0, 20)}...` : 'Nenhum');
+      console.log('🔍 ClientConfig - Token encontrado:', !!token);
+      console.log('🔍 ClientConfig - Token valor:', token ? `${token.substring(0, 20)}...` : 'Nenhum');
       
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
-        console.log('🔍 Interceptor - Header Authorization adicionado:', config.headers.Authorization);
+        console.log('🔍 ClientConfig - Header Authorization adicionado:', config.headers.Authorization);
       } else {
-        console.log('⚠️ Interceptor - Nenhum token encontrado no AsyncStorage');
+        console.log('⚠️ ClientConfig - Nenhum token encontrado no AsyncStorage');
       }
     } catch (error) {
-      console.error('❌ Interceptor - Erro ao obter token:', error);
+      console.error('❌ ClientConfig - Erro ao obter token:', error);
     }
     return config;
   },
   (error) => {
-    console.error('❌ Interceptor - Erro na requisição:', error);
+    console.error('❌ ClientConfig - Erro na requisição:', error);
     return Promise.reject(error);
   }
 );
 
-// Interceptor para tratar erros de resposta
-api.interceptors.response.use(
+// 🛡️ Interceptor para tratar erros de resposta
+httpClient.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -47,8 +47,9 @@ api.interceptors.response.use(
       try {
         await AsyncStorage.removeItem('@GestaoEntregadores:token');
         await AsyncStorage.removeItem('@GestaoEntregadores:user');
+        console.log('🧹 ClientConfig - Storage limpo após erro 401');
       } catch (storageError) {
-        console.error('Erro ao limpar storage:', storageError);
+        console.error('❌ ClientConfig - Erro ao limpar storage:', storageError);
       }
       // Redirecionar para login se necessário
     }
@@ -56,16 +57,16 @@ api.interceptors.response.use(
   }
 );
 
-// Função para registro de trabalho
+// 📡 Função para registro de trabalho
 export const registroTrabalho = async (dados) => {
   try {
-    const response = await api.post('/registro/api/registro-trabalho/', dados);
+    const response = await httpClient.post('/registro/api/registro-trabalho/', dados);
     return {
       success: true,
       message: 'Trabalho registrado com sucesso!'
     };
   } catch (error) {
-    console.error('Erro ao registrar trabalho:', error);
+    console.error('❌ Erro ao registrar trabalho:', error);
     return {
       success: false,
       message: error.response?.data?.error || 'Erro ao registrar trabalho'
@@ -73,19 +74,22 @@ export const registroTrabalho = async (dados) => {
   }
 };
 
-// Função para registro de despesa
+// 💰 Função para registro de despesa
 export const registroDespesa = async (dados) => {
   try {
-    const response = await api.post('/registro/api/registro-despesa/', dados);
+    const response = await httpClient.post('/registro/api/registro-despesa/', dados);
     return {
       success: true,
       message: 'Despesa registrada com sucesso!'
     };
   } catch (error) {
-    console.error('Erro ao registrar despesa:', error);
+    console.error('❌ Erro ao registrar despesa:', error);
     return {
       success: false,
       message: error.response?.data?.error || 'Erro ao registrar despesa'
     };
   }
 };
+
+// Alias para compatibilidade (pode ser removido gradualmente)
+export const api = httpClient;

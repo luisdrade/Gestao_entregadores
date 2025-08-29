@@ -351,7 +351,11 @@ class UploadFotoPerfilView(APIView):
             user = request.user
             foto_data = request.data.get('foto')
             
+            print(f"📸 UploadFotoPerfilView - Usuário: {user.email}")
+            print(f"📸 UploadFotoPerfilView - Dados recebidos: {len(str(foto_data))} caracteres")
+            
             if not foto_data:
+                print("❌ UploadFotoPerfilView - Nenhuma foto fornecida")
                 return Response(
                     {'error': 'Nenhuma foto fornecida'}, 
                     status=status.HTTP_400_BAD_REQUEST
@@ -363,8 +367,12 @@ class UploadFotoPerfilView(APIView):
                 if ';base64,' in foto_data:
                     foto_data = foto_data.split(';base64,')[1]
                 
+                print(f"📸 UploadFotoPerfilView - Base64 limpo: {len(foto_data)} caracteres")
                 foto_bytes = base64.b64decode(foto_data)
+                print(f"📸 UploadFotoPerfilView - Bytes decodificados: {len(foto_bytes)} bytes")
+                
             except Exception as e:
+                print(f"❌ UploadFotoPerfilView - Erro ao decodificar base64: {str(e)}")
                 return Response(
                     {'error': 'Formato de imagem inválido'}, 
                     status=status.HTTP_400_BAD_REQUEST
@@ -373,24 +381,39 @@ class UploadFotoPerfilView(APIView):
             # Gerar nome único para o arquivo
             import uuid
             filename = f"perfil_{user.id}_{uuid.uuid4().hex[:8]}.jpg"
+            print(f"📸 UploadFotoPerfilView - Nome do arquivo: {filename}")
             
             # Salvar a imagem
             if user.foto:
                 # Remover foto antiga se existir
-                if default_storage.exists(user.foto.name):
-                    default_storage.delete(user.foto.name)
+                try:
+                    if default_storage.exists(user.foto.name):
+                        default_storage.delete(user.foto.name)
+                        print(f"📸 UploadFotoPerfilView - Foto antiga removida: {user.foto.name}")
+                except Exception as e:
+                    print(f"⚠️ UploadFotoPerfilView - Erro ao remover foto antiga: {str(e)}")
             
             # Salvar nova foto
-            user.foto.save(filename, ContentFile(foto_bytes), save=True)
-            
-            return Response({
-                'success': True,
-                'message': 'Foto atualizada com sucesso',
-                'foto_url': user.foto.url if user.foto else None
-            })
+            try:
+                user.foto.save(filename, ContentFile(foto_bytes), save=True)
+                print(f"📸 UploadFotoPerfilView - Nova foto salva: {user.foto.name}")
+                print(f"📸 UploadFotoPerfilView - URL da foto: {user.foto.url}")
+                
+                return Response({
+                    'success': True,
+                    'message': 'Foto atualizada com sucesso',
+                    'foto_url': user.foto.url if user.foto else None
+                })
+                
+            except Exception as e:
+                print(f"❌ UploadFotoPerfilView - Erro ao salvar foto: {str(e)}")
+                return Response(
+                    {'error': f'Erro ao salvar foto: {str(e)}'}, 
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
             
         except Exception as e:
-            print(f"Erro ao fazer upload da foto: {str(e)}")
+            print(f"❌ UploadFotoPerfilView - Erro geral: {str(e)}")
             return Response(
                 {'error': f'Erro ao fazer upload da foto: {str(e)}'}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR

@@ -8,13 +8,15 @@ import {
   Alert, 
   ScrollView,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
+  Linking,
+  Platform
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
-import { api } from '../../../services/api';
-import { API_ENDPOINTS } from '../../../config/api';
+import { api } from '../../../services/clientConfig';
+import { API_CONFIG, API_ENDPOINTS } from '../../../config/api';
 import { useAuth } from '../../../context/AuthContext';
 
 export default function ProfileScreen() {
@@ -24,7 +26,6 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);
   const [loadingStats, setLoadingStats] = useState(true);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
-  const [imagePickerAvailable, setImagePickerAvailable] = useState(false);
   const [photoUrl, setPhotoUrl] = useState(null);
   const [stats, setStats] = useState({
     totalEntregas: 0,
@@ -39,24 +40,23 @@ export default function ProfileScreen() {
     console.log('🔍 ProfileScreen - Usuário atual:', user);
     console.log('🔍 ProfileScreen - Função signOut disponível:', !!signOut);
     loadUserStats();
-    checkImagePickerAvailability();
     buildPhotoUrl();
   }, [user, authContext]);
 
   const buildPhotoUrl = () => {
     try {
-      const baseUrl = 'http://10.250.135.36:8000'; // Mesmo IP da API_CONFIG
+      const baseUrl = API_CONFIG.BASE_URL;
       
       console.log('🔍 buildPhotoUrl - user.foto:', user?.foto);
       console.log('🔍 buildPhotoUrl - stats.foto:', stats?.foto);
       
+      // Priorizar foto do usuário atual
       if (user?.foto) {
-        // Se a foto já tem http, usar como está
         if (user.foto.startsWith('http')) {
           console.log('🔍 buildPhotoUrl - Usando user.foto com http:', user.foto);
           setPhotoUrl(user.foto);
         } else {
-          // Se não tem http, adicionar o base URL
+          // Construir URL completa
           const fullUrl = `${baseUrl}${user.foto}`;
           console.log('🔍 buildPhotoUrl - Construindo URL completa:', fullUrl);
           setPhotoUrl(fullUrl);
@@ -77,18 +77,6 @@ export default function ProfileScreen() {
     } catch (error) {
       console.error('Erro ao construir URL da foto:', error);
       setPhotoUrl(null);
-    }
-  };
-
-  const checkImagePickerAvailability = async () => {
-    try {
-      // Tentar importar o ImagePicker dinamicamente
-      const ImagePicker = await import('expo-image-picker');
-      setImagePickerAvailable(true);
-      console.log('✅ ImagePicker disponível');
-    } catch (error) {
-      console.log('⚠️ ImagePicker não disponível:', error.message);
-      setImagePickerAvailable(false);
     }
   };
 
@@ -130,90 +118,172 @@ export default function ProfileScreen() {
   };
 
   const handleUploadPhoto = () => {
-    if (imagePickerAvailable) {
+    showPhotoOptions();
+  };
+
+  const showPhotoOptions = () => {
+    Alert.alert(
+      'Gerenciar Foto de Perfil',
+      'Escolha uma opção:',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { 
+          text: 'Upload Manual', 
+          onPress: () => uploadManualPhoto()
+        },
+        { 
+          text: 'Limpar Foto', 
+          onPress: () => clearPhoto()
+        },
+        {
+          text: 'Abrir Web',
+          onPress: () => openWebUpload()
+        },
+        {
+          text: 'Tentar Câmera',
+          onPress: () => tryNativeImagePicker()
+        }
+      ]
+    );
+  };
+
+  const tryNativeImagePicker = async () => {
+    try {
+      // Tentar importar dinamicamente
+      const ImagePicker = await import('expo-image-picker');
+      
+      if (ImagePicker && ImagePicker.requestCameraPermissionsAsync) {
+        const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
+        const { status: mediaLibraryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        
+        if (cameraStatus === 'granted' && mediaLibraryStatus === 'granted') {
+          Alert.alert(
+            'Selecionar Foto',
+            'Escolha como deseja adicionar uma foto:',
+            [
+              { text: 'Cancelar', style: 'cancel' },
+              { 
+                text: 'Câmera', 
+                onPress: () => pickImageFromCamera(ImagePicker)
+              },
+              { 
+                text: 'Galeria', 
+                onPress: () => pickImageFromLibrary(ImagePicker)
+              },
+            ]
+          );
+        } else {
+          Alert.alert(
+            'Permissões Necessárias',
+            'Para usar a câmera e galeria, conceda as permissões nas configurações do dispositivo.',
+            [
+              { text: 'OK' },
+              { text: 'Configurações', onPress: () => ImagePicker.openSettingsAsync() }
+            ]
+          );
+        }
+      } else {
+        throw new Error('ImagePicker não funcional');
+      }
+    } catch (error) {
+      console.log('❌ ImagePicker não disponível:', error.message);
       Alert.alert(
-        'Selecionar Foto',
-        'Escolha como deseja adicionar uma foto:',
-        [
-          { text: 'Cancelar', style: 'cancel' },
-          { 
-            text: 'Câmera', 
-            onPress: () => pickImage('camera')
-          },
-          { 
-            text: 'Galeria', 
-            onPress: () => pickImage('library')
-          },
-        ]
-      );
-    } else {
-      Alert.alert(
-        'Upload de Foto',
-        'Escolha uma opção:',
-        [
-          { text: 'Cancelar', style: 'cancel' },
-          { 
-            text: 'Upload Foto Teste', 
-            onPress: () => uploadTestPhoto()
-          },
-          { 
-            text: 'Limpar Foto', 
-            onPress: () => clearPhoto()
-          }
-        ]
+        'Funcionalidade Indisponível',
+        'O seletor de imagens nativo não está disponível. Use as outras opções.',
+        [{ text: 'OK' }]
       );
     }
   };
 
-  const pickImage = async (source) => {
+  const pickImageFromCamera = async (ImagePicker) => {
     try {
       setUploadingPhoto(true);
       
-      const ImagePicker = await import('expo-image-picker');
-      
-      // Solicitar permissões
-      const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
-      const { status: mediaLibraryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      
-      if (cameraStatus !== 'granted' || mediaLibraryStatus !== 'granted') {
-        Alert.alert(
-          'Permissões necessárias',
-          'Precisamos de permissão para acessar a câmera e a galeria para selecionar fotos.',
-          [{ text: 'OK' }]
-        );
-        return;
-      }
-      
-      let result;
-      if (source === 'camera') {
-        result = await ImagePicker.launchCameraAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          allowsEditing: true,
-          aspect: [1, 1],
-          quality: 0.8,
-          base64: true,
-        });
-      } else {
-        result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          allowsEditing: true,
-          aspect: [1, 1],
-          quality: 0.8,
-          base64: true,
-        });
-      }
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+        base64: true,
+      });
 
       if (!result.canceled && result.assets && result.assets[0]) {
         const image = result.assets[0];
-        console.log('📸 Imagem selecionada:', image.uri);
-        await uploadImageToServer(image.base64);
+        if (image.base64) {
+          await uploadImageToServer(image.base64);
+        }
       }
     } catch (error) {
-      console.error('Erro ao selecionar imagem:', error);
-      Alert.alert('Erro', 'Erro ao selecionar imagem. Tente novamente.');
+      console.error('Erro ao usar câmera:', error);
+      Alert.alert('Erro', 'Erro ao usar câmera. Tente outra opção.');
     } finally {
       setUploadingPhoto(false);
     }
+  };
+
+  const pickImageFromLibrary = async (ImagePicker) => {
+    try {
+      setUploadingPhoto(true);
+      
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+        base64: true,
+      });
+
+      if (!result.canceled && result.assets && result.assets[0]) {
+        const image = result.assets[0];
+        if (image.base64) {
+          await uploadImageToServer(image.base64);
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao usar galeria:', error);
+      Alert.alert('Erro', 'Erro ao usar galeria. Tente outra opção.');
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
+
+  const uploadManualPhoto = async () => {
+    try {
+      setUploadingPhoto(true);
+      
+      // Upload de uma imagem de teste (1x1 pixel transparente)
+      const base64Image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+      
+      Alert.alert(
+        'Upload Manual',
+        'Enviando foto de teste...',
+        [{ text: 'OK' }]
+      );
+      
+      await uploadImageToServer(base64Image);
+    } catch (error) {
+      console.error('Erro no upload manual:', error);
+      Alert.alert('Erro', 'Erro ao fazer upload manual.');
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
+
+  const openWebUpload = () => {
+    Alert.alert(
+      'Upload via Web',
+      'Para fazer upload de fotos, acesse a versão web do sistema.',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { 
+          text: 'Abrir Web', 
+          onPress: () => {
+            const webUrl = `${API_CONFIG.BASE_URL}/admin/`;
+            Linking.openURL(webUrl);
+          }
+        }
+      ]
+    );
   };
 
   const uploadImageToServer = async (base64Image) => {
@@ -225,10 +295,14 @@ export default function ProfileScreen() {
         return;
       }
 
+      // Preparar dados para envio
+      const fotoData = `data:image/jpeg;base64,${base64Image}`;
+      
       console.log('🔍 Token encontrado, fazendo requisição para:', API_ENDPOINTS.USER.UPLOAD_PHOTO);
+      console.log('🔍 Tamanho do base64:', base64Image.length);
       
       const response = await api.post(API_ENDPOINTS.USER.UPLOAD_PHOTO, {
-        foto: base64Image,
+        foto: fotoData,
       }, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -240,64 +314,29 @@ export default function ProfileScreen() {
 
       if (response.data.success) {
         console.log('✅ Upload bem-sucedido, foto_url:', response.data.foto_url);
+        
+        // Atualizar foto no contexto
         await updateUserPhoto(response.data.foto_url);
+        
         // Reconstruir URL da foto após upload
         setTimeout(() => buildPhotoUrl(), 100);
+        
         Alert.alert('Sucesso', 'Foto atualizada com sucesso!');
       } else {
-        Alert.alert('Erro', 'Erro ao enviar foto.');
+        Alert.alert('Erro', response.data.error || 'Erro ao enviar foto.');
       }
     } catch (error) {
       console.error('❌ Erro ao enviar foto:', error);
       console.error('❌ Detalhes do erro:', error.response?.data);
-      Alert.alert(
-        'Erro', 
-        error.response?.data?.error || 'Erro ao enviar foto. Tente novamente.'
-      );
-    }
-  };
-
-  const testBackendConnection = async () => {
-    try {
-      const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
-      if (!token) {
-        Alert.alert('Erro', 'Token não encontrado. Faça login novamente.');
-        return;
+      
+      let errorMessage = 'Erro ao enviar foto. Tente novamente.';
+      if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
       }
-
-      const response = await api.get(API_ENDPOINTS.USER.STATISTICS, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      Alert.alert('Conexão OK', 'Conexão com o backend estabelecida com sucesso!');
-    } catch (error) {
-      console.error('❌ Erro ao testar conexão:', error);
-      Alert.alert('Erro de Conexão', 'Não foi possível conectar ao backend. Verifique sua conexão.');
-    }
-  };
-
-  const uploadTestPhoto = async () => {
-    try {
-      const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
-      if (!token) {
-        Alert.alert('Erro', 'Token não encontrado. Faça login novamente.');
-        return;
-      }
-
-      const base64Image = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2Q=='; // Base64 de uma imagem vazia
-      const response = await api.post(API_ENDPOINTS.USER.UPLOAD_PHOTO, {
-        foto: base64Image,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      Alert.alert('Upload Teste', 'Foto de teste enviada com sucesso!');
-    } catch (error) {
-      console.error('❌ Erro ao enviar foto de teste:', error);
-      Alert.alert('Erro de Upload', 'Não foi possível enviar foto de teste.');
+      
+      Alert.alert('Erro', errorMessage);
     }
   };
 
@@ -395,7 +434,10 @@ export default function ProfileScreen() {
                   }
                 }} 
                 style={styles.profilePhoto}
-                onError={() => console.log('Erro ao carregar imagem')}
+                onError={(error) => {
+                  console.log('❌ Erro ao carregar imagem:', error.nativeEvent);
+                  setPhotoUrl(null);
+                }}
               />
             ) : (
               <View style={styles.photoPlaceholder}>
@@ -582,6 +624,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 14,
     color: '#666',
+  },
+  infoText: {
+    marginTop: 5,
+    fontSize: 12,
+    color: '#007AFF',
+    fontStyle: 'italic',
   },
   statsSection: {
     backgroundColor: '#fff',

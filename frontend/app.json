@@ -22,7 +22,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.luisdrade.gestaoentregadores",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "O app precisa acessar sua câmera para tirar uma foto de perfil.",
+        "NSPhotoLibraryUsageDescription": "O app precisa acessar suas fotos para selecionar uma imagem de perfil."
       }
     },
     "android": {
@@ -31,7 +33,12 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.luisdrade.gestaoentregadores"
+      "package": "com.luisdrade.gestaoentregadores",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "assets/favicon.png"
@@ -42,6 +49,13 @@
         "@react-native-google-signin/google-signin",
         {
           "iosUrlScheme": "com.googleusercontent.apps.862844595304-01174lc2pl1jsvfbn7ccch388bjki020"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O app precisa acessar suas fotos para selecionar uma imagem de perfil.",
+          "cameraPermission": "O app precisa acessar sua câmera para tirar uma foto de perfil."
         }
       ],
       "expo-router"

@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { api } from '../../services/api';
+import { api } from '../../services/clientConfig';
 import { API_ENDPOINTS } from '../../config/api';
 
 export default function ForgotPasswordScreen() {

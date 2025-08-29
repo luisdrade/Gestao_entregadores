@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { registroDespesa } from '../../../services/api';
+import { registroDespesa } from '../../../services/clientConfig';
 import TopNavBar from '../../../components/_NavBar_Superior';
 import DatePicker from '../../../components/_DataComp';
 

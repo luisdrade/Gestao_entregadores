@@ -1,0 +1,63 @@
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /api/estatisticas/ HTTP/1.1" 200 162
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /api/estatisticas/ HTTP/1.1" 200 162
+"GET /api/estatisticas/ HTTP/1.1" 200 162
+"GET /media/fotos_perfil/teste_perfil_1_959fdb67.png HTTP/1.1" 200 70
+"GET /api/estatisticas/ HTTP/1.1" 200 162
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 193
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 193
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 193
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 193
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 193
+"POST /api/auth/login/ HTTP/1.1" 200 345
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"GET /media/fotos_perfil/perfil_2_0868222c.jpg HTTP/1.1" 200 248422
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"POST /api/upload-foto/ HTTP/1.1" 200 111
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"GET /media/fotos_perfil/perfil_2_9e983574.jpg HTTP/1.1" 200 70
+"POST /api/upload-foto/ HTTP/1.1" 200 111
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"GET /media/fotos_perfil/perfil_2_ba4fd826.jpg HTTP/1.1" 200 70
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /api/estatisticas/ HTTP/1.1" 200 155
+"POST /api/auth/login/ HTTP/1.1" 200 349
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /api/estatisticas/ HTTP/1.1" 200 162
+"POST /api/upload-foto/ HTTP/1.1" 200 111
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 70
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 440
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 440
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376

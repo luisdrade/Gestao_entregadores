@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { api } from '../services/api';
+import { api } from '../services/clientConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ApiTest() {

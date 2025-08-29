@@ -1,0 +1,12 @@
+# Configurações do NO-IP
+NOIP_USERNAME=seu_usuario_noip
+NOIP_PASSWORD=sua_senha_noip
+NOIP_HOSTNAME=entregasplus.ddns.net
+
+# Configurações do Django
+DEBUG=True
+SECRET_KEY=sua_chave_secreta_aqui
+ALLOWED_HOSTS=localhost,127.0.0.1,entregasplus.ddns.net
+
+# Configurações do banco de dados
+DATABASE_URL=sqlite:///db.sqlite3

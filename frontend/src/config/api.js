@@ -1,15 +1,14 @@
 // Configurações da API
 export const API_CONFIG = {
-  // Para desenvolvimento local (web)
-  BASE_URL: 'http://10.250.135.36:8000',
+  // 🎯 CONFIGURAÇÃO INTELIGENTE - Funciona em qualquer rede!
+  //BASE_URL: 'http://entregasplus.ddns.net:8000',
+  BASE_URL: 'http://10.20.13.125:8000',
   
-  // Para quando estiver rodando no emulador Android
-  // BASE_URL: 'http://10.0.2.2:8000',
-  
-  // Para quando estiver rodando no dispositivo físico (substitua pelo IP da sua máquina)
-  // BASE_URL: 'http://192.168.1.100:8000',
-  
-  TIMEOUT: 10000,
+  // 🚀 NO-IP: Domínio fixo que resolve o problema do IP dinâmico
+  // Substitua 'entregasplus.ddns.net' pelo seu domínio NO-IP
+  // Exemplo: 'http://seuapp.ddns.net:8000'
+    
+  TIMEOUT: 15000,
 };
 
 // Endpoints da API

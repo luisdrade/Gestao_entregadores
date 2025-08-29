@@ -12,7 +12,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import TopNavBar from '../../components/_NavBar_Superior';
-import { api } from '../../services/api';
+import { httpClient as api } from '../../services/clientConfig';
 import { API_ENDPOINTS } from '../../config/api';
 
 export default function RelatoriosScreen() {
