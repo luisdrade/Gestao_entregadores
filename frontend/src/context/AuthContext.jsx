@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../services/clientConfig';
 import { API_ENDPOINTS } from '../config/api';
+import { signInWithGoogle, signOutFromGoogle, configureGoogleSignIn } from '../services/googleAuth';
 
 const AuthContext = createContext({});
 
@@ -12,6 +13,8 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     loadStoredData();
+    // Configurar Google Sign-In na inicialização
+    configureGoogleSignIn();
   }, []);
 
   async function loadStoredData() {
@@ -87,8 +90,39 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function signInWithGoogleAuth() {
+    try {
+      const result = await signInWithGoogle();
+      
+      if (result.success) {
+        const { token: authToken, user: userData } = result.data;
+        
+        api.defaults.headers.authorization = `Bearer ${authToken}`;
+        
+        await AsyncStorage.setItem('@GestaoEntregadores:token', authToken);
+        await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(userData));
+        
+        setToken(authToken);
+        setUser(userData);
+        
+        return { success: true };
+      } else {
+        return { success: false, error: result.error };
+      }
+    } catch (error) {
+      console.error('Erro no login com Google:', error);
+      return { 
+        success: false, 
+        error: 'Erro ao fazer login com Google' 
+      };
+    }
+  }
+
   async function signOut() {
     try {
+      // Fazer logout do Google também
+      await signOutFromGoogle();
+      
       await AsyncStorage.removeItem('@GestaoEntregadores:token');
       await AsyncStorage.removeItem('@GestaoEntregadores:user');
       
@@ -108,6 +142,7 @@ export function AuthProvider({ children }) {
       loading,
       signIn,
       signUp,
+      signInWithGoogle: signInWithGoogleAuth,
       signOut,
       updateUserPhoto,
     }}>

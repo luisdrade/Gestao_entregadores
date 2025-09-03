@@ -10,15 +10,19 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../context/AuthContext';
+import { Ionicons } from '@expo/vector-icons';
+import GoogleSignInButton from '../components/GoogleSignInButton';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signed } = useAuth();
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const { signIn, signInWithGoogle, signed } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -54,6 +58,22 @@ export default function LoginScreen() {
 
   const handleForgotPassword = () => {
     router.push('/(auth)/forgot-password');
+  };
+
+  const handleGoogleLogin = async () => {
+    setIsGoogleLoading(true);
+    try {
+      const result = await signInWithGoogle();
+      if (result.success) {
+        router.replace('/(home)/home');
+      } else {
+        Alert.alert('Erro', result.error || 'Erro ao fazer login com Google');
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Erro inesperado ao fazer login com Google');
+    } finally {
+      setIsGoogleLoading(false);
+    }
   };
 
 
@@ -106,12 +126,13 @@ export default function LoginScreen() {
               <Text style={styles.linkText}>Esqueci minha senha</Text>
             </TouchableOpacity>
 
-
             <View style={styles.divider}>
               <View style={styles.dividerLine} />
               <Text style={styles.dividerText}>ou</Text>
               <View style={styles.dividerLine} />
             </View>
+
+
 
             <TouchableOpacity
               style={styles.registerButton}
@@ -119,6 +140,13 @@ export default function LoginScreen() {
             >
               <Text style={styles.registerButtonText}>Criar nova conta</Text>
             </TouchableOpacity>
+
+            {/* Google Sign-In Button */}
+            <GoogleSignInButton
+              onPress={handleGoogleLogin}
+              loading={isGoogleLoading}
+              disabled={isLoading}
+            />
           </View>
         </View>
       </ScrollView>
@@ -207,6 +235,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: 8,
     padding: 15,
+    marginBottom: 15,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#007AFF',
