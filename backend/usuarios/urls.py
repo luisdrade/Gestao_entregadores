@@ -11,6 +11,7 @@ from .auth_views import (
     ChangePasswordView,
     AdminUserManagementView
 )
+from .admin_views import AdminUsersAPIView, AdminStatsAPIView
 
 app_name = 'usuarios'
 
@@ -53,4 +54,6 @@ urlpatterns = [
     
     # Endpoints de administração (apenas para admin)
     path('admin/users/', AdminUserManagementView.as_view(), name='admin_users'),
+    path('admin/users/<int:user_id>/', AdminUsersAPIView.as_view(), name='admin_user_detail'),
+    path('admin/stats/', AdminStatsAPIView.as_view(), name='admin_stats'),
 ]
