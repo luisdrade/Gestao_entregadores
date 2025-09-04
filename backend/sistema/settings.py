@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -69,6 +70,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'usuarios.middleware.CSRFExemptAPIMiddleware',  # Middleware personalizado para APIs
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -291,3 +293,16 @@ SIMPLE_JWT = {
 # Configuração do dj-rest-auth
 REST_USE_JWT = True
 JWT_AUTH_COOKIE = 'jwt-auth'
+
+# Configurações de CSRF para APIs
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+]
+
+# Desabilitar CSRF para APIs REST (usando JWT)
+CSRF_COOKIE_SECURE = False  # Para desenvolvimento
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'

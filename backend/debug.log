@@ -61,3 +61,251 @@ Unauthorized: /registro/api/dashboard-data/
 "GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 440
 "GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 440
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 77
+Not Found: /login/
+"GET /login/ HTTP/1.1" 404 3456
+Not Found: /registro/
+"GET /registro/ HTTP/1.1" 404 5332
+Not Found: /auth/
+"GET /auth/ HTTP/1.1" 404 3453
+Not Found: /auth/login
+"GET /auth/login HTTP/1.1" 404 3468
+Method Not Allowed: /api/auth/login
+"GET /api/auth/login HTTP/1.1" 405 8186
+"GET /static/rest_framework/css/bootstrap.min.css HTTP/1.1" 200 121457
+"GET /static/rest_framework/css/bootstrap-tweaks.css HTTP/1.1" 200 3385
+"GET /static/rest_framework/css/prettify.css HTTP/1.1" 200 817
+"GET /static/rest_framework/css/default.css HTTP/1.1" 200 1152
+"GET /static/rest_framework/js/ajax-form.js HTTP/1.1" 200 3597
+"GET /static/rest_framework/js/csrf.js HTTP/1.1" 200 1719
+"GET /static/rest_framework/js/default.js HTTP/1.1" 200 1268
+"GET /static/rest_framework/img/grid.png HTTP/1.1" 200 1458
+"GET /static/rest_framework/js/prettify-min.js HTTP/1.1" 200 13632
+"GET /static/rest_framework/js/bootstrap.min.js HTTP/1.1" 200 39680
+"GET /static/rest_framework/js/jquery-3.5.1.min.js HTTP/1.1" 200 89476
+Not Found: /auth/login
+"GET /auth/login HTTP/1.1" 404 3468
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\auth_urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /auth/login HTTP/1.1" 301 0
+"GET /auth/login/ HTTP/1.1" 200 9645
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+"GET /auth/login/ HTTP/1.1" 200 9645
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+"GET /auth/register/ HTTP/1.1" 200 19369
+Forbidden: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 403 45
+Watching for file changes with StatReloader
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+"GET /auth/login/ HTTP/1.1" 200 9645
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+"GET /auth/register/ HTTP/1.1" 200 19369
+Not Found: /auth/dashboard/
+"GET /auth/dashboard/ HTTP/1.1" 404 4581
+Not Found: /auth/refresh/
+"GET /auth/refresh/ HTTP/1.1" 404 4575
+Not Found: /auth/profile/
+"GET /auth/profile/ HTTP/1.1" 404 4575
+"GET /auth/register/ HTTP/1.1" 200 19369
+Erro no registro: JSON parse error - 'utf-8' codec can't decode byte 0xe3 in position 259: invalid continuation byte
+Internal Server Error: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 500 52
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+Dados recebidos no registro: {'nome': 'Teste Usuario', 'email': 'teste2@teste.com', 'password': 'Teste123!', 'password_confirm': 'Teste123!', 'cpf': '12345678902', 'telefone': '11999999998', 'username': 'testeuser2', 'data_nascimento': '1990-01-01', 'endereco': 'Rua Teste 123', 'cep': '01234-567', 'cidade': 'Sao Paulo', 'estado': 'SP'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '285', 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; pt-BR) WindowsPowerShell/5.1.26100.5074', 'Host': '127.0.0.1:8000', 'Connection': 'Keep-Alive'}
+Novo usuário registrado: teste2@teste.com
+"POST /api/auth/register/ HTTP/1.1" 201 923
+Login bem-sucedido para usuário: teste2@teste.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 923
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /login/
+"GET /login/ HTTP/1.1" 404 3604
+Not Found: /login/
+"GET /login/ HTTP/1.1" 404 3604
+"GET /auth/login/ HTTP/1.1" 200 9645
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 77
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3742
+"GET /static/admin/css/login.css HTTP/1.1" 200 951
+"POST /admin/login/?next=/admin/ HTTP/1.1" 200 3933
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 16688
+"GET /auth/login/ HTTP/1.1" 200 9645
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3730
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Login bem-sucedido para usuário: teste2@teste.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 923
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /auth/login/ HTTP/1.1" 200 9645
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3730
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Login bem-sucedido para usuário: teste2@teste.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 923
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+Login bem-sucedido para usuário: teste2@teste.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 923
+Watching for file changes with StatReloader
+"GET /auth/login/ HTTP/1.1" 200 9645
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3730
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3730
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\template_urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /auth/login/ HTTP/1.1" 200 9645
+"GET /auth/login/ HTTP/1.1" 200 9645
+"GET /auth/login/ HTTP/1.1" 200 9645
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3730
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Watching for file changes with StatReloader
+"GET /auth/login/ HTTP/1.1" 200 9645
+"GET / HTTP/1.1" 200 77
+Not Found: /login/
+"GET /login/ HTTP/1.1" 404 3604
+Not Found: /auth/
+"GET /auth/ HTTP/1.1" 404 3975
+Not Found: /auth/test
+"GET /auth/test HTTP/1.1" 404 3987
+"GET /auth/login/ HTTP/1.1" 200 9645
+Forbidden: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 403 45
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3730
+Method Not Allowed: /api/auth/login/
+"GET /api/auth/login/ HTTP/1.1" 405 5894
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3730
+"GET /static/rest_framework/css/bootstrap.min.css HTTP/1.1" 200 121457
+"GET /static/rest_framework/css/bootstrap-tweaks.css HTTP/1.1" 200 3385
+"GET /static/rest_framework/js/csrf.js HTTP/1.1" 200 1719
+"GET /static/rest_framework/js/ajax-form.js HTTP/1.1" 200 3597
+"GET /static/rest_framework/css/prettify.css HTTP/1.1" 200 817
+"GET /static/rest_framework/css/default.css HTTP/1.1" 200 1152
+"GET /static/rest_framework/img/grid.png HTTP/1.1" 200 1458
+"GET /static/rest_framework/js/default.js HTTP/1.1" 200 1268
+"GET /static/rest_framework/js/prettify-min.js HTTP/1.1" 200 13632
+"GET /static/rest_framework/js/bootstrap.min.js HTTP/1.1" 200 39680
+"GET /static/rest_framework/css/bootstrap.min.css.map HTTP/1.1" 200 540434
+"GET /static/rest_framework/js/jquery-3.5.1.min.js HTTP/1.1" 200 89476
+Method Not Allowed: /api/auth/login
+"GET /api/auth/login HTTP/1.1" 405 8186
+"GET /api/ HTTP/1.1" 200 5356
+"GET /api/entregadores/ HTTP/1.1" 200 17938
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Login bem-sucedido para usuário: teste2@teste.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 923
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@teste.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 923
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 77
+"GET /auth/login/ HTTP/1.1" 200 9645
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@teste.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 923
+Not Found: /entregador/dashboard/
+"GET /entregador/dashboard/ HTTP/1.1" 404 3649
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 955
+Not Found: /entregador/dashboard/
+"GET /entregador/dashboard/ HTTP/1.1" 404 3649
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 865
+Not Found: /admin/dashboard/
+"GET /admin/dashboard/ HTTP/1.1" 404 8190
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+"GET /auth/register/ HTTP/1.1" 200 15696
