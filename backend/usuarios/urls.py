@@ -8,8 +8,7 @@ from .auth_views import (
     LogoutView,
     RefreshTokenView,
     UserProfileView,
-    ChangePasswordView,
-    AdminUserManagementView
+    ChangePasswordView
 )
 from .admin_views import AdminUsersAPIView, AdminStatsAPIView
 
@@ -53,7 +52,7 @@ urlpatterns = [
     path('relatorios/despesas/', views.relatorio_despesas, name='relatorio_despesas'),
     
     # Endpoints de administração (apenas para admin)
-    path('admin/users/', AdminUserManagementView.as_view(), name='admin_users'),
+    path('admin/users/', AdminUsersAPIView.as_view(), name='admin_users'),
     path('admin/users/<int:user_id>/', AdminUsersAPIView.as_view(), name='admin_user_detail'),
     path('admin/stats/', AdminStatsAPIView.as_view(), name='admin_stats'),
 ]

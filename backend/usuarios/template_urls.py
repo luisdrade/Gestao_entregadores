@@ -10,5 +10,5 @@ urlpatterns = [
     path('register/', TemplateView.as_view(template_name='usuarios/register.html'), name='register'),
     
     # Dashboard do admin
-    path('admin/dashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),
+    path('admin/', AdminDashboardView.as_view(), name='admin_dashboard'),
 ]

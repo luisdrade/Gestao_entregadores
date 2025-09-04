@@ -412,3 +412,134 @@ Not Found: /admin/dashboard/
 "GET /auth/admin/dashboard/ HTTP/1.1" 200 24449
 "GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2855
 "GET /api/admin/stats/ HTTP/1.1" 200 351
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\admin_views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\template_urls.py changed, reloading.
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\template_urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\admin_views.py changed, reloading.
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\admin_views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\template_urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /auth/login/ HTTP/1.1" 200 9635
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 865
+"GET /auth/admin/ HTTP/1.1" 200 24449
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: True
+"GET /api/admin/stats/ HTTP/1.1" 200 351
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2708
+Entregadores encontrados: 1
+Entregador: teste@teste.com, is_active: True
+"GET /api/admin/users/?page=2&per_page=10&search=&status=all HTTP/1.1" 200 416
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: True
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2708
+Usuário teste4@gmail.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/4/ HTTP/1.1" 200 333
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: False
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+"GET /api/admin/stats/ HTTP/1.1" 200 351
+Entregador: teste@exemplo.com, is_active: True
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2709
+Usuário teste@exemplo.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/8/ HTTP/1.1" 200 321
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: False
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2709
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+Usuário teste11@gmail.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/6/ HTTP/1.1" 200 342
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: False
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2710
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+Usuário teste@gmail.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/1/ HTTP/1.1" 200 310
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: False
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: False
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2711
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+Usuário teste@gmail.com ativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/1/ HTTP/1.1" 200 306
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: False
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2710
+"GET /api/admin/stats/ HTTP/1.1" 200 350

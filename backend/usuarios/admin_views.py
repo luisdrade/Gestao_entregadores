@@ -105,6 +105,11 @@ class AdminUsersAPIView(APIView):
             # Serializar dados
             serializer = UserListSerializer(entregadores, many=True)
             
+            # Log para debug
+            logger.info(f"Entregadores encontrados: {len(entregadores)}")
+            for entregador in entregadores:
+                logger.info(f"Entregador: {entregador.email}, is_active: {entregador.is_active}")
+            
             # Estatísticas
             total_count = queryset.count()
             active_count = Entregador.objects.filter(is_active=True).count()
