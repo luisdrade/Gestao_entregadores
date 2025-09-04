@@ -2,7 +2,7 @@
 export const API_CONFIG = {
   // 🎯 CONFIGURAÇÃO INTELIGENTE - Funciona em qualquer rede!
   //BASE_URL: 'http://entregasplus.ddns.net:8000',
-  BASE_URL: 'http://10.20.13.125:8000',
+  BASE_URL: 'http://192.168.0.115:8000',
   
   // 🚀 NO-IP: Domínio fixo que resolve o problema do IP dinâmico
   // Substitua 'entregasplus.ddns.net' pelo seu domínio NO-IP
@@ -17,7 +17,7 @@ export const API_ENDPOINTS = {
     LOGIN: '/api/auth/login/',
     REGISTER: '/api/auth/register/',
     GOOGLE_LOGIN: '/api/auth/google-login/',
-    GOOGLE_REGISTER: '/api/auth/google-register/',
+    GOOGLE_REGISTER: '/api/auth/google-register/',  
     FORGOT_PASSWORD: '/api/auth/password/reset/',
     REFRESH_TOKEN: '/api/auth/token/refresh/',
   },

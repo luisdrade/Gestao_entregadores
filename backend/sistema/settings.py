@@ -91,11 +91,17 @@ CORS_ALLOWED_ORIGINS = [
     "http://172.18.128.1:8000",
     "http://172.18.128.1:19006",
     "http://172.18.128.1:19000",
+    # Expo/React Native
+    "http://localhost:8081",
+    "http://127.0.0.1:8081",
+    "http://192.168.0.115:8081",
+    "http://10.20.13.125:8081",
 ]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^http://192\.168\.\d+\.\d+:\d+$",
     r"^http://172\.18\.\d+\.\d+:\d+$",
+    r"^http://10\.\d+\.\d+\.\d+:\d+$",
     r"^http://localhost:\d+$",
     r"^http://127\.0\.0\.1:\d+$",
 ]

@@ -47,7 +47,8 @@ export function AuthProvider({ children }) {
         password,
       });
 
-      const { token: authToken, user: userData } = response.data;
+      const { tokens, user: userData } = response.data;
+      const authToken = tokens.access;
 
       api.defaults.headers.authorization = `Bearer ${authToken}`;
 
@@ -95,7 +96,8 @@ export function AuthProvider({ children }) {
       const result = await signInWithGoogle();
       
       if (result.success) {
-        const { token: authToken, user: userData } = result.data;
+        const { tokens, user: userData } = result.data;
+        const authToken = tokens.access;
         
         api.defaults.headers.authorization = `Bearer ${authToken}`;
         

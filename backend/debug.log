@@ -543,3 +543,95 @@ Entregador: admin@teste.com, is_active: True
 Entregador: teste@exemplo.com, is_active: False
 "GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2710
 "GET /api/admin/stats/ HTTP/1.1" 200 350
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\template_urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\middleware.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\middleware.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 955
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 77
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 955
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 70
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/admin/users/1/
+Usuário teste@gmail.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/1/ HTTP/1.1" 200 310
+CSRF desabilitado para rota: /api/admin/users/
+CSRF desabilitado para rota: /api/admin/stats/
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: False
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: False
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2711
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/admin/users/1/
+Usuário teste@gmail.com ativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/1/ HTTP/1.1" 200 306
+CSRF desabilitado para rota: /api/admin/users/
+CSRF desabilitado para rota: /api/admin/stats/
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: False
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2710
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 955
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+CSRF desabilitado para rota: /api/admin/users/4/
+Usuário teste4@gmail.com ativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/4/ HTTP/1.1" 200 329
+CSRF desabilitado para rota: /api/admin/users/
+CSRF desabilitado para rota: /api/admin/stats/
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2709
+"GET /api/admin/stats/ HTTP/1.1" 200 350

@@ -18,6 +18,13 @@ class CSRFExemptAPIMiddleware(MiddlewareMixin):
             '/api/auth/refresh/',
             '/api/auth/profile/',
             '/api/auth/change-password/',
+            '/api/entregadores/me/',
+            '/api/estatisticas/',
+            '/api/upload-foto/',
+            '/api/relatorios/trabalho/',
+            '/api/relatorios/despesas/',
+            '/api/admin/users/',
+            '/api/admin/stats/',
         ]
         
         # Verificar se a rota atual é uma API que deve ser isenta de CSRF
