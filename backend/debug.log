@@ -635,3 +635,69 @@ Entregador: admin@teste.com, is_active: True
 Entregador: teste@exemplo.com, is_active: False
 "GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2709
 "GET /api/admin/stats/ HTTP/1.1" 200 350
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /auth/admin/ HTTP/1.1" 200 24449
+CSRF desabilitado para rota: /api/admin/stats/
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2709
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+CSRF desabilitado para rota: /api/admin/users/1/
+Usuário teste@gmail.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/1/ HTTP/1.1" 200 310
+CSRF desabilitado para rota: /api/admin/users/
+CSRF desabilitado para rota: /api/admin/stats/
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: False
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2710
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+"GET /admin/ HTTP/1.1" 200 16688
+"GET /admin/usuarios/entregador/ HTTP/1.1" 200 25809
+"GET /admin/jsi18n/ HTTP/1.1" 200 8158
+"GET /admin/registro_entregadespesa/registrotrabalho/ HTTP/1.1" 200 28433
+"GET /admin/jsi18n/ HTTP/1.1" 200 8158
+"GET /admin/registro_entregadespesa/registrotrabalho/ HTTP/1.1" 200 28433
+"GET /admin/jsi18n/ HTTP/1.1" 200 8158
+"GET /admin/registro_entregadespesa/registroentregadespesa/ HTTP/1.1" 200 18538
+"GET /admin/jsi18n/ HTTP/1.1" 200 8158
+"GET /admin/registro_entregadespesa/despesa/ HTTP/1.1" 200 24353
+"GET /admin/jsi18n/ HTTP/1.1" 200 8158
+"GET /admin/account/emailaddress/ HTTP/1.1" 200 17375
+"GET /admin/jsi18n/ HTTP/1.1" 200 8158
+"GET /admin/socialaccount/socialapp/ HTTP/1.1" 200 16076
+"GET /admin/jsi18n/ HTTP/1.1" 200 8158
+"GET /admin/socialaccount/socialtoken/ HTTP/1.1" 200 17620
+"GET /admin/jsi18n/ HTTP/1.1" 200 8158
+"GET /admin/socialaccount/socialaccount/ HTTP/1.1" 200 16958
+"GET /admin/jsi18n/ HTTP/1.1" 200 8158
+"GET /admin/auth/group/ HTTP/1.1" 200 16323
+"GET /admin/jsi18n/ HTTP/1.1" 200 8158
+"GET /admin/cadastro_veiculo/veiculo/ HTTP/1.1" 200 21793
+"GET /admin/jsi18n/ HTTP/1.1" 200 8158
+"GET /admin/authtoken/tokenproxy/ HTTP/1.1" 200 17487
+"GET /auth/login/ HTTP/1.1" 200 9635
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 948
+Not Found: /entregador/dashboard/
+"GET /entregador/dashboard/ HTTP/1.1" 404 3649
