@@ -701,3 +701,17 @@ Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
 "POST /api/auth/login/ HTTP/1.1" 200 948
 Not Found: /entregador/dashboard/
 "GET /entregador/dashboard/ HTTP/1.1" 404 3649
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 948
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+Not Found: /comunidade/
+"POST /comunidade/ HTTP/1.1" 404 3624

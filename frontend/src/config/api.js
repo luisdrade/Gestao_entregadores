@@ -57,8 +57,10 @@ export const API_ENDPOINTS = {
     DESPESAS: '/api/relatorios/despesas/',
   },
   COMMUNITY: {
-    POSTS: '/comunidade/posts/',
-    CREATE_POST: '/comunidade/posts/',
-    COMMENTS: (postId) => `/comunidade/posts/${postId}/comments/`,
+    BASE: '/comunidade/',
+    POSTS: '/comunidade/',
+    CREATE_POST: '/comunidade/',
+    VEHICLE_ADS: '/comunidade/',
+    CREATE_VEHICLE_AD: '/comunidade/',
   },
 };

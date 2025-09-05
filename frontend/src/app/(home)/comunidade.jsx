@@ -1,15 +1,135 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  FlatList,
+  RefreshControl,
+  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import _CardPostagem from '../../components/_CardPostagem';
+import _CardAnuncioVeiculo from '../../components/_CardAnuncioVeiculo';
+import _ModalCriarPostagem from '../../components/_ModalCriarPostagem';
+import _ModalCriarAnuncioVeiculo from '../../components/_ModalCriarAnuncioVeiculo';
+import communityService from '../../services/communityService';
 
-export default function ComunidadeScreen() {
+function ComunidadeScreen() {
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState('postagens'); // 'postagens' ou 'anuncios'
+  const [postagens, setPostagens] = useState([]);
+  const [anuncios, setAnuncios] = useState([]);
+  const [carregando, setCarregando] = useState(false);
+  const [atualizando, setAtualizando] = useState(false);
+  const [mostrarModalPostagem, setMostrarModalPostagem] = useState(false);
+  const [mostrarModalAnuncio, setMostrarModalAnuncio] = useState(false);
+
+  useEffect(() => {
+    carregarDados();
+  }, []);
+
+  const carregarDados = async () => {
+    setCarregando(true);
+    try {
+      // Como o backend retorna HTML, vamos simular dados por enquanto
+      // Em uma implementação real, você precisaria criar endpoints JSON
+      const postagensMock = [
+        {
+          id: 1,
+          autor: 'João Silva',
+          titulo: 'Dicas para economizar combustível',
+          conteudo: 'Compartilhando algumas dicas que aprendi ao longo dos anos para economizar combustível durante as entregas...',
+          data_criacao: new Date().toISOString(),
+        },
+        {
+          id: 2,
+          autor: 'Maria Santos',
+          titulo: 'Melhores rotas para o centro',
+          conteudo: 'Descobri algumas rotas alternativas que podem economizar tempo no trânsito do centro da cidade...',
+          data_criacao: new Date(Date.now() - 86400000).toISOString(),
+        },
+      ];
+
+      const anunciosMock = [
+        {
+          id: 1,
+          modelo: 'Honda CG 160',
+          ano: 2020,
+          quilometragem: 25000,
+          preco: 8500.00,
+          localizacao: 'São Paulo, SP',
+          link_externo: 'https://exemplo.com/anuncio1',
+          foto: null,
+          data_publicacao: new Date().toISOString(),
+        },
+        {
+          id: 2,
+          modelo: 'Yamaha Fazer 250',
+          ano: 2019,
+          quilometragem: 45000,
+          preco: 12000.00,
+          localizacao: 'Rio de Janeiro, RJ',
+          link_externo: 'https://exemplo.com/anuncio2',
+          foto: null,
+          data_publicacao: new Date(Date.now() - 172800000).toISOString(),
+        },
+      ];
+
+      setPostagens(postagensMock);
+      setAnuncios(anunciosMock);
+    } catch (error) {
+      Alert.alert('Erro', 'Erro ao carregar dados da comunidade');
+      console.error('Erro ao carregar dados:', error);
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const aoAtualizar = async () => {
+    setAtualizando(true);
+    await carregarDados();
+    setAtualizando(false);
+  };
+
+  const aoCriarPostagem = () => {
+    carregarDados();
+  };
+
+  const aoCriarAnuncio = () => {
+    carregarDados();
+  };
+
+  const aoPressionarPostagem = (postagem) => {
+    // Navegar para detalhes da postagem
+    Alert.alert('Postagem', `Título: ${postagem.titulo}\nAutor: ${postagem.autor}`);
+  };
+
+  const renderizarPostagem = ({ item }) => (
+    <_CardPostagem postagem={item} aoPressionar={() => aoPressionarPostagem(item)} />
+  );
+
+  const renderizarAnuncio = ({ item }) => (
+    <_CardAnuncioVeiculo anuncio={item} />
+  );
+
+  const renderizarEstadoVazio = () => (
+    <View style={styles.estadoVazio}>
+      <Text style={styles.textoVazio}>
+        {activeTab === 'postagens' 
+          ? 'Nenhuma postagem ainda' 
+          : 'Nenhum anúncio de veículo ainda'
+        }
+      </Text>
+      <Text style={styles.subtextoVazio}>
+        {activeTab === 'postagens' 
+          ? 'Seja o primeiro a compartilhar algo!' 
+          : 'Seja o primeiro a anunciar um veículo!'
+        }
+      </Text>
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -18,17 +138,61 @@ export default function ComunidadeScreen() {
           <Text style={styles.backButton}>← Voltar</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Comunidade</Text>
-        <View style={{ width: 60 }} />
+        <TouchableOpacity
+          onPress={() => {
+            if (activeTab === 'postagens') {
+              setMostrarModalPostagem(true);
+            } else {
+              setMostrarModalAnuncio(true);
+            }
+          }}
+        >
+          <Text style={styles.addButton}>+</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.content}>
-        <Text style={styles.placeholderText}>
-          Comunidade de Entregadores
-        </Text>
-        <Text style={styles.subtitle}>
-          Conecte-se com outros entregadores
-        </Text>
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'postagens' && styles.activeTab]}
+          onPress={() => setActiveTab('postagens')}
+        >
+          <Text style={[styles.tabText, activeTab === 'postagens' && styles.activeTabText]}>
+            Postagens
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'anuncios' && styles.activeTab]}
+          onPress={() => setActiveTab('anuncios')}
+        >
+          <Text style={[styles.tabText, activeTab === 'anuncios' && styles.activeTabText]}>
+            Veículos
+          </Text>
+        </TouchableOpacity>
       </View>
+
+      <FlatList
+        data={activeTab === 'postagens' ? postagens : anuncios}
+        renderItem={activeTab === 'postagens' ? renderizarPostagem : renderizarAnuncio}
+        keyExtractor={(item) => item.id.toString()}
+        refreshControl={
+          <RefreshControl refreshing={atualizando} onRefresh={aoAtualizar} />
+        }
+        ListEmptyComponent={renderizarEstadoVazio}
+        contentContainerStyle={styles.containerLista}
+        showsVerticalScrollIndicator={false}
+      />
+
+      <_ModalCriarPostagem
+        visivel={mostrarModalPostagem}
+        aoFechar={() => setMostrarModalPostagem(false)}
+        aoCriarPostagem={aoCriarPostagem}
+      />
+
+      <_ModalCriarAnuncioVeiculo
+        visivel={mostrarModalAnuncio}
+        aoFechar={() => setMostrarModalAnuncio(false)}
+        aoCriarAnuncio={aoCriarAnuncio}
+      />
     </SafeAreaView>
   );
 }
@@ -57,24 +221,57 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
-  content: {
+  addButton: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    marginHorizontal: 16,
+    marginTop: 16,
+    borderRadius: 12,
+    padding: 4,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  activeTab: {
+    backgroundColor: '#007AFF',
+  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#666',
+  },
+  activeTabText: {
+    color: '#fff',
+  },
+  containerLista: {
+    paddingBottom: 100, // Espaço para a barra inferior
+  },
+  estadoVazio: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    paddingBottom: 100, // Espaço para a barra inferior
+    paddingVertical: 60,
   },
-  placeholderText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  textoVazio: {
+    fontSize: 18,
+    fontWeight: '600',
     color: '#333',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
-  subtitle: {
-    fontSize: 16,
+  subtextoVazio: {
+    fontSize: 14,
     color: '#666',
     textAlign: 'center',
   },
 });
 
+export default ComunidadeScreen;
