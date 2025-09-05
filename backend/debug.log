@@ -715,3 +715,88 @@ Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
 Not Found: /comunidade/
 "POST /comunidade/ HTTP/1.1" 404 3624
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+Not Found: /comunidade/
+"GET /comunidade/ HTTP/1.1" 404 3623
+Not Found: /comunidade/
+"POST /comunidade/ HTTP/1.1" 404 3624
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /comunidade/
+Traceback (most recent call last):
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\urls\base.py", line 81, in reverse
+    extra, resolver = resolver.namespace_dict[ns]
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^
+KeyError: 'relatorios_dashboard'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py", line 39, in comunidade
+    return render(request, 'comunidade/index.html', {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\urls\base.py", line 92, in reverse
+    raise NoReverseMatch("%s is not a registered namespace" % key)
+django.urls.exceptions.NoReverseMatch: 'relatorios_dashboard' is not a registered namespace
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /comunidade/ HTTP/1.1" 200 3506
+Forbidden (CSRF token missing.): /comunidade/
+"POST /comunidade/ HTTP/1.1" 403 2492
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /comunidade/ HTTP/1.1" 200 3506
+"GET /comunidade/ HTTP/1.1" 200 3506
+"GET /comunidade/ HTTP/1.1" 200 3506
+"GET /comunidade/ HTTP/1.1" 200 405
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /comunidade/ HTTP/1.1" 200 980
+"GET /comunidade/ HTTP/1.1" 200 980
+"POST /comunidade/ HTTP/1.1" 200 78
+"GET /comunidade/ HTTP/1.1" 200 1130
+"GET /comunidade/ HTTP/1.1" 200 1130
+"GET /comunidade/ HTTP/1.1" 200 1130
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /media/fotos_perfil/perfil_2_ba4fd826.jpg HTTP/1.1" 200 70

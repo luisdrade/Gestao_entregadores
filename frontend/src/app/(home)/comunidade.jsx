@@ -15,6 +15,7 @@ import _CardAnuncioVeiculo from '../../components/_CardAnuncioVeiculo';
 import _ModalCriarPostagem from '../../components/_ModalCriarPostagem';
 import _ModalCriarAnuncioVeiculo from '../../components/_ModalCriarAnuncioVeiculo';
 import communityService from '../../services/communityService';
+import { API_CONFIG } from '../../config/api';
 
 function ComunidadeScreen() {
   const router = useRouter();
@@ -33,52 +34,66 @@ function ComunidadeScreen() {
   const carregarDados = async () => {
     setCarregando(true);
     try {
-      // Como o backend retorna HTML, vamos simular dados por enquanto
-      // Em uma implementação real, você precisaria criar endpoints JSON
-      const postagensMock = [
-        {
-          id: 1,
-          autor: 'João Silva',
-          titulo: 'Dicas para economizar combustível',
-          conteudo: 'Compartilhando algumas dicas que aprendi ao longo dos anos para economizar combustível durante as entregas...',
-          data_criacao: new Date().toISOString(),
-        },
-        {
-          id: 2,
-          autor: 'Maria Santos',
-          titulo: 'Melhores rotas para o centro',
-          conteudo: 'Descobri algumas rotas alternativas que podem economizar tempo no trânsito do centro da cidade...',
-          data_criacao: new Date(Date.now() - 86400000).toISOString(),
-        },
-      ];
+      console.log('🔄 Carregando dados da comunidade...');
+      
+      // Tentar buscar dados reais do backend
+      try {
+        const data = await communityService.getPosts();
+        console.log('✅ Dados carregados do backend:', data);
+        
+        setPostagens(data.postagens || []);
+        setAnuncios(data.anuncios || []);
+        
+      } catch (backendError) {
+        console.log('⚠️ Erro ao conectar com backend, usando dados mock:', backendError.message);
+        
+        // Dados mock para demonstração
+        const postagensMock = [
+          {
+            id: 1,
+            autor: 'João Silva',
+            titulo: 'Dicas para economizar combustível',
+            conteudo: 'Compartilhando algumas dicas que aprendi ao longo dos anos para economizar combustível durante as entregas...',
+            data_criacao: new Date().toISOString(),
+          },
+          {
+            id: 2,
+            autor: 'Maria Santos',
+            titulo: 'Melhores rotas para o centro',
+            conteudo: 'Descobri algumas rotas alternativas que podem economizar tempo no trânsito do centro da cidade...',
+            data_criacao: new Date(Date.now() - 86400000).toISOString(),
+          },
+        ];
 
-      const anunciosMock = [
-        {
-          id: 1,
-          modelo: 'Honda CG 160',
-          ano: 2020,
-          quilometragem: 25000,
-          preco: 8500.00,
-          localizacao: 'São Paulo, SP',
-          link_externo: 'https://exemplo.com/anuncio1',
-          foto: null,
-          data_publicacao: new Date().toISOString(),
-        },
-        {
-          id: 2,
-          modelo: 'Yamaha Fazer 250',
-          ano: 2019,
-          quilometragem: 45000,
-          preco: 12000.00,
-          localizacao: 'Rio de Janeiro, RJ',
-          link_externo: 'https://exemplo.com/anuncio2',
-          foto: null,
-          data_publicacao: new Date(Date.now() - 172800000).toISOString(),
-        },
-      ];
+        const anunciosMock = [
+          {
+            id: 1,
+            modelo: 'Honda CG 160',
+            ano: 2020,
+            quilometragem: 25000,
+            preco: 8500.00,
+            localizacao: 'São Paulo, SP',
+            link_externo: 'https://exemplo.com/anuncio1',
+            foto: null,
+            data_publicacao: new Date().toISOString(),
+          },
+          {
+            id: 2,
+            modelo: 'Yamaha Fazer 250',
+            ano: 2019,
+            quilometragem: 45000,
+            preco: 12000.00,
+            localizacao: 'Rio de Janeiro, RJ',
+            link_externo: 'https://exemplo.com/anuncio2',
+            foto: null,
+            data_publicacao: new Date(Date.now() - 172800000).toISOString(),
+          },
+        ];
 
-      setPostagens(postagensMock);
-      setAnuncios(anunciosMock);
+        setPostagens(postagensMock);
+        setAnuncios(anunciosMock);
+      }
+      
     } catch (error) {
       Alert.alert('Erro', 'Erro ao carregar dados da comunidade');
       console.error('Erro ao carregar dados:', error);

@@ -65,6 +65,9 @@ urlpatterns = [
     
     path('registro/', include('registro_entregadespesa.urls')),
     
+    # Comunidade
+    path('comunidade/', include('comunidade.urls')),
+    
 ]
 
 # Servir arquivos de mídia em desenvolvimento
