@@ -84,9 +84,10 @@ export function AuthProvider({ children }) {
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Erro no cadastro:', error);
+      console.error('Dados do erro:', error.response?.data);
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Erro ao fazer cadastro' 
+        error: error.response?.data || 'Erro ao fazer cadastro' 
       };
     }
   }

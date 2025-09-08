@@ -1136,3 +1136,60 @@ Headers: {'Content-Length': '146', 'Content-Type': 'application/json', 'Accept':
 Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')], 'password': [ErrorDetail(string='Esta senha é muito curta. Ela precisa conter pelo menos 8 caracteres.', code='password_too_short')], 'username': [ErrorDetail(string='entregador com este username já existe.', code='unique')]}
 Bad Request: /api/auth/register/
 "POST /api/auth/register/ HTTP/1.1" 400 248
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Teste Email Duplicado', 'username': 'teste_email_duplicado', 'email': 'teste.frontend@email.com', 'telefone': '(11) 99999-9999', 'password': 'senha123456', 'password_confirm': 'senha123456'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '200', 'Content-Type': 'application/json', 'Host': '192.168.0.115:8000', 'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 106
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Teste Username Duplicado', 'username': 'teste_frontend_123', 'email': 'teste.username.duplicado@email.com', 'telefone': '(11) 88888-8888', 'password': 'senha123456', 'password_confirm': 'senha123456'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '210', 'Content-Type': 'application/json', 'Host': '192.168.0.115:8000', 'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+Erro de validação no serializer: {'username': [ErrorDetail(string='entregador com este username já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 112
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Teste Senha Curta', 'username': 'teste_senha_curta', 'email': 'teste.senha.curta@email.com', 'telefone': '(11) 77777-7777', 'password': '123', 'password_confirm': '123'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '179', 'Content-Type': 'application/json', 'Host': '192.168.0.115:8000', 'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+Erro de validação no serializer: {'password': [ErrorDetail(string='Esta senha é muito curta. Ela precisa conter pelo menos 8 caracteres.', code='password_too_short'), ErrorDetail(string='Esta senha é muito comum.', code='password_too_common'), ErrorDetail(string='Esta senha é inteiramente numérica.', code='password_entirely_numeric')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 211
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste10', 'username': 'teste10', 'email': 'teste10@gmail.com', 'telefone': '(48) 34864-6467', 'password': 'teste10484', 'password_confirm': 'teste10484'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '152', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 106
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Teste Debug', 'username': 'teste_debug_123', 'email': 'teste.frontend@email.com', 'telefone': '(11) 99999-9999', 'password': 'senha123456', 'password_confirm': 'senha123456'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '184', 'Content-Type': 'application/json', 'Host': '192.168.0.115:8000', 'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 106
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Teste Frontend Error', 'username': 'teste_frontend_error', 'email': 'teste.frontend@email.com', 'telefone': '(11) 99999-9999', 'password': 'senha123456', 'password_confirm': 'senha123456'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '198', 'Content-Type': 'application/json', 'Host': '192.168.0.115:8000', 'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 106
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste10', 'username': 'teste10', 'email': 'teste10@gmail.com', 'telefone': '(18) 6484-6464', 'password': 'd4as68d4a6d4', 'password_confirm': 'd4as68d4a6d4'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '155', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 106
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste10', 'username': 'teste12', 'email': 'teste10@gmail.com', 'telefone': '(18) 6484-6464', 'password': 'teste1025', 'password_confirm': 'teste1025'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '149', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')], 'username': [ErrorDetail(string='entregador com este username já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 162
