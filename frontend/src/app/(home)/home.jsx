@@ -38,14 +38,18 @@ export default function HomeScreen() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [periodo, setPeriodo] = useState('mes'); // 'semana' ou 'mes'
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    loadDashboardData();
+    if (!hasError) {
+      loadDashboardData();
+    }
   }, [periodo]);
 
   const loadDashboardData = async () => {
     try {
       setIsLoading(true);
+      setHasError(false);
 
       // Debug: verificar se o usuário está logado
       console.log('🔍 Debug - Usuário logado:', user);
@@ -60,11 +64,14 @@ export default function HomeScreen() {
         setDashboardData(response.data.data);
       } else {
         Alert.alert('Erro', 'Falha ao carregar dados do dashboard');
+        setHasError(true);
       }
     } catch (error) {
       console.error('❌ Erro ao carregar dados do dashboard:', error);
       console.error('❌ Status do erro:', error.response?.status);
       console.error('❌ Dados do erro:', error.response?.data);
+
+      setHasError(true);
 
       if (error.response?.status === 401) {
         Alert.alert('Erro de Autenticação', 'Sessão expirada. Faça login novamente.');
@@ -82,6 +89,11 @@ export default function HomeScreen() {
     setPeriodo(periodo === 'mes' ? 'semana' : 'mes');
   };
 
+  const retryLoadData = () => {
+    setHasError(false);
+    loadDashboardData();
+  };
+
   const formatCurrency = (value) => {
     return `R$ ${parseFloat(value).toFixed(2)}`;
   };
@@ -92,6 +104,20 @@ export default function HomeScreen() {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#007AFF" />
           <Text style={styles.loadingText}>Carregando dashboard...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (hasError) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.errorText}>❌ Erro ao carregar dados</Text>
+          <Text style={styles.errorSubtext}>Verifique sua conexão e tente novamente</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={retryLoadData}>
+            <Text style={styles.retryButtonText}>Tentar Novamente</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -365,6 +391,31 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginLeft: 8,
     color: '#666',
+  },
+  errorText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FF3B30',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  errorSubtext: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

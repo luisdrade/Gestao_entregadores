@@ -2,7 +2,13 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api } from '../services/clientConfig';
 import { API_ENDPOINTS } from '../config/api';
-import { signInWithGoogle, signOutFromGoogle, configureGoogleSignIn } from '../services/googleAuth';
+// Importação condicional do Google Sign-In
+let googleAuth = null;
+try {
+  googleAuth = require('../services/googleAuth');
+} catch (error) {
+  console.log('⚠️ Google Sign-In não disponível no Expo Go');
+}
 
 const AuthContext = createContext({});
 
@@ -13,9 +19,36 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     loadStoredData();
-    // Configurar Google Sign-In na inicialização
-    configureGoogleSignIn();
+    // Configurar Google Sign-In na inicialização (se disponível)
+    if (googleAuth && googleAuth.configureGoogleSignIn) {
+      googleAuth.configureGoogleSignIn();
+    }
   }, []);
+
+  // Monitorar mudanças no storage para logout automático
+  useEffect(() => {
+    const checkTokenStatus = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('@GestaoEntregadores:token');
+        const storedUser = await AsyncStorage.getItem('@GestaoEntregadores:user');
+        
+        // Se não há token mas o usuário está "logado", fazer logout
+        if (!storedToken && user) {
+          console.log('🚪 AuthContext - Token removido, fazendo logout automático');
+          setUser(null);
+          setToken(null);
+          delete api.defaults.headers.authorization;
+        }
+      } catch (error) {
+        console.error('❌ AuthContext - Erro ao verificar status do token:', error);
+      }
+    };
+
+    // Verificar a cada 2 segundos se o token ainda existe
+    const interval = setInterval(checkTokenStatus, 2000);
+    
+    return () => clearInterval(interval);
+  }, [user]);
 
   async function loadStoredData() {
     try {
@@ -94,7 +127,14 @@ export function AuthProvider({ children }) {
 
   async function signInWithGoogleAuth() {
     try {
-      const result = await signInWithGoogle();
+      if (!googleAuth || !googleAuth.signInWithGoogle) {
+        return { 
+          success: false, 
+          error: 'Google Sign-In não disponível no Expo Go' 
+        };
+      }
+      
+      const result = await googleAuth.signInWithGoogle();
       
       if (result.success) {
         const { tokens, user: userData } = result.data;
@@ -123,8 +163,10 @@ export function AuthProvider({ children }) {
 
   async function signOut() {
     try {
-      // Fazer logout do Google também
-      await signOutFromGoogle();
+      // Fazer logout do Google também (se disponível)
+      if (googleAuth && googleAuth.signOutFromGoogle) {
+        await googleAuth.signOutFromGoogle();
+      }
       
       await AsyncStorage.removeItem('@GestaoEntregadores:token');
       await AsyncStorage.removeItem('@GestaoEntregadores:user');

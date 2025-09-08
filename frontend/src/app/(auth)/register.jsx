@@ -48,7 +48,7 @@ export default function RegisterScreen() {
 
   const handleRegister = async (values) => {
     setIsSubmitting(true);
-    setFieldErrors({}); // Limpar erros anteriores
+    setFieldErrors({}); //Limpar erros anteriores
     
     try {
       // Mapear os campos para o formato esperado pelo backend
@@ -58,7 +58,7 @@ export default function RegisterScreen() {
         email: values.email,
         telefone: values.telefone,
         password: values.senha,
-        password_confirm: values.confirmarSenha, // Usar o campo de confirmação
+        password_confirm: values.confirmarSenha, 
       };
       
       const result = await signUp(registrationData);
@@ -70,7 +70,6 @@ export default function RegisterScreen() {
           [{ text: 'OK', onPress: () => router.back() }]
         );
       } else {
-        // Processar erros e mapear para campos específicos
         const newFieldErrors = {};
         console.log('🔍 Processando erros:', result.error);
         
@@ -78,7 +77,7 @@ export default function RegisterScreen() {
           const details = result.error.details;
           console.log('🔍 Detalhes dos erros:', details);
           
-          // Mapear erros do backend para campos do frontend
+          // Mapear erros do back para campos do front
           if (details.email) {
             newFieldErrors.email = details.email[0];
           }
@@ -97,12 +96,10 @@ export default function RegisterScreen() {
           if (details.nome) {
             newFieldErrors.nome = details.nome[0];
           }
-          if (details.non_field_errors) {
-            // Erro de senhas não coincidem
+          if (details.non_field_errors) {//erro de senhas não coincidem
             newFieldErrors.confirmarSenha = details.non_field_errors[0];
           }
-        } else if (result.error && typeof result.error === 'string') {
-          // Se for um erro geral, mostrar no campo mais relevante
+        } else if (result.error && typeof result.error === 'string') {//erro geral
           newFieldErrors.general = result.error;
         }
         
@@ -440,4 +437,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
 

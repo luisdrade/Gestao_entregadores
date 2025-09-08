@@ -48,10 +48,16 @@ httpClient.interceptors.response.use(
         await AsyncStorage.removeItem('@GestaoEntregadores:token');
         await AsyncStorage.removeItem('@GestaoEntregadores:user');
         console.log('🧹 ClientConfig - Storage limpo após erro 401');
+        
+        // Limpar headers de autorização
+        delete httpClient.defaults.headers.Authorization;
+        
+        // Emitir evento global para logout (se necessário)
+        // Isso pode ser usado por outros componentes para detectar logout automático
+        console.log('🚪 ClientConfig - Logout automático devido a token expirado');
       } catch (storageError) {
         console.error('❌ ClientConfig - Erro ao limpar storage:', storageError);
       }
-      // Redirecionar para login se necessário
     }
     return Promise.reject(error);
   }

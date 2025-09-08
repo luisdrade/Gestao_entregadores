@@ -1206,3 +1206,186 @@ Tipo dos dados: <class 'dict'>
 Headers: {'Content-Length': '201', 'Content-Type': 'application/json', 'Host': '192.168.0.115:8000', 'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
 Novo usuário registrado: teste.senhas.iguais@email.com
 "POST /api/auth/register/ HTTP/1.1" 201 913
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+- Broken pipe from ('192.168.0.119', 63840)
