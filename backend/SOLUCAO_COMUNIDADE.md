@@ -95,3 +95,4 @@ python test_comunidade.py
 - ✅ Frontend enviando dados com sucesso
 - ✅ Postagens e anúncios sendo criados
 - ✅ Logs detalhados para monitoramento
+

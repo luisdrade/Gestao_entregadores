@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,12 +10,19 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 // import * as ImagePicker from 'expo-image-picker';
 import communityService from '../services/communityService';
+import { api } from '../services/clientConfig';
 
 const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
-  const [modelo, setModelo] = useState('');
+  const [veiculoSelecionado, setVeiculoSelecionado] = useState(null);
+  const [veiculos, setVeiculos] = useState([]);
+  const [carregandoVeiculos, setCarregandoVeiculos] = useState(false);
+  const [mostrarSelecaoVeiculo, setMostrarSelecaoVeiculo] = useState(false);
   const [ano, setAno] = useState('');
   const [quilometragem, setQuilometragem] = useState('');
   const [preco, setPreco] = useState('');
@@ -23,6 +30,32 @@ const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
   const [link_externo, setLink_externo] = useState('');
   const [foto, setFoto] = useState(null);
   const [carregando, setCarregando] = useState(false);
+
+  // Carregar veículos do usuário quando o modal abrir
+  useEffect(() => {
+    if (visivel) {
+      carregarVeiculos();
+    }
+  }, [visivel]);
+
+  const carregarVeiculos = async () => {
+    try {
+      setCarregandoVeiculos(true);
+      console.log('🔄 Carregando veículos do usuário...');
+      
+      const response = await api.get('/api/veiculos/');
+      
+      if (response.data) {
+        setVeiculos(response.data);
+        console.log('✅ Veículos carregados:', response.data.length);
+      }
+    } catch (error) {
+      console.error('❌ Erro ao carregar veículos:', error);
+      Alert.alert('Erro', 'Erro ao carregar seus veículos');
+    } finally {
+      setCarregandoVeiculos(false);
+    }
+  };
 
   const selecionarImagem = async () => {
     // Temporariamente desabilitado até resolver o problema do ExponentImagePicker
@@ -48,7 +81,7 @@ const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
   };
 
   const aoEnviar = async () => {
-    if (!modelo.trim() || !ano.trim() || !quilometragem.trim() || 
+    if (!veiculoSelecionado || !ano.trim() || !quilometragem.trim() || 
         !preco.trim() || !localizacao.trim() || !link_externo.trim()) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios');
       return;
@@ -57,7 +90,7 @@ const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
     setCarregando(true);
     try {
       await communityService.createVehicleAd({
-        modelo: modelo.trim(),
+        modelo: veiculoSelecionado.modelo,
         ano: parseInt(ano),
         quilometragem: parseInt(quilometragem),
         preco: parseFloat(preco),
@@ -68,7 +101,7 @@ const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
 
       Alert.alert('Sucesso', 'Anúncio criado com sucesso!');
       // Limpar campos
-      setModelo('');
+      setVeiculoSelecionado(null);
       setAno('');
       setQuilometragem('');
       setPreco('');
@@ -87,13 +120,14 @@ const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
 
   const aoFecharModal = () => {
     // Limpar campos
-    setModelo('');
+    setVeiculoSelecionado(null);
     setAno('');
     setQuilometragem('');
     setPreco('');
     setLocalizacao('');
     setLink_externo('');
     setFoto(null);
+    setMostrarSelecaoVeiculo(false);
     aoFechar();
   };
 
@@ -126,13 +160,22 @@ const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
 
         <ScrollView style={styles.conteudo}>
           <View style={styles.containerInput}>
-            <Text style={styles.rotulo}>Modelo do Veículo *</Text>
-            <TextInput
-              style={styles.input}
-              value={modelo}
-              onChangeText={setModelo}
-              placeholder="Ex: Honda CG 160"
-            />
+            <Text style={styles.rotulo}>Selecionar Veículo *</Text>
+            <TouchableOpacity
+              style={styles.seletorVeiculo}
+              onPress={() => setMostrarSelecaoVeiculo(true)}
+            >
+              <Text style={[
+                styles.textoSeletorVeiculo,
+                !veiculoSelecionado && styles.textoSeletorVeiculoPlaceholder
+              ]}>
+                {veiculoSelecionado 
+                  ? `${veiculoSelecionado.modelo} (${veiculoSelecionado.tipo === 'carro' ? 'Carro' : 'Moto'})`
+                  : 'Selecione um veículo'
+                }
+              </Text>
+              <Ionicons name="chevron-down" size={20} color="#666" />
+            </TouchableOpacity>
           </View>
 
           <View style={styles.linha}>
@@ -201,6 +244,78 @@ const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Modal de Seleção de Veículos */}
+      <Modal
+        visible={mostrarSelecaoVeiculo}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setMostrarSelecaoVeiculo(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalSelecaoVeiculo}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitulo}>Selecionar Veículo</Text>
+              <TouchableOpacity onPress={() => setMostrarSelecaoVeiculo(false)}>
+                <Ionicons name="close" size={24} color="#666" />
+              </TouchableOpacity>
+            </View>
+            
+            {carregandoVeiculos ? (
+              <View style={styles.carregandoContainer}>
+                <ActivityIndicator size="large" color="#007AFF" />
+                <Text style={styles.textoCarregando}>Carregando veículos...</Text>
+              </View>
+            ) : veiculos.length === 0 ? (
+              <View style={styles.semVeiculosContainer}>
+                <Ionicons name="car-outline" size={48} color="#ccc" />
+                <Text style={styles.textoSemVeiculos}>Nenhum veículo cadastrado</Text>
+                <Text style={styles.textoSemVeiculosDescricao}>
+                  Cadastre um veículo primeiro em "Meus Veículos"
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                data={veiculos}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={[
+                      styles.itemVeiculo,
+                      veiculoSelecionado?.id === item.id && styles.itemVeiculoSelecionado
+                    ]}
+                    onPress={() => {
+                      setVeiculoSelecionado(item);
+                      setMostrarSelecaoVeiculo(false);
+                    }}
+                  >
+                    <View style={styles.infoVeiculo}>
+                      <View style={styles.tipoVeiculo}>
+                        <Ionicons 
+                          name={item.tipo === 'carro' ? 'car' : 'bicycle'} 
+                          size={20} 
+                          color="#007AFF" 
+                        />
+                        <Text style={styles.textoTipoVeiculo}>
+                          {item.tipo === 'carro' ? 'Carro' : 'Moto'}
+                        </Text>
+                      </View>
+                      <Text style={styles.textoModeloVeiculo}>{item.modelo}</Text>
+                      <Text style={styles.textoCategoriaVeiculo}>
+                        {item.categoria === 'passeio' ? 'Passeio' : 'Utilitário'}
+                      </Text>
+                    </View>
+                    {veiculoSelecionado?.id === item.id && (
+                      <Ionicons name="checkmark-circle" size={24} color="#007AFF" />
+                    )}
+                  </TouchableOpacity>
+                )}
+                style={styles.listaVeiculos}
+              />
+            )}
+          </View>
+        </View>
+      </Modal>
     </Modal>
   );
 };
@@ -281,6 +396,121 @@ const styles = StyleSheet.create({
   textoBotaoImagem: {
     fontSize: 16,
     color: '#007AFF',
+  },
+  // Estilos do seletor de veículos
+  seletorVeiculo: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    height: 50,
+  },
+  textoSeletorVeiculo: {
+    fontSize: 16,
+    color: '#333',
+    flex: 1,
+  },
+  textoSeletorVeiculoPlaceholder: {
+    color: '#999',
+  },
+  // Estilos do modal de seleção
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalSelecaoVeiculo: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    width: '90%',
+    maxHeight: '70%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  modalTitulo: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  carregandoContainer: {
+    padding: 40,
+    alignItems: 'center',
+  },
+  textoCarregando: {
+    marginTop: 10,
+    color: '#666',
+    fontSize: 16,
+  },
+  semVeiculosContainer: {
+    padding: 40,
+    alignItems: 'center',
+  },
+  textoSemVeiculos: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginTop: 10,
+  },
+  textoSemVeiculosDescricao: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 5,
+    textAlign: 'center',
+  },
+  listaVeiculos: {
+    maxHeight: 400,
+  },
+  itemVeiculo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  itemVeiculoSelecionado: {
+    backgroundColor: '#f0f8ff',
+  },
+  infoVeiculo: {
+    flex: 1,
+  },
+  tipoVeiculo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  textoTipoVeiculo: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#007AFF',
+    marginLeft: 6,
+  },
+  textoModeloVeiculo: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 2,
+  },
+  textoCategoriaVeiculo: {
+    fontSize: 14,
+    color: '#666',
   },
 });
 

@@ -800,3 +800,218 @@ Watching for file changes with StatReloader
 CSRF desabilitado para rota: /api/estatisticas/
 "GET /api/estatisticas/ HTTP/1.1" 200 156
 "GET /media/fotos_perfil/perfil_2_ba4fd826.jpg HTTP/1.1" 200 70
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /comunidade/ HTTP/1.1" 200 1130
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /comunidade/ HTTP/1.1" 200 1130
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /comunidade/ HTTP/1.1" 200 1130
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"POST /comunidade/ HTTP/1.1" 200 81
+"GET /comunidade/ HTTP/1.1" 200 1330
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /comunidade/ HTTP/1.1" 200 1330
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 77
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3777
+Not Found: /login
+"GET /login HTTP/1.1" 404 3759
+"GET /auth/login HTTP/1.1" 301 0
+"GET /auth/login/ HTTP/1.1" 200 9635
+"GET /auth/register/ HTTP/1.1" 200 15696
+"GET /auth/login/ HTTP/1.1" 200 9635
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 865
+"GET /auth/admin/ HTTP/1.1" 200 24449
+CSRF desabilitado para rota: /api/admin/stats/
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: False
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2710
+CSRF desabilitado para rota: /api/admin/users/1/
+Usuário teste@gmail.com ativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/1/ HTTP/1.1" 200 306
+CSRF desabilitado para rota: /api/admin/stats/
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2709
+"GET /auth/login/ HTTP/1.1" 200 9635
+"GET /auth/admin/ HTTP/1.1" 200 24449
+CSRF desabilitado para rota: /api/admin/stats/
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2709
+"GET /auth/login/ HTTP/1.1" 200 9635
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 955
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"POST /registro/api/registro-trabalho/ HTTP/1.1" 201 75
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /api/veiculos/ HTTP/1.1" 200 412
+"PUT /api/change-password/1/ HTTP/1.1" 200 55
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 607
+CSRF desabilitado para rota: /api/relatorios/despesas/
+"GET /api/relatorios/despesas/?periodo=mes HTTP/1.1" 200 429
+"GET /comunidade/ HTTP/1.1" 200 1330
+"GET /api/veiculos/ HTTP/1.1" 200 412
+"POST /comunidade/ HTTP/1.1" 200 81
+"GET /comunidade/ HTTP/1.1" 200 1539
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 865
+"GET /auth/admin/ HTTP/1.1" 200 24449
+CSRF desabilitado para rota: /api/admin/stats/
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2709
+CSRF desabilitado para rota: /api/admin/users/1/
+Usuário teste@gmail.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/1/ HTTP/1.1" 200 310
+CSRF desabilitado para rota: /api/admin/users/
+CSRF desabilitado para rota: /api/admin/stats/
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: False
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2710
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+CSRF desabilitado para rota: /api/estatisticas/
+Unauthorized: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 401 58
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/admin/users/1/
+Usuário teste@gmail.com ativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/1/ HTTP/1.1" 200 306
+CSRF desabilitado para rota: /api/admin/users/
+CSRF desabilitado para rota: /api/admin/stats/
+Entregadores encontrados: 10
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2709
+"GET /api/admin/stats/ HTTP/1.1" 200 350
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 955
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382

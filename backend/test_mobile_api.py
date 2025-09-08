@@ -102,3 +102,4 @@ if __name__ == '__main__':
     print("🚀 Iniciando testes da API mobile...")
     test_mobile_api()
     print("\n🎯 Testes concluídos!")
+

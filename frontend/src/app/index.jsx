@@ -141,12 +141,6 @@ export default function LoginScreen() {
               <Text style={styles.registerButtonText}>Criar nova conta</Text>
             </TouchableOpacity>
 
-            {/* Google Sign-In Button */}
-            <GoogleSignInButton
-              onPress={handleGoogleLogin}
-              loading={isGoogleLoading}
-              disabled={isLoading}
-            />
           </View>
         </View>
       </ScrollView>

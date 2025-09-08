@@ -128,3 +128,4 @@ node test-community-connection.js
 - ✅ **Teste de conexão** implementado
 - ⚠️ **Aguardando** verificação do backend
 - ⚠️ **Possível** necessidade de configurar CORS
+

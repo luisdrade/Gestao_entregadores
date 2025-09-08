@@ -80,3 +80,4 @@ if __name__ == '__main__':
         print("\n🎉 Todos os testes passaram! A comunidade está funcionando.")
     else:
         print("\n⚠️ Alguns testes falharam. Verifique a configuração.")
+
