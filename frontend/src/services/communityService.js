@@ -40,18 +40,17 @@ class CommunityService {
       console.log('🚀 Enviando postagem:', postData);
       console.log('🌐 URL:', `${this.baseURL}/comunidade/`);
 
-      const formData = new FormData();
-      formData.append('autor', postData.autor);
-      formData.append('titulo', postData.titulo);
-      formData.append('conteudo', postData.conteudo);
-      formData.append('submit_postagem', 'true');
-
       const response = await fetch(`${this.baseURL}/comunidade/`, {
         method: 'POST',
-        body: formData,
         headers: {
+          'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
+        body: JSON.stringify({
+          autor: postData.autor || 'Usuário',
+          titulo: postData.titulo,
+          conteudo: postData.conteudo,
+        }),
       });
 
       console.log('📡 Resposta do servidor:', response.status, response.statusText);
@@ -60,7 +59,6 @@ class CommunityService {
         throw new Error(`Erro ao criar postagem: ${response.status} - ${response.statusText}`);
       }
 
-      // O backend agora retorna JSON
       const data = await response.json();
       console.log('✅ Postagem criada com sucesso!', data);
       return data;
@@ -76,41 +74,68 @@ class CommunityService {
       console.log('🚀 Enviando anúncio:', adData);
       console.log('🌐 URL:', `${this.baseURL}/comunidade/`);
 
-      const formData = new FormData();
-      formData.append('modelo', adData.modelo);
-      formData.append('ano', adData.ano.toString());
-      formData.append('quilometragem', adData.quilometragem.toString());
-      formData.append('preco', adData.preco.toString());
-      formData.append('localizacao', adData.localizacao);
-      formData.append('link_externo', adData.link_externo);
-      formData.append('submit_anuncio', 'true');
-      
-      if (adData.foto) {
+      // Se não há foto, usar JSON
+      if (!adData.foto) {
+        const response = await fetch(`${this.baseURL}/comunidade/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            modelo: adData.modelo,
+            ano: parseInt(adData.ano),
+            quilometragem: parseInt(adData.quilometragem),
+            preco: parseFloat(adData.preco),
+            localizacao: adData.localizacao,
+            link_externo: adData.link_externo || '',
+          }),
+        });
+
+        console.log('📡 Resposta do servidor:', response.status, response.statusText);
+
+        if (!response.ok) {
+          throw new Error(`Erro ao criar anúncio: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ Anúncio criado com sucesso!', data);
+        return data;
+      } else {
+        // Se há foto, usar FormData
+        const formData = new FormData();
+        formData.append('modelo', adData.modelo);
+        formData.append('ano', adData.ano.toString());
+        formData.append('quilometragem', adData.quilometragem.toString());
+        formData.append('preco', adData.preco.toString());
+        formData.append('localizacao', adData.localizacao);
+        formData.append('link_externo', adData.link_externo);
+        formData.append('submit_anuncio', 'true');
+        
         formData.append('foto', {
           uri: adData.foto.uri,
           type: adData.foto.type || 'image/jpeg',
           name: adData.foto.fileName || 'foto.jpg',
         });
+
+        const response = await fetch(`${this.baseURL}/comunidade/`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+
+        console.log('📡 Resposta do servidor:', response.status, response.statusText);
+
+        if (!response.ok) {
+          throw new Error(`Erro ao criar anúncio: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ Anúncio criado com sucesso!', data);
+        return data;
       }
-
-      const response = await fetch(`${this.baseURL}/comunidade/`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
-
-      console.log('📡 Resposta do servidor:', response.status, response.statusText);
-
-      if (!response.ok) {
-        throw new Error(`Erro ao criar anúncio: ${response.status} - ${response.statusText}`);
-      }
-
-      // O backend agora retorna JSON
-      const data = await response.json();
-      console.log('✅ Anúncio criado com sucesso!', data);
-      return data;
     } catch (error) {
       console.error('❌ Erro ao criar anúncio:', error);
       throw error;

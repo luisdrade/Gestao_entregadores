@@ -1015,3 +1015,48 @@ Login bem-sucedido para usuário: teste@gmail.com (Tipo: entregador)
 "POST /api/auth/login/ HTTP/1.1" 200 955
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 607
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /comunidade/ HTTP/1.1" 200 4890
+"GET /comunidade/ HTTP/1.1" 200 4890
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"PUT /api/change-password/1/ HTTP/1.1" 200 55
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 607
+CSRF desabilitado para rota: /api/relatorios/despesas/
+"GET /api/relatorios/despesas/?periodo=mes HTTP/1.1" 200 429
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 607
+"GET /comunidade/ HTTP/1.1" 200 4890
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /comunidade/ HTTP/1.1" 200 1556
+Forbidden (CSRF cookie not set.): /comunidade/
+"POST /comunidade/ HTTP/1.1" 403 2901
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /comunidade/ HTTP/1.1" 200 1556
+"POST /comunidade/ HTTP/1.1" 200 253
+"GET /comunidade/ HTTP/1.1" 200 1737
+"GET /comunidade/ HTTP/1.1" 200 1737
+"GET /comunidade/ HTTP/1.1" 200 1737
+"GET /comunidade/ HTTP/1.1" 200 1737
+"GET /comunidade/ HTTP/1.1" 200 1737
+"GET /comunidade/ HTTP/1.1" 200 1737
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /comunidade/ HTTP/1.1" 200 1737
+"GET /comunidade/ HTTP/1.1" 200 1737
+"GET /comunidade/ HTTP/1.1" 200 1737
