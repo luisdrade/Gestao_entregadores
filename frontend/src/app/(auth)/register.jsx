@@ -35,6 +35,9 @@ const validacaoRegister = Yup.object().shape({
   senha: Yup.string()
     .min(8, 'Senha deve ter pelo menos 8 caracteres')
     .required('Senha é obrigatória'),
+  confirmarSenha: Yup.string()
+    .oneOf([Yup.ref('senha'), null], 'As senhas devem ser iguais')
+    .required('Confirmação de senha é obrigatória'),
 });
 
 export default function RegisterScreen() {
@@ -55,7 +58,7 @@ export default function RegisterScreen() {
         email: values.email,
         telefone: values.telefone,
         password: values.senha,
-        password_confirm: values.senha, // Confirmar a mesma senha
+        password_confirm: values.confirmarSenha, // Usar o campo de confirmação
       };
       
       const result = await signUp(registrationData);
@@ -88,8 +91,15 @@ export default function RegisterScreen() {
           if (details.password) {
             newFieldErrors.senha = details.password[0];
           }
+          if (details.password_confirm) {
+            newFieldErrors.confirmarSenha = details.password_confirm[0];
+          }
           if (details.nome) {
             newFieldErrors.nome = details.nome[0];
+          }
+          if (details.non_field_errors) {
+            // Erro de senhas não coincidem
+            newFieldErrors.confirmarSenha = details.non_field_errors[0];
           }
         } else if (result.error && typeof result.error === 'string') {
           // Se for um erro geral, mostrar no campo mais relevante
@@ -123,6 +133,7 @@ export default function RegisterScreen() {
               email: '',
               telefone: '',
               senha: '',
+              confirmarSenha: '',
             }}
             validationSchema={validacaoRegister}
             onSubmit={handleRegister}
@@ -258,6 +269,32 @@ export default function RegisterScreen() {
                 )}
                 {fieldErrors.senha && (
                   <Text style={styles.error}>{fieldErrors.senha}</Text>
+                )}
+
+                <TextInput
+                  placeholder="Confirmar Senha"
+                  style={[
+                    styles.input,
+                    (touched.confirmarSenha && errors.confirmarSenha) || fieldErrors.confirmarSenha ? styles.inputError : null
+                  ]}
+                  secureTextEntry
+                  autoCapitalize="none"
+                  value={values.confirmarSenha}
+                  onChangeText={(text) => {
+                    handleChange('confirmarSenha')(text);
+                    // Limpar erro do campo quando usuário começar a digitar
+                    if (fieldErrors.confirmarSenha) {
+                      setFieldErrors(prev => ({ ...prev, confirmarSenha: null }));
+                    }
+                  }}
+                  onBlur={handleBlur('confirmarSenha')}
+                  placeholderTextColor="#666"
+                />
+                {(touched.confirmarSenha && errors.confirmarSenha) && (
+                  <Text style={styles.error}>{errors.confirmarSenha}</Text>
+                )}
+                {fieldErrors.confirmarSenha && (
+                  <Text style={styles.error}>{fieldErrors.confirmarSenha}</Text>
                 )}
 
                 {/* Erro geral */}

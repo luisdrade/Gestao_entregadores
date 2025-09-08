@@ -1193,3 +1193,16 @@ Headers: {'Content-Length': '149', 'Content-Type': 'application/json', 'Accept':
 Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')], 'username': [ErrorDetail(string='entregador com este username já existe.', code='unique')]}
 Bad Request: /api/auth/register/
 "POST /api/auth/register/ HTTP/1.1" 400 162
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Teste Senhas Diferentes', 'username': 'teste_senhas_diferentes', 'email': 'teste.senhas.diferentes@email.com', 'telefone': '(11) 99999-9999', 'password': 'senha123456', 'password_confirm': 'senha654321'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '213', 'Content-Type': 'application/json', 'Host': '192.168.0.115:8000', 'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+Erro de validação no serializer: {'non_field_errors': [ErrorDetail(string='As senhas não coincidem', code='invalid')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 104
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Teste Senhas Iguais', 'username': 'teste_senhas_iguais', 'email': 'teste.senhas.iguais@email.com', 'telefone': '(11) 88888-8888', 'password': 'senha123456', 'password_confirm': 'senha123456'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '201', 'Content-Type': 'application/json', 'Host': '192.168.0.115:8000', 'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+Novo usuário registrado: teste.senhas.iguais@email.com
+"POST /api/auth/register/ HTTP/1.1" 201 913
