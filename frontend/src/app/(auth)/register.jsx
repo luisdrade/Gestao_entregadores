@@ -21,15 +21,17 @@ const validationSchema = Yup.object().shape({
   nome: Yup.string()
     .min(2, 'Nome deve ter pelo menos 2 caracteres')
     .required('Nome é obrigatório'),
+  username: Yup.string()
+    .min(3, 'Username deve ter pelo menos 3 caracteres')
+    .max(20, 'Username deve ter no máximo 20 caracteres')
+    .matches(/^[a-zA-Z0-9_]+$/, 'Username pode conter apenas letras, números e _')
+    .required('Username é obrigatório'),
   email: Yup.string()
     .email('Email inválido')
     .required('Email é obrigatório'),
   telefone: Yup.string()
     .min(14, 'Telefone deve ter pelo menos 14 caracteres')
     .required('Telefone é obrigatório'),
-  cpf: Yup.string()
-    .min(14, 'CPF deve ter pelo menos 14 caracteres')
-    .required('CPF é obrigatório'),
   senha: Yup.string()
     .min(6, 'Senha deve ter pelo menos 6 caracteres')
     .required('Senha é obrigatória'),
@@ -43,7 +45,17 @@ export default function RegisterScreen() {
   const handleRegister = async (values) => {
     setIsSubmitting(true);
     try {
-      const result = await signUp(values);
+      // Mapear os campos para o formato esperado pelo backend
+      const registrationData = {
+        nome: values.nome,
+        username: values.username,
+        email: values.email,
+        telefone: values.telefone,
+        password: values.senha,
+        password_confirm: values.senha, // Confirmar a mesma senha
+      };
+      
+      const result = await signUp(registrationData);
       if (result.success) {
         Alert.alert(
           'Sucesso', 
@@ -51,7 +63,22 @@ export default function RegisterScreen() {
           [{ text: 'OK', onPress: () => router.back() }]
         );
       } else {
-        Alert.alert('Erro', result.error || 'Erro ao criar conta');
+        // Tratar erros específicos
+        let errorMessage = 'Erro ao criar conta';
+        
+        if (result.error) {
+          if (typeof result.error === 'string') {
+            errorMessage = result.error;
+          } else if (result.error.details) {
+            // Se há detalhes de validação, mostrar o primeiro erro
+            const firstError = Object.values(result.error.details)[0];
+            if (Array.isArray(firstError) && firstError.length > 0) {
+              errorMessage = firstError[0];
+            }
+          }
+        }
+        
+        Alert.alert('Erro', errorMessage);
       }
     } catch (error) {
       Alert.alert('Erro', 'Erro inesperado ao criar conta');
@@ -73,9 +100,9 @@ export default function RegisterScreen() {
           <Formik
             initialValues={{
               nome: '',
+              username: '',
               email: '',
               telefone: '',
-              cpf: '',
               senha: '',
             }}
             validationSchema={validationSchema}
@@ -84,7 +111,7 @@ export default function RegisterScreen() {
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
               <View style={styles.form}>
                 <TextInput
-                  placeholder="Nome"
+                  placeholder="Nome completo"
                   style={styles.input}
                   value={values.nome}
                   onChangeText={handleChange('nome')}
@@ -93,6 +120,22 @@ export default function RegisterScreen() {
                 />
                 {touched.nome && errors.nome && (
                   <Text style={styles.error}>{errors.nome}</Text>
+                )}
+
+                <View style={styles.usernameContainer}>
+                  <Text style={styles.usernamePrefix}>@</Text>
+                  <TextInput
+                    placeholder="username"
+                    style={[styles.input, styles.usernameInput]}
+                    autoCapitalize="none"
+                    value={values.username}
+                    onChangeText={handleChange('username')}
+                    onBlur={handleBlur('username')}
+                    placeholderTextColor="#666"
+                  />
+                </View>
+                {touched.username && errors.username && (
+                  <Text style={styles.error}>{errors.username}</Text>
                 )}
 
                 <TextInput
@@ -122,20 +165,6 @@ export default function RegisterScreen() {
                 />
                 {touched.telefone && errors.telefone && (
                   <Text style={styles.error}>{errors.telefone}</Text>
-                )}
-
-                <TextInputMask
-                  type={'cpf'}
-                  placeholder="CPF"
-                  style={styles.input}
-                  keyboardType="numeric"
-                  value={values.cpf}
-                  onChangeText={text => setFieldValue('cpf', text)}
-                  onBlur={handleBlur('cpf')}
-                  placeholderTextColor="#666"
-                />
-                {touched.cpf && errors.cpf && (
-                  <Text style={styles.error}>{errors.cpf}</Text>
                 )}
 
                 <TextInput
@@ -217,6 +246,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderWidth: 1,
     borderColor: '#ddd',
+  },
+  usernameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginBottom: 5,
+  },
+  usernamePrefix: {
+    fontSize: 16,
+    color: '#007AFF',
+    fontWeight: '600',
+    paddingLeft: 15,
+    paddingRight: 5,
+  },
+  usernameInput: {
+    flex: 1,
+    borderWidth: 0,
+    marginBottom: 0,
+    paddingLeft: 0,
   },
   error: {
     color: '#ff3b30',

@@ -43,13 +43,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         if Entregador.objects.filter(email=attrs['email']).exists():
             raise serializers.ValidationError("Este email já está cadastrado")
         
-        # Verificar se username já existe
-        if Entregador.objects.filter(username=attrs['username']).exists():
-            raise serializers.ValidationError("Este username já está em uso")
-        
-        # Verificar se CPF já existe (apenas se fornecido)
-        if attrs.get('cpf') and Entregador.objects.filter(cpf=attrs['cpf']).exists():
+        # Verificar se CPF já existe
+        if Entregador.objects.filter(cpf=attrs['cpf']).exists():
             raise serializers.ValidationError("Este CPF já está cadastrado")
+        
+        # Verificar se username já existe (se fornecido)
+        if attrs.get('username') and Entregador.objects.filter(username=attrs['username']).exists():
+            raise serializers.ValidationError("Este username já está em uso")
         
         return attrs
     
@@ -62,9 +62,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password'],
             nome=validated_data['nome'],
-            cpf=validated_data.get('cpf'),
+            cpf=validated_data['cpf'],
             telefone=validated_data['telefone'],
-            username=validated_data['username'],
+            username=validated_data.get('username'),
             data_nascimento=validated_data.get('data_nascimento'),
             endereco=validated_data.get('endereco'),
             cep=validated_data.get('cep'),
@@ -126,8 +126,7 @@ class AdminCreateUserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
             'password_confirm': {'write_only': True},
-            'username': {'required': True},
-            'cpf': {'required': False},
+            'username': {'required': False},
             'data_nascimento': {'required': False},
             'endereco': {'required': False},
             'cep': {'required': False},
@@ -146,13 +145,13 @@ class AdminCreateUserSerializer(serializers.ModelSerializer):
         if Entregador.objects.filter(email=attrs['email']).exists():
             raise serializers.ValidationError("Este email já está cadastrado")
         
-        # Verificar se username já existe
-        if Entregador.objects.filter(username=attrs['username']).exists():
-            raise serializers.ValidationError("Este username já está em uso")
-        
-        # Verificar se CPF já existe (apenas se fornecido)
-        if attrs.get('cpf') and Entregador.objects.filter(cpf=attrs['cpf']).exists():
+        # Verificar se CPF já existe
+        if Entregador.objects.filter(cpf=attrs['cpf']).exists():
             raise serializers.ValidationError("Este CPF já está cadastrado")
+        
+        # Verificar se username já existe (se fornecido)
+        if attrs.get('username') and Entregador.objects.filter(username=attrs['username']).exists():
+            raise serializers.ValidationError("Este username já está em uso")
         
         return attrs
     
@@ -169,9 +168,9 @@ class AdminCreateUserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password'],
             nome=validated_data['nome'],
-            cpf=validated_data.get('cpf'),
+            cpf=validated_data['cpf'],
             telefone=validated_data['telefone'],
-            username=validated_data['username'],
+            username=validated_data.get('username'),
             data_nascimento=validated_data.get('data_nascimento'),
             endereco=validated_data.get('endereco'),
             cep=validated_data.get('cep'),

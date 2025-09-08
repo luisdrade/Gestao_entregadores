@@ -1060,3 +1060,79 @@ CSRF desabilitado para rota: /api/estatisticas/
 "GET /comunidade/ HTTP/1.1" 200 1737
 "GET /comunidade/ HTTP/1.1" 200 1737
 "GET /comunidade/ HTTP/1.1" 200 1737
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_serializers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_serializers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\models.py changed, reloading.
+Watching for file changes with StatReloader
+Bad Request: /api/auth/registration/
+"POST /api/auth/registration/ HTTP/1.1" 400 169
+Bad Request: /api/auth/registration/
+"POST /api/auth/registration/ HTTP/1.1" 400 169
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'João Silva Teste', 'username': 'joao_teste_123', 'email': 'joao.teste@email.com', 'telefone': '(11) 99999-9999', 'password': 'senha123456', 'password_confirm': 'senha123456'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '189', 'Content-Type': 'application/json', 'Host': '192.168.0.115:8000', 'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+Novo usuário registrado: joao.teste@email.com
+"POST /api/auth/register/ HTTP/1.1" 201 897
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Maria Santos Teste', 'username': 'joao_teste_123', 'email': 'maria.teste@email.com', 'telefone': '(11) 88888-8888', 'password': 'senha123456', 'password_confirm': 'senha123456'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '187', 'Content-Type': 'application/json', 'Host': '192.168.0.115:8000', 'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+Erro de validação no serializer: {'username': [ErrorDetail(string='entregador com este username já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 112
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\models.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste10', 'email': 'teste10@gmail.com', 'telefone': '(16) 84646-8468', 'cpf': '', 'senha': 'teste10', 'username': 'teste10'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '123', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')], 'password': [ErrorDetail(string='Este campo é obrigatório.', code='required')], 'password_confirm': [ErrorDetail(string='Este campo é obrigatório.', code='required')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 200
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste10', 'email': 'teste10@gmail.com', 'telefone': '(16) 84646-8468', 'cpf': '', 'senha': 'teste10', 'username': 'teste10'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '123', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')], 'password': [ErrorDetail(string='Este campo é obrigatório.', code='required')], 'password_confirm': [ErrorDetail(string='Este campo é obrigatório.', code='required')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 200
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Teste Frontend', 'username': 'teste_frontend_123', 'email': 'teste.frontend@email.com', 'telefone': '(11) 99999-9999', 'password': 'senha123456', 'password_confirm': 'senha123456'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '190', 'Content-Type': 'application/json', 'Host': '192.168.0.115:8000', 'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+Novo usuário registrado: teste.frontend@email.com
+"POST /api/auth/register/ HTTP/1.1" 201 902
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Teste10', 'username': 'teste10', 'email': 'teste10@gmail.com', 'telefone': '(16) 84684-6846', 'password': 'teste10', 'password_confirm': 'teste10'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '146', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')], 'password': [ErrorDetail(string='Esta senha é muito curta. Ela precisa conter pelo menos 8 caracteres.', code='password_too_short')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 192
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Teste12', 'username': 'teste12', 'email': 'teste12@gmail.com', 'telefone': '(16) 84684-6846', 'password': 'teste12', 'password_confirm': 'teste12'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '146', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'password': [ErrorDetail(string='Esta senha é muito curta. Ela precisa conter pelo menos 8 caracteres.', code='password_too_short')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 142
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Teste12', 'username': 'teste12', 'email': 'teste12@gmail.com', 'telefone': '(16) 84684-6846', 'password': 'novoteste12', 'password_confirm': 'novoteste12'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '154', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Novo usuário registrado: teste12@gmail.com
+"POST /api/auth/register/ HTTP/1.1" 201 877
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste12', 'username': 'teste12', 'email': 'teste12@gmail.com', 'telefone': '(84) 46448-6468', 'password': 'teste12', 'password_confirm': 'teste12'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '146', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')], 'password': [ErrorDetail(string='Esta senha é muito curta. Ela precisa conter pelo menos 8 caracteres.', code='password_too_short')], 'username': [ErrorDetail(string='entregador com este username já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 248

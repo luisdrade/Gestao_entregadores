@@ -44,7 +44,7 @@ class Entregador(AbstractBaseUser, PermissionsMixin):
     objects = UsuarioManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nome', 'cpf', 'telefone', 'username']
+    REQUIRED_FIELDS = ['nome', 'telefone', 'username']
 
     def __str__(self):
         return self.email
