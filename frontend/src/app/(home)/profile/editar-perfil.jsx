@@ -28,6 +28,12 @@ const validationSchema = Yup.object().shape({
     .min(2, 'Nome deve ter pelo menos 2 caracteres')
     .max(100, 'Nome deve ter no máximo 100 caracteres')
     .required('Nome é obrigatório'),
+  username: Yup.string()
+    .trim()
+    .min(3, 'Username deve ter pelo menos 3 caracteres')
+    .max(20, 'Username deve ter no máximo 20 caracteres')
+    .matches(/^[a-zA-Z0-9_]+$/, 'Username pode conter apenas letras, números e _')
+    .required('Username é obrigatório'),
   email: Yup.string()
     .trim()
     .email('Email inválido')
@@ -110,6 +116,13 @@ export default function EditarPerfilScreen() {
       const storedUser = await AsyncStorage.getItem('@GestaoEntregadores:user');
       if (storedUser) {
         const userData = JSON.parse(storedUser);
+        
+        // Converter data de nascimento de YYYY-MM-DD para DD/MM/AAAA se existir
+        if (userData.data_nascimento) {
+          const [year, month, day] = userData.data_nascimento.split('-');
+          userData.dataNascimento = `${day}/${month}/${year}`;
+        }
+        
         setUser(userData);
       }
     } catch (error) {
@@ -143,6 +156,12 @@ export default function EditarPerfilScreen() {
           ...user,
           ...response.data.user
         };
+        
+        // Converter data de nascimento de YYYY-MM-DD para DD/MM/AAAA se existir
+        if (updatedUserData.data_nascimento) {
+          const [year, month, day] = updatedUserData.data_nascimento.split('-');
+          updatedUserData.dataNascimento = `${day}/${month}/${year}`;
+        }
         
         // Atualizar AsyncStorage
         await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(updatedUserData));
@@ -195,6 +214,7 @@ export default function EditarPerfilScreen() {
   // Valores iniciais para o Formik
   const initialValues = {
     nome: user.nome || '',
+    username: user.username || '',
     email: user.email || '',
     telefone: user.telefone || '',
     cpf: user.cpf || '',
@@ -262,6 +282,29 @@ export default function EditarPerfilScreen() {
                   />
                   {touched.nome && errors.nome && (
                     <Text style={styles.errorText}>{errors.nome}</Text>
+                  )}
+                </View>
+
+                {/* Username */}
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>@Usuário *</Text>
+                  <View style={[
+                    styles.usernameContainer,
+                    touched.username && errors.username && styles.inputError
+                  ]}>
+                    <Text style={styles.usernamePrefix}>@</Text>
+                    <TextInput
+                      style={[styles.input, styles.usernameInput]}
+                      placeholder="Usuario"
+                      value={values.username}
+                      onChangeText={handleChange('username')}
+                      onBlur={handleBlur('username')}
+                      placeholderTextColor="#666"
+                      autoCapitalize="none"
+                    />
+                  </View>
+                  {touched.username && errors.username && (
+                    <Text style={styles.errorText}>{errors.username}</Text>
                   )}
                 </View>
 
@@ -577,5 +620,26 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 8,
     fontWeight: '600',
+  },
+  usernameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  usernamePrefix: {
+    fontSize: 16,
+    color: '#007AFF',
+    fontWeight: '600',
+    paddingLeft: 15,
+    paddingRight: 5,
+  },
+  usernameInput: {
+    flex: 1,
+    borderWidth: 0,
+    marginBottom: 0,
+    paddingLeft: 0,
   },
 });

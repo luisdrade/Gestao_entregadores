@@ -119,9 +119,9 @@ export default function RegisterScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Criar Conta</Text>
-          <Text style={styles.subtitle}>Preencha os dados para se cadastrar</Text>
+        <View style={styles.conteudo}>
+          <Text style={styles.titulo}>Criar Conta</Text>
+          <Text style={styles.subtitulo}>Preencha os dados para se cadastrar</Text>
 
           <Formik
             initialValues={{
@@ -141,12 +141,11 @@ export default function RegisterScreen() {
                   placeholder="Nome completo"
                   style={[
                     styles.input,
-                    (touched.nome && errors.nome) || fieldErrors.nome ? styles.inputError : null
+                    (touched.nome && errors.nome) || fieldErrors.nome ? styles.inputErro : null
                   ]}
                   value={values.nome}
                   onChangeText={(text) => {
                     handleChange('nome')(text);
-                    // Limpar erro do campo quando usuário começar a digitar
                     if (fieldErrors.nome) {
                       setFieldErrors(prev => ({ ...prev, nome: null }));
                     }
@@ -163,17 +162,16 @@ export default function RegisterScreen() {
 
                 <View style={[
                   styles.usernameContainer,
-                  (touched.username && errors.username) || fieldErrors.username ? styles.inputError : null
+                  (touched.username && errors.username) || fieldErrors.username ? styles.inputErro : null
                 ]}>
                   <Text style={styles.usernamePrefix}>@</Text>
                   <TextInput
-                    placeholder="username"
+                    placeholder="Usuario"
                     style={[styles.input, styles.usernameInput]}
                     autoCapitalize="none"
                     value={values.username}
                     onChangeText={(text) => {
                       handleChange('username')(text);
-                      // Limpar erro do campo quando usuário começar a digitar
                       if (fieldErrors.username) {
                         setFieldErrors(prev => ({ ...prev, username: null }));
                       }
@@ -193,14 +191,13 @@ export default function RegisterScreen() {
                   placeholder="Email"
                   style={[
                     styles.input,
-                    (touched.email && errors.email) || fieldErrors.email ? styles.inputError : null
+                    (touched.email && errors.email) || fieldErrors.email ? styles.inputErro : null
                   ]}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   value={values.email}
                   onChangeText={(text) => {
                     handleChange('email')(text);
-                    // Limpar erro do campo quando usuário começar a digitar
                     if (fieldErrors.email) {
                       setFieldErrors(prev => ({ ...prev, email: null }));
                     }
@@ -221,7 +218,7 @@ export default function RegisterScreen() {
                   placeholder="Telefone"
                   style={[
                     styles.input,
-                    (touched.telefone && errors.telefone) || fieldErrors.telefone ? styles.inputError : null
+                    (touched.telefone && errors.telefone) || fieldErrors.telefone ? styles.inputErro : null
                   ]}
                   keyboardType="phone-pad"
                   value={values.telefone}
@@ -246,7 +243,7 @@ export default function RegisterScreen() {
                   placeholder="Senha"
                   style={[
                     styles.input,
-                    (touched.senha && errors.senha) || fieldErrors.senha ? styles.inputError : null
+                    (touched.senha && errors.senha) || fieldErrors.senha ? styles.inputErro : null
                   ]}
                   secureTextEntry
                   autoCapitalize="none"
@@ -272,7 +269,7 @@ export default function RegisterScreen() {
                   placeholder="Confirmar Senha"
                   style={[
                     styles.input,
-                    (touched.confirmarSenha && errors.confirmarSenha) || fieldErrors.confirmarSenha ? styles.inputError : null
+                    (touched.confirmarSenha && errors.confirmarSenha) || fieldErrors.confirmarSenha ? styles.inputErro : null
                   ]}
                   secureTextEntry
                   autoCapitalize="none"
@@ -296,8 +293,8 @@ export default function RegisterScreen() {
 
                 {/* Erro geral */}
                 {fieldErrors.general && (
-                  <View style={styles.generalErrorContainer}>
-                    <Text style={styles.generalError}>{fieldErrors.general}</Text>
+                  <View style={styles.geralErroContainer}>
+                    <Text style={styles.geralErro}>{fieldErrors.general}</Text>
                   </View>
                 )}
 
@@ -337,18 +334,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
   },
-  content: {
+  conteudo: {
     padding: 20,
     alignItems: 'center',
   },
-  title: {
+  titulo: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 10,
     textAlign: 'center',
   },
-  subtitle: {
+  subtitulo: {
     fontSize: 16,
     color: '#666',
     marginBottom: 30,
@@ -367,7 +364,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
   },
-  inputError: {
+  inputErro: {
     borderColor: '#ff3b30',
     borderWidth: 2,
   },
@@ -422,7 +419,7 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     fontSize: 14,
   },
-  generalErrorContainer: {
+  geralErroContainer: {
     backgroundColor: '#ffebee',
     borderRadius: 8,
     padding: 12,
@@ -430,7 +427,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderLeftColor: '#ff3b30',
   },
-  generalError: {
+  geralErro: {
     color: '#ff3b30',
     fontSize: 14,
     fontWeight: '500',

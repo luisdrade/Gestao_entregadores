@@ -453,7 +453,7 @@ export default function ProfileScreen() {
             </View>
           </TouchableOpacity>
           <Text style={styles.userName}>{user.nome || 'Usuário'}</Text>
-          <Text style={styles.userEmail}>{user.email || 'email@exemplo.com'}</Text>
+          <Text style={styles.userEmail}>@{user.username || 'usuario'}</Text>
           {uploadingPhoto && (
             <Text style={styles.uploadingText}>Atualizando foto...</Text>
           )}

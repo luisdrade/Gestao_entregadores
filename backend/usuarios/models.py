@@ -27,7 +27,6 @@ class Entregador(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150, unique=True, blank=True, null=True)
     data_nascimento = models.DateField(null=True, blank=True)
     
-    # Campos de endereço
     endereco = models.CharField(max_length=200, null=True, blank=True)
     cep = models.CharField(max_length=10, null=True, blank=True)
     cidade = models.CharField(max_length=100, null=True, blank=True)

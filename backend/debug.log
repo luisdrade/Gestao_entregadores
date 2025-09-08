@@ -1389,3 +1389,87 @@ Unauthorized: /registro/api/dashboard-data/
 Unauthorized: /registro/api/dashboard-data/
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
 - Broken pipe from ('192.168.0.119', 63840)
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\models.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 955
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"PUT /api/entregadores/1/ HTTP/1.1" 200 318
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"PUT /api/entregadores/1/ HTTP/1.1" 200 313
+"PUT /api/entregadores/1/ HTTP/1.1" 200 313
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /api/veiculos/ HTTP/1.1" 200 412
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET / HTTP/1.1" 200 77
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3777
+"GET /auth/login/ HTTP/1.1" 200 9635
+"GET /auth/admin/ HTTP/1.1" 200 24449
+CSRF desabilitado para rota: /api/admin/stats/
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2718
+"GET /api/admin/stats/ HTTP/1.1" 200 351
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 5
+Entregador: teste10@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+Entregador: teste@teste.com, is_active: True
+"GET /api/admin/users/?page=2&per_page=10&search=&status=all HTTP/1.1" 200 1454
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2718
