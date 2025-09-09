@@ -14,6 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 import TopNavBar from '../../components/_NavBar_Superior';
 import { httpClient as api } from '../../services/clientConfig';
 import { API_ENDPOINTS } from '../../config/api';
+import HeaderWithBack from '../../components/_Header';
 
 export default function RelatoriosScreen() {
   const router = useRouter();
@@ -85,7 +86,6 @@ export default function RelatoriosScreen() {
 
   const renderTrabalhoReport = () => (
     <View style={styles.reportSection}>
-      {/* Resumo Geral */}
       <View style={styles.summaryContainer}>
         <Text style={styles.sectionTitle}>Resumo Geral</Text>
         <View style={styles.summaryGrid}>
@@ -238,14 +238,7 @@ export default function RelatoriosScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backButton}>← Voltar</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Relatórios</Text>
-        <View style={{ width: 60 }} />
-      </View>
+      <HeaderWithBack title="Relatórios" />
 
       {/* NavBar */}
       <TopNavBar />
@@ -361,7 +354,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#007AFF',
   },
   tabText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '500',
     color: '#666',
   },
@@ -378,7 +371,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     marginHorizontal: 4,
-    borderRadius: 20,
+    borderRadius: 8,
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#e0e0e0',
@@ -628,4 +621,3 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 });
-

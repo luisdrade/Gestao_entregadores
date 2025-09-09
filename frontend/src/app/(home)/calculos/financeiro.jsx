@@ -14,6 +14,7 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { registroDespesa } from '../../../services/clientConfig';
+import HeaderWithBack from '../../../components/_Header.jsx';
 import TopNavBar from '../../../components/_NavBar_Superior';
 import DatePicker from '../../../components/_DataComp';
 
@@ -187,14 +188,7 @@ export default function FinanceiroScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>Registro de Despesas</Text>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <Ionicons name="arrow-back" size={20} color="#fff" />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <HeaderWithBack title="Registro de Despesas" />
 
       {/* Navigation Bar */}
       <TopNavBar />

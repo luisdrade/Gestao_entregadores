@@ -3,18 +3,19 @@ import {
   View,
   Text,
   StyleSheet,
+  TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  ActivityIndicator,
   Alert,
-  TouchableOpacity,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import TopNavBar from '../../components/_NavBar_Superior';
 import KPICard from '../../components/_KPICard';
-import LoadingError from '../../components/_CarregamentoError';
 import { api } from '../../services/clientConfig';
 import { API_ENDPOINTS } from '../../config/api';
+
 
 export default function HomeScreen() {
   const { user } = useAuth();
@@ -39,18 +40,14 @@ export default function HomeScreen() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [periodo, setPeriodo] = useState('mes'); // 'semana' ou 'mes'
-  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    if (!hasError) {
-      loadDashboardData();
-    }
+    loadDashboardData();
   }, [periodo]);
 
   const loadDashboardData = async () => {
     try {
       setIsLoading(true);
-      setHasError(false);
 
       // Debug: verificar se o usuário está logado
       console.log('🔍 Debug - Usuário logado:', user);
@@ -65,17 +62,15 @@ export default function HomeScreen() {
         setDashboardData(response.data.data);
       } else {
         Alert.alert('Erro', 'Falha ao carregar dados do dashboard');
-        setHasError(true);
       }
     } catch (error) {
       console.error('❌ Erro ao carregar dados do dashboard:', error);
       console.error('❌ Status do erro:', error.response?.status);
       console.error('❌ Dados do erro:', error.response?.data);
 
-      setHasError(true);
-
       if (error.response?.status === 401) {
         Alert.alert('Erro de Autenticação', 'Sessão expirada. Faça login novamente.');
+        // Redirecionar para login
         router.replace('/');
       } else {
         Alert.alert('Erro', 'Erro de conexão com o servidor');
@@ -89,20 +84,17 @@ export default function HomeScreen() {
     setPeriodo(periodo === 'mes' ? 'semana' : 'mes');
   };
 
-  const retryLoadData = () => {
-    setHasError(false);
-    loadDashboardData();
+  const formatCurrency = (value) => {
+    return `R$ ${parseFloat(value).toFixed(2)}`;
   };
 
-  if (isLoading || hasError) {
+  if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
-        <LoadingError
-          isLoading={isLoading}
-          hasError={hasError}
-          onRetry={retryLoadData}
-          loadingText="Carregando dashboard..."
-        />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+          <Text style={styles.loadingText}>Carregando dashboard...</Text>
+        </View>
       </SafeAreaView>
     );
   }
@@ -124,13 +116,14 @@ export default function HomeScreen() {
         <TopNavBar />
         
         <View>
-          {/* Botão de Período */}
-          <View style={styles.periodoButtonContainer}>
-            <TouchableOpacity style={styles.periodoButton} onPress={togglePeriodo}>
-              <Text style={styles.periodoButtonText}>
-                {periodo === 'mes' ? 'Mês' : 'Semana'}
-              </Text>
-            </TouchableOpacity>
+          {/* Botão de Período no canto superior direito */}
+          <View style={styles.periodButtonContainer}>
+                         <TouchableOpacity style={styles.periodButton} onPress={togglePeriodo}>
+               <Text style={styles.periodButtonText}>
+                 {periodo === 'mes' ? 'Mês' : 'Semana'}
+               </Text>
+               <Text style={styles.periodButtonIcon}>▼</Text>
+             </TouchableOpacity>
           </View>
 
           {/* Resumo Diário */}
@@ -146,7 +139,7 @@ export default function HomeScreen() {
                 <Text style={styles.statLabel}>Não Entregas</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statNumber}>R$ {parseFloat(dashboardData.resumo_diario.lucro_hoje).toFixed(2)}</Text>
+                <Text style={styles.statNumber}>{formatCurrency(dashboardData.resumo_diario.lucro_hoje)}</Text>
                 <Text style={styles.statLabel}>Lucro Hoje</Text>
               </View>
             </View>
@@ -206,12 +199,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 100, 
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#666',
   },
   header: {
     backgroundColor: '#007AFF',
-    paddingTop: 10,
-    paddingBottom: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
     paddingHorizontal: 20,
   },
   headerContent: {
@@ -231,12 +235,19 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   statsContainer: {
-    marginTop: 30,
+    marginTop: 50,
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
     margin: 20,
-    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   statsTitle: {
     fontSize: 18,
@@ -263,21 +274,6 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
   },
-  periodoButtonContainer: {
-    position: 'absolute',
-    left: 20,
-  },
-  periodoButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  periodoButtonText: {
-    color: '#007AFF',
-    fontSize: 14,
-    fontWeight: '500',
-  },
   kpiContainer: {
     paddingHorizontal: 20,
     marginBottom: 20,
@@ -292,6 +288,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+  },
+  periodButtonContainer: {
+    position: 'absolute',
+    top: 4,
+    left: 20,
+    zIndex: 10,
+    
+  },
+  periodButton: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  periodButtonText: {
+    color: '#333',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  periodButtonIcon: {
+    fontSize: 10,
+    marginLeft: 8,
+    color: '#666',
   },
 });
 
