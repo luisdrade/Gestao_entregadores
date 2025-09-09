@@ -2,7 +2,7 @@
 export const API_CONFIG = {
   // 🎯 CONFIGURAÇÃO INTELIGENTE - Funciona em qualquer rede!
   //BASE_URL: 'http://entregasplus.ddns.net:8000',
-  BASE_URL: 'http://192.168.0.115:8000',
+  BASE_URL: 'http://10.20.16.100:8000',
   
   // 🚀 NO-IP: Domínio fixo que resolve o problema do IP dinâmico
   // Substitua 'entregasplus.ddns.net' pelo seu domínio NO-IP

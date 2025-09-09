@@ -1473,3 +1473,318 @@ Entregador: teste2@gmail.com, is_active: True
 Entregador: teste3@gmail.com, is_active: True
 Entregador: teste4@gmail.com, is_active: True
 "GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2718
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\models.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /auth/admin/ HTTP/1.1" 200 24449
+CSRF desabilitado para rota: /api/admin/stats/
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: teste@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+"GET /api/admin/users/?page=1&per_page=10&search=&status=all HTTP/1.1" 200 2718
+"GET /api/admin/stats/ HTTP/1.1" 200 351
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+Código de validação de telefone para (18) 84685-6846: 984762
+"POST /api/auth/send-validation-code/ HTTP/1.1" 200 99
+"PUT /api/entregadores/1/ HTTP/1.1" 200 313
+Código de validação de telefone para (18) 99700-9892: 239586
+"POST /api/auth/send-validation-code/ HTTP/1.1" 200 99
+"PUT /api/entregadores/1/ HTTP/1.1" 200 321
+Código de validação de email para luisfilipem13@gmail.com: 811703
+"POST /api/auth/send-validation-code/ HTTP/1.1" 200 96
+CSRF desabilitado para rota: /api/auth/profile/
+Unauthorized: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 401 68
+Unauthorized: /api/auth/send-validation-code/
+"POST /api/auth/send-validation-code/ HTTP/1.1" 401 68
+Unauthorized: /api/auth/verify-validation-code/
+"POST /api/auth/verify-validation-code/ HTTP/1.1" 401 68
+Código de validação de telefone para (18) 99700-9892: 124911
+"POST /api/auth/send-validation-code/ HTTP/1.1" 200 99
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_serializers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\admin.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\models.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /auth/login/ HTTP/1.1" 200 9635
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 948
+Not Found: /entregador/dashboard/
+"GET /entregador/dashboard/ HTTP/1.1" 404 3807
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_serializers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\admin.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /auth/login/ HTTP/1.1" 200 4489
+Method Not Allowed (POST): /auth/login/
+"POST /auth/login/ HTTP/1.1" 405 0
+Watching for file changes with StatReloader
+Not Found: /entregador/dashboard/
+"GET /entregador/dashboard/ HTTP/1.1" 404 3807
+"GET /auth/login/ HTTP/1.1" 200 4489
+Method Not Allowed (POST): /auth/login/
+"POST /auth/login/ HTTP/1.1" 405 0
+"PUT /api/entregadores/1/ HTTP/1.1" 200 321
+Method Not Allowed (POST): /auth/login/
+"POST /auth/login/ HTTP/1.1" 405 0
+Method Not Allowed (POST): /auth/login/
+"POST /auth/login/ HTTP/1.1" 405 0
+"GET /auth/login/ HTTP/1.1" 200 4489
+Method Not Allowed (POST): /auth/login/
+"POST /auth/login/ HTTP/1.1" 405 0
+Watching for file changes with StatReloader
+"GET /auth/login/ HTTP/1.1" 200 4489
+Method Not Allowed (POST): /auth/login/
+"POST /auth/login/ HTTP/1.1" 405 0
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\template_urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\web_views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Email de validação enviado para luisfilipem13@gmail.com com código 664619
+"POST /auth/login/ HTTP/1.1" 302 0
+"GET /api/email-validation/ HTTP/1.1" 200 7002
+Email de validação enviado para luisfilipem13@gmail.com com código 453491
+"POST /api/resend-code/ HTTP/1.1" 200 66
+"GET /api/login/ HTTP/1.1" 200 775
+"GET /auth/login/ HTTP/1.1" 200 775
+"GET /auth/api/login/ HTTP/1.1" 302 0
+"GET /api/email-validation/ HTTP/1.1" 200 6823
+"GET /api/login/ HTTP/1.1" 200 775
+- Broken pipe from ('192.168.0.115', 50769)
+- Broken pipe from ('192.168.0.115', 51405)
+"POST /api/login/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 16688
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+"GET /static/admin/css/base.css HTTP/1.1" 200 22120
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /api/login/ HTTP/1.1" 200 775
+Forbidden (CSRF token from POST incorrect.): /api/email-validation/
+"POST /api/email-validation/ HTTP/1.1" 403 2504
+"GET /api/email-validation/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 16688
+Watching for file changes with StatReloader
+"GET /auth/login/ HTTP/1.1" 200 775
+"POST /auth/login/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 16688
+Not Found: /auth/api/login/
+"GET /auth/api/login/ HTTP/1.1" 404 4431
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 70
+"PUT /api/entregadores/1/ HTTP/1.1" 200 322
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 607
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 607
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 373

@@ -35,6 +35,11 @@ class Entregador(AbstractBaseUser, PermissionsMixin):
     # Campo de foto
     foto = models.ImageField(upload_to='fotos_perfil/', null=True, blank=True)
 
+    # Validação de email (apenas para web)
+    email_validado = models.BooleanField(default=False)
+    email_codigo_validacao = models.CharField(max_length=6, null=True, blank=True)
+    email_codigo_expira_em = models.DateTimeField(null=True, blank=True)
+
     # Campos de sistema
     date_joined = models.DateTimeField(default=django.utils.timezone.now)
     is_active = models.BooleanField(default=True)

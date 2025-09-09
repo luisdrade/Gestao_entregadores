@@ -4,7 +4,7 @@ import { API_CONFIG } from '../config/api';
 
 // ⚡ Cliente HTTP principal da aplicação
 export const httpClient = axios.create({
-  baseURL: API_CONFIG.BASE_URL || 'http://192.168.0.115:8000',
+  baseURL: API_CONFIG.BASE_URL || 'http://10.20.16.100:8000',
   timeout: API_CONFIG.TIMEOUT || 30000,
   headers: {
     'Content-Type': 'application/json',

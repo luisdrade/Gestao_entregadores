@@ -201,6 +201,7 @@ export default function EditarPerfilScreen() {
     router.back();
   };
 
+
   if (!user) {
     return (
       <SafeAreaView style={styles.container}>
@@ -308,48 +309,7 @@ export default function EditarPerfilScreen() {
                   )}
                 </View>
 
-                {/* Email */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Email *</Text>
-                  <TextInput
-                    style={[
-                      styles.input, 
-                      touched.email && errors.email && styles.inputError
-                    ]}
-                    placeholder="Digite seu email"
-                    value={values.email}
-                    onChangeText={handleChange('email')}
-                    onBlur={handleBlur('email')}
-                    placeholderTextColor="#666"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                  />
-                  {touched.email && errors.email && (
-                    <Text style={styles.errorText}>{errors.email}</Text>
-                  )}
-                </View>
 
-                {/* Telefone */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Telefone *</Text>
-                  <TextInputMask
-                    type={'cel-phone'}
-                    options={{ maskType: 'BRL', withDDD: true, dddMask: '(99) ' }}
-                    placeholder="(11) 99999-9999"
-                    style={[
-                      styles.input, 
-                      touched.telefone && errors.telefone && styles.inputError
-                    ]}
-                    keyboardType="phone-pad"
-                    value={values.telefone}
-                    onChangeText={text => setFieldValue('telefone', text)}
-                    onBlur={handleBlur('telefone')}
-                    placeholderTextColor="#666"
-                  />
-                  {touched.telefone && errors.telefone && (
-                    <Text style={styles.errorText}>{errors.telefone}</Text>
-                  )}
-                </View>
 
                 {/* CPF */}
                 <View style={styles.inputContainer}>
@@ -466,6 +426,49 @@ export default function EditarPerfilScreen() {
                   />
                   {touched.estado && errors.estado && (
                     <Text style={styles.errorText}>{errors.estado}</Text>
+                  )}
+                </View>
+
+                {/* Email */}
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Email *</Text>
+                  <TextInput
+                    style={[
+                      styles.input, 
+                      touched.email && errors.email && styles.inputError
+                    ]}
+                    placeholder="Digite seu email"
+                    value={values.email}
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
+                    placeholderTextColor="#666"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                  {touched.email && errors.email && (
+                    <Text style={styles.errorText}>{errors.email}</Text>
+                  )}
+                </View>
+
+                {/* Telefone */}
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Telefone *</Text>
+                  <TextInputMask
+                    type={'cel-phone'}
+                    options={{ maskType: 'BRL', withDDD: true, dddMask: '(99) ' }}
+                    placeholder="(11) 99999-9999"
+                    style={[
+                      styles.input, 
+                      touched.telefone && errors.telefone && styles.inputError
+                    ]}
+                    keyboardType="phone-pad"
+                    value={values.telefone}
+                    onChangeText={text => setFieldValue('telefone', text)}
+                    onBlur={handleBlur('telefone')}
+                    placeholderTextColor="#666"
+                  />
+                  {touched.telefone && errors.telefone && (
+                    <Text style={styles.errorText}>{errors.telefone}</Text>
                   )}
                 </View>
 

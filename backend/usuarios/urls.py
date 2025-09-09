@@ -11,6 +11,7 @@ from .auth_views import (
     ChangePasswordView
 )
 from .admin_views import AdminUsersAPIView, AdminStatsAPIView
+from .web_views import email_validation_view, resend_validation_code, custom_login_view
 
 app_name = 'usuarios'
 
@@ -55,4 +56,9 @@ urlpatterns = [
     path('admin/users/', AdminUsersAPIView.as_view(), name='admin_users'),
     path('admin/users/<int:user_id>/', AdminUsersAPIView.as_view(), name='admin_user_detail'),
     path('admin/stats/', AdminStatsAPIView.as_view(), name='admin_stats'),
+    
+    # URLs para validação de email (web)
+    path('login/', custom_login_view, name='custom_login'),
+    path('email-validation/', email_validation_view, name='email_validation'),
+    path('resend-code/', resend_validation_code, name='resend_code'),
 ]
