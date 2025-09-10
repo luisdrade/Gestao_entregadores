@@ -87,7 +87,6 @@ export default function DatePicker({
       
       {error && errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
-      {/* Modal de seleção de data */}
       <Modal
         visible={showDatePicker}
         animationType="slide"
@@ -98,7 +97,6 @@ export default function DatePicker({
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Selecione a data</Text>
             
-            {/* Inputs para dia, mês e ano */}
             <View style={styles.dateInputsRow}>
               <View style={styles.dateInputContainer}>
                 <Text style={styles.dateInputLabel}>Dia</Text>

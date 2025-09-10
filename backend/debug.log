@@ -2068,3 +2068,10 @@ CSRF desabilitado para rota: /api/relatorios/trabalho/
 "GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
 CSRF desabilitado para rota: /api/relatorios/trabalho/
 "GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375

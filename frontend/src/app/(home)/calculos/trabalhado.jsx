@@ -57,6 +57,7 @@ export default function TrabalhadoScreen() {
 
 
 
+
   const selectPaymentType = (type) => {
     setSelectedPaymentType(type);
     handleInputChange('tipoPagamento', type);
@@ -92,20 +93,17 @@ export default function TrabalhadoScreen() {
   const validateForm = () => {
     const newErrors = {};
 
+    // Validações de campos obrigatórios (componentes garantem formato)
     if (!formData.data.trim()) {
       newErrors.data = 'Data é obrigatória';
     }
 
     if (!formData.horaInicio.trim()) {
       newErrors.horaInicio = 'Hora de início é obrigatória';
-    } else if (!/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(formData.horaInicio)) {
-      newErrors.horaInicio = 'Formato de hora inválido (HH:MM)';
     }
 
     if (!formData.horaFim.trim()) {
       newErrors.horaFim = 'Hora de fim é obrigatória';
-    } else if (!/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(formData.horaFim)) {
-      newErrors.horaFim = 'Formato de hora inválido (HH:MM)';
     }
 
     if (!formData.quantidadeEntregues.trim()) {
@@ -130,7 +128,7 @@ export default function TrabalhadoScreen() {
       newErrors.valor = 'Valor deve ser um número positivo';
     }
 
-    // Validar se hora fim é maior que hora início
+    // Validação de lógica de negócio: hora fim deve ser maior que hora início
     if (formData.horaInicio && formData.horaFim) {
       const inicio = new Date(`2000-01-01 ${formData.horaInicio}`);
       const fim = new Date(`2000-01-01 ${formData.horaFim}`);
