@@ -1,8 +1,21 @@
 import { API_CONFIG, API_ENDPOINTS } from '../config/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class CommunityService {
   constructor() {
     this.baseURL = API_CONFIG.BASE_URL;
+  }
+
+  // Buscar token de autenticação
+  async getAuthToken() {
+    try {
+      const token = await AsyncStorage.getItem('authToken');
+      console.log('🔑 Token encontrado:', !!token);
+      return token;
+    } catch (error) {
+      console.error('❌ Erro ao buscar token:', error);
+      return null;
+    }
   }
 
   // Buscar todas as postagens
@@ -11,11 +24,15 @@ class CommunityService {
       console.log('🔄 Buscando postagens...');
       console.log('🌐 URL:', `${this.baseURL}/comunidade/`);
 
+      // Buscar token do AsyncStorage
+      const token = await this.getAuthToken();
+
       const response = await fetch(`${this.baseURL}/comunidade/`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
         },
       });
 
@@ -40,22 +57,37 @@ class CommunityService {
       console.log('🚀 Enviando postagem:', postData);
       console.log('🌐 URL:', `${this.baseURL}/comunidade/`);
 
+      // Buscar token do AsyncStorage
+      const token = await this.getAuthToken();
+
+      // Usar FormData em vez de JSON para compatibilidade com Django
+      const formData = new FormData();
+      formData.append('autor', postData.autor || 'Usuário');
+      formData.append('titulo', postData.titulo);
+      formData.append('conteudo', postData.conteudo);
+      formData.append('submit_postagem', 'true');
+
+      console.log('📝 Dados do FormData:', {
+        autor: postData.autor,
+        titulo: postData.titulo,
+        conteudo: postData.conteudo,
+        submit_postagem: 'true'
+      });
+
       const response = await fetch(`${this.baseURL}/comunidade/`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Accept': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
         },
-        body: JSON.stringify({
-          autor: postData.autor || 'Usuário',
-          titulo: postData.titulo,
-          conteudo: postData.conteudo,
-        }),
+        body: formData,
       });
 
       console.log('📡 Resposta do servidor:', response.status, response.statusText);
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Erro detalhado:', errorText);
         throw new Error(`Erro ao criar postagem: ${response.status} - ${response.statusText}`);
       }
 
