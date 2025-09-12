@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard Admin Unificado{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar.collapsed {
+            width: 70px;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .sidebar-header h4 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-header .subtitle {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .sidebar-menu .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            transition: all 0.3s ease;
+            border-radius: 0;
+            position: relative;
+        }
+        
+        .sidebar-menu .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.15);
+            border-right: 3px solid white;
+        }
+        
+        .sidebar-menu .nav-link i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+        
+        .main-content.expanded {
+            margin-left: 70px;
+        }
+        
+        .top-navbar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        
+        .content-area {
+            padding: 2rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .stats-card .card-body {
+            padding: 1.5rem;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .status-badge {
+            font-size: 0.8em;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .status-aprovado { background-color: #d4edda; color: #155724; }
+        .status-pendente { background-color: #fff3cd; color: #856404; }
+        .status-rejeitado { background-color: #f8d7da; color: #721c24; }
+        .status-removido { background-color: #d1ecf1; color: #0c5460; }
+        .status-ativo { background-color: #d4edda; color: #155724; }
+        .status-inativo { background-color: #f8d7da; color: #721c24; }
+        
+        .btn-action {
+            padding: 4px 8px;
+            font-size: 0.8em;
+            margin: 1px;
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 0;
+        }
+        
+        .section-header h5 {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .quick-action-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #495057;
+        }
+        
+        .quick-action-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .quick-action-btn i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .recent-activity {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .activity-icon.success { background-color: #d4edda; color: #155724; }
+        .activity-icon.warning { background-color: #fff3cd; color: #856404; }
+        .activity-icon.danger { background-color: #f8d7da; color: #721c24; }
+        .activity-icon.info { background-color: #d1ecf1; color: #0c5460; }
+        
+        .toggle-sidebar {
+            background: none;
+            border: none;
+            color: #667eea;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h4><i class="fas fa-shield-alt"></i> Admin Unificado</h4>
+            <div class="subtitle">Gestão Completa</div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <!-- Dashboard -->
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_unificado_dashboard' %}active{% endif %}" 
+               href="{% url 'admin_unificado_dashboard' %}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            
+            <!-- Usuários -->
+            <div class="nav-link" style="color: rgba(255,255,255,0.6); font-size: 0.9rem; font-weight: 600; margin-top: 1rem;">
+                <i class="fas fa-users"></i> GESTÃO DE USUÁRIOS
+            </div>
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_unificado_usuarios' %}active{% endif %}" 
+               href="{% url 'admin_unificado_usuarios' %}">
+                <i class="fas fa-list"></i> Listar Usuários
+            </a>
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_unificado_usuarios_stats' %}active{% endif %}" 
+               href="{% url 'admin_unificado_usuarios_stats' %}">
+                <i class="fas fa-chart-bar"></i> Estatísticas Usuários
+            </a>
+            
+            <!-- Comunidade -->
+            <div class="nav-link" style="color: rgba(255,255,255,0.6); font-size: 0.9rem; font-weight: 600; margin-top: 1rem;">
+                <i class="fas fa-comments"></i> MODERAÇÃO COMUNIDADE
+            </div>
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_unificado_posts' %}active{% endif %}" 
+               href="{% url 'admin_unificado_posts' %}">
+                <i class="fas fa-comment"></i> Postagens
+            </a>
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_unificado_anuncios' %}active{% endif %}" 
+               href="{% url 'admin_unificado_anuncios' %}">
+                <i class="fas fa-car"></i> Anúncios
+            </a>
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_unificado_comunidade_stats' %}active{% endif %}" 
+               href="{% url 'admin_unificado_comunidade_stats' %}">
+                <i class="fas fa-chart-pie"></i> Stats Comunidade
+            </a>
+            
+            <!-- Sistema -->
+            <div class="nav-link" style="color: rgba(255,255,255,0.6); font-size: 0.9rem; font-weight: 600; margin-top: 1rem;">
+                <i class="fas fa-cog"></i> SISTEMA
+            </div>
+            <a class="nav-link" href="{% url 'admin:index' %}">
+                <i class="fas fa-database"></i> Django Admin
+            </a>
+            <a class="nav-link" href="{% url 'comunidade' %}">
+                <i class="fas fa-globe"></i> Ver Comunidade
+            </a>
+            <a class="nav-link" href="{% url 'usuarios:logout' %}">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Navbar -->
+        <div class="top-navbar">
+            <div class="d-flex align-items-center">
+                <button class="toggle-sidebar" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="h4 mb-0 ms-3">{% block page_title %}Dashboard Unificado{% endblock %}</h1>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar">
+                    {{ request.user.nome|first|upper }}
+                </div>
+                <div>
+                    <div class="fw-bold">{{ request.user.nome }}</div>
+                    <small class="text-muted">Administrador</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Page Content -->
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        }
+
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                var bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+
+        // Confirm actions
+        function confirmAction(message, action) {
+            if (confirm(message)) {
+                action();
+            }
+        }
+
+        // Status badge colors
+        function getStatusClass(status) {
+            switch(status) {
+                case 'aprovado': return 'status-aprovado';
+                case 'pendente': return 'status-pendente';
+                case 'rejeitado': return 'status-rejeitado';
+                case 'removido': return 'status-removido';
+                case 'ativo': return 'status-ativo';
+                case 'inativo': return 'status-inativo';
+                default: return 'status-pendente';
+            }
+        }
+
+        // Mobile sidebar toggle
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        }
+
+        // Close sidebar on mobile when clicking outside
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.querySelector('.toggle-sidebar');
+            
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
+                    sidebar.classList.remove('show');
+                }
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

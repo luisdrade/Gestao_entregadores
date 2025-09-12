@@ -12,6 +12,15 @@ from .auth_views import (
 )
 from .admin_views import AdminUsersAPIView, AdminStatsAPIView
 from .web_views import email_validation_view, resend_validation_code, custom_login_view
+from .admin_unificado_views import (
+    admin_unificado_dashboard,
+    admin_unificado_usuarios,
+    admin_unificado_posts,
+    admin_unificado_anuncios,
+    admin_unificado_moderar,
+    admin_unificado_usuarios_stats,
+    admin_unificado_comunidade_stats
+)
 
 app_name = 'usuarios'
 
@@ -61,4 +70,15 @@ urlpatterns = [
     path('login/', custom_login_view, name='custom_login'),
     path('email-validation/', email_validation_view, name='email_validation'),
     path('resend-code/', resend_validation_code, name='resend_code'),
+    
+    # URLs do Admin Unificado
+    path('admin/unificado/', include([
+        path('', admin_unificado_dashboard, name='admin_unificado_dashboard'),
+        path('usuarios/', admin_unificado_usuarios, name='admin_unificado_usuarios'),
+        path('posts/', admin_unificado_posts, name='admin_unificado_posts'),
+        path('anuncios/', admin_unificado_anuncios, name='admin_unificado_anuncios'),
+        path('moderar/<str:item_type>/<int:item_id>/', admin_unificado_moderar, name='admin_unificado_moderar'),
+        path('stats/usuarios/', admin_unificado_usuarios_stats, name='admin_unificado_usuarios_stats'),
+        path('stats/comunidade/', admin_unificado_comunidade_stats, name='admin_unificado_comunidade_stats'),
+    ])),
 ]

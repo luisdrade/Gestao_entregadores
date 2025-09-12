@@ -41,8 +41,9 @@ def comunidade(request):
                 )
                 return redirect('comunidade')
 
-    postagens = Postagem.objects.order_by('-data_criacao')
-    anuncios = AnuncioVeiculo.objects.order_by('-data_publicacao')
+    # Filtrar apenas conteúdo aprovado e visível
+    postagens = Postagem.objects.filter(status='aprovado', is_visivel=True).order_by('-data_criacao')
+    anuncios = AnuncioVeiculo.objects.filter(status='aprovado', is_visivel=True).order_by('-data_publicacao')
 
     return render(request, 'comunidade/index.html', {
         'postagens': postagens,
@@ -55,9 +56,9 @@ def comunidade_api(request):
     """API JSON para a comunidade"""
     try:
         if request.method == "GET":
-            # Buscar postagens e anúncios
-            postagens = Postagem.objects.order_by('-data_criacao')
-            anuncios = AnuncioVeiculo.objects.order_by('-data_publicacao')
+            # Buscar postagens e anúncios (apenas aprovados e visíveis)
+            postagens = Postagem.objects.filter(status='aprovado', is_visivel=True).order_by('-data_criacao')
+            anuncios = AnuncioVeiculo.objects.filter(status='aprovado', is_visivel=True).order_by('-data_publicacao')
             
             # Converter para formato JSON
             postagens_data = []

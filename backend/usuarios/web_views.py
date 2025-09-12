@@ -118,7 +118,7 @@ def custom_login_view(request):
         
         if not email or not password:
             messages.error(request, 'Por favor, preencha todos os campos.')
-            return render(request, 'usuarios/test_login.html')
+            return render(request, 'usuarios/login.html')
         
         user = authenticate(request, email=email, password=password)
         
@@ -143,4 +143,4 @@ def custom_login_view(request):
         else:
             messages.error(request, 'Email ou senha incorretos.')
     
-    return render(request, 'usuarios/test_login.html')
+    return render(request, 'usuarios/login.html')

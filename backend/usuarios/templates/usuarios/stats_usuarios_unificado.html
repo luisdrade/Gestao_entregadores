@@ -1,0 +1,164 @@
+{% extends 'usuarios/admin_unificado.html' %}
+
+{% block title %}Estatísticas de Usuários - Admin Unificado{% endblock %}
+{% block page_title %}Estatísticas de Usuários{% endblock %}
+
+{% block content %}
+<!-- Estatísticas Gerais -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-2x mb-3"></i>
+                <div class="stats-number">{{ stats.total_usuarios }}</div>
+                <div class="stats-label">Total de Usuários</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <i class="fas fa-user-check fa-2x mb-3"></i>
+                <div class="stats-number">{{ stats.usuarios_ativos }}</div>
+                <div class="stats-label">Usuários Ativos</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <i class="fas fa-user-times fa-2x mb-3"></i>
+                <div class="stats-number">{{ stats.usuarios_inativos }}</div>
+                <div class="stats-label">Usuários Inativos</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-day fa-2x mb-3"></i>
+                <div class="stats-number">{{ stats.usuarios_hoje }}</div>
+                <div class="stats-label">Cadastros Hoje</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Status dos Usuários -->
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="section-header">
+                <h5><i class="fas fa-users"></i> Status dos Usuários</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="status-badge status-ativo">Ativos</span>
+                            <span class="badge bg-success fs-6">{{ stats.usuarios_ativos }}</span>
+                        </div>
+                        <div class="progress mt-1" style="height: 5px;">
+                            <div class="progress-bar bg-success" style="width: {% widthratio stats.usuarios_ativos stats.total_usuarios 100 %}%"></div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="status-badge status-inativo">Inativos</span>
+                            <span class="badge bg-danger fs-6">{{ stats.usuarios_inativos }}</span>
+                        </div>
+                        <div class="progress mt-1" style="height: 5px;">
+                            <div class="progress-bar bg-danger" style="width: {% widthratio stats.usuarios_inativos stats.total_usuarios 100 %}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cadastros por Período -->
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="section-header">
+                <h5><i class="fas fa-chart-line"></i> Cadastros por Período</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-4 text-center">
+                        <div class="border rounded p-3">
+                            <i class="fas fa-calendar-day fa-2x text-primary mb-2"></i>
+                            <h5 class="text-primary">{{ stats.usuarios_hoje }}</h5>
+                            <small class="text-muted">Hoje</small>
+                        </div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div class="border rounded p-3">
+                            <i class="fas fa-calendar-week fa-2x text-info mb-2"></i>
+                            <h5 class="text-info">{{ stats.usuarios_semana }}</h5>
+                            <small class="text-muted">Esta Semana</small>
+                        </div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div class="border rounded p-3">
+                            <i class="fas fa-calendar-alt fa-2x text-success mb-2"></i>
+                            <h5 class="text-success">{{ stats.usuarios_mes }}</h5>
+                            <small class="text-muted">Este Mês</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ações Rápidas -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="section-header">
+                <h5><i class="fas fa-bolt"></i> Ações Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="quick-actions">
+                    <a href="{% url 'admin_unificado_usuarios' %}" class="quick-action-btn">
+                        <i class="fas fa-list text-primary"></i>
+                        <div class="fw-bold">Ver Todos os Usuários</div>
+                        <small class="text-muted">{{ stats.total_usuarios }} usuários</small>
+                    </a>
+                    
+                    <a href="{% url 'admin_unificado_usuarios' %}?status=active" class="quick-action-btn">
+                        <i class="fas fa-user-check text-success"></i>
+                        <div class="fw-bold">Usuários Ativos</div>
+                        <small class="text-muted">{{ stats.usuarios_ativos }} ativos</small>
+                    </a>
+                    
+                    <a href="{% url 'admin_unificado_usuarios' %}?status=inactive" class="quick-action-btn">
+                        <i class="fas fa-user-times text-warning"></i>
+                        <div class="fw-bold">Usuários Inativos</div>
+                        <small class="text-muted">{{ stats.usuarios_inativos }} inativos</small>
+                    </a>
+                    
+                    <a href="{% url 'admin_unificado_dashboard' %}" class="quick-action-btn">
+                        <i class="fas fa-tachometer-alt text-info"></i>
+                        <div class="fw-bold">Dashboard Principal</div>
+                        <small class="text-muted">Voltar ao início</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-refresh das estatísticas a cada 5 minutos
+setTimeout(function() {
+    location.reload();
+}, 300000);
+</script>
+{% endblock %}
+

@@ -476,7 +476,7 @@ export default function ProfileScreen() {
               <View style={styles.statItem}>
                 <Ionicons name="cash-outline" size={24} color="#34C759" />
                 <Text style={styles.statValue}>R$ {stats.totalGanhos.toFixed(2)}</Text>
-                <Text style={styles.statLabel}>Lucro</Text>
+                <Text style={styles.statLabel}>Ganhos</Text>
               </View>
               <View style={styles.statItem}>
                 <Ionicons name="car-outline" size={24} color="#FF9500" />

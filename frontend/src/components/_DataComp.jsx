@@ -1,149 +1,120 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
-  Modal,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function DatePicker({ 
   value, 
   onDateChange, 
-  placeholder = "DD/MM/AAAA",
+  placeholder = "25/12/2024",
   label = "Data",
   error = false,
   errorMessage = "",
   style = {}
 }) {
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  
-  // Inicializar com data atual
-  const getInitialDate = () => {
-    return new Date();
-  };
-
-  const [selectedDate, setSelectedDate] = useState(getInitialDate());
-
-  const showDatePickerModal = () => {
-    setShowDatePicker(true);
-  };
-
-  const hideDatePickerModal = () => {
-    setShowDatePicker(false);
-  };
-
-  const confirmDate = () => {
-    // Formatar a data para DD/MM/AAAA
-    const day = selectedDate.getDate().toString().padStart(2, '0');
-    const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
-    const year = selectedDate.getFullYear();
-    const formattedDate = `${day}/${month}/${year}`;
+  const getDaysInMonth = (month, year) => {
+    // Meses com 31 dias: 1, 3, 5, 7, 8, 10, 12
+    const monthsWith31Days = [1, 3, 5, 7, 8, 10, 12];
+    // Meses com 30 dias: 4, 6, 9, 11
+    const monthsWith30Days = [4, 6, 9, 11];
     
-    onDateChange(formattedDate);
-    hideDatePickerModal();
+    if (monthsWith31Days.includes(month)) {
+      return 31;
+    } else if (monthsWith30Days.includes(month)) {
+      return 30;
+    } else if (month === 2) {
+      // Fevereiro: verificar se é ano bissexto
+      return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0) ? 29 : 28;
+    }
+    return 30; // fallback
   };
 
-  const handleDayChange = (text) => {
-    const day = parseInt(text) || 1;
-    const newDate = new Date(selectedDate);
-    newDate.setDate(day);
-    setSelectedDate(newDate);
+  const formatDate = (inputValue) => {
+    // Remove tudo que não é número
+    const numericValue = inputValue.replace(/\D/g, '');
+    
+    if (numericValue.length === 0) {
+      return '';
+    } else if (numericValue.length <= 2) {
+      // Validar dia (1-31)
+      const dia = parseInt(numericValue);
+      if (dia > 31) {
+        return '31';
+      }
+      return numericValue;
+    } else if (numericValue.length <= 4) {
+      const dia = numericValue.slice(0, 2);
+      const mes = numericValue.slice(2, 4);
+      
+      // Validar dia
+      const diaInt = parseInt(dia);
+      let diaValido = dia;
+      if (diaInt > 31) {
+        diaValido = '31';
+      }
+      
+      // Validar mês (1-12)
+      const mesInt = parseInt(mes);
+      let mesValido = mes;
+      if (mesInt > 12) {
+        mesValido = '12';
+      }
+      
+      return `${diaValido}/${mesValido}`;
+    } else {
+      const dia = numericValue.slice(0, 2);
+      const mes = numericValue.slice(2, 4);
+      const ano = numericValue.slice(4, 8);
+      
+      // Validar mês (1-12)
+      const mesInt = parseInt(mes);
+      let mesValido = mes;
+      if (mesInt > 12) {
+        mesValido = '12';
+      }
+      
+      // Validar ano (até 2025)
+      const anoInt = parseInt(ano);
+      let anoValido = ano;
+      if (anoInt > 2025) {
+        anoValido = '2025';
+      }
+      
+      // Validar dia baseado no mês e ano
+      const diaInt = parseInt(dia);
+      const maxDays = getDaysInMonth(mesInt, anoInt);
+      let diaValido = dia;
+      if (diaInt > maxDays) {
+        diaValido = maxDays.toString().padStart(2, '0');
+      }
+      
+      return `${diaValido}/${mesValido}/${anoValido}`;
+    }
   };
 
-  const handleMonthChange = (text) => {
-    const month = parseInt(text) || 1;
-    const newDate = new Date(selectedDate);
-    newDate.setMonth(month - 1);
-    setSelectedDate(newDate);
-  };
-
-  const handleYearChange = (text) => {
-    const year = parseInt(text) || 2024;
-    const newDate = new Date(selectedDate);
-    newDate.setFullYear(year);
-    setSelectedDate(newDate);
+  const handleDateChange = (inputValue) => {
+    const formatted = formatDate(inputValue);
+    onDateChange(formatted);
   };
 
   return (
     <View style={[styles.container, style]}>
       {label && <Text style={styles.label}>{label}</Text>}
       
-      {/* Campo de seleção */}
-      <TouchableOpacity 
-        style={[styles.selectField, error && styles.inputError]}
-        onPress={showDatePickerModal}
-      >
-        <Text style={[
-          styles.dateText, 
-          !value && styles.placeholderText
-        ]}>
-          {value || placeholder}
-        </Text>
-        <Ionicons name="calendar" size={20} color="#666" style={styles.calendarIcon} />
-      </TouchableOpacity>
+      <TextInput
+        style={[styles.input, error && styles.inputError]}
+        placeholder={placeholder}
+        value={value}
+        onChangeText={handleDateChange}
+        keyboardType="numeric"
+        placeholderTextColor="#666"
+        maxLength={10}
+      />
       
       {error && errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
-
-      <Modal
-        visible={showDatePicker}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={hideDatePickerModal}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Selecione a data</Text>
-            
-            <View style={styles.dateInputsRow}>
-              <View style={styles.dateInputContainer}>
-                <Text style={styles.dateInputLabel}>Dia</Text>
-                <TextInput
-                  style={styles.dateInputField}
-                  placeholder="DD"
-                  value={selectedDate.getDate().toString()}
-                  onChangeText={handleDayChange}
-                  keyboardType="numeric"
-                  maxLength={2}
-                />
-              </View>
-              
-              <View style={styles.dateInputContainer}>
-                <Text style={styles.dateInputLabel}>Mês</Text>
-                <TextInput
-                  style={styles.dateInputField}
-                  placeholder="MM"
-                  value={(selectedDate.getMonth() + 1).toString()}
-                  onChangeText={handleMonthChange}
-                  keyboardType="numeric"
-                  maxLength={2}
-                />
-              </View>
-              
-              <View style={styles.dateInputContainer}>
-                <Text style={styles.dateInputLabel}>Ano</Text>
-                <TextInput
-                  style={styles.dateInputField}
-                  placeholder="AAAA"
-                  value={selectedDate.getFullYear().toString()}
-                  onChangeText={handleYearChange}
-                  keyboardType="numeric"
-                  maxLength={4}
-                />
-              </View>
-            </View>
-            
-            <TouchableOpacity style={styles.confirmButton} onPress={confirmDate}>
-              <Text style={styles.confirmButtonText}>Confirmar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelButton} onPress={hideDatePickerModal}>
-              <Text style={styles.cancelButtonText}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }
@@ -153,31 +124,18 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   label: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: '600',
     color: '#000',
     marginBottom: 8,
   },
-  selectField: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  input: {
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 15,
+    fontSize: 16,
     borderWidth: 1,
     borderColor: '#ddd',
-  },
-  dateText: {
-    fontSize: 16,
-    color: '#000',
-    flex: 1,
-  },
-  placeholderText: {
-    color: '#666',
-  },
-  calendarIcon: {
-    marginLeft: 10,
   },
   inputError: {
     borderColor: '#FF6B6B',
@@ -187,77 +145,5 @@ const styles = StyleSheet.create({
     color: '#FF6B6B',
     fontSize: 12,
     marginTop: 5,
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-    width: '80%',
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 20,
-  },
-  dateInputsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 20,
-  },
-  dateInputContainer: {
-    flex: 1,
-    alignItems: 'center',
-    marginHorizontal: 5,
-  },
-  dateInputLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000',
-    marginBottom: 8,
-  },
-  dateInputField: {
-    backgroundColor: '#f8f9fa',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    textAlign: 'center',
-    width: '100%',
-  },
-  confirmButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 15,
-    width: '100%',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  confirmButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  cancelButton: {
-    backgroundColor: '#ccc',
-    borderRadius: 8,
-    padding: 15,
-    width: '100%',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  cancelButtonText: {
-    color: '#000',
-    fontSize: 16,
-    fontWeight: '600',
   },
 });

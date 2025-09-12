@@ -1,0 +1,301 @@
+{% extends 'usuarios/admin_unificado.html' %}
+
+{% block title %}Postagens - Admin Unificado{% endblock %}
+{% block page_title %}Gerenciar Postagens{% endblock %}
+
+{% block content %}
+<!-- Filtros -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="search" class="form-label">Buscar</label>
+                        <input type="text" class="form-control" id="search" name="search" 
+                               value="{{ request.GET.search }}" placeholder="Título, autor ou conteúdo...">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="all" {% if request.GET.status == 'all' %}selected{% endif %}>Todos</option>
+                            <option value="aprovado" {% if request.GET.status == 'aprovado' %}selected{% endif %}>Aprovado</option>
+                            <option value="pendente" {% if request.GET.status == 'pendente' %}selected{% endif %}>Pendente</option>
+                            <option value="rejeitado" {% if request.GET.status == 'rejeitado' %}selected{% endif %}>Rejeitado</option>
+                            <option value="removido" {% if request.GET.status == 'removido' %}selected{% endif %}>Removido</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="per_page" class="form-label">Por página</label>
+                        <select class="form-select" id="per_page" name="per_page">
+                            <option value="10" {% if request.GET.per_page == '10' %}selected{% endif %}>10</option>
+                            <option value="25" {% if request.GET.per_page == '25' %}selected{% endif %}>25</option>
+                            <option value="50" {% if request.GET.per_page == '50' %}selected{% endif %}>50</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="fas fa-search"></i> Filtrar
+                        </button>
+                        <a href="{% url 'admin_unificado_posts' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times"></i> Limpar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lista de Postagens -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-comments"></i> Postagens ({{ pagination.total }})
+                </h6>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-primary" onclick="selectAll()">
+                        <i class="fas fa-check-square"></i> Selecionar Todas
+                    </button>
+                    <button class="btn btn-outline-success" onclick="bulkAction('aprovado')">
+                        <i class="fas fa-check"></i> Aprovar Selecionadas
+                    </button>
+                    <button class="btn btn-outline-danger" onclick="bulkAction('rejeitado')">
+                        <i class="fas fa-times"></i> Rejeitar Selecionadas
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if postagens %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="50">
+                                        <input type="checkbox" id="select-all" onchange="toggleSelectAll()">
+                                    </th>
+                                    <th>Título</th>
+                                    <th>Autor</th>
+                                    <th>Status</th>
+                                    <th>Data</th>
+                                    <th>Moderado por</th>
+                                    <th width="200">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for postagem in postagens %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="post-checkbox" value="{{ postagem.id }}">
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">{{ postagem.titulo|truncatechars:50 }}</div>
+                                        <small class="text-muted">{{ postagem.conteudo|truncatechars:100 }}</small>
+                                    </td>
+                                    <td>{{ postagem.autor }}</td>
+                                    <td>
+                                        <span class="status-badge status-{{ postagem.status }}">
+                                            {{ postagem.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div>{{ postagem.data_criacao|date:"d/m/Y" }}</div>
+                                        <small class="text-muted">{{ postagem.data_criacao|time:"H:i" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if postagem.moderado_por %}
+                                            <div>{{ postagem.moderado_por.nome }}</div>
+                                            <small class="text-muted">{{ postagem.data_moderacao|date:"d/m/Y H:i" }}</small>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'admin_unificado_moderar' 'postagem' postagem.id %}" 
+                                               class="btn btn-primary btn-action" title="Ver detalhes">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if postagem.status != 'aprovado' %}
+                                                <button class="btn btn-success btn-action" 
+                                                        onclick="moderatePost({{ postagem.id }}, 'aprovado')" 
+                                                        title="Aprovar">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            {% endif %}
+                                            {% if postagem.status != 'rejeitado' %}
+                                                <button class="btn btn-warning btn-action" 
+                                                        onclick="moderatePost({{ postagem.id }}, 'rejeitado')" 
+                                                        title="Rejeitar">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            {% endif %}
+                                            {% if postagem.status != 'removido' %}
+                                                <button class="btn btn-danger btn-action" 
+                                                        onclick="moderatePost({{ postagem.id }}, 'removido')" 
+                                                        title="Remover">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            {% endif %}
+                                            <button class="btn btn-outline-danger btn-action" 
+                                                    onclick="deletePost({{ postagem.id }})" 
+                                                    title="Deletar permanentemente">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Paginação -->
+                    {% if pagination.total_pages > 1 %}
+                    <nav aria-label="Paginação">
+                        <ul class="pagination justify-content-center">
+                            {% if pagination.page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ pagination.page|add:'-1' }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.per_page %}&per_page={{ request.GET.per_page }}{% endif %}">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for page_num in pagination.page_range %}
+                                <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ page_num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.per_page %}&per_page={{ request.GET.per_page }}{% endif %}">
+                                        {{ page_num }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+
+                            {% if pagination.page < pagination.total_pages %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ pagination.page|add:'1' }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.per_page %}&per_page={{ request.GET.per_page }}{% endif %}">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Nenhuma postagem encontrada</h5>
+                        <p class="text-muted">Tente ajustar os filtros de busca.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleSelectAll() {
+    const selectAll = document.getElementById('select-all');
+    const checkboxes = document.querySelectorAll('.post-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+    });
+}
+
+function selectAll() {
+    const checkboxes = document.querySelectorAll('.post-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+    document.getElementById('select-all').checked = true;
+}
+
+function bulkAction(status) {
+    const checkboxes = document.querySelectorAll('.post-checkbox:checked');
+    if (checkboxes.length === 0) {
+        alert('Selecione pelo menos uma postagem.');
+        return;
+    }
+    
+    const statusText = {
+        'aprovado': 'aprovar',
+        'rejeitado': 'rejeitar',
+        'removido': 'remover'
+    };
+    
+    if (confirm(`Tem certeza que deseja ${statusText[status]} ${checkboxes.length} postagem(ns)?`)) {
+        const promises = Array.from(checkboxes).map(checkbox => {
+            return moderatePost(checkbox.value, status, false);
+        });
+        
+        Promise.all(promises).then(() => {
+            location.reload();
+        });
+    }
+}
+
+function moderatePost(id, status, reload = true) {
+    const statusText = {
+        'aprovado': 'aprovar',
+        'rejeitado': 'rejeitar',
+        'removido': 'remover'
+    };
+    
+    if (reload && !confirm(`Tem certeza que deseja ${statusText[status]} esta postagem?`)) {
+        return;
+    }
+    
+    const url = `/comunidade/admin/api/postagens/${id}/`;
+    const data = { status: status };
+    
+    return fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (reload) location.reload();
+        } else {
+            alert('Erro: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Erro na requisição: ' + error);
+    });
+}
+
+function deletePost(id) {
+    if (confirm('Tem certeza que deseja deletar permanentemente esta postagem? Esta ação não pode ser desfeita.')) {
+        const url = `/comunidade/admin/api/postagens/${id}/`;
+        
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erro: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Erro na requisição: ' + error);
+        });
+    }
+}
+</script>
+{% endblock %}
+

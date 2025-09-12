@@ -15,6 +15,12 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    
+    # Se o comando for 'runserver' e não especificar IP/porta, usa 0.0.0.0:8000
+    if len(sys.argv) >= 2 and sys.argv[1] == 'runserver' and len(sys.argv) == 2:
+        sys.argv.append('0.0.0.0:8000')
+        print("Servidor configurado para rodar em 0.0.0.0:8000")
+    
     execute_from_command_line(sys.argv)
 
 

@@ -24,7 +24,6 @@ export default function TimePicker({
     } else if (numericValue.length === 1) {
       return numericValue;
     } else if (numericValue.length === 2) {
-      // Validar se a hora é válida (0-23)
       const hora = parseInt(numericValue);
       if (hora > 23) {
         return '23';

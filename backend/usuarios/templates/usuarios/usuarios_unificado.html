@@ -1,0 +1,301 @@
+{% extends 'usuarios/admin_unificado.html' %}
+
+{% block title %}Usuários - Admin Unificado{% endblock %}
+{% block page_title %}Gerenciar Usuários{% endblock %}
+
+{% block content %}
+<!-- Filtros -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="search" class="form-label">Buscar</label>
+                        <input type="text" class="form-control" id="search" name="search" 
+                               value="{{ request.GET.search }}" placeholder="Nome, email ou CPF...">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="all" {% if request.GET.status == 'all' %}selected{% endif %}>Todos</option>
+                            <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Ativos</option>
+                            <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inativos</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="per_page" class="form-label">Por página</label>
+                        <select class="form-select" id="per_page" name="per_page">
+                            <option value="10" {% if request.GET.per_page == '10' %}selected{% endif %}>10</option>
+                            <option value="25" {% if request.GET.per_page == '25' %}selected{% endif %}>25</option>
+                            <option value="50" {% if request.GET.per_page == '50' %}selected{% endif %}>50</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="fas fa-search"></i> Filtrar
+                        </button>
+                        <a href="{% url 'admin_unificado_usuarios' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times"></i> Limpar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lista de Usuários -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-users"></i> Usuários ({{ pagination.total }})
+                </h6>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-primary" onclick="selectAll()">
+                        <i class="fas fa-check-square"></i> Selecionar Todos
+                    </button>
+                    <button class="btn btn-outline-success" onclick="bulkAction('activate')">
+                        <i class="fas fa-check"></i> Ativar Selecionados
+                    </button>
+                    <button class="btn btn-outline-danger" onclick="bulkAction('deactivate')">
+                        <i class="fas fa-times"></i> Desativar Selecionados
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if usuarios %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="50">
+                                        <input type="checkbox" id="select-all" onchange="toggleSelectAll()">
+                                    </th>
+                                    <th>Usuário</th>
+                                    <th>Email</th>
+                                    <th>CPF</th>
+                                    <th>Status</th>
+                                    <th>Data de Cadastro</th>
+                                    <th>Email Validado</th>
+                                    <th width="200">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for usuario in usuarios %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="user-checkbox" value="{{ usuario.id }}">
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if usuario.foto %}
+                                                <img src="{{ usuario.foto.url }}" alt="{{ usuario.nome }}" 
+                                                     class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                                            {% else %}
+                                                <div class="bg-light rounded-circle me-2 d-flex align-items-center justify-content-center" 
+                                                     style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-user text-muted"></i>
+                                                </div>
+                                            {% endif %}
+                                            <div>
+                                                <div class="fw-bold">{{ usuario.nome }}</div>
+                                                <small class="text-muted">{{ usuario.telefone }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ usuario.email }}</td>
+                                    <td>{{ usuario.cpf }}</td>
+                                    <td>
+                                        {% if usuario.is_active %}
+                                            <span class="status-badge status-ativo">Ativo</span>
+                                        {% else %}
+                                            <span class="status-badge status-inativo">Inativo</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div>{{ usuario.date_joined|date:"d/m/Y" }}</div>
+                                        <small class="text-muted">{{ usuario.date_joined|time:"H:i" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if usuario.email_validado %}
+                                            <span class="badge bg-success">Validado</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Pendente</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'admin_unificado_moderar' 'usuario' usuario.id %}" 
+                                               class="btn btn-primary btn-action" title="Ver detalhes">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if usuario.is_active %}
+                                                <button class="btn btn-warning btn-action" 
+                                                        onclick="toggleUserStatus({{ usuario.id }}, false)" 
+                                                        title="Desativar">
+                                                    <i class="fas fa-user-times"></i>
+                                                </button>
+                                            {% else %}
+                                                <button class="btn btn-success btn-action" 
+                                                        onclick="toggleUserStatus({{ usuario.id }}, true)" 
+                                                        title="Ativar">
+                                                    <i class="fas fa-user-check"></i>
+                                                </button>
+                                            {% endif %}
+                                            {% if not usuario.email_validado %}
+                                                <button class="btn btn-info btn-action" 
+                                                        onclick="validateEmail({{ usuario.id }})" 
+                                                        title="Validar Email">
+                                                    <i class="fas fa-envelope"></i>
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Paginação -->
+                    {% if pagination.total_pages > 1 %}
+                    <nav aria-label="Paginação">
+                        <ul class="pagination justify-content-center">
+                            {% if pagination.page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ pagination.page|add:'-1' }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.per_page %}&per_page={{ request.GET.per_page }}{% endif %}">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for page_num in pagination.page_range %}
+                                <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ page_num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.per_page %}&per_page={{ request.GET.per_page }}{% endif %}">
+                                        {{ page_num }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+
+                            {% if pagination.page < pagination.total_pages %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ pagination.page|add:'1' }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.per_page %}&per_page={{ request.GET.per_page }}{% endif %}">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Nenhum usuário encontrado</h5>
+                        <p class="text-muted">Tente ajustar os filtros de busca.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleSelectAll() {
+    const selectAll = document.getElementById('select-all');
+    const checkboxes = document.querySelectorAll('.user-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+    });
+}
+
+function selectAll() {
+    const checkboxes = document.querySelectorAll('.user-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+    document.getElementById('select-all').checked = true;
+}
+
+function bulkAction(action) {
+    const checkboxes = document.querySelectorAll('.user-checkbox:checked');
+    if (checkboxes.length === 0) {
+        alert('Selecione pelo menos um usuário.');
+        return;
+    }
+    
+    const actionText = action === 'activate' ? 'ativar' : 'desativar';
+    
+    if (confirm(`Tem certeza que deseja ${actionText} ${checkboxes.length} usuário(s)?`)) {
+        const promises = Array.from(checkboxes).map(checkbox => {
+            return toggleUserStatus(checkbox.value, action === 'activate', false);
+        });
+        
+        Promise.all(promises).then(() => {
+            location.reload();
+        });
+    }
+}
+
+function toggleUserStatus(id, isActive, reload = true) {
+    const actionText = isActive ? 'ativar' : 'desativar';
+    
+    if (reload && !confirm(`Tem certeza que deseja ${actionText} este usuário?`)) {
+        return;
+    }
+    
+    const url = `/usuarios/admin/users/${id}/`;
+    const data = { is_active: isActive };
+    
+    return fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (reload) location.reload();
+        } else {
+            alert('Erro: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Erro na requisição: ' + error);
+    });
+}
+
+function validateEmail(id) {
+    if (confirm('Tem certeza que deseja validar o email deste usuário?')) {
+        const url = `/usuarios/admin/validate-email/${id}/`;
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erro: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Erro na requisição: ' + error);
+        });
+    }
+}
+</script>
+{% endblock %}
+
