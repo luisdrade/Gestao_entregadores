@@ -10,6 +10,8 @@ import {
   Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import Header from '../../components/_Header';
+import TopNavBar from '../../components/_NavBar_Superior';
 import _CardPostagem from '../../components/_CardPostagem';
 import _CardAnuncioVeiculo from '../../components/_CardAnuncioVeiculo';
 import _ModalCriarPostagem from '../../components/_ModalCriarPostagem';
@@ -33,22 +35,61 @@ function ComunidadeScreen() {
   const carregarDados = async () => {
     setCarregando(true);
     try {
-      // Como o backend retorna HTML, vamos simular dados por enquanto
-      // Em uma implementação real, você precisaria criar endpoints JSON
+      // Simulando dados de uma comunidade real com postagens de vários usuários
       const postagensMock = [
         {
           id: 1,
           autor: 'João Silva',
           titulo: 'Dicas para economizar combustível',
-          conteudo: 'Compartilhando algumas dicas que aprendi ao longo dos anos para economizar combustível durante as entregas...',
+          conteudo: 'Compartilhando algumas dicas que aprendi ao longo dos anos para economizar combustível durante as entregas. Sempre mantenha os pneus calibrados e evite acelerações bruscas!',
           data_criacao: new Date().toISOString(),
+          curtidas: 12,
+          comentarios: 3,
         },
         {
           id: 2,
           autor: 'Maria Santos',
           titulo: 'Melhores rotas para o centro',
-          conteudo: 'Descobri algumas rotas alternativas que podem economizar tempo no trânsito do centro da cidade...',
+          conteudo: 'Descobri algumas rotas alternativas que podem economizar tempo no trânsito do centro da cidade. A Rua das Flores sempre está mais livre pela manhã!',
           data_criacao: new Date(Date.now() - 86400000).toISOString(),
+          curtidas: 8,
+          comentarios: 5,
+        },
+        {
+          id: 3,
+          autor: 'Carlos Oliveira',
+          titulo: 'App de trânsito em tempo real',
+          conteudo: 'Galera, estou usando o Waze há 3 meses e tem me ajudado muito a evitar congestionamentos. Recomendo para todos!',
+          data_criacao: new Date(Date.now() - 172800000).toISOString(),
+          curtidas: 15,
+          comentarios: 7,
+        },
+        {
+          id: 4,
+          autor: 'Ana Costa',
+          titulo: 'Cuidados com a moto na chuva',
+          conteudo: 'Com a temporada de chuvas chegando, lembrem-se de sempre verificar os freios e pneus. Segurança em primeiro lugar!',
+          data_criacao: new Date(Date.now() - 259200000).toISOString(),
+          curtidas: 20,
+          comentarios: 4,
+        },
+        {
+          id: 5,
+          autor: 'Pedro Mendes',
+          titulo: 'Novo restaurante na região',
+          conteudo: 'Abriu um restaurante novo na Rua Principal que tem promoção para entregadores. Vale a pena conferir!',
+          data_criacao: new Date(Date.now() - 345600000).toISOString(),
+          curtidas: 6,
+          comentarios: 2,
+        },
+        {
+          id: 6,
+          autor: 'Lucia Ferreira',
+          titulo: 'Grupo de WhatsApp da região',
+          conteudo: 'Criei um grupo no WhatsApp para entregadores da nossa região trocarem informações. Quem quiser participar, me chama!',
+          data_criacao: new Date(Date.now() - 432000000).toISOString(),
+          curtidas: 25,
+          comentarios: 12,
         },
       ];
 
@@ -63,6 +104,7 @@ function ComunidadeScreen() {
           link_externo: 'https://exemplo.com/anuncio1',
           foto: null,
           data_publicacao: new Date().toISOString(),
+          vendedor: 'João Silva',
         },
         {
           id: 2,
@@ -74,6 +116,31 @@ function ComunidadeScreen() {
           link_externo: 'https://exemplo.com/anuncio2',
           foto: null,
           data_publicacao: new Date(Date.now() - 172800000).toISOString(),
+          vendedor: 'Maria Santos',
+        },
+        {
+          id: 3,
+          modelo: 'Honda Biz 125',
+          ano: 2021,
+          quilometragem: 15000,
+          preco: 6500.00,
+          localizacao: 'Belo Horizonte, MG',
+          link_externo: 'https://exemplo.com/anuncio3',
+          foto: null,
+          data_publicacao: new Date(Date.now() - 259200000).toISOString(),
+          vendedor: 'Carlos Oliveira',
+        },
+        {
+          id: 4,
+          modelo: 'Yamaha XRE 300',
+          ano: 2020,
+          quilometragem: 30000,
+          preco: 15000.00,
+          localizacao: 'Salvador, BA',
+          link_externo: 'https://exemplo.com/anuncio4',
+          foto: null,
+          data_publicacao: new Date(Date.now() - 345600000).toISOString(),
+          vendedor: 'Ana Costa',
         },
       ];
 
@@ -133,12 +200,13 @@ function ComunidadeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backButton}>← Voltar</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Comunidade</Text>
+      {/* Header */}
+      <Header title="Comunidade" showWelcome={false} />
+
+      {/* Botão de Adicionar */}
+      <View style={styles.addButtonContainer}>
         <TouchableOpacity
+          style={styles.addButton}
           onPress={() => {
             if (activeTab === 'postagens') {
               setMostrarModalPostagem(true);
@@ -147,7 +215,7 @@ function ComunidadeScreen() {
             }
           }}
         >
-          <Text style={styles.addButton}>+</Text>
+          <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
       </View>
 
@@ -202,26 +270,29 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  header: {
-    backgroundColor: '#007AFF',
-    paddingTop: 10,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  backButton: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
+  addButtonContainer: {
+    position: 'absolute',
+    top: 60,
+    right: 20,
+    zIndex: 10,
   },
   addButton: {
+    backgroundColor: '#007AFF',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  addButtonText: {
     color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
