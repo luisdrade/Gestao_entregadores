@@ -111,6 +111,17 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function updateUserData(userData) {
+    try {
+      console.log('🔄 AuthContext - Atualizando dados do usuário:', userData);
+      setUser(userData);
+      await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(userData));
+      console.log('✅ AuthContext - Dados do usuário atualizados com sucesso');
+    } catch (error) {
+      console.error('❌ AuthContext - Erro ao atualizar dados do usuário:', error);
+    }
+  }
+
   async function signUp(userData) {
     try {
       const response = await api.post(API_ENDPOINTS.AUTH.REGISTER, userData);
@@ -190,6 +201,7 @@ export function AuthProvider({ children }) {
       signInWithGoogle: signInWithGoogleAuth,
       signOut,
       updateUserPhoto,
+      updateUserData,
     }}>
       {children}
     </AuthContext.Provider>

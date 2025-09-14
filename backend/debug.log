@@ -60,3 +60,54 @@ Bad Request: /comunidade/
 "POST /comunidade/ HTTP/1.1" 200 228
 "GET /comunidade/ HTTP/1.1" 200 2439
 "GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /comunidade/ HTTP/1.1" 200 2439
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+Watching for file changes with StatReloader
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 971
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"PUT /api/entregadores/2/ HTTP/1.1" 200 298
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 976
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"PUT /api/entregadores/2/ HTTP/1.1" 200 308
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"PUT /api/entregadores/2/ HTTP/1.1" 200 308
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"PUT /api/entregadores/2/ HTTP/1.1" 200 311
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156

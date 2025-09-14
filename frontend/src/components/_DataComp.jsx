@@ -76,11 +76,11 @@ export default function DatePicker({
         mesValido = '12';
       }
       
-      // Validar ano (até 2025)
+      // Validar ano (até 2100 para permitir datas futuras válidas)
       const anoInt = parseInt(ano);
       let anoValido = ano;
-      if (anoInt > 2025) {
-        anoValido = '2025';
+      if (anoInt > 2100) {
+        anoValido = '2100';
       }
       
       // Validar dia baseado no mês e ano

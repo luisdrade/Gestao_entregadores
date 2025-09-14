@@ -20,6 +20,7 @@ import DatePicker from '../../../components/_DataComp';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TextInputMask } from 'react-native-masked-text';
+import { useAuth } from '../../../context/AuthContext';
 
 // Schema de validação
 const validationSchema = Yup.object().shape({
@@ -41,19 +42,34 @@ const validationSchema = Yup.object().shape({
     .required('Email é obrigatório'),
   telefone: Yup.string()
     .trim()
-    .min(14, 'Telefone deve ter pelo menos 14 caracteres')
-    .max(15, 'Telefone deve ter no máximo 15 caracteres')
-    .required('Telefone é obrigatório'),
+    .required('Telefone é obrigatório')
+    .test('telefone-length', 'Telefone deve ter formato válido', function(value) {
+      if (!value) return false;
+      // Aceita tanto (11) 99999-9999 quanto (11) 9999-9999
+      return value.length >= 14 && value.length <= 15;
+    })
+    .test('telefone-format', 'Formato de telefone inválido', function(value) {
+      if (!value) return false;
+      const telefoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
+      return telefoneRegex.test(value);
+    }),
   cpf: Yup.string()
     .trim()
-    .min(14, 'CPF deve ter pelo menos 14 caracteres')
-    .max(14, 'CPF deve ter no máximo 14 caracteres')
-    .required('CPF é obrigatório'),
+    .required('CPF é obrigatório')
+    .test('cpf-length', 'CPF deve ter 14 caracteres (formato: 123.456.789-00)', function(value) {
+      if (!value) return false;
+      return value.length === 14;
+    })
+    .test('cpf-format', 'Formato de CPF inválido', function(value) {
+      if (!value) return false;
+      const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+      return cpfRegex.test(value);
+    }),
   dataNascimento: Yup.string()
     .trim()
     .required('Data de nascimento é obrigatória')
     .test('valid-date', 'Data de nascimento inválida', function(value) {
-      if (!value) return false;
+      if (!value || value.trim() === '') return false;
       
       // Verificar formato DD/MM/AAAA
       const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
@@ -78,6 +94,10 @@ const validationSchema = Yup.object().shape({
       const minYear = today.getFullYear() - 120;
       if (yearNum < minYear) return false;
       
+      // Verificar se não é muito nova (menos de 16 anos)
+      const maxYear = today.getFullYear() - 16;
+      if (yearNum > maxYear) return false;
+      
       return true;
     }),
   endereco: Yup.string()
@@ -87,9 +107,12 @@ const validationSchema = Yup.object().shape({
     .required('Endereço é obrigatório'),
   cep: Yup.string()
     .trim()
-    .min(8, 'CEP deve ter pelo menos 8 caracteres')
-    .max(9, 'CEP deve ter no máximo 9 caracteres')
-    .required('CEP é obrigatório'),
+    .required('CEP é obrigatório')
+    .test('cep-format', 'CEP deve ter formato 12345-678', function(value) {
+      if (!value) return false;
+      const cepRegex = /^\d{5}-\d{3}$/;
+      return cepRegex.test(value);
+    }),
   cidade: Yup.string()
     .trim()
     .min(2, 'Cidade deve ter pelo menos 2 caracteres')
@@ -104,6 +127,7 @@ const validationSchema = Yup.object().shape({
 
 export default function EditarPerfilScreen() {
   const router = useRouter();
+  const { updateUserData } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -163,8 +187,11 @@ export default function EditarPerfilScreen() {
           updatedUserData.dataNascimento = `${day}/${month}/${year}`;
         }
         
-        // Atualizar AsyncStorage
-        await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(updatedUserData));
+        // Atualizar contexto de autenticação (isso atualizará automaticamente a tela de perfil)
+        await updateUserData(updatedUserData);
+        
+        // Atualizar estado local também
+        setUser(updatedUserData);
         
         Alert.alert('Sucesso', 'Perfil atualizado com sucesso!', [
           {
@@ -256,7 +283,15 @@ export default function EditarPerfilScreen() {
             validationSchema={validationSchema}
             onSubmit={handleSalvar}
           >
-            {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
+            {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => {
+              // Debug: Log dos erros quando mudarem
+              if (Object.keys(errors).length > 0 && __DEV__) {
+                console.log('🔍 Formik Errors:', errors);
+                console.log('🔍 Formik Values:', values);
+                console.log('🔍 Formik Touched:', touched);
+              }
+              
+              return (
               <View style={styles.form}>
                 {Object.keys(errors).length > 0 && (
                   <View style={styles.errorSummary}>
@@ -264,6 +299,17 @@ export default function EditarPerfilScreen() {
                     <Text style={styles.errorSummaryText}>
                       {Object.keys(errors).length} campo(s) com erro(s) para corrigir
                     </Text>
+                    {/* Debug: Mostrar erros específicos */}
+                    {__DEV__ && (
+                      <View style={styles.debugContainer}>
+                        <Text style={styles.debugTitle}>Debug - Erros encontrados:</Text>
+                        {Object.entries(errors).map(([field, error]) => (
+                          <Text key={field} style={styles.debugText}>
+                            • {field}: {error}
+                          </Text>
+                        ))}
+                      </View>
+                    )}
                   </View>
                 )}
 
@@ -491,7 +537,8 @@ export default function EditarPerfilScreen() {
                   )}
                 </TouchableOpacity>
               </View>
-            )}
+              );
+            }}
           </Formik>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -644,5 +691,24 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     marginBottom: 0,
     paddingLeft: 0,
+  },
+  debugContainer: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: '#FFF5F5',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#FED7D7',
+  },
+  debugTitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#C53030',
+    marginBottom: 5,
+  },
+  debugText: {
+    fontSize: 11,
+    color: '#C53030',
+    marginBottom: 2,
   },
 });

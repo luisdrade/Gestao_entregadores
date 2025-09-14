@@ -43,6 +43,15 @@ export default function ProfileScreen() {
     buildPhotoUrl();
   }, [user, authContext]);
 
+  // Recarregar dados quando o usuário mudar (atualização automática)
+  useEffect(() => {
+    if (user) {
+      console.log('🔄 ProfileScreen - Usuário atualizado, recarregando dados...');
+      loadUserStats();
+      buildPhotoUrl();
+    }
+  }, [user]);
+
   const buildPhotoUrl = () => {
     try {
       const baseUrl = API_CONFIG.BASE_URL;
