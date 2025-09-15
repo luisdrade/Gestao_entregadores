@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statNumber: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#007AFF',
     marginBottom: 5,

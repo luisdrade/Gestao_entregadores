@@ -362,6 +362,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   periodFilter: {
+    paddingBottom: 20,
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 20,
@@ -381,7 +382,7 @@ const styles = StyleSheet.create({
     borderColor: '#007AFF',
   },
   periodButtonText: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '500',
     color: '#666',
   },

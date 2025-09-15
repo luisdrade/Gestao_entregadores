@@ -9,7 +9,7 @@ class CommunityService {
   // Buscar token de autenticação
   async getAuthToken() {
     try {
-      const token = await AsyncStorage.getItem('authToken');
+      const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
       console.log('🔑 Token encontrado:', !!token);
       return token;
     } catch (error) {
@@ -108,11 +108,15 @@ class CommunityService {
 
       // Se não há foto, usar JSON
       if (!adData.foto) {
+        // Buscar token do AsyncStorage
+        const token = await this.getAuthToken();
+        
         const response = await fetch(`${this.baseURL}/comunidade/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` }),
           },
           body: JSON.stringify({
             modelo: adData.modelo,
@@ -121,6 +125,7 @@ class CommunityService {
             preco: parseFloat(adData.preco),
             localizacao: adData.localizacao,
             link_externo: adData.link_externo || '',
+            vendedor: adData.vendedor || 'Usuário',
           }),
         });
 
@@ -135,6 +140,9 @@ class CommunityService {
         return data;
       } else {
         // Se há foto, usar FormData
+        // Buscar token do AsyncStorage
+        const token = await this.getAuthToken();
+        
         const formData = new FormData();
         formData.append('modelo', adData.modelo);
         formData.append('ano', adData.ano.toString());
@@ -142,6 +150,7 @@ class CommunityService {
         formData.append('preco', adData.preco.toString());
         formData.append('localizacao', adData.localizacao);
         formData.append('link_externo', adData.link_externo);
+        formData.append('vendedor', adData.vendedor || 'Usuário');
         formData.append('submit_anuncio', 'true');
         
         formData.append('foto', {
@@ -155,6 +164,7 @@ class CommunityService {
           body: formData,
           headers: {
             'Accept': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` }),
           },
         });
 

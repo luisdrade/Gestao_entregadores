@@ -1,7 +1,8 @@
 // Configurações da API
 export const API_CONFIG = {
   //BASE_URL: 'http://entregasplus.ddns.net:8000',
-  BASE_URL: 'http://192.168.0.115:8000',
+  //BASE_URL: 'http://192.168.0.115:8000',
+  BASE_URL: 'http://10.250.108.238:8000',
   
   TIMEOUT: 15000,
 };
@@ -21,7 +22,7 @@ export const API_ENDPOINTS = {
     STATISTICS: '/api/estatisticas/',
     UPDATE_PROFILE: '/api/entregadores/me/',
     CHANGE_PASSWORD: '/api/usuarios/change-password/',
-    UPLOAD_PHOTO: '/api/upload-foto/',
+    UPLOAD_PHOTO: '/api/usuarios/upload-foto/',
   },
   VEHICLES: {
     LIST: '/veiculos/',

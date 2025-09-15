@@ -27,6 +27,7 @@ export default function ProfileScreen() {
   const [loadingStats, setLoadingStats] = useState(true);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [photoUrl, setPhotoUrl] = useState(null);
+  const [imageLoadError, setImageLoadError] = useState(false);
   const [stats, setStats] = useState({
     totalEntregas: 0,
     totalGanhos: 0,
@@ -52,33 +53,70 @@ export default function ProfileScreen() {
     }
   }, [user]);
 
-  const buildPhotoUrl = () => {
+  const buildPhotoUrl = async () => {
     try {
       const baseUrl = API_CONFIG.BASE_URL;
       
       console.log('🔍 buildPhotoUrl - user.foto:', user?.foto);
       console.log('🔍 buildPhotoUrl - stats.foto:', stats?.foto);
       
+      // Função para validar e construir URL da foto
+      const buildValidPhotoUrl = (photoPath) => {
+        if (!photoPath || photoPath === 'null' || photoPath === '') {
+          return null;
+        }
+        
+        if (photoPath.startsWith('http')) {
+          console.log('🔍 buildPhotoUrl - URL já completa:', photoPath);
+          return photoPath;
+        }
+        
+        // Limpar o caminho da foto
+        let cleanPath = photoPath;
+        if (cleanPath.startsWith('/media/')) {
+          cleanPath = cleanPath.substring(7); // Remove /media/
+        }
+        if (cleanPath.startsWith('fotos_perfil/')) {
+          cleanPath = cleanPath.substring(13); // Remove fotos_perfil/
+        }
+        
+        const fullUrl = `${baseUrl}/media/fotos_perfil/${cleanPath}`;
+        console.log('🔍 buildPhotoUrl - URL construída:', fullUrl);
+        return fullUrl;
+      };
+      
       // Priorizar foto do usuário atual
       if (user?.foto) {
-        if (user.foto.startsWith('http')) {
-          console.log('🔍 buildPhotoUrl - Usando user.foto com http:', user.foto);
-          setPhotoUrl(user.foto);
+        const url = buildValidPhotoUrl(user.foto);
+        if (url) {
+          // Testar se a imagem é acessível antes de definir
+          const isAccessible = await testImageAccessibility(url);
+          if (isAccessible) {
+            setPhotoUrl(url);
+          } else {
+            console.log('🔍 buildPhotoUrl - user.foto não acessível, tentando stats');
+            if (stats?.foto) {
+              const statsUrl = buildValidPhotoUrl(stats.foto);
+              const statsAccessible = await testImageAccessibility(statsUrl);
+              setPhotoUrl(statsAccessible ? statsUrl : null);
+            } else {
+              setPhotoUrl(null);
+            }
+          }
         } else {
-          // Construir URL completa
-          const fullUrl = `${baseUrl}${user.foto}`;
-          console.log('🔍 buildPhotoUrl - Construindo URL completa:', fullUrl);
-          setPhotoUrl(fullUrl);
+          console.log('🔍 buildPhotoUrl - user.foto inválida, tentando stats');
+          if (stats?.foto) {
+            const statsUrl = buildValidPhotoUrl(stats.foto);
+            const statsAccessible = await testImageAccessibility(statsUrl);
+            setPhotoUrl(statsAccessible ? statsUrl : null);
+          } else {
+            setPhotoUrl(null);
+          }
         }
       } else if (stats?.foto) {
-        if (stats.foto.startsWith('http')) {
-          console.log('🔍 buildPhotoUrl - Usando stats.foto com http:', stats.foto);
-          setPhotoUrl(stats.foto);
-        } else {
-          const fullUrl = `${baseUrl}${stats.foto}`;
-          console.log('🔍 buildPhotoUrl - Construindo URL completa das stats:', fullUrl);
-          setPhotoUrl(fullUrl);
-        }
+        const url = buildValidPhotoUrl(stats.foto);
+        const isAccessible = await testImageAccessibility(url);
+        setPhotoUrl(isAccessible ? url : null);
       } else {
         console.log('🔍 buildPhotoUrl - Nenhuma foto encontrada');
         setPhotoUrl(null);
@@ -104,7 +142,7 @@ export default function ProfileScreen() {
       if (response.data) {
         setStats(response.data);
         // Reconstruir URL da foto após carregar estatísticas
-        setTimeout(() => buildPhotoUrl(), 100);
+        setTimeout(async () => await buildPhotoUrl(), 100);
       }
     } catch (error) {
       console.error('Erro ao carregar estatísticas:', error);
@@ -151,6 +189,18 @@ export default function ProfileScreen() {
         {
           text: 'Tentar Câmera',
           onPress: () => tryNativeImagePicker()
+        },
+        {
+          text: 'Testar Endpoint',
+          onPress: () => testUploadEndpoint()
+        },
+        {
+          text: 'Testar Imagem Atual',
+          onPress: () => testCurrentImage()
+        },
+        {
+          text: 'Limpar Cache da Imagem',
+          onPress: () => clearImageCache()
         }
       ]
     );
@@ -308,6 +358,7 @@ export default function ProfileScreen() {
       const fotoData = `data:image/jpeg;base64,${base64Image}`;
       
       console.log('🔍 Token encontrado, fazendo requisição para:', API_ENDPOINTS.USER.UPLOAD_PHOTO);
+      console.log('🔍 URL completa:', `${API_CONFIG.BASE_URL}${API_ENDPOINTS.USER.UPLOAD_PHOTO}`);
       console.log('🔍 Tamanho do base64:', base64Image.length);
       
       const response = await api.post(API_ENDPOINTS.USER.UPLOAD_PHOTO, {
@@ -317,6 +368,7 @@ export default function ProfileScreen() {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
+        timeout: 30000, // 30 segundos de timeout
       });
 
       console.log('📡 Resposta do servidor:', response.data);
@@ -328,7 +380,7 @@ export default function ProfileScreen() {
         await updateUserPhoto(response.data.foto_url);
         
         // Reconstruir URL da foto após upload
-        setTimeout(() => buildPhotoUrl(), 100);
+        setTimeout(async () => await buildPhotoUrl(), 100);
         
         Alert.alert('Sucesso', 'Foto atualizada com sucesso!');
       } else {
@@ -337,9 +389,18 @@ export default function ProfileScreen() {
     } catch (error) {
       console.error('❌ Erro ao enviar foto:', error);
       console.error('❌ Detalhes do erro:', error.response?.data);
+      console.error('❌ Status do erro:', error.response?.status);
+      console.error('❌ Headers do erro:', error.response?.headers);
       
       let errorMessage = 'Erro ao enviar foto. Tente novamente.';
-      if (error.response?.data?.error) {
+      
+      if (error.response?.status === 404) {
+        errorMessage = 'Endpoint de upload não encontrado. Verifique a configuração.';
+      } else if (error.response?.status === 401) {
+        errorMessage = 'Sessão expirada. Faça login novamente.';
+      } else if (error.response?.status === 413) {
+        errorMessage = 'Arquivo muito grande. Use uma imagem menor.';
+      } else if (error.response?.data?.error) {
         errorMessage = error.response.data.error;
       } else if (error.message) {
         errorMessage = error.message;
@@ -357,6 +418,111 @@ export default function ProfileScreen() {
     } catch (error) {
       console.error('Erro ao limpar foto:', error);
       Alert.alert('Erro', 'Erro ao limpar foto.');
+    }
+  };
+
+  const testUploadEndpoint = async () => {
+    try {
+      console.log('🧪 Testando endpoint de upload...');
+      const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
+      if (!token) {
+        Alert.alert('Erro', 'Token não encontrado. Faça login novamente.');
+        return;
+      }
+
+      const testUrl = `${API_CONFIG.BASE_URL}${API_ENDPOINTS.USER.UPLOAD_PHOTO}`;
+      console.log('🧪 URL do endpoint:', testUrl);
+
+      // Teste simples de conectividade
+      const response = await fetch(testUrl, {
+        method: 'OPTIONS',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      console.log('🧪 Resposta do teste:', response.status, response.statusText);
+      
+      if (response.ok) {
+        Alert.alert('Teste', `Endpoint acessível! Status: ${response.status}`);
+      } else {
+        Alert.alert('Teste', `Endpoint com problema! Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('🧪 Erro no teste:', error);
+      Alert.alert('Teste', `Erro ao testar endpoint: ${error.message}`);
+    }
+  };
+
+  const testImageAccessibility = async (imageUrl) => {
+    try {
+      console.log('🧪 Testando acessibilidade da imagem:', imageUrl);
+      
+      const response = await fetch(imageUrl, {
+        method: 'HEAD',
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
+      
+      console.log('🧪 Status da imagem:', response.status);
+      
+      if (response.ok) {
+        console.log('✅ Imagem acessível!');
+        return true;
+      } else {
+        console.log('❌ Imagem não acessível:', response.status);
+        return false;
+      }
+    } catch (error) {
+      console.error('❌ Erro ao testar imagem:', error);
+      return false;
+    }
+  };
+
+  const testCurrentImage = async () => {
+    if (!photoUrl) {
+      Alert.alert('Teste', 'Nenhuma imagem carregada para testar.');
+      return;
+    }
+
+    Alert.alert(
+      'Testando Imagem Atual',
+      `URL: ${photoUrl}`,
+      [{ text: 'OK' }]
+    );
+
+    const isAccessible = await testImageAccessibility(photoUrl);
+    
+    if (isAccessible) {
+      Alert.alert('Teste', '✅ Imagem atual está acessível!');
+    } else {
+      Alert.alert('Teste', '❌ Imagem atual não está acessível. Tentando recarregar...');
+      
+      // Tentar recarregar a URL da foto
+      setTimeout(async () => {
+        await buildPhotoUrl();
+      }, 1000);
+    }
+  };
+
+  const clearImageCache = async () => {
+    try {
+      console.log('🧹 Limpando cache da imagem...');
+      
+      // Resetar estados relacionados à imagem
+      setImageLoadError(false);
+      setPhotoUrl(null);
+      
+      // Aguardar um pouco e reconstruir a URL
+      setTimeout(async () => {
+        await buildPhotoUrl();
+      }, 500);
+      
+      Alert.alert('Cache Limpo', 'Cache da imagem limpo. Recarregando...');
+    } catch (error) {
+      console.error('Erro ao limpar cache:', error);
+      Alert.alert('Erro', 'Erro ao limpar cache da imagem.');
     }
   };
 
@@ -434,23 +600,49 @@ export default function ProfileScreen() {
             onPress={handleUploadPhoto}
             disabled={uploadingPhoto}
           >
-            {photoUrl ? (
+            {photoUrl && !imageLoadError ? (
               <Image 
                 source={{ 
                   uri: photoUrl,
                   headers: {
-                    'Cache-Control': 'no-cache'
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
                   }
                 }} 
                 style={styles.profilePhoto}
+                resizeMode="cover"
                 onError={(error) => {
                   console.log('❌ Erro ao carregar imagem:', error.nativeEvent);
-                  setPhotoUrl(null);
+                  console.log('❌ URL que falhou:', photoUrl);
+                  setImageLoadError(true);
+                  // Tentar recarregar após um tempo
+                  setTimeout(() => {
+                    setImageLoadError(false);
+                    buildPhotoUrl();
+                  }, 2000);
+                }}
+                onLoad={() => {
+                  console.log('✅ Imagem carregada com sucesso:', photoUrl);
+                  setImageLoadError(false);
+                }}
+                onLoadStart={() => {
+                  console.log('🔄 Iniciando carregamento da imagem:', photoUrl);
+                  setImageLoadError(false);
+                }}
+                onLoadEnd={() => {
+                  console.log('🏁 Carregamento da imagem finalizado:', photoUrl);
                 }}
               />
             ) : (
               <View style={styles.photoPlaceholder}>
-                <Ionicons name="person" size={60} color="#ccc" />
+                {imageLoadError ? (
+                  <View style={styles.errorContainer}>
+                    <Ionicons name="warning-outline" size={30} color="#ff6b6b" />
+                    <Text style={styles.errorText}>Erro ao carregar</Text>
+                  </View>
+                ) : (
+                  <Ionicons name="person" size={60} color="#ccc" />
+                )}
               </View>
             )}
             <View style={styles.photoEditButton}>
@@ -645,8 +837,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: '#000',shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
@@ -664,11 +855,11 @@ const styles = StyleSheet.create({
   },
   statItem: {
     alignItems: 'center',
-    marginHorizontal: 10,
-    marginVertical: 10,
+    marginHorizontal: 7,
+    marginVertical: 7,
   },
   statValue: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#007AFF',
     marginTop: 5,
@@ -740,6 +931,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'red',
     marginBottom: 10,
+  },
+  errorContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  errorText: {
+    fontSize: 10,
+    color: '#ff6b6b',
+    marginTop: 5,
+    textAlign: 'center',
   },
 });
 

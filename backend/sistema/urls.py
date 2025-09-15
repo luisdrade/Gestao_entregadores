@@ -60,6 +60,9 @@ urlpatterns = [
     path('api/auth/', include('dj_rest_auth.urls')),             # login/logout/password reset
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # registro e verificação de email
     
+    # URLs para reset de senha (necessárias para o dj-rest-auth funcionar)
+    path('api/auth/password/reset/confirm/', include('django.contrib.auth.urls')),
+    
     # Páginas de autenticação e dashboards
     path('auth/', include('usuarios.template_urls')),
     

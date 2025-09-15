@@ -111,3 +111,514 @@ CSRF desabilitado para rota: /api/estatisticas/
 CSRF desabilitado para rota: /api/estatisticas/
 "GET /api/estatisticas/ HTTP/1.1" 200 156
 "GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 335
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /media/fotos_perfil/perfil_2_ba4fd826.jpg HTTP/1.1" 200 70
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /api/estatisticas/ HTTP/1.1" 200 156
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+Internal Server Error: /registro/api/registro-trabalho/
+"POST /registro/api/registro-trabalho/ HTTP/1.1" 500 86
+"POST /registro/api/registro-trabalho/ HTTP/1.1" 201 75
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 368
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 368
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 375
+"POST /registro/api/registro-trabalho/ HTTP/1.1" 201 75
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 382
+"POST /registro/api/registro-trabalho/ HTTP/1.1" 201 75
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 384
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 384
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 384
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+- Broken pipe from ('192.168.0.119', 49815)
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=semana HTTP/1.1" 200 333
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=ano HTTP/1.1" 200 548
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=semana HTTP/1.1" 200 333
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=ano HTTP/1.1" 200 548
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 438
+"GET /api/relatorios/trabalho/?periodo=ano HTTP/1.1" 200 548
+- Broken pipe from ('192.168.0.119', 49832)
+- Broken pipe from ('192.168.0.119', 49830)
+- Broken pipe from ('192.168.0.119', 49831)
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 384
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 384
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 384
+Internal Server Error: /api/auth/password/reset/
+Traceback (most recent call last):
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\dj_rest_auth\views.py", line 265, in post
+    serializer.save()
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\dj_rest_auth\serializers.py", line 253, in save
+    self.reset_form.save(**opts)
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\dj_rest_auth\forms.py", line 64, in save
+    url = url_generator(request, user, temp_key)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\dj_rest_auth\forms.py", line 23, in default_url_generator
+    path = reverse(
+           ^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'password_reset_confirm' not found. 'password_reset_confirm' is not a valid view function or pattern name.
+"POST /api/auth/password/reset/ HTTP/1.1" 500 130114
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /api/auth/password/reset/ HTTP/1.1" 200 58
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 384
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: luisfilipem13@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 1000
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 377
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+Watching for file changes with StatReloader
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /media/fotos_perfil/perfil_2_ba4fd826.jpg HTTP/1.1" 200 70
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /api/test/ HTTP/1.1" 200 238
+"GET /comunidade/ HTTP/1.1" 200 2439
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"POST /api/usuarios/upload-foto/ HTTP/1.1" 200 111
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /media/fotos_perfil/perfil_2_d9cda46d.jpg HTTP/1.1" 200 70
+"GET /media/fotos_perfil/perfil_2_d9cda46d.jpg HTTP/1.1" 200 70
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"POST /api/usuarios/upload-foto/ HTTP/1.1" 200 111
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 70
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 200 0
+"POST /api/usuarios/upload-foto/ HTTP/1.1" 200 111
+"HEAD /media/fotos_perfil/perfil_2_a050c1b7.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_a050c1b7.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+Not Found: /media/fotos_perfil/perfil_2_8419b7a4.jpg
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 404 0
+"HEAD /media/fotos_perfil/perfil_2_a050c1b7.jpg HTTP/1.1" 200 0
+Not Found: /media/fotos_perfil/perfil_2_8419b7a4.jpg
+"HEAD /media/fotos_perfil/perfil_2_8419b7a4.jpg HTTP/1.1" 404 0
+"GET /media/fotos_perfil/perfil_2_a050c1b7.jpg HTTP/1.1" 200 70
+"HEAD /media/fotos_perfil/perfil_2_a050c1b7.jpg HTTP/1.1" 200 0
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"HEAD /media/fotos_perfil/perfil_2_a050c1b7.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_a050c1b7.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"HEAD /media/fotos_perfil/perfil_2_a050c1b7.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_a050c1b7.jpg HTTP/1.1" 200 0
+"POST /api/usuarios/upload-foto/ HTTP/1.1" 200 111
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+Not Found: /media/fotos_perfil/perfil_2_a050c1b7.jpg
+"HEAD /media/fotos_perfil/perfil_2_a050c1b7.jpg HTTP/1.1" 404 0
+"GET /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 70
+Not Found: /media/fotos_perfil/perfil_2_a050c1b7.jpg
+"HEAD /media/fotos_perfil/perfil_2_a050c1b7.jpg HTTP/1.1" 404 0
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_2fce6293.jpg HTTP/1.1" 200 0
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /api/estatisticas/ HTTP/1.1" 200 159
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /comunidade/ HTTP/1.1" 200 2439
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /comunidade/ HTTP/1.1" 200 2439

@@ -97,6 +97,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8081",
     "http://192.168.0.115:8081",
     "http://10.20.13.125:8081",
+    # IP atual do servidor
+    "http://10.250.108.238:8000",
+    "http://10.250.108.238:3000",
+    "http://10.250.108.238:8081",
 ]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
@@ -324,3 +328,10 @@ DEFAULT_FROM_EMAIL = 'noreply@gestaoentregadores.com'
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'seu-email@gmail.com'
 # EMAIL_HOST_PASSWORD = 'sua-senha'
+
+# Configurações do dj-rest-auth para reset de senha
+REST_AUTH = {
+    'PASSWORD_RESET_USE_SITES_DOMAIN': True,
+    'PASSWORD_RESET_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetSerializer',
+    'PASSWORD_RESET_CONFIRM_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetConfirmSerializer',
+}

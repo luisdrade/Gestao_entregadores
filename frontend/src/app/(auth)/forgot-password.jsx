@@ -25,11 +25,16 @@ export default function ForgotPasswordScreen() {
       return;
     }
 
+    // Validação básica de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert('Erro', 'Por favor, informe um email válido');
+      return;
+    }
+
     setIsLoading(true);
     try {
-      // Aqui você deve implementar a chamada para a API do Django
-      // que envia o email de recuperação de senha
-      await api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
+      const response = await api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
       
       Alert.alert(
         'Email enviado', 
@@ -37,7 +42,23 @@ export default function ForgotPasswordScreen() {
         [{ text: 'OK', onPress: () => router.back() }]
       );
     } catch (error) {
-      Alert.alert('Erro', 'Erro ao enviar email de recuperação');
+      console.error('Erro ao enviar email de recuperação:', error);
+      
+      let errorMessage = 'Erro ao enviar email de recuperação';
+      
+      if (error.response?.data?.email) {
+        errorMessage = error.response.data.email[0];
+      } else if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error.response?.status === 404) {
+        errorMessage = 'Email não encontrado em nosso sistema';
+      } else if (error.response?.status === 400) {
+        errorMessage = 'Dados inválidos. Verifique o email informado';
+      } else if (error.code === 'NETWORK_ERROR' || !error.response) {
+        errorMessage = 'Erro de conexão. Verifique sua internet';
+      }
+      
+      Alert.alert('Erro', errorMessage);
     } finally {
       setIsLoading(false);
     }

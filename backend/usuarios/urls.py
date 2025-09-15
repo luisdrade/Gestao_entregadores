@@ -55,7 +55,7 @@ urlpatterns = [
     path('estatisticas/', EstatisticasUsuarioView.as_view(), name='estatisticas_usuario'),
     
     # Endpoint para upload de foto de perfil
-    path('upload-foto/', UploadFotoPerfilView.as_view(), name='upload_foto_perfil'),
+    path('usuarios/upload-foto/', UploadFotoPerfilView.as_view(), name='upload_foto_perfil'),
     
     # Endpoints de relatórios
     path('relatorios/trabalho/', views.relatorio_trabalho, name='relatorio_trabalho'),
