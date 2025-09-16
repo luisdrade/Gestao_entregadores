@@ -1425,3 +1425,115 @@ CSRF desabilitado para rota: /api/estatisticas/
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 373
 "GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 374
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 373
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 373
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 373
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+Internal Server Error: /api/relatorios/trabalho/
+Traceback (most recent call last):
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\views.py", line 369, in relatorio_trabalho
+    return nova_func(request)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 492, in dispatch
+    request = self.initialize_request(request, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 391, in initialize_request
+    return Request(
+           ^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\request.py", line 154, in __init__
+    assert isinstance(request, HttpRequest), (
+AssertionError: The `request` argument must be an instance of `django.http.HttpRequest`, not `rest_framework.request.Request`.
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 500 133064
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+Internal Server Error: /api/relatorios/trabalho/
+Traceback (most recent call last):
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\views.py", line 369, in relatorio_trabalho
+    return nova_func(request)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 492, in dispatch
+    request = self.initialize_request(request, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\views.py", line 391, in initialize_request
+    return Request(
+           ^^^^^^^^
+  File "C:\Faculdade\TCC\Gestao_entregadores\backend\venv\Lib\site-packages\rest_framework\request.py", line 154, in __init__
+    assert isinstance(request, HttpRequest), (
+AssertionError: The `request` argument must be an instance of `django.http.HttpRequest`, not `rest_framework.request.Request`.
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 500 133064
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 373
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 289
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=ano HTTP/1.1" 200 474
+"GET /registro/api/registro-trabalho/8/ HTTP/1.1" 200 193
+"DELETE /registro/api/registro-trabalho/8/ HTTP/1.1" 200 59
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=ano HTTP/1.1" 200 427
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 373
