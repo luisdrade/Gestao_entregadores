@@ -224,7 +224,6 @@ export default function TrabalhadoScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Registre seu dia de trabalho</Text>
 
         <View style={styles.form}>
           {/* Data */}
@@ -435,21 +434,14 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 100, // Espaço para a barra inferior
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
   form: {
     gap: 20,
   },
   inputContainer: {
-    marginBottom: 15,
+    marginBottom: 10,
   },
   label: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '600',
     color: '#000',
     marginBottom: 8,
@@ -494,7 +486,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 15,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
   },
   registerButtonText: {
     color: '#fff',
@@ -550,12 +542,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderWidth: 1,
     borderColor: '#ddd',
+
   },
   totalValueLabel: {
     fontSize: 14,
     fontWeight: '600',
     color: '#666',
     marginBottom: 5,
+    textAlign: 'center',
   },
   totalValueText: {
     fontSize: 18,

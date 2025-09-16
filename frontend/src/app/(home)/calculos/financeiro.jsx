@@ -199,12 +199,11 @@ export default function FinanceiroScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Registre suas despesas</Text>
 
         <View style={styles.form}>
           {/* Tipo de despesa */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Tipo de despesa *</Text>
+            <Text style={styles.label}>Tipo de despesa</Text>
 
             {/* Campo de seleção */}
             <TouchableOpacity
@@ -293,7 +292,7 @@ export default function FinanceiroScreen() {
 
           {/* Descrição */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Descrição *</Text>
+            <Text style={styles.label}>Descrição</Text>
             <TextInput
               style={[styles.input, styles.textArea, errors.descricao && styles.inputError]}
               placeholder="Descreva detalhadamente a despesa realizada"
@@ -309,7 +308,7 @@ export default function FinanceiroScreen() {
 
           {/* Valor */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Valor da despesa *</Text>
+            <Text style={styles.label}>Valor da despesa</Text>
             <View style={[styles.inputWithIcon, errors.valor && styles.inputError]}>
               <TextInput
                 style={styles.input}
@@ -356,47 +355,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8f9fa',
   },
-  header: {
-    backgroundColor: '#007AFF',
-    paddingTop: 10,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-  },
-  headerContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  backButton: {
-    padding: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
-  },
-
   content: {
     flex: 1,
     padding: 20,
   },
   scrollContent: {
-    paddingBottom: 100, // Espaço para a barra inferior
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 30,
-    textAlign: 'center',
+    paddingBottom: 100,
   },
   form: {
     gap: 20,
-  },
-  inputContainer: {
-    marginBottom: 15,
   },
   label: {
     fontSize: 16,
@@ -434,9 +401,9 @@ const styles = StyleSheet.create({
   registerButton: {
     backgroundColor: '#007AFF',
     borderRadius: 8,
+    marginTop: 20,
     padding: 15,
     alignItems: 'center',
-    marginTop: 20,
   },
   registerButtonText: {
     color: '#fff',

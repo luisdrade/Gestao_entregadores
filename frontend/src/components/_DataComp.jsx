@@ -121,10 +121,9 @@ export default function DatePicker({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 15,
   },
   label: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '600',
     color: '#000',
     marginBottom: 8,
