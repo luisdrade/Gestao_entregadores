@@ -568,12 +568,12 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       
-      {/* Header */}
+      {/* Header próprio do Perfil */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
+          <View style={{ width: 40 }} />
           <Text style={styles.headerTitle}>Meu Perfil</Text>
-          <TouchableOpacity style={styles.settingsButton} onPress={handleChangePassword}>
-          </TouchableOpacity>
+          <View style={{ width: 40 }} />
         </View>
       </View>
 
@@ -740,7 +740,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#007AFF',
-    paddingTop: 50, // Adjust for safe area
+    paddingTop: 30, 
     paddingBottom: 20,
     paddingHorizontal: 20,
   },

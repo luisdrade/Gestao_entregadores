@@ -100,3 +100,47 @@ export const registroDespesa = async (dados) => {
 
 // Alias para compatibilidade (pode ser removido gradualmente)
 export const api = httpClient;
+
+// ✏️ Atualizar registro de trabalho
+export const atualizarRegistroTrabalho = async (id, dados) => {
+  try {
+    await httpClient.put(`/registro/api/registro-trabalho/${id}/`, dados);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Erro ao atualizar registro de trabalho:', error);
+    return { success: false, message: error.response?.data?.error || 'Erro ao atualizar' };
+  }
+};
+
+// 🗑️ Excluir registro de trabalho
+export const excluirRegistroTrabalho = async (id) => {
+  try {
+    await httpClient.delete(`/registro/api/registro-trabalho/${id}/`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Erro ao excluir registro de trabalho:', error);
+    return { success: false, message: error.response?.data?.error || 'Erro ao excluir' };
+  }
+};
+
+// ✏️ Atualizar despesa
+export const atualizarDespesa = async (id, dados) => {
+  try {
+    await httpClient.put(`/registro/api/registro-despesa/${id}/`, dados);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Erro ao atualizar despesa:', error);
+    return { success: false, message: error.response?.data?.error || 'Erro ao atualizar' };
+  }
+};
+
+// 🗑️ Excluir despesa
+export const excluirDespesa = async (id) => {
+  try {
+    await httpClient.delete(`/registro/api/registro-despesa/${id}/`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Erro ao excluir despesa:', error);
+    return { success: false, message: error.response?.data?.error || 'Erro ao excluir' };
+  }
+};

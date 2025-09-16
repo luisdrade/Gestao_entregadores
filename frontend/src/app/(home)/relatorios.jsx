@@ -8,13 +8,16 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  Modal,
+  TextInput,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import TopNavBar from '../../components/_NavBar_Superior';
-import { httpClient as api } from '../../services/clientConfig';
+import { httpClient as api, atualizarRegistroTrabalho, excluirRegistroTrabalho, atualizarDespesa, excluirDespesa } from '../../services/clientConfig';
 import { API_ENDPOINTS } from '../../config/api';
 import HeaderWithBack from '../../components/_Header';
+import DatePicker from '../../components/_DataComp';
 
 export default function RelatoriosScreen() {
   const router = useRouter();
@@ -44,6 +47,37 @@ export default function RelatoriosScreen() {
       despesas_por_dia: []
     }
   });
+
+  // Estados para edição (modais)
+  const [editTrabalhoVisible, setEditTrabalhoVisible] = useState(false);
+  const [editDespesaVisible, setEditDespesaVisible] = useState(false);
+  const [selectedTrabalhoId, setSelectedTrabalhoId] = useState(null);
+  const [selectedDespesaId, setSelectedDespesaId] = useState(null);
+  const [editTrabalhoForm, setEditTrabalhoForm] = useState({
+    data: '',
+    quantidade_entregues: '',
+    quantidade_nao_entregues: '',
+    valor: '',
+  });
+  const [editDespesaForm, setEditDespesaForm] = useState({
+    data: '',
+    valor: '',
+    descricao: '',
+  });
+
+  const toBR = (yyyyMmDd) => {
+    if (!yyyyMmDd) return '';
+    const [y, m, d] = yyyyMmDd.split('-');
+    return `${d}/${m}/${y}`;
+  };
+
+  const toISO = (ddMmYyyy) => {
+    if (!ddMmYyyy) return '';
+    const parts = ddMmYyyy.split('/');
+    if (parts.length !== 3) return ddMmYyyy;
+    const [d, m, y] = parts;
+    return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+  };
 
   useEffect(() => {
     loadRelatorioData();
@@ -82,6 +116,46 @@ export default function RelatoriosScreen() {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('pt-BR');
+  };
+
+  const handleEditTrabalho = async (item) => {
+    try {
+      // Buscar detalhes para preencher (inclui nao_entregues se disponível)
+      const detail = await api.get(`/registro/api/registro-trabalho/${item.id}/`);
+      const data = detail.data?.data || {};
+      setSelectedTrabalhoId(item.id);
+      setEditTrabalhoForm({
+        data: toBR(data.data || item.data),
+        quantidade_entregues: String(data.quantidade_entregues ?? item.entregas ?? ''),
+        quantidade_nao_entregues: String(data.quantidade_nao_entregues ?? ''),
+        valor: String(data.valor ?? item.ganho ?? ''),
+      });
+      setEditTrabalhoVisible(true);
+    } catch (e) {
+      // Fallback sem detail
+      setSelectedTrabalhoId(item.id);
+      setEditTrabalhoForm({
+        data: toBR(item.data),
+        quantidade_entregues: String(item.entregas ?? ''),
+        quantidade_nao_entregues: '',
+        valor: String(item.ganho ?? ''),
+      });
+      setEditTrabalhoVisible(true);
+    }
+  };
+
+  const handleDeleteTrabalho = (item) => {
+    Alert.alert(
+      'Excluir Dia',
+      `Deseja excluir o dia ${formatDate(item.data)}?`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Excluir', style: 'destructive', onPress: async () => {
+          const res = await excluirRegistroTrabalho(item.id);
+          if (res.success) { Alert.alert('Excluído'); loadRelatorioData(); } else { Alert.alert('Erro', res.message || 'Falha ao excluir'); }
+        }}
+      ]
+    );
   };
 
   const renderTrabalhoReport = () => (
@@ -142,17 +216,53 @@ export default function RelatoriosScreen() {
       <View style={styles.diasContainer}>
         <Text style={styles.sectionTitle}>Dias Trabalhados</Text>
         {relatorioData.trabalho.dias_trabalhados.map((dia, index) => (
-          <View key={index} style={styles.dayCard}>
+          <TouchableOpacity key={index} style={styles.dayCard} onPress={() => handleEditTrabalho(dia)} onLongPress={() => handleDeleteTrabalho(dia)} delayLongPress={300}>
             <Text style={styles.diaData}>{formatDate(dia.data)}</Text>
             <View style={styles.diaStats}>
               <Text style={styles.diaStat}>Entregas: {dia.entregas}</Text>
               <Text style={styles.diaStat}>Ganho: {formatCurrency(dia.ganho)}</Text>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     </View>
   );
+
+  const handleEditDespesa = async (item) => {
+    try {
+      const detail = await api.get(`/registro/api/registro-despesa/${item.id}/`);
+      const data = detail.data?.data || {};
+      setSelectedDespesaId(item.id);
+      setEditDespesaForm({
+        data: toBR(data.data || item.data),
+        valor: String(data.valor ?? item.valor ?? ''),
+        descricao: String(data.descricao ?? item.descricao ?? ''),
+      });
+      setEditDespesaVisible(true);
+    } catch (e) {
+      setSelectedDespesaId(item.id);
+      setEditDespesaForm({
+        data: toBR(item.data),
+        valor: String(item.valor ?? ''),
+        descricao: String(item.descricao ?? ''),
+      });
+      setEditDespesaVisible(true);
+    }
+  };
+
+  const handleDeleteDespesa = (item) => {
+    Alert.alert(
+      'Excluir Despesa',
+      `Deseja excluir a despesa de ${formatCurrency(item.valor)} em ${formatDate(item.data)}?`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Excluir', style: 'destructive', onPress: async () => {
+          const res = await excluirDespesa(item.id);
+          if (res.success) { Alert.alert('Excluída'); loadRelatorioData(); } else { Alert.alert('Erro', res.message || 'Falha ao excluir'); }
+        }}
+      ]
+    );
+  };
 
   const renderDespesasReport = () => (
     <View style={styles.reportSection}>
@@ -210,7 +320,7 @@ export default function RelatoriosScreen() {
       <View style={styles.container_RelatorioDespesa}>
         <Text style={styles.sectionTitle}>Despesas por Dia</Text>
         {relatorioData.despesas.despesas_por_dia.map((despesa, index) => (
-          <View key={index} style={styles.dailyExpenseCard}>
+          <TouchableOpacity key={index} style={styles.dailyExpenseCard} onPress={() => handleEditDespesa(despesa)} onLongPress={() => handleDeleteDespesa(despesa)} delayLongPress={300}>
             <Text style={styles.dailyExpenseDate}>{formatDate(despesa.data)}</Text>
             <View style={styles.dailyExpenseDetails}>
               <Text style={styles.dailyExpenseCategory}>{despesa.categoria}</Text>
@@ -219,7 +329,7 @@ export default function RelatoriosScreen() {
             {despesa.descricao && (
               <Text style={styles.dailyExpenseDescription}>{despesa.descricao}</Text>
             )}
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     </View>
@@ -302,6 +412,158 @@ export default function RelatoriosScreen() {
           activeTab === 'trabalho' ? renderTrabalhoReport() : renderDespesasReport()
         )}
       </ScrollView>
+
+      {/* Modal Editar Trabalho */}
+      <Modal visible={editTrabalhoVisible} transparent animationType="slide" onRequestClose={() => setEditTrabalhoVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Editar Dia Trabalhado</Text>
+            <DatePicker
+              label="Data"
+              value={editTrabalhoForm.data}
+              onDateChange={(v) => setEditTrabalhoForm(prev => ({ ...prev, data: v }))}
+            />
+            <View style={styles.rowInputs}>
+              <View style={{ flex: 1, marginRight: 6 }}>
+                <Text style={styles.inputLabel}>Entregas</Text>
+                <TextInput
+                  style={styles.input}
+                  keyboardType="numeric"
+                  value={editTrabalhoForm.quantidade_entregues}
+                  onChangeText={(v) => setEditTrabalhoForm(prev => ({ ...prev, quantidade_entregues: v.replace(/\D/g,'') }))}
+                  placeholder="0"
+                />
+              </View>
+              <View style={{ flex: 1, marginLeft: 6 }}>
+                <Text style={styles.inputLabel}>Não Entregues</Text>
+                <TextInput
+                  style={styles.input}
+                  keyboardType="numeric"
+                  value={editTrabalhoForm.quantidade_nao_entregues}
+                  onChangeText={(v) => setEditTrabalhoForm(prev => ({ ...prev, quantidade_nao_entregues: v.replace(/\D/g,'') }))}
+                  placeholder="0"
+                />
+              </View>
+            </View>
+            <Text style={styles.inputLabel}>Valor Recebido (R$)</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="decimal-pad"
+              value={String(editTrabalhoForm.valor)}
+              onChangeText={(v) => setEditTrabalhoForm(prev => ({ ...prev, valor: v.replace(',', '.').replace(/[^0-9.]/g,'') }))}
+              placeholder="0.00"
+            />
+
+            <View style={styles.modalActions}>
+              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setEditTrabalhoVisible(false)}>
+                <Text style={styles.modalButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.saveButton]}
+                onPress={async () => {
+                  const payload = {
+                    data: toISO(editTrabalhoForm.data),
+                    quantidade_entregues: parseInt(editTrabalhoForm.quantidade_entregues || '0'),
+                    quantidade_nao_entregues: parseInt(editTrabalhoForm.quantidade_nao_entregues || '0'),
+                    valor: parseFloat(editTrabalhoForm.valor || '0'),
+                  };
+                  const res = await atualizarRegistroTrabalho(selectedTrabalhoId, payload);
+                  if (res.success) {
+                    setEditTrabalhoVisible(false);
+                    loadRelatorioData();
+                  } else {
+                    Alert.alert('Erro', res.message || 'Falha ao salvar');
+                  }
+                }}
+              >
+                <Text style={[styles.modalButtonText, { color: '#fff' }]}>Salvar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.deleteButton]}
+                onPress={async () => {
+                  const res = await excluirRegistroTrabalho(selectedTrabalhoId);
+                  if (res.success) {
+                    setEditTrabalhoVisible(false);
+                    loadRelatorioData();
+                  } else {
+                    Alert.alert('Erro', res.message || 'Falha ao excluir');
+                  }
+                }}
+              >
+                <Text style={[styles.modalButtonText, { color: '#fff' }]}>Excluir</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal Editar Despesa */}
+      <Modal visible={editDespesaVisible} transparent animationType="slide" onRequestClose={() => setEditDespesaVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Editar Despesa</Text>
+            <DatePicker
+              label="Data"
+              value={editDespesaForm.data}
+              onDateChange={(v) => setEditDespesaForm(prev => ({ ...prev, data: v }))}
+            />
+            <Text style={styles.inputLabel}>Valor (R$)</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="decimal-pad"
+              value={String(editDespesaForm.valor)}
+              onChangeText={(v) => setEditDespesaForm(prev => ({ ...prev, valor: v.replace(',', '.').replace(/[^0-9.]/g,'') }))}
+              placeholder="0.00"
+            />
+            <Text style={styles.inputLabel}>Descrição</Text>
+            <TextInput
+              style={styles.input}
+              value={editDespesaForm.descricao}
+              onChangeText={(v) => setEditDespesaForm(prev => ({ ...prev, descricao: v }))}
+              placeholder="Opcional"
+            />
+
+            <View style={styles.modalActions}>
+              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setEditDespesaVisible(false)}>
+                <Text style={styles.modalButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.saveButton]}
+                onPress={async () => {
+                  const payload = {
+                    data: toISO(editDespesaForm.data),
+                    valor: parseFloat(editDespesaForm.valor || '0'),
+                    descricao: editDespesaForm.descricao || '',
+                  };
+                  const res = await atualizarDespesa(selectedDespesaId, payload);
+                  if (res.success) {
+                    setEditDespesaVisible(false);
+                    loadRelatorioData();
+                  } else {
+                    Alert.alert('Erro', res.message || 'Falha ao salvar');
+                  }
+                }}
+              >
+                <Text style={[styles.modalButtonText, { color: '#fff' }]}>Salvar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.deleteButton]}
+                onPress={async () => {
+                  const res = await excluirDespesa(selectedDespesaId);
+                  if (res.success) {
+                    setEditDespesaVisible(false);
+                    loadRelatorioData();
+                  } else {
+                    Alert.alert('Erro', res.message || 'Falha ao excluir');
+                  }
+                }}
+              >
+                <Text style={[styles.modalButtonText, { color: '#fff' }]}>Excluir</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -620,5 +882,71 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#999',
     fontStyle: 'italic',
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
+  },
+  modalCard: {
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 12,
+  },
+  inputLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 6,
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginBottom: 12,
+  },
+  rowInputs: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginHorizontal: 4,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  cancelButton: {
+  },
+  saveButton: {
+    backgroundColor: '#007AFF',
+    borderColor: '#007AFF',
+  },
+  deleteButton: {
+    backgroundColor: '#FF3B30',
+    borderColor: '#FF3B30',
+  },
+  modalButtonText: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: '600',
   },
 });

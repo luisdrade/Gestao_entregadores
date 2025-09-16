@@ -13,6 +13,88 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth import get_user_model
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def registro_trabalho_detail(request, registro_id):
+    try:
+        registro = RegistroTrabalho.objects.get(id=registro_id, entregador=request.user)
+    except RegistroTrabalho.DoesNotExist:
+        return Response({'success': False, 'error': 'Registro não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method in ['PUT', 'PATCH']:
+        data = request.data
+        # Atualizar campos permitidos
+        for field_map in [
+            ('data', 'data'),
+            ('hora_inicio', 'hora_inicio'),
+            ('hora_fim', 'hora_fim'),
+            ('quantidade_entregues', 'quantidade_entregues'),
+            ('quantidade_nao_entregues', 'quantidade_nao_entregues'),
+            ('tipo_pagamento', 'tipo_pagamento'),
+            ('valor', 'valor'),
+        ]:
+            payload_key, model_field = field_map
+            if payload_key in data and data[payload_key] is not None:
+                setattr(registro, model_field, data[payload_key])
+        registro.save()
+        return Response({'success': True, 'message': 'Registro atualizado com sucesso'})
+
+    if request.method == 'DELETE':
+        registro.delete()
+        return Response({'success': True, 'message': 'Registro excluído com sucesso'})
+
+    # GET detail básico
+    return Response({
+        'success': True,
+        'data': {
+            'id': registro.id,
+            'data': registro.data.strftime('%Y-%m-%d'),
+            'hora_inicio': registro.hora_inicio.strftime('%H:%M') if registro.hora_inicio else None,
+            'hora_fim': registro.hora_fim.strftime('%H:%M') if registro.hora_fim else None,
+            'quantidade_entregues': registro.quantidade_entregues,
+            'quantidade_nao_entregues': registro.quantidade_nao_entregues,
+            'tipo_pagamento': registro.tipo_pagamento,
+            'valor': float(registro.valor),
+        }
+    })
+
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def registro_despesa_detail(request, despesa_id):
+    try:
+        despesa = Despesa.objects.get(id=despesa_id, entregador=request.user)
+    except Despesa.DoesNotExist:
+        return Response({'success': False, 'error': 'Despesa não encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method in ['PUT', 'PATCH']:
+        data = request.data
+        for field_map in [
+            ('tipo_despesa', 'tipo_despesa'),
+            ('descricao', 'descricao'),
+            ('valor', 'valor'),
+            ('data', 'data'),
+        ]:
+            payload_key, model_field = field_map
+            if payload_key in data and data[payload_key] is not None:
+                setattr(despesa, model_field, data[payload_key])
+        despesa.save()
+        return Response({'success': True, 'message': 'Despesa atualizada com sucesso'})
+
+    if request.method == 'DELETE':
+        despesa.delete()
+        return Response({'success': True, 'message': 'Despesa excluída com sucesso'})
+
+    return Response({
+        'success': True,
+        'data': {
+            'id': despesa.id,
+            'tipo_despesa': despesa.tipo_despesa,
+            'descricao': despesa.descricao,
+            'valor': float(despesa.valor),
+            'data': despesa.data.strftime('%Y-%m-%d'),
+        }
+    })
 
 @csrf_exempt
 def registro_entrega_despesa(request):

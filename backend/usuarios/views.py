@@ -480,10 +480,11 @@ def relatorio_trabalho(request):
                 melhor_dia = 'N/A'
                 pior_dia = 'N/A'
             
-            # Lista de dias trabalhados
+            # Lista de dias trabalhados (com ID para edição/exclusão)
             dias_trabalhados = []
             for registro in registros_trabalho:
                 dias_trabalhados.append({
+                    'id': registro.id,
                     'data': registro.data.strftime('%Y-%m-%d'),
                     'entregas': registro.quantidade_entregues,
                     'ganho': float(registro.valor)
@@ -598,10 +599,11 @@ def relatorio_despesas(request):
             # Categoria mais cara
             categoria_mais_cara = despesas_por_categoria[0]['nome'] if despesas_por_categoria else 'N/A'
             
-            # Despesas por dia
+            # Despesas por dia (com ID para edição/exclusão)
             despesas_por_dia = []
             for despesa in despesas:
                 despesas_por_dia.append({
+                    'id': despesa.id,
                     'data': despesa.data.strftime('%Y-%m-%d'),
                     'categoria': categoria_mapping.get(despesa.tipo_despesa, despesa.tipo_despesa),
                     'valor': float(despesa.valor),
