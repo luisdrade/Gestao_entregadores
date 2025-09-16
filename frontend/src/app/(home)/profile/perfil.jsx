@@ -175,38 +175,22 @@ export default function ProfileScreen() {
       [
         { text: 'Cancelar', style: 'cancel' },
         { 
-          text: 'Upload Manual', 
-          onPress: () => uploadManualPhoto()
+          text: 'Câmera', 
+          onPress: () => tryNativeImagePicker('camera')
+        },
+        { 
+          text: 'Galeria', 
+          onPress: () => tryNativeImagePicker('library')
         },
         { 
           text: 'Limpar Foto', 
           onPress: () => clearPhoto()
-        },
-        {
-          text: 'Abrir Web',
-          onPress: () => openWebUpload()
-        },
-        {
-          text: 'Tentar Câmera',
-          onPress: () => tryNativeImagePicker()
-        },
-        {
-          text: 'Testar Endpoint',
-          onPress: () => testUploadEndpoint()
-        },
-        {
-          text: 'Testar Imagem Atual',
-          onPress: () => testCurrentImage()
-        },
-        {
-          text: 'Limpar Cache da Imagem',
-          onPress: () => clearImageCache()
         }
       ]
     );
   };
 
-  const tryNativeImagePicker = async () => {
+  const tryNativeImagePicker = async (preferred) => {
     try {
       // Tentar importar dinamicamente
       const ImagePicker = await import('expo-image-picker');
@@ -216,21 +200,27 @@ export default function ProfileScreen() {
         const { status: mediaLibraryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         
         if (cameraStatus === 'granted' && mediaLibraryStatus === 'granted') {
-          Alert.alert(
-            'Selecionar Foto',
-            'Escolha como deseja adicionar uma foto:',
-            [
-              { text: 'Cancelar', style: 'cancel' },
-              { 
-                text: 'Câmera', 
-                onPress: () => pickImageFromCamera(ImagePicker)
-              },
-              { 
-                text: 'Galeria', 
-                onPress: () => pickImageFromLibrary(ImagePicker)
-              },
-            ]
-          );
+          if (preferred === 'camera') {
+            pickImageFromCamera(ImagePicker);
+          } else if (preferred === 'library') {
+            pickImageFromLibrary(ImagePicker);
+          } else {
+            Alert.alert(
+              'Selecionar Foto',
+              'Escolha como deseja adicionar uma foto:',
+              [
+                { text: 'Cancelar', style: 'cancel' },
+                { 
+                  text: 'Câmera', 
+                  onPress: () => pickImageFromCamera(ImagePicker)
+                },
+                { 
+                  text: 'Galeria', 
+                  onPress: () => pickImageFromLibrary(ImagePicker)
+                },
+              ]
+            );
+          }
         } else {
           Alert.alert(
             'Permissões Necessárias',
