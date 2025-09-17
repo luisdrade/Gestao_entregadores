@@ -14,6 +14,28 @@ __pycache__/
 
 # Node modules do frontend (se usar npm)
 frontend/node_modules/
+frontend-web/node_modules/
 
 # Build do React
 frontend/build/
+frontend-web/dist/
+
+# Caches do Vite/TypeScript
+frontend-web/.vite/
+frontend-web/.tsbuildinfo
+
+# Arquivos de ambiente (não versionar segredos)
+.env
+.env.*
+frontend-web/.env
+frontend-web/.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db

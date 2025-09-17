@@ -1599,3 +1599,64 @@ CSRF desabilitado para rota: /api/estatisticas/
 "HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
 Watching for file changes with StatReloader
 Watching for file changes with StatReloader
+"OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 888
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+CSRF desabilitado para rota: /api/entregadores/me/
+Unauthorized: /api/entregadores/me/
+"GET /api/entregadores/me/ HTTP/1.1" 401 68
+"GET /api/test/ HTTP/1.1" 200 238
+CSRF desabilitado para rota: /api/auth/profile/
+Unauthorized: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 401 68
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+CSRF desabilitado para rota: /api/auth/profile/
+Unauthorized: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 401 68
+"OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+CSRF desabilitado para rota: /api/auth/profile/
+Unauthorized: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 401 68
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+CSRF desabilitado para rota: /api/auth/profile/
+Unauthorized: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 401 68
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 450
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 450
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 450
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 450
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 888
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
