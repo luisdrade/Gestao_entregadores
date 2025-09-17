@@ -1537,3 +1537,65 @@ CSRF desabilitado para rota: /api/relatorios/trabalho/
 CSRF desabilitado para rota: /api/relatorios/trabalho/
 "GET /api/relatorios/trabalho/?periodo=ano HTTP/1.1" 200 427
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 373
+C:\Faculdade\TCC\Gestao_entregadores\backend\relatorios_dashboard\api_views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Unauthorized: /registro/api/dashboard-data/
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 373
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 80721
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 373
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 289
+"GET /registro/api/registro-trabalho/17/ HTTP/1.1" 200 191
+"PUT /registro/api/registro-trabalho/17/ HTTP/1.1" 200 60
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 295
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=ano HTTP/1.1" 200 429
+"DELETE /registro/api/registro-trabalho/14/ HTTP/1.1" 200 59
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=ano HTTP/1.1" 200 358
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=semana HTTP/1.1" 200 295
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 295
+CSRF desabilitado para rota: /api/relatorios/despesas/
+"GET /api/relatorios/despesas/?periodo=mes HTTP/1.1" 200 469
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 295
+CSRF desabilitado para rota: /api/relatorios/despesas/
+"GET /api/relatorios/despesas/?periodo=mes HTTP/1.1" 200 469
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 295
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader

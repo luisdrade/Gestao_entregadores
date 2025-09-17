@@ -2,7 +2,7 @@
 export const API_CONFIG = {
   //BASE_URL: 'http://entregasplus.ddns.net:8000',
   BASE_URL: 'http://192.168.0.115:8000',
-  //BASE_URL: 'http://10.250.108.238:8000',
+  //BASE_URL: 'http://192.168.56.1:8000',
   
   TIMEOUT: 15000,
 };
