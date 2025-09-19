@@ -25,8 +25,17 @@ export default function Login() {
         const isAdmin = Boolean(userData?.is_staff || userData?.is_superuser || userData?.user_type === 'admin');
         const roleText = isAdmin ? 'admin' : 'usuário';
         window.alert(`Login bem-sucedido! Entrando como ${roleText}...`);
-      } catch {}
-      navigate('/');
+        
+        // Redireciona baseado no tipo de usuário
+        if (isAdmin) {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+      } catch {
+        // Se não conseguir verificar o perfil, vai para a página inicial
+        navigate('/');
+      }
     } catch (err) {
       setError('Falha no login. Verifique suas credenciais.');
     } finally {

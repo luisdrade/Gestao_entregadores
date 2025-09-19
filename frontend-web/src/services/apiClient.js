@@ -1,4 +1,4 @@
-import axios from 'axios';
+﻿import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://192.168.0.115:8000';
 
@@ -55,6 +55,10 @@ export const ENDPOINTS = {
     REGISTER: '/api/auth/register/',
     ME: '/api/auth/profile/',
   },
+  ADMIN: {
+    USERS: '/api/admin/users/',
+    USER_DETAIL: (id) => `/api/admin/users/${id}/`,
+    USER_ACTIVATE: (id) => `/api/admin/users/${id}/activate/`,
+    USER_DEACTIVATE: (id) => `/api/admin/users/${id}/deactivate/`,
+  },
 };
-
-

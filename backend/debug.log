@@ -1762,3 +1762,811 @@ Unauthorized: /registro/api/dashboard-data/
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
 Unauthorized: /registro/api/dashboard-data/
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 191
+Watching for file changes with StatReloader
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/profile/
+Unauthorized: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 401 191
+CSRF desabilitado para rota: /api/auth/profile/
+Unauthorized: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 401 191
+"OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 888
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"OPTIONS /api/admin/users/ HTTP/1.1" 200 0
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+"OPTIONS /api/admin/users/ HTTP/1.1" 200 0
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+CSRF desabilitado para rota: /api/admin/users/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 888
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+CSRF desabilitado para rota: /api/admin/users/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+CSRF desabilitado para rota: /api/admin/users/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+CSRF desabilitado para rota: /api/admin/users/
+"OPTIONS /comunidade/api/postagens/ HTTP/1.1" 200 0
+"OPTIONS /comunidade/api/anuncios/ HTTP/1.1" 200 0
+"OPTIONS /comunidade/api/anuncios/ HTTP/1.1" 200 0
+"OPTIONS /comunidade/api/postagens/ HTTP/1.1" 200 0
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Not Found: /comunidade/api/postagens/
+Not Found: /comunidade/api/anuncios/
+"GET /comunidade/api/postagens/ HTTP/1.1" 404 6960
+"GET /comunidade/api/anuncios/ HTTP/1.1" 404 6957
+Not Found: /comunidade/api/postagens/
+Entregadores encontrados: 10
+Not Found: /comunidade/api/anuncios/
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+"GET /comunidade/api/postagens/ HTTP/1.1" 404 6960
+Entregador: teste12@gmail.com, is_active: True
+"GET /comunidade/api/anuncios/ HTTP/1.1" 404 6957
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Not Found: /comunidade/api/postagens/
+Not Found: /comunidade/api/anuncios/
+"GET /comunidade/api/postagens/ HTTP/1.1" 404 6960
+"GET /comunidade/api/anuncios/ HTTP/1.1" 404 6957
+Not Found: /comunidade/api/postagens/
+"GET /comunidade/api/postagens/ HTTP/1.1" 404 6960
+Not Found: /comunidade/api/anuncios/
+"GET /comunidade/api/anuncios/ HTTP/1.1" 404 6957
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+"OPTIONS /api/dashboard/ HTTP/1.1" 200 0
+"OPTIONS /api/dashboard/ HTTP/1.1" 200 0
+Not Found: /api/dashboard/
+"GET /api/dashboard/ HTTP/1.1" 404 17251
+Not Found: /api/dashboard/
+"GET /api/dashboard/ HTTP/1.1" 404 17251
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 888
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Not Found: /comunidade/api/postagens/
+"GET /comunidade/api/postagens/ HTTP/1.1" 404 6960
+Not Found: /comunidade/api/anuncios/
+"GET /comunidade/api/anuncios/ HTTP/1.1" 404 6957
+Entregadores encontrados: 10
+Not Found: /comunidade/api/postagens/
+Entregador: rafa@gmail.com, is_active: True
+Not Found: /comunidade/api/anuncios/
+Entregador: teste.senhas.iguais@email.com, is_active: True
+"GET /comunidade/api/postagens/ HTTP/1.1" 404 6960
+"GET /comunidade/api/anuncios/ HTTP/1.1" 404 6957
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\admin_views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+Not Found: /api/dashboard/
+"GET /api/dashboard/ HTTP/1.1" 404 17251
+Not Found: /api/dashboard/
+"GET /api/dashboard/ HTTP/1.1" 404 17251
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 888
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Not Found: /comunidade/api/postagens/
+Not Found: /comunidade/api/anuncios/
+"GET /comunidade/api/postagens/ HTTP/1.1" 404 6960
+"GET /comunidade/api/anuncios/ HTTP/1.1" 404 6957
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Not Found: /comunidade/api/anuncios/
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Not Found: /comunidade/api/postagens/
+"GET /comunidade/api/anuncios/ HTTP/1.1" 404 6957
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+"GET /comunidade/api/postagens/ HTTP/1.1" 404 6960
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\urls.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+"OPTIONS /api/dashboard-data/ HTTP/1.1" 200 0
+"OPTIONS /api/dashboard-data/ HTTP/1.1" 200 0
+Not Found: /api/dashboard-data/
+"GET /api/dashboard-data/ HTTP/1.1" 404 17266
+Not Found: /api/dashboard-data/
+"GET /api/dashboard-data/ HTTP/1.1" 404 17266
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 888
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2931
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2931
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2931
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2931
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+"OPTIONS /comunidade/admin/api/postagens/15/ HTTP/1.1" 200 0
+Postagem 15 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/15/ HTTP/1.1" 200 62
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+Not Found: /api/dashboard-data/
+"GET /api/dashboard-data/ HTTP/1.1" 404 17266
+Not Found: /api/dashboard-data/
+"GET /api/dashboard-data/ HTTP/1.1" 404 17266
+"OPTIONS /api/relatorios/estatisticas/ HTTP/1.1" 200 0
+"OPTIONS /api/relatorios/estatisticas/ HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/ HTTP/1.1" 200 110
+"GET /api/relatorios/estatisticas/ HTTP/1.1" 200 110
+Not Found: /api/dashboard-data/
+"GET /api/dashboard-data/ HTTP/1.1" 404 17266
+Not Found: /api/dashboard-data/
+"GET /api/dashboard-data/ HTTP/1.1" 404 17266
+"GET /api/relatorios/estatisticas/ HTTP/1.1" 200 110
+"GET /api/relatorios/estatisticas/ HTTP/1.1" 200 110
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2775
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2775
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2775
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2775
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 888
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2775
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2775
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+CSRF desabilitado para rota: /api/admin/users/
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2775
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2775
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2701
+"OPTIONS /api/admin/users/16/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/16/
+Usuário teste.senhas.iguais@email.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/16/ HTTP/1.1" 200 344
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2702
+"OPTIONS /api/admin/users/14/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/14/
+Usuário teste.frontend@email.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/14/ HTTP/1.1" 200 333
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: False
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2703
+"OPTIONS /api/admin/users/2/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/2/
+Usuário teste2@gmail.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/2/ HTTP/1.1" 200 329
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: False
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: False
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2704
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/admin/users/2/
+Usuário teste2@gmail.com ativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/2/ HTTP/1.1" 200 325
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: False
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2703
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /api/estatisticas/ HTTP/1.1" 200 157
+"GET /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 80721
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"OPTIONS /comunidade/admin/api/postagens/5/ HTTP/1.1" 200 0
+Postagem 5 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/5/ HTTP/1.1" 200 62
+"OPTIONS /comunidade/admin/api/postagens/1/ HTTP/1.1" 200 0
+Postagem 1 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/1/ HTTP/1.1" 200 62
+"OPTIONS /comunidade/admin/api/postagens/11/ HTTP/1.1" 200 0
+Postagem 11 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/11/ HTTP/1.1" 200 62
+"OPTIONS /comunidade/admin/api/postagens/4/ HTTP/1.1" 200 0
+Postagem 4 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/4/ HTTP/1.1" 200 62
+"OPTIONS /comunidade/admin/api/postagens/3/ HTTP/1.1" 200 0
+Postagem 3 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/3/ HTTP/1.1" 200 62
+"OPTIONS /comunidade/admin/api/postagens/2/ HTTP/1.1" 200 0
+Postagem 2 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/2/ HTTP/1.1" 200 62
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 376
+"GET /comunidade/ HTTP/1.1" 200 1626
+"GET /comunidade/ HTTP/1.1" 200 1626
+"GET /comunidade/ HTTP/1.1" 200 1626

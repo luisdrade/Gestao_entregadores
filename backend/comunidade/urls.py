@@ -18,6 +18,10 @@ urlpatterns = [
     # URLs públicas
     path('', views.comunidade, name='comunidade'),
     
+    # URLs de API específicas
+    path('api/postagens/', views.comunidade_api, name='comunidade_postagens'),
+    path('api/anuncios/', views.comunidade_api, name='comunidade_anuncios'),
+    
     # URLs de administração WEB (templates)
     path('admin/dashboard/', admin_dashboard, name='admin_comunidade_dashboard'),
     path('admin/posts/', admin_posts, name='admin_comunidade_posts'),

@@ -187,6 +187,52 @@ class AdminUsersAPIView(APIView):
                 'success': False,
                 'error': 'Erro interno do servidor'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def delete(self, request, user_id):
+        """
+        Excluir usuário
+        """
+        try:
+            # Verificar se é admin
+            if not request.user.is_staff:
+                return Response({
+                    'success': False,
+                    'error': 'Acesso negado. Apenas administradores podem acessar esta funcionalidade.'
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            # Buscar usuário
+            try:
+                entregador = Entregador.objects.get(id=user_id)
+            except Entregador.DoesNotExist:
+                return Response({
+                    'success': False,
+                    'error': 'Usuário não encontrado'
+                }, status=status.HTTP_404_NOT_FOUND)
+            
+            # Não permitir que o admin exclua a si mesmo
+            if entregador.id == request.user.id:
+                return Response({
+                    'success': False,
+                    'error': 'Você não pode excluir sua própria conta'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Excluir usuário
+            email = entregador.email
+            entregador.delete()
+            
+            logger.info(f"Usuário {email} excluído pelo admin {request.user.email}")
+            
+            return Response({
+                'success': True,
+                'message': 'Usuário excluído com sucesso'
+            }, status=status.HTTP_200_OK)
+                
+        except Exception as e:
+            logger.error(f"Erro ao excluir usuário: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @method_decorator(csrf_exempt, name='dispatch')
 class AdminStatsAPIView(APIView):
