@@ -42,9 +42,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
-    if (error.response && error.response.status === 401) {
-      clearTokens();
-    }
+    // Não limpar tokens automaticamente - deixar para o componente lidar com 401
+    console.log('Erro na resposta:', error.response?.status, error.response?.data);
     return Promise.reject(error);
   }
 );

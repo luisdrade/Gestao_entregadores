@@ -34,11 +34,14 @@ import {
   Refresh as RefreshIcon,
   Search as SearchIcon,
   Forum as ForumIcon,
-  DirectionsCar as CarIcon
+  DirectionsCar as CarIcon,
+  Logout as LogoutIcon
 } from '@mui/icons-material';
 import { api, ENDPOINTS } from '../../services/apiClient';
+import { useAuth } from '../../context/AuthContext';
 
 const AdminDashboard = () => {
+  const { user, logout } = useAuth();
   const [users, setUsers] = useState([]);
   const [postagens, setPostagens] = useState([]);
   const [anuncios, setAnuncios] = useState([]);
@@ -140,10 +143,31 @@ const AdminDashboard = () => {
     
     try {
       setActionLoading(prev => ({ ...prev, [`anuncio_${anuncioId}`]: true }));
-      await api.delete(`/comunidade/admin/api/anuncios/${anuncioId}/`);
-      setAnuncios(anuncios.filter(a => a.id !== anuncioId));
+      
+      // Verificar se há token antes de fazer a requisição
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        setError('Token de autenticação não encontrado. Faça login novamente.');
+        return;
+      }
+      
+      const response = await api.delete(`/comunidade/admin/api/anuncios/${anuncioId}/`);
+      
+      if (response.data.success) {
+        setAnuncios(anuncios.filter(a => a.id !== anuncioId));
+        setError(null); // Limpar erros anteriores
+      } else {
+        setError('Erro ao excluir anúncio: ' + (response.data.error || 'Erro desconhecido'));
+      }
     } catch (err) {
-      setError('Erro ao excluir anúncio: ' + (err.response?.data?.message || err.message));
+      console.error('Erro detalhado:', err);
+      if (err.response?.status === 401) {
+        setError('Sessão expirada. Faça login novamente.');
+        // Redirecionar para login
+        window.location.href = '/login';
+      } else {
+        setError('Erro ao excluir anúncio: ' + (err.response?.data?.error || err.message));
+      }
     } finally {
       setActionLoading(prev => ({ ...prev, [`anuncio_${anuncioId}`]: false }));
     }
@@ -179,7 +203,7 @@ const AdminDashboard = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Dashboard Administrativo
           </Typography>
-          <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <Button
               color="inherit"
               startIcon={<PersonIcon />}
@@ -204,6 +228,26 @@ const AdminDashboard = () => {
             >
               Anúncios
             </Button>
+            
+            {/* Informações do usuário e botão de logout */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 2, pl: 2, borderLeft: '1px solid rgba(255,255,255,0.2)' }}>
+              <Typography variant="body2" sx={{ color: 'white' }}>
+                {user?.name || user?.email || 'Admin'}
+              </Typography>
+              <Button
+                color="inherit"
+                startIcon={<LogoutIcon />}
+                onClick={logout}
+                sx={{ 
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255,255,255,0.2)'
+                  }
+                }}
+              >
+                Logout
+              </Button>
+            </Box>
           </Box>
         </Toolbar>
       </AppBar>
@@ -376,8 +420,7 @@ const AdminDashboard = () => {
                       <TableCell>Ano</TableCell>
                       <TableCell>Preço</TableCell>
                       <TableCell>Localização</TableCell>
-                      <TableCell>Autor</TableCell>
-                      <TableCell>Data</TableCell>
+                      <TableCell>Link</TableCell>
                       <TableCell align="center">Ações</TableCell>
                     </TableRow>
                   </TableHead>
@@ -389,12 +432,23 @@ const AdminDashboard = () => {
                         <TableCell>R$ {anuncio.preco?.toFixed(2) || '0,00'}</TableCell>
                         <TableCell>{anuncio.localizacao}</TableCell>
                         <TableCell>
-                          <Box display="flex" alignItems="center">
-                            <PersonIcon sx={{ mr: 1, color: 'action.active', fontSize: 16 }} />
-                            @{anuncio.autor || anuncio.user?.username || anuncio.user?.email?.split('@')[0] || 'usuario'}
-                          </Box>
+                          {anuncio.link_externo ? (
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              href={anuncio.link_externo}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              sx={{ textTransform: 'none' }}
+                            >
+                              Ver Anúncio
+                            </Button>
+                          ) : (
+                            <Typography variant="body2" color="text.secondary">
+                              Sem link
+                            </Typography>
+                          )}
                         </TableCell>
-                        <TableCell>{new Date(anuncio.data_criacao).toLocaleDateString('pt-BR')}</TableCell>
                         <TableCell align="center">
                           <IconButton
                             color="error"

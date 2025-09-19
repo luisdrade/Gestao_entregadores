@@ -23,11 +23,12 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    // Sempre forçar logout na inicialização para ir para login
-    clearTokens();
-    setUser(null);
-    setLoading(false);
-  }, []);
+    // Verificar se há token válido na inicialização
+    (async () => {
+      await fetchMe();
+      setLoading(false);
+    })();
+  }, [fetchMe]);
 
   const login = useCallback(async (email, password) => {
     const { data } = await api.post(ENDPOINTS.AUTH.LOGIN, { email, password });
