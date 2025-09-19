@@ -30,11 +30,11 @@ export default function Login() {
         if (isAdmin) {
           navigate('/admin');
         } else {
-          navigate('/');
+          navigate('/dashboard');
         }
       } catch {
         // Se não conseguir verificar o perfil, vai para a página inicial
-        navigate('/');
+        navigate('/login');
       }
     } catch (err) {
       setError('Falha no login. Verifique suas credenciais.');

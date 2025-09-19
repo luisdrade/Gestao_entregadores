@@ -7,12 +7,12 @@ import ProtectedRoute from './routes/ProtectedRoute'
 import AdminRoute from './routes/AdminRoute'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import AdminDashboard from './pages/AdminDashboard'
-import DeliveryDashboard from './pages/DeliveryDashboard'
-import DeliveryComunidade from './pages/DeliveryComunidade'
-import RegistroEntregaDespesa from './pages/RegistroEntregaDespesa'
-import CadastroVeiculo from './pages/CadastroVeiculo'
-import Relatorios from './pages/Relatorios'
+import AdminDashboard from './pages/(admin)/AdminDashboard'
+import DeliveryDashboard from './pages/(auth)/DeliveryDashboard'
+import DeliveryComunidade from './pages/(auth)/DeliveryComunidade'
+import RegistroEntregaDespesa from './pages/(auth)/RegistroEntregaDespesa'
+import CadastroVeiculo from './pages/(auth)/CadastroVeiculo'
+import Relatorios from './pages/(auth)/Relatorios'
 import DeliveryNavbar from './components/DeliveryNavbar'
 import DeliveryLayout from './components/DeliveryLayout'
 import { Button, Container, Typography, Box } from '@mui/material'
@@ -52,6 +52,7 @@ function App() {
       <RegistrosProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registrar" element={<Register />} />
             
@@ -63,7 +64,7 @@ function App() {
             } />
             
             {/* Rotas do Entregador */}
-            <Route path="/" element={
+            <Route path="/dashboard" element={
               <ProtectedRoute>
                 <DeliveryLayout>
                   <DeliveryDashboard />

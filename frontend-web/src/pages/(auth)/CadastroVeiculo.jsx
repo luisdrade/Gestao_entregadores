@@ -25,7 +25,7 @@ import {
   Delete as DeleteIcon,
   Edit as EditIcon
 } from '@mui/icons-material';
-import { RegistrosContext } from '../context/RegistrosContext';
+import { RegistrosContext } from '../../context/RegistrosContext';
 
 const CadastroVeiculo = () => {
   const { veiculos, setVeiculos } = useContext(RegistrosContext);

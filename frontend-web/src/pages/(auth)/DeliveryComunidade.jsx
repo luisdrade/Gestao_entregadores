@@ -24,7 +24,7 @@ import {
   Person as PersonIcon,
   CalendarToday as CalendarIcon
 } from '@mui/icons-material';
-import { api, ENDPOINTS } from '../services/apiClient';
+import { api, ENDPOINTS } from '../../services/apiClient';
 
 const DeliveryComunidade = () => {
   const [postagens, setPostagens] = useState([]);

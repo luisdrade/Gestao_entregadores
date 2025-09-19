@@ -36,7 +36,7 @@ import {
   Forum as ForumIcon,
   DirectionsCar as CarIcon
 } from '@mui/icons-material';
-import { api, ENDPOINTS } from '../services/apiClient';
+import { api, ENDPOINTS } from '../../services/apiClient';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -150,6 +150,7 @@ const AdminDashboard = () => {
   };
 
   const filteredUsers = users.filter(user =>
+    user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -224,7 +225,7 @@ const AdminDashboard = () => {
                 </Typography>
                 <Box display="flex" gap={2}>
                   <TextField
-                    placeholder="Buscar usuários..."
+                    placeholder="Buscar por @username, nome ou email..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     InputProps={{
@@ -247,7 +248,7 @@ const AdminDashboard = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Nome</TableCell>
+                    <TableCell>@ Username</TableCell>
                     <TableCell>Email</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell>Data de Cadastro</TableCell>
@@ -260,7 +261,7 @@ const AdminDashboard = () => {
                       <TableCell>
                         <Box display="flex" alignItems="center">
                           <PersonIcon sx={{ mr: 1, color: 'action.active' }} />
-                          {user.name || 'Nome não informado'}
+                          @{user.username || user.email?.split('@')[0] || 'usuario'}
                         </Box>
                       </TableCell>
                       <TableCell>{user.email}</TableCell>
@@ -375,6 +376,7 @@ const AdminDashboard = () => {
                       <TableCell>Ano</TableCell>
                       <TableCell>Preço</TableCell>
                       <TableCell>Localização</TableCell>
+                      <TableCell>Autor</TableCell>
                       <TableCell>Data</TableCell>
                       <TableCell align="center">Ações</TableCell>
                     </TableRow>
@@ -386,6 +388,12 @@ const AdminDashboard = () => {
                         <TableCell>{anuncio.ano}</TableCell>
                         <TableCell>R$ {anuncio.preco?.toFixed(2) || '0,00'}</TableCell>
                         <TableCell>{anuncio.localizacao}</TableCell>
+                        <TableCell>
+                          <Box display="flex" alignItems="center">
+                            <PersonIcon sx={{ mr: 1, color: 'action.active', fontSize: 16 }} />
+                            @{anuncio.autor || anuncio.user?.username || anuncio.user?.email?.split('@')[0] || 'usuario'}
+                          </Box>
+                        </TableCell>
                         <TableCell>{new Date(anuncio.data_criacao).toLocaleDateString('pt-BR')}</TableCell>
                         <TableCell align="center">
                           <IconButton

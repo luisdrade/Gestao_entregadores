@@ -24,7 +24,7 @@ import {
   TrendingUp as TrendingUpIcon,
   Assessment as ReportIcon
 } from '@mui/icons-material';
-import { api, ENDPOINTS } from '../services/apiClient';
+import { api, ENDPOINTS } from '../../services/apiClient';
 
 const DeliveryDashboard = () => {
   const [dados, setDados] = useState({

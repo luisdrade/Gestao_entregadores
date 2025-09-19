@@ -20,7 +20,7 @@ import {
   Save as SaveIcon,
   Assignment as AssignmentIcon
 } from '@mui/icons-material';
-import { RegistrosContext } from '../context/RegistrosContext';
+import { RegistrosContext } from '../../context/RegistrosContext';
 
 const RegistroEntregaDespesa = () => {
   const { registros, setRegistros } = useContext(RegistrosContext);

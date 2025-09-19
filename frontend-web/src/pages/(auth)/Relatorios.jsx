@@ -30,8 +30,8 @@ import {
   AttachMoney as MoneyIcon,
   DirectionsCar as CarIcon
 } from '@mui/icons-material';
-import { RegistrosContext } from '../context/RegistrosContext';
-import { api, ENDPOINTS } from '../services/apiClient';
+import { RegistrosContext } from '../../context/RegistrosContext';
+import { api, ENDPOINTS } from '../../services/apiClient';
 
 const Relatorios = () => {
   const { registros, veiculos } = useContext(RegistrosContext);
