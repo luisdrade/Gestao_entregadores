@@ -40,10 +40,21 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    // Log de sucesso apenas para debug
+    if (res.config.url?.includes('/auth/profile/')) {
+      console.log('✅ API - Profile carregado com sucesso');
+    }
+    return res;
+  },
   async (error) => {
-    // Não limpar tokens automaticamente - deixar para o componente lidar com 401
-    console.log('Erro na resposta:', error.response?.status, error.response?.data);
+    // Log detalhado de erros
+    if (error.response?.status === 401) {
+      console.log('❌ API - Erro 401 (Unauthorized):', error.config?.url);
+      console.log('❌ API - Token enviado:', error.config?.headers?.Authorization?.substring(0, 20) + '...');
+    } else {
+      console.log('❌ API - Erro na resposta:', error.response?.status, error.config?.url);
+    }
     return Promise.reject(error);
   }
 );
@@ -59,5 +70,20 @@ export const ENDPOINTS = {
     USER_DETAIL: (id) => `/api/admin/users/${id}/`,
     USER_ACTIVATE: (id) => `/api/admin/users/${id}/activate/`,
     USER_DEACTIVATE: (id) => `/api/admin/users/${id}/deactivate/`,
+  },
+  REGISTROS: {
+    LIST: '/registro/api/registro-trabalho/',
+    CREATE: '/registro/api/registro-trabalho/',
+    UPDATE: (id) => `/registro/api/registro-trabalho/${id}/`,
+    DELETE: (id) => `/registro/api/registro-trabalho/${id}/`,
+  },
+  VEICULOS: {
+    LIST: '/api/veiculos/',
+    CREATE: '/api/veiculos/',
+    UPDATE: (id) => `/api/veiculos/${id}/`,
+    DELETE: (id) => `/api/veiculos/${id}/`,
+  },
+  RELATORIOS: {
+    ESTATISTICAS: '/api/relatorios/estatisticas/',
   },
 };

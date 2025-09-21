@@ -34,7 +34,7 @@ import { RegistrosContext } from '../../context/RegistrosContext';
 import { api, ENDPOINTS } from '../../services/apiClient';
 
 const Relatorios = () => {
-  const { registros, veiculos } = useContext(RegistrosContext);
+  const { registros, veiculos, loading: contextLoading, error: contextError } = useContext(RegistrosContext);
   const [relatoriosData, setRelatoriosData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -42,16 +42,21 @@ const Relatorios = () => {
   const [filtroTipo, setFiltroTipo] = useState('todos');
 
   useEffect(() => {
+    console.log('🔍 Relatorios - Registros do contexto:', registros);
+    console.log('🔍 Relatorios - Veículos do contexto:', veiculos);
     fetchRelatoriosData();
-  }, []);
+  }, [registros]);
 
   const fetchRelatoriosData = async () => {
     try {
       setLoading(true);
       setError(null);
+      console.log('🔍 Relatorios - Fazendo chamada para /api/relatorios/estatisticas/');
       const response = await api.get('/api/relatorios/estatisticas/');
+      console.log('🔍 Relatorios - Resposta dos relatórios:', response.data);
       setRelatoriosData(response.data);
     } catch (err) {
+      console.error('❌ Relatorios - Erro ao carregar dados dos relatórios:', err);
       setError('Erro ao carregar dados dos relatórios: ' + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);

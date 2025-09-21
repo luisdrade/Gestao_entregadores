@@ -21,6 +21,7 @@ import {
   Assignment as AssignmentIcon
 } from '@mui/icons-material';
 import { RegistrosContext } from '../../context/RegistrosContext';
+import { api, ENDPOINTS } from '../../services/apiClient';
 
 const RegistroEntregaDespesa = () => {
   const { registros, setRegistros } = useContext(RegistrosContext);
@@ -52,7 +53,7 @@ const RegistroEntregaDespesa = () => {
     setSuccess(false);
 
     try {
-      // Simula uma validação
+      // Validação
       if (formData.tipo_rendimento === "") {
         throw new Error("Selecione o tipo de rendimento");
       }
@@ -63,18 +64,41 @@ const RegistroEntregaDespesa = () => {
         throw new Error("A soma dos pacotes entregues e não entregues deve ser igual ao total de pacotes");
       }
 
-      // Adiciona data atual
-      const registroComData = {
-        ...formData,
-        data: new Date().toLocaleDateString('pt-BR'),
-        ganho: formData.tipo_rendimento === "unitario" 
-          ? formData.valor_unitario * formData.pacotes_entregues
-          : formData.valor_diaria,
-        lucro: (formData.tipo_rendimento === "unitario" 
-          ? formData.valor_unitario * formData.pacotes_entregues
-          : formData.valor_diaria) - formData.valor_despesa
+      // Calcula ganho e lucro
+      const ganho = formData.tipo_rendimento === "unitario" 
+        ? formData.valor_unitario * formData.pacotes_entregues
+        : formData.valor_diaria;
+      
+      const lucro = ganho - formData.valor_despesa;
+
+      // Dados para enviar para a API
+      const dadosParaAPI = {
+        tipo_rendimento: formData.tipo_rendimento,
+        valor_unitario: formData.valor_unitario,
+        valor_diaria: formData.valor_diaria,
+        total_pacotes: formData.total_pacotes,
+        pacotes_entregues: formData.pacotes_entregues,
+        pacotes_nao_entregues: formData.pacotes_nao_entregues,
+        categoria_despesa: formData.categoria_despesa,
+        descricao_outros: formData.descricao_outros,
+        valor_despesa: formData.valor_despesa,
+        ganho: ganho,
+        lucro: lucro
       };
 
+      console.log('🔍 RegistroEntregaDespesa - Enviando dados:', dadosParaAPI);
+      
+      // Envia para a API
+      const response = await api.post(ENDPOINTS.REGISTROS.CREATE, dadosParaAPI);
+      console.log('🔍 RegistroEntregaDespesa - Resposta da API:', response.data);
+      
+      // Atualiza o contexto local
+      const registroComData = {
+        ...dadosParaAPI,
+        id: response.data.id,
+        data: new Date().toLocaleDateString('pt-BR')
+      };
+      
       setRegistros([...registros, registroComData]);
       
       // Limpa o formulário
@@ -92,7 +116,8 @@ const RegistroEntregaDespesa = () => {
 
       setSuccess(true);
     } catch (err) {
-      setError(err.message);
+      console.error('❌ RegistroEntregaDespesa - Erro ao salvar:', err);
+      setError(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
     }

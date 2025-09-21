@@ -237,26 +237,39 @@ def registro_trabalho(request):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     elif request.method == 'GET':
-        # Retornar informações sobre o endpoint para teste
-        return Response({
-            'success': True,
-            'message': 'Endpoint de teste - Use POST para registrar trabalho',
-            'method': request.method,
-            'url': request.path,
-            'exemplo_dados': {
-                'data': '2025-08-19',
-                'hora_inicio': '08:00',
-                'hora_fim': '17:00',
-                'quantidade_entregues': 10,
-                'quantidade_nao_entregues': 0,
-                'tipo_pagamento': 'diaria',
-                'valor': '100.00'
-            },
-            'campos_obrigatorios': [
-                'data', 'hora_inicio', 'hora_fim', 'quantidade_entregues',
-                'quantidade_nao_entregues', 'tipo_pagamento', 'valor'
-            ]
-        })
+        # Listar registros do usuário
+        try:
+            registros = RegistroTrabalho.objects.filter(entregador=request.user).order_by('-data', '-hora_inicio')
+            
+            registros_data = []
+            for registro in registros:
+                registros_data.append({
+                    'id': registro.id,
+                    'data': registro.data.strftime('%d/%m/%Y'),
+                    'hora_inicio': str(registro.hora_inicio),
+                    'hora_fim': str(registro.hora_fim),
+                    'quantidade_entregues': registro.quantidade_entregues,
+                    'quantidade_nao_entregues': registro.quantidade_nao_entregues,
+                    'tipo_pagamento': registro.tipo_pagamento,
+                    'valor': float(registro.valor),
+                    'total_pacotes': registro.quantidade_entregues + registro.quantidade_nao_entregues,
+                    'pacotes_entregues': registro.quantidade_entregues,
+                    'pacotes_nao_entregues': registro.quantidade_nao_entregues,
+                    'ganho': float(registro.valor),
+                    'lucro': float(registro.valor)  # Para compatibilidade com o frontend
+                })
+            
+            return Response({
+                'success': True,
+                'results': registros_data,
+                'count': len(registros_data)
+            })
+        except Exception as e:
+            print(f"Erro ao listar registros: {str(e)}")
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     else:
         print(f"Método {request.method} não permitido")

@@ -26,6 +26,7 @@ import {
   Edit as EditIcon
 } from '@mui/icons-material';
 import { RegistrosContext } from '../../context/RegistrosContext';
+import { api, ENDPOINTS } from '../../services/apiClient';
 
 const CadastroVeiculo = () => {
   const { veiculos, setVeiculos } = useContext(RegistrosContext);
@@ -44,7 +45,7 @@ const CadastroVeiculo = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -72,23 +73,33 @@ const CadastroVeiculo = () => {
         throw new Error("Já existe um veículo cadastrado com esta placa");
       }
 
+      console.log('🔍 CadastroVeiculo - Enviando dados:', formData);
+
       if (editingIndex !== null) {
         // Editando veículo existente
+        const veiculoId = veiculos[editingIndex].id;
+        const response = await api.put(ENDPOINTS.VEICULOS.UPDATE(veiculoId), formData);
+        console.log('🔍 CadastroVeiculo - Veículo atualizado:', response.data);
+        
         const novosVeiculos = [...veiculos];
-        novosVeiculos[editingIndex] = { ...formData };
+        novosVeiculos[editingIndex] = { ...formData, id: veiculoId };
         setVeiculos(novosVeiculos);
         setEditingIndex(null);
         setSuccess("Veículo atualizado com sucesso!");
       } else {
         // Adicionando novo veículo
-        setVeiculos([...veiculos, { ...formData }]);
+        const response = await api.post(ENDPOINTS.VEICULOS.CREATE, formData);
+        console.log('🔍 CadastroVeiculo - Veículo criado:', response.data);
+        
+        setVeiculos([...veiculos, { ...formData, id: response.data.id }]);
         setSuccess("Veículo cadastrado com sucesso!");
       }
 
       // Limpa o formulário
       setFormData({ modelo: "", placa: "", categoria: "" });
     } catch (err) {
-      setError(err.message);
+      console.error('❌ CadastroVeiculo - Erro ao salvar:', err);
+      setError(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
     }
@@ -100,11 +111,22 @@ const CadastroVeiculo = () => {
     setEditingIndex(index);
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = async (index) => {
     if (window.confirm("Tem certeza que deseja excluir este veículo?")) {
-      const novosVeiculos = veiculos.filter((_, i) => i !== index);
-      setVeiculos(novosVeiculos);
-      setSuccess("Veículo excluído com sucesso!");
+      try {
+        const veiculoId = veiculos[index].id;
+        console.log('🔍 CadastroVeiculo - Excluindo veículo:', veiculoId);
+        
+        await api.delete(ENDPOINTS.VEICULOS.DELETE(veiculoId));
+        console.log('🔍 CadastroVeiculo - Veículo excluído com sucesso');
+        
+        const novosVeiculos = veiculos.filter((_, i) => i !== index);
+        setVeiculos(novosVeiculos);
+        setSuccess("Veículo excluído com sucesso!");
+      } catch (err) {
+        console.error('❌ CadastroVeiculo - Erro ao excluir:', err);
+        setError(err.response?.data?.message || err.message);
+      }
     }
   };
 

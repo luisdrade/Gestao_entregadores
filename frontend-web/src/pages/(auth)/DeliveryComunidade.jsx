@@ -207,33 +207,31 @@ const DeliveryComunidade = () => {
                 {postagens.length > 0 ? (
                   postagens.map((post) => (
                     <ListItem key={post.id} component={Paper} sx={{ mb: 1, p: 2 }}>
-                      <ListItemText
-                        primary={
-                          <Box display="flex" alignItems="center" mb={1}>
-                            <Avatar sx={{ mr: 1, width: 32, height: 32 }}>
-                              <PersonIcon />
-                            </Avatar>
-                            <Typography variant="h6" component="span">
-                              {post.titulo}
-                            </Typography>
-                          </Box>
-                        }
-                        secondary={
-                          <Box>
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
-                              por {post.autor} em {new Date(post.data_criacao).toLocaleDateString('pt-BR')}
-                            </Typography>
-                            <Typography variant="body1">
-                              {post.conteudo}
-                            </Typography>
-                          </Box>
-                        }
-                      />
+                      <Box sx={{ width: '100%' }}>
+                        <Box display="flex" alignItems="center" mb={1}>
+                          <Avatar sx={{ mr: 1, width: 32, height: 32 }}>
+                            <PersonIcon />
+                          </Avatar>
+                          <Typography variant="h6" component="div">
+                            {post.titulo}
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            por {post.autor} em {new Date(post.data_criacao).toLocaleDateString('pt-BR')}
+                          </Typography>
+                          <Typography variant="body1">
+                            {post.conteudo}
+                          </Typography>
+                        </Box>
+                      </Box>
                     </ListItem>
                   ))
                 ) : (
                   <ListItem>
-                    <ListItemText primary="Nenhuma postagem encontrada." />
+                    <Typography variant="body2" color="text.secondary">
+                      Nenhuma postagem encontrada.
+                    </Typography>
                   </ListItem>
                 )}
               </List>
@@ -355,57 +353,55 @@ const DeliveryComunidade = () => {
                 {anuncios.length > 0 ? (
                   anuncios.map((anuncio) => (
                     <ListItem key={anuncio.id} component={Paper} sx={{ mb: 1, p: 2 }}>
-                      <ListItemText
-                        primary={
-                          <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
-                            <Typography variant="h6">
-                              {anuncio.modelo} - {anuncio.ano}
-                            </Typography>
-                            <Chip
-                              label={`R$ ${anuncio.preco?.toFixed(2) || '0,00'}`}
-                              color="primary"
-                              variant="outlined"
-                            />
-                          </Box>
-                        }
-                        secondary={
-                          <Box>
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
-                              Km: {anuncio.quilometragem} | Localização: {anuncio.localizacao}
-                            </Typography>
-                            {anuncio.link_externo && (
-                              <Button
-                                size="small"
-                                href={anuncio.link_externo}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                sx={{ mt: 1 }}
-                              >
-                                Ver anúncio
-                              </Button>
-                            )}
-                            {anuncio.foto && (
-                              <Box sx={{ mt: 1 }}>
-                                <img
-                                  src={`http://localhost:8000${anuncio.foto}`}
-                                  alt="Foto do veículo"
-                                  style={{
-                                    width: '100%',
-                                    maxWidth: 200,
-                                    height: 'auto',
-                                    borderRadius: 8
-                                  }}
-                                />
-                              </Box>
-                            )}
-                          </Box>
-                        }
-                      />
+                      <Box sx={{ width: '100%' }}>
+                        <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
+                          <Typography variant="h6" component="div">
+                            {anuncio.modelo} - {anuncio.ano}
+                          </Typography>
+                          <Chip
+                            label={`R$ ${anuncio.preco?.toFixed(2) || '0,00'}`}
+                            color="primary"
+                            variant="outlined"
+                          />
+                        </Box>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            Km: {anuncio.quilometragem} | Localização: {anuncio.localizacao}
+                          </Typography>
+                          {anuncio.link_externo && (
+                            <Button
+                              size="small"
+                              href={anuncio.link_externo}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              sx={{ mt: 1 }}
+                            >
+                              Ver anúncio
+                            </Button>
+                          )}
+                          {anuncio.foto && (
+                            <Box sx={{ mt: 1 }}>
+                              <img
+                                src={`http://localhost:8000${anuncio.foto}`}
+                                alt="Foto do veículo"
+                                style={{
+                                  width: '100%',
+                                  maxWidth: 200,
+                                  height: 'auto',
+                                  borderRadius: 8
+                                }}
+                              />
+                            </Box>
+                          )}
+                        </Box>
+                      </Box>
                     </ListItem>
                   ))
                 ) : (
                   <ListItem>
-                    <ListItemText primary="Nenhum anúncio encontrado." />
+                    <Typography variant="body2" color="text.secondary">
+                      Nenhum anúncio encontrado.
+                    </Typography>
                   </ListItem>
                 )}
               </List>

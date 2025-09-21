@@ -41,7 +41,7 @@ const DeliveryNavbar = () => {
   };
 
   const navItems = [
-    { path: '/', label: 'Dashboard', icon: <HomeIcon /> },
+    { path: '/dashboard', label: 'Dashboard', icon: <HomeIcon /> },
     { path: '/relatorios', label: 'Relatórios', icon: <ReportIcon /> },
     { path: '/registro-entrega', label: 'Registros', icon: <AssignmentIcon /> },
     { path: '/cadastro-veiculo', label: 'Veículos', icon: <CarIcon /> },
