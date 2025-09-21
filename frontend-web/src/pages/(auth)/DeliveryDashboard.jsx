@@ -28,7 +28,8 @@ import { api, ENDPOINTS } from '../../services/apiClient';
 import { RegistrosContext } from '../../context/RegistrosContext';
 
 const DeliveryDashboard = () => {
-  const { registros, veiculos } = useContext(RegistrosContext);
+  const registrosContext = useContext(RegistrosContext);
+  const { registros, veiculos } = registrosContext || { registros: [], veiculos: [] };
   const [dados, setDados] = useState({
     resumo_diario: {
       entregas_hoje: 0,

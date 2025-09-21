@@ -375,26 +375,34 @@ def registro_despesa(request):
                 'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     elif request.method == 'GET':
-        # Retornar informações sobre o endpoint para teste
-        return Response({
-            'success': True,
-            'message': 'Endpoint de teste - Use POST para registrar despesa',
-            'method': request.method,
-            'url': request.path,
-            'exemplo_dados': {
-                'tipo_despesa': 'combustivel',
-                'descricao': 'Abastecimento do veículo',
-                'valor': '50.00',
-                'data': '2025-08-19'
-            },
-            'campos_obrigatorios': [
-                'tipo_despesa', 'descricao', 'valor', 'data'
-            ],
-            'tipos_despesa_validos': [
-                'alimentacao', 'combustivel', 'manutencao', 'pedagio',
-                'estacionamento', 'seguro', 'licenciamento', 'outros'
-            ]
-        })
+        # Listar despesas do usuário
+        try:
+            despesas = Despesa.objects.filter(entregador=request.user).order_by('-data')
+            
+            despesas_data = []
+            for despesa in despesas:
+                despesas_data.append({
+                    'id': despesa.id,
+                    'tipo_despesa': despesa.tipo_despesa,
+                    'descricao': despesa.descricao,
+                    'valor': float(despesa.valor),
+                    'data': despesa.data.strftime('%d/%m/%Y'),
+                    'categoria_despesa': despesa.tipo_despesa,  # Para compatibilidade com frontend
+                    'valor_despesa': float(despesa.valor),  # Para compatibilidade com frontend
+                    'descricao_outros': despesa.descricao if despesa.tipo_despesa == 'outros' else None
+                })
+            
+            return Response({
+                'success': True,
+                'results': despesas_data,
+                'count': len(despesas_data)
+            })
+        except Exception as e:
+            print(f"Erro ao listar despesas: {str(e)}")
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     else:
         print(f"Método {request.method} não permitido")

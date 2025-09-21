@@ -23,7 +23,8 @@ import {
 import { useAuth } from '../context/AuthContext';
 
 const DeliveryNavbar = () => {
-  const { user, logout } = useAuth();
+  const auth = useAuth();
+  const { user, logout } = auth || {};
   const location = useLocation();
   const [anchorEl, setAnchorEl] = React.useState(null);
 

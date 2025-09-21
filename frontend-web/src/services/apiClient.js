@@ -77,6 +77,12 @@ export const ENDPOINTS = {
     UPDATE: (id) => `/registro/api/registro-trabalho/${id}/`,
     DELETE: (id) => `/registro/api/registro-trabalho/${id}/`,
   },
+  DESPESAS: {
+    LIST: '/registro/api/registro-despesa/',
+    CREATE: '/registro/api/registro-despesa/',
+    UPDATE: (id) => `/registro/api/registro-despesa/${id}/`,
+    DELETE: (id) => `/registro/api/registro-despesa/${id}/`,
+  },
   VEICULOS: {
     LIST: '/api/veiculos/',
     CREATE: '/api/veiculos/',

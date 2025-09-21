@@ -28,13 +28,16 @@ import {
   TrendingUp as TrendingUpIcon,
   TrendingDown as TrendingDownIcon,
   AttachMoney as MoneyIcon,
-  DirectionsCar as CarIcon
+  DirectionsCar as CarIcon,
+  Receipt as ReceiptIcon,
+  Category as CategoryIcon,
+  Timeline as TimelineIcon
 } from '@mui/icons-material';
 import { RegistrosContext } from '../../context/RegistrosContext';
 import { api, ENDPOINTS } from '../../services/apiClient';
 
 const Relatorios = () => {
-  const { registros, veiculos, loading: contextLoading, error: contextError } = useContext(RegistrosContext);
+  const { registros, veiculos, despesas, loading: contextLoading, error: contextError } = useContext(RegistrosContext);
   const [relatoriosData, setRelatoriosData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -80,6 +83,32 @@ const Relatorios = () => {
       taxaEntrega,
       totalRegistros: registros.length
     };
+  };
+
+  const calcularDespesasPorCategoria = () => {
+    const despesasPorCategoria = {};
+    
+    despesas.forEach(despesa => {
+      const categoria = despesa.categoria_despesa || despesa.tipo_despesa || 'Outros';
+      if (!despesasPorCategoria[categoria]) {
+        despesasPorCategoria[categoria] = {
+          total: 0,
+          quantidade: 0,
+          registros: []
+        };
+      }
+      despesasPorCategoria[categoria].total += despesa.valor_despesa || despesa.valor;
+      despesasPorCategoria[categoria].quantidade += 1;
+      despesasPorCategoria[categoria].registros.push(despesa);
+    });
+
+    return despesasPorCategoria;
+  };
+
+  const obterDespesasDetalhadas = () => {
+    return despesas
+      .filter(despesa => (despesa.valor_despesa || despesa.valor) > 0)
+      .sort((a, b) => new Date(b.data) - new Date(a.data));
   };
 
   const filtrarRegistros = () => {
@@ -321,6 +350,138 @@ const Relatorios = () => {
           </Card>
         </Grid>
       </Grid>
+
+      {/* Relatório Detalhado de Despesas */}
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Box display="flex" alignItems="center" mb={2}>
+            <ReceiptIcon color="primary" sx={{ mr: 1 }} />
+            <Typography variant="h5" component="h2">
+              Relatório Detalhado de Despesas
+            </Typography>
+          </Box>
+
+          {/* Despesas por Categoria */}
+          <Grid container spacing={3} sx={{ mb: 3 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Card variant="outlined">
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={2}>
+                    <CategoryIcon color="secondary" sx={{ mr: 1 }} />
+                    <Typography variant="h6">
+                      Despesas por Categoria
+                    </Typography>
+                  </Box>
+                  {Object.keys(calcularDespesasPorCategoria()).length > 0 ? (
+                    Object.entries(calcularDespesasPorCategoria()).map(([categoria, dados]) => (
+                      <Box key={categoria} display="flex" justifyContent="space-between" mb={1}>
+                        <Typography variant="body2">
+                          {categoria} ({dados.quantidade} registros)
+                        </Typography>
+                        <Typography variant="body2" color="error.main" fontWeight="bold">
+                          R$ {dados.total.toFixed(2)}
+                        </Typography>
+                      </Box>
+                    ))
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      Nenhuma despesa registrada
+                    </Typography>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Card variant="outlined">
+                <CardContent>
+                  <Box display="flex" alignItems="center" mb={2}>
+                    <TimelineIcon color="info" sx={{ mr: 1 }} />
+                    <Typography variant="h6">
+                      Resumo de Despesas
+                    </Typography>
+                  </Box>
+                  <Box display="flex" justifyContent="space-between" mb={1}>
+                    <Typography>Total de Despesas:</Typography>
+                    <Typography variant="h6" color="error.main">
+                      R$ {estatisticas.totalDespesa.toFixed(2)}
+                    </Typography>
+                  </Box>
+                  <Box display="flex" justifyContent="space-between" mb={1}>
+                    <Typography>Média por Registro:</Typography>
+                    <Typography variant="h6">
+                      R$ {estatisticas.totalRegistros > 0 ? (estatisticas.totalDespesa / estatisticas.totalRegistros).toFixed(2) : '0,00'}
+                    </Typography>
+                  </Box>
+                  <Box display="flex" justifyContent="space-between">
+                    <Typography>% do Ganho Total:</Typography>
+                    <Typography variant="h6" color="warning.main">
+                      {estatisticas.totalGanho > 0 ? ((estatisticas.totalDespesa / estatisticas.totalGanho) * 100).toFixed(1) : '0,0'}%
+                    </Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+
+          {/* Tabela de Despesas Detalhadas */}
+          <Typography variant="h6" gutterBottom>
+            Histórico Detalhado de Despesas
+          </Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Data</TableCell>
+                  <TableCell>Categoria</TableCell>
+                  <TableCell>Descrição</TableCell>
+                  <TableCell align="right">Valor</TableCell>
+                  <TableCell>Tipo Rendimento</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {obterDespesasDetalhadas().length > 0 ? (
+                  obterDespesasDetalhadas().map((despesa, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{despesa.data}</TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={despesa.categoria_despesa || despesa.tipo_despesa || 'Outros'} 
+                          size="small" 
+                          color="secondary" 
+                        />
+                      </TableCell>
+                      <TableCell>
+                        {despesa.descricao || despesa.descricao_outros || 'N/A'}
+                      </TableCell>
+                      <TableCell align="right">
+                        <Typography color="error.main" fontWeight="bold">
+                          R$ {(despesa.valor_despesa || despesa.valor)?.toFixed(2) || '0,00'}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip 
+                          label="Despesa" 
+                          size="small" 
+                          color="primary" 
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} align="center">
+                      <Typography variant="body2" color="text.secondary">
+                        Nenhuma despesa registrada
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </CardContent>
+      </Card>
 
       {/* Tabela de Registros Filtrados */}
       <Card>

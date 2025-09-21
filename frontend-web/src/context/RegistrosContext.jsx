@@ -6,6 +6,7 @@ const RegistrosContext = createContext(null);
 export function RegistrosProvider({ children }) {
   const [registros, setRegistros] = useState([]);
   const [veiculos, setVeiculos] = useState([]);
+  const [despesas, setDespesas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -33,10 +34,22 @@ export function RegistrosProvider({ children }) {
     }
   };
 
+  const fetchDespesas = async () => {
+    try {
+      console.log('🔍 RegistrosContext - Carregando despesas...');
+      const response = await api.get(ENDPOINTS.DESPESAS.LIST);
+      console.log('🔍 RegistrosContext - Despesas carregadas:', response.data);
+      setDespesas(response.data.results || response.data || []);
+    } catch (err) {
+      console.error('❌ RegistrosContext - Erro ao carregar despesas:', err);
+      setError('Erro ao carregar despesas: ' + (err.response?.data?.message || err.message));
+    }
+  };
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      await Promise.all([fetchRegistros(), fetchVeiculos()]);
+      await Promise.all([fetchRegistros(), fetchVeiculos(), fetchDespesas()]);
       setLoading(false);
     };
     
@@ -48,10 +61,13 @@ export function RegistrosProvider({ children }) {
     setRegistros,
     veiculos,
     setVeiculos,
+    despesas,
+    setDespesas,
     loading,
     error,
     fetchRegistros,
-    fetchVeiculos
+    fetchVeiculos,
+    fetchDespesas
   };
 
   return (
