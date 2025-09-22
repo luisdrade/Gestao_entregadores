@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import DeliveryNavbar from './DeliveryNavbar';
+import Header from './Header';
 
 const DeliveryLayout = ({ children }) => {
   return (
     <Box>
-      <DeliveryNavbar />
+      <Header />
       <Box component="main">
         {children}
       </Box>

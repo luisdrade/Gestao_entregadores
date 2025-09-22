@@ -22,8 +22,6 @@ import {
   Alert,
   CircularProgress,
   Grid,
-  AppBar,
-  Toolbar,
   Container
 } from '@mui/material';
 import {
@@ -35,10 +33,10 @@ import {
   Search as SearchIcon,
   Forum as ForumIcon,
   DirectionsCar as CarIcon,
-  Logout as LogoutIcon
 } from '@mui/icons-material';
 import { api, ENDPOINTS } from '../../services/apiClient';
 import { useAuth } from '../../context/AuthContext';
+import Header from '../../components/Header';
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
@@ -196,61 +194,43 @@ const AdminDashboard = () => {
   }
 
   return (
-    <Container maxWidth="xl">
-      <AppBar position="static" color="primary">
-        <Toolbar>
-          <PersonIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Dashboard Administrativo
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <Button
-              color="inherit"
-              startIcon={<PersonIcon />}
-              onClick={() => setActiveTab('users')}
-              sx={{ backgroundColor: activeTab === 'users' ? 'rgba(255,255,255,0.1)' : 'transparent' }}
-            >
-              Usuários
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<ForumIcon />}
-              onClick={() => setActiveTab('posts')}
-              sx={{ backgroundColor: activeTab === 'posts' ? 'rgba(255,255,255,0.1)' : 'transparent' }}
-            >
-              Posts
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<CarIcon />}
-              onClick={() => setActiveTab('anuncios')}
-              sx={{ backgroundColor: activeTab === 'anuncios' ? 'rgba(255,255,255,0.1)' : 'transparent' }}
-            >
-              Anúncios
-            </Button>
-            
-            {/* Informações do usuário e botão de logout */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 2, pl: 2, borderLeft: '1px solid rgba(255,255,255,0.2)' }}>
-              <Typography variant="body2" sx={{ color: 'white' }}>
-                {user?.name || user?.email || 'Admin'}
-              </Typography>
-              <Button
-                color="inherit"
-                startIcon={<LogoutIcon />}
-                onClick={logout}
-                sx={{ 
-                  backgroundColor: 'rgba(255,255,255,0.1)',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255,255,255,0.2)'
-                  }
-                }}
-              >
-                Logout
-              </Button>
-            </Box>
-          </Box>
-        </Toolbar>
-      </AppBar>
+    <>
+      <Header />
+      <Container maxWidth="xl">
+        {/* Navegação de abas para admin */}
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 1, 
+          alignItems: 'center', 
+          p: 2, 
+          backgroundColor: 'primary.main',
+          color: 'white'
+        }}>
+          <Button
+            color="inherit"
+            startIcon={<PersonIcon />}
+            onClick={() => setActiveTab('users')}
+            sx={{ backgroundColor: activeTab === 'users' ? 'rgba(255,255,255,0.1)' : 'transparent' }}
+          >
+            Usuários
+          </Button>
+          <Button
+            color="inherit"
+            startIcon={<ForumIcon />}
+            onClick={() => setActiveTab('posts')}
+            sx={{ backgroundColor: activeTab === 'posts' ? 'rgba(255,255,255,0.1)' : 'transparent' }}
+          >
+            Posts
+          </Button>
+          <Button
+            color="inherit"
+            startIcon={<CarIcon />}
+            onClick={() => setActiveTab('anuncios')}
+            sx={{ backgroundColor: activeTab === 'anuncios' ? 'rgba(255,255,255,0.1)' : 'transparent' }}
+          >
+            Anúncios
+          </Button>
+        </Box>
 
       <Box sx={{ mt: 3 }}>
         {error && (
@@ -502,7 +482,8 @@ const AdminDashboard = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+      </Container>
+    </>
   );
 };
 

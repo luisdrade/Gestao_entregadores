@@ -60,13 +60,14 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const register = async (payload) => {
-    await api.post(ENDPOINTS.AUTH.REGISTER, payload);
-  };
 
   const logout = () => {
     clearTokens();
     setUser(null);
+  };
+
+  const register = async (payload) => {
+    await api.post(ENDPOINTS.AUTH.REGISTER, payload);
   };
 
   const value = { user, loading, login, logout, register };

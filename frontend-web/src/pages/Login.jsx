@@ -44,8 +44,8 @@ export default function Login() {
   }
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 8 }}>
-      <Paper elevation={2} sx={{ p: 3 }}>
+    <>      <Container maxWidth="sm" sx={{ mt: 8 }}>
+        <Paper elevation={2} sx={{ p: 3 }}>
         <Typography variant="h5" mb={2}>Entrar</Typography>
         <Box component="form" onSubmit={onSubmit}>
           <TextField fullWidth label="E-mail" type="email" value={email} onChange={(e) => setEmail(e.target.value)} margin="normal" required />
@@ -56,8 +56,9 @@ export default function Login() {
         <Typography variant="body2" sx={{ mt: 2 }}>
           Não tem conta? <Link to="/registrar">Cadastre-se</Link>
         </Typography>
-      </Paper>
-    </Container>
+        </Paper>
+      </Container>
+    </>
   );
 }
 

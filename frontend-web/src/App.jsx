@@ -10,10 +10,8 @@ import Register from './pages/Register'
 import AdminDashboard from './pages/(admin)/AdminDashboard'
 import DeliveryDashboard from './pages/(auth)/DeliveryDashboard'
 import DeliveryComunidade from './pages/(auth)/DeliveryComunidade'
-import RegistroEntregaDespesa from './pages/(auth)/RegistroEntregaDespesa'
 import CadastroVeiculo from './pages/(auth)/CadastroVeiculo'
 import Relatorios from './pages/(auth)/Relatorios'
-import DeliveryNavbar from './components/DeliveryNavbar'
 import DeliveryLayout from './components/DeliveryLayout'
 import { Button, Container, Typography, Box } from '@mui/material'
 
@@ -75,13 +73,6 @@ function App() {
               <ProtectedRoute>
                 <DeliveryLayout>
                   <Relatorios />
-                </DeliveryLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/registro-entrega" element={
-              <ProtectedRoute>
-                <DeliveryLayout>
-                  <RegistroEntregaDespesa />
                 </DeliveryLayout>
               </ProtectedRoute>
             } />

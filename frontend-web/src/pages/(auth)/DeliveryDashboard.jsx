@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Box,
@@ -7,13 +7,6 @@ import {
   CardContent,
   Grid,
   Container,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Button,
   CircularProgress,
   Alert
@@ -25,11 +18,8 @@ import {
   Assessment as ReportIcon
 } from '@mui/icons-material';
 import { api, ENDPOINTS } from '../../services/apiClient';
-import { RegistrosContext } from '../../context/RegistrosContext';
 
 const DeliveryDashboard = () => {
-  const registrosContext = useContext(RegistrosContext);
-  const { registros, veiculos } = registrosContext || { registros: [], veiculos: [] };
   const [dados, setDados] = useState({
     resumo_diario: {
       entregas_hoje: 0,
@@ -258,87 +248,6 @@ const DeliveryDashboard = () => {
         </Card>
       )}
 
-      {/* Tabela de Últimos Registros */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h5" component="h2" gutterBottom>
-            Últimos Registros ({registros.length})
-          </Typography>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Data</TableCell>
-                  <TableCell>Tipo</TableCell>
-                  <TableCell>Total Pacotes</TableCell>
-                  <TableCell>Entregues</TableCell>
-                  <TableCell>Ganho</TableCell>
-                  <TableCell>Despesa</TableCell>
-                  <TableCell>Lucro</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {registros.length > 0 ? (
-                  registros.slice(0, 10).map((registro, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{registro.data || 'N/A'}</TableCell>
-                      <TableCell>{registro.tipo_rendimento || 'N/A'}</TableCell>
-                      <TableCell>{registro.total_pacotes || 0}</TableCell>
-                      <TableCell>{registro.pacotes_entregues || 0}</TableCell>
-                      <TableCell>R$ {registro.ganho?.toFixed(2) || '0,00'}</TableCell>
-                      <TableCell>R$ {registro.valor_despesa?.toFixed(2) || '0,00'}</TableCell>
-                      <TableCell>R$ {registro.lucro?.toFixed(2) || '0,00'}</TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={7} align="center">
-                      Nenhum registro encontrado
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-      </Card>
-
-      {/* Tabela de Veículos */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h5" component="h2" gutterBottom>
-            Meus Veículos ({veiculos.length})
-          </Typography>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Modelo</TableCell>
-                  <TableCell>Placa</TableCell>
-                  <TableCell>Categoria</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {veiculos.length > 0 ? (
-                  veiculos.map((veiculo, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{veiculo.modelo || 'N/A'}</TableCell>
-                      <TableCell>{veiculo.placa || 'N/A'}</TableCell>
-                      <TableCell>{veiculo.categoria || 'N/A'}</TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={3} align="center">
-                      Nenhum veículo cadastrado
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-      </Card>
 
       {/* Botão para Relatórios */}
       <Box textAlign="center" sx={{ mt: 3 }}>

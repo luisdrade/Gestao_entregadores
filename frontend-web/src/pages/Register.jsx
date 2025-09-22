@@ -29,8 +29,9 @@ export default function Register() {
   }
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 8 }}>
-      <Paper elevation={2} sx={{ p: 3 }}>
+    <>
+      <Container maxWidth="sm" sx={{ mt: 8 }}>
+        <Paper elevation={2} sx={{ p: 3 }}>
         <Typography variant="h5" mb={2}>Cadastro de Entregador</Typography>
         <Box component="form" onSubmit={onSubmit}>
           <TextField fullWidth label="Nome" name="nome" value={form.nome} onChange={handleChange} margin="normal" required />
@@ -42,12 +43,8 @@ export default function Register() {
         <Typography variant="body2" sx={{ mt: 2 }}>
           Já tem conta? <Link to="/login">Entrar</Link>
         </Typography>
-      </Paper>
-    </Container>
+        </Paper>
+      </Container>
+    </>
   );
 }
-
-
-
-
-
