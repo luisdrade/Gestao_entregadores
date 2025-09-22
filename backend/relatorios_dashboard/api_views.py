@@ -15,34 +15,69 @@ class EstatisticasUsuarioView(APIView):
     def get(self, request):
         try:
             user = request.user
+            
+            # Obter parâmetros de filtro
+            periodo = request.GET.get('periodo', 'mes')
+            data_inicio = request.GET.get('data_inicio')
+            data_fim = request.GET.get('data_fim')
+            
+            from datetime import timedelta, date
+            from django.utils import timezone
+            
+            # Definir período baseado nos parâmetros
+            hoje = timezone.now().date()
+            
+            if data_inicio and data_fim:
+                # Período personalizado
+                data_inicio_filtro = date.fromisoformat(data_inicio)
+                data_fim_filtro = date.fromisoformat(data_fim)
+            else:
+                # Período automático
+                if periodo == 'semana':
+                    data_inicio_filtro = hoje - timedelta(days=7)
+                    data_fim_filtro = hoje
+                elif periodo == 'ano':
+                    data_inicio_filtro = hoje - timedelta(days=365)
+                    data_fim_filtro = hoje
+                else:  # mês
+                    data_inicio_filtro = hoje - timedelta(days=30)
+                    data_fim_filtro = hoje
 
             from cadastro_veiculo.models import Veiculo
             veiculos_count = Veiculo.objects.filter(entregador=user).count()
 
             from registro_entregadespesa.models import RegistroTrabalho, Despesa
 
+            # Filtrar registros por período
+            registros_trabalho = RegistroTrabalho.objects.filter(
+                entregador=user,
+                data__gte=data_inicio_filtro,
+                data__lte=data_fim_filtro
+            )
+            
+            registros_despesa = Despesa.objects.filter(
+                entregador=user,
+                data__gte=data_inicio_filtro,
+                data__lte=data_fim_filtro
+            )
+
             total_entregas = (
-                RegistroTrabalho.objects.filter(entregador=user)
-                .aggregate(total=models.Sum('quantidade_entregues'))['total']
+                registros_trabalho.aggregate(total=models.Sum('quantidade_entregues'))['total']
                 or 0
             )
 
             total_ganhos = 0
-            registros_trabalho = RegistroTrabalho.objects.filter(entregador=user)
             for registro in registros_trabalho:
                 total_ganhos += float(registro.valor)
 
-            registros_despesa = Despesa.objects.filter(entregador=user)
             total_despesas = sum(float(reg.valor) for reg in registros_despesa)
 
             lucro_total = total_ganhos - total_despesas
 
             dias_trabalhados = (
-                RegistroTrabalho.objects.filter(entregador=user)
-                .values('data').distinct().count()
+                registros_trabalho.values('data').distinct().count()
             )
 
-            from datetime import date
             if hasattr(user, 'date_joined') and user.date_joined:
                 data_primeiro_acesso = user.date_joined.date()
                 dias_conectado = (date.today() - data_primeiro_acesso).days
@@ -51,10 +86,16 @@ class EstatisticasUsuarioView(APIView):
 
             return Response({
                 'totalEntregas': total_entregas,
-                'totalGanhos': round(lucro_total, 2),
+                'totalGanhos': round(total_ganhos, 2),
+                'totalDespesas': round(total_despesas, 2),
+                'lucroLiquido': round(lucro_total, 2),
                 'veiculosCadastrados': veiculos_count,
                 'diasTrabalhados': dias_trabalhados,
                 'diasConectado': dias_conectado,
+                'periodo': {
+                    'inicio': data_inicio_filtro.strftime('%Y-%m-%d'),
+                    'fim': data_fim_filtro.strftime('%Y-%m-%d')
+                },
                 'foto': user.foto.url if getattr(user, 'foto', None) else None
             })
 
@@ -77,20 +118,30 @@ def relatorio_trabalho(request):
 
             user = request.user
             periodo = request.GET.get('periodo', 'mes')
+            data_inicio_param = request.GET.get('data_inicio')
+            data_fim_param = request.GET.get('data_fim')
 
             hoje = timezone.now().date()
-            if periodo == 'semana':
-                data_inicio = hoje - timedelta(days=7)
-            elif periodo == 'ano':
-                data_inicio = hoje - timedelta(days=365)
+            
+            if data_inicio_param and data_fim_param:
+                # Período personalizado
+                data_inicio = date.fromisoformat(data_inicio_param)
+                data_fim = date.fromisoformat(data_fim_param)
             else:
-                data_inicio = hoje - timedelta(days=30)
+                # Período automático
+                if periodo == 'semana':
+                    data_inicio = hoje - timedelta(days=7)
+                elif periodo == 'ano':
+                    data_inicio = hoje - timedelta(days=365)
+                else:
+                    data_inicio = hoje - timedelta(days=30)
+                data_fim = hoje
 
             registros_trabalho = (
                 RegistroTrabalho.objects.filter(
                     entregador=user,
                     data__gte=data_inicio,
-                    data__lte=hoje
+                    data__lte=data_fim
                 ).order_by('data')
             )
 
@@ -153,25 +204,35 @@ def relatorio_despesas(request):
 
             user = request.user
             periodo = request.GET.get('periodo', 'mes')
+            data_inicio_param = request.GET.get('data_inicio')
+            data_fim_param = request.GET.get('data_fim')
 
             hoje = timezone.now().date()
-            if periodo == 'semana':
-                data_inicio = hoje - timedelta(days=7)
-            elif periodo == 'ano':
-                data_inicio = hoje - timedelta(days=365)
+            
+            if data_inicio_param and data_fim_param:
+                # Período personalizado
+                data_inicio = date.fromisoformat(data_inicio_param)
+                data_fim = date.fromisoformat(data_fim_param)
             else:
-                data_inicio = hoje - timedelta(days=30)
+                # Período automático
+                if periodo == 'semana':
+                    data_inicio = hoje - timedelta(days=7)
+                elif periodo == 'ano':
+                    data_inicio = hoje - timedelta(days=365)
+                else:
+                    data_inicio = hoje - timedelta(days=30)
+                data_fim = hoje
 
             despesas = (
                 Despesa.objects.filter(
                     entregador=user,
                     data__gte=data_inicio,
-                    data__lte=hoje
+                    data__lte=data_fim
                 ).order_by('data')
             )
 
             total_despesas = despesas.aggregate(total=Sum('valor'))['total'] or 0
-            dias_periodo = (hoje - data_inicio).days + 1
+            dias_periodo = (data_fim - data_inicio).days + 1
             media_despesas_dia = total_despesas / max(dias_periodo, 1)
 
             maior_despesa_obj = despesas.order_by('-valor').first()

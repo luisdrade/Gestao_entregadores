@@ -22,7 +22,12 @@ import {
   Tab,
   Button,
   IconButton,
-  Tooltip
+  Tooltip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField
 } from '@mui/material';
 import {
   Assessment as ReportIcon,
@@ -62,6 +67,11 @@ import {
 } from 'recharts';
 import { RegistrosContext } from '../../context/RegistrosContext';
 import { api, ENDPOINTS } from '../../services/apiClient';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, subDays, subWeeks, subMonths } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 const Relatorios = () => {
   const { veiculos, loading: contextLoading, error: contextError } = useContext(RegistrosContext);
@@ -72,11 +82,17 @@ const Relatorios = () => {
   const [diasTrabalhados, setDiasTrabalhados] = useState([]);
   const [despesas, setDespesas] = useState([]);
   const [periodo, setPeriodo] = useState('mes'); // 'semana', 'mes', 'ano'
+  const [dataInicio, setDataInicio] = useState('');
+  const [dataFim, setDataFim] = useState('');
+  const [dadosGraficosReais, setDadosGraficosReais] = useState({
+    performanceSemanal: [],
+    distribuicaoDespesas: []
+  });
 
   useEffect(() => {
     console.log('🔍 Relatorios - Veículos do contexto:', veiculos);
     fetchRelatoriosData();
-  }, []);
+  }, [periodo, dataInicio, dataFim]);
 
   const fetchRelatoriosData = async () => {
     try {
@@ -84,14 +100,20 @@ const Relatorios = () => {
       setError(null);
       console.log('🔍 Relatorios - Fazendo chamada para /api/relatorios/estatisticas/');
       
+      // Construir parâmetros de filtro
+      const params = new URLSearchParams();
+      if (dataInicio) params.append('data_inicio', dataInicio);
+      if (dataFim) params.append('data_fim', dataFim);
+      if (periodo) params.append('periodo', periodo);
+      
       // Buscar dados de estatísticas
-      const response = await api.get('/api/relatorios/estatisticas/');
+      const response = await api.get(`/api/relatorios/estatisticas/?${params.toString()}`);
       console.log('🔍 Relatorios - Resposta dos relatórios:', response.data);
       setRelatoriosData(response.data);
       
       // Buscar dados detalhados de dias trabalhados
       try {
-        const diasResponse = await api.get('/registro/api/registro-trabalho/');
+        const diasResponse = await api.get(`/registro/api/registro-trabalho/?${params.toString()}`);
         console.log('🔍 Relatorios - Dias trabalhados:', diasResponse.data);
         setDiasTrabalhados(diasResponse.data.results || []);
       } catch (err) {
@@ -100,12 +122,15 @@ const Relatorios = () => {
       
       // Buscar dados de despesas
       try {
-        const despesasResponse = await api.get('/registro/api/registro-despesa/');
+        const despesasResponse = await api.get(`/registro/api/registro-despesa/?${params.toString()}`);
         console.log('🔍 Relatorios - Despesas:', despesasResponse.data);
         setDespesas(despesasResponse.data.results || []);
       } catch (err) {
         console.warn('⚠️ Relatorios - Erro ao buscar despesas:', err);
       }
+      
+      // Processar dados para gráficos
+      processarDadosGraficos();
       
     } catch (err) {
       console.error('❌ Relatorios - Erro ao carregar dados dos relatórios:', err);
@@ -176,22 +201,74 @@ const Relatorios = () => {
 
   const analises = calcularAnalisesDetalhadas();
 
-  // Dados para gráficos
-  const dadosGraficos = {
+  // Função para processar dados dos gráficos
+  const processarDadosGraficos = () => {
+    // Processar performance semanal
+    const performanceSemanal = [];
+    const diasSemana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+    
+    diasSemana.forEach((dia, index) => {
+      const diaDados = diasTrabalhados.filter(d => {
+        const dataDia = new Date(d.data);
+        return dataDia.getDay() === (index + 1) % 7;
+      });
+      
+      const entregas = diaDados.reduce((sum, d) => sum + (d.quantidade_entregues || 0), 0);
+      const ganho = diaDados.reduce((sum, d) => sum + (d.valor || 0), 0);
+      const despesa = despesas.filter(d => {
+        const dataDespesa = new Date(d.data);
+        return dataDespesa.getDay() === (index + 1) % 7;
+      }).reduce((sum, d) => sum + (d.valor || 0), 0);
+      
+      performanceSemanal.push({
+        dia,
+        entregas,
+        ganho,
+        despesa
+      });
+    });
+
+    // Processar distribuição de despesas
+    const distribuicaoDespesas = [];
+    const categorias = {};
+    
+    despesas.forEach(despesa => {
+      const categoria = despesa.tipo_despesa || 'Outros';
+      if (categorias[categoria]) {
+        categorias[categoria] += despesa.valor || 0;
+      } else {
+        categorias[categoria] = despesa.valor || 0;
+      }
+    });
+
+    const cores = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00', '#ff6b6b'];
+    Object.entries(categorias).forEach(([categoria, valor], index) => {
+      distribuicaoDespesas.push({
+        name: categoria,
+        value: valor,
+        color: cores[index % cores.length]
+      });
+    });
+
+    setDadosGraficosReais({
+      performanceSemanal,
+      distribuicaoDespesas
+    });
+  };
+
+  // Dados para gráficos (fallback se não houver dados reais)
+  const dadosGraficos = dadosGraficosReais.performanceSemanal.length > 0 ? dadosGraficosReais : {
     performanceSemanal: [
-      { dia: 'Seg', entregas: 12, ganho: 240, despesa: 30 },
-      { dia: 'Ter', entregas: 8, ganho: 160, despesa: 25 },
-      { dia: 'Qua', entregas: 15, ganho: 300, despesa: 40 },
-      { dia: 'Qui', entregas: 10, ganho: 200, despesa: 35 },
-      { dia: 'Sex', entregas: 18, ganho: 360, despesa: 45 },
-      { dia: 'Sáb', entregas: 6, ganho: 120, despesa: 20 },
-      { dia: 'Dom', entregas: 4, ganho: 80, despesa: 15 }
+      { dia: 'Seg', entregas: 0, ganho: 0, despesa: 0 },
+      { dia: 'Ter', entregas: 0, ganho: 0, despesa: 0 },
+      { dia: 'Qua', entregas: 0, ganho: 0, despesa: 0 },
+      { dia: 'Qui', entregas: 0, ganho: 0, despesa: 0 },
+      { dia: 'Sex', entregas: 0, ganho: 0, despesa: 0 },
+      { dia: 'Sáb', entregas: 0, ganho: 0, despesa: 0 },
+      { dia: 'Dom', entregas: 0, ganho: 0, despesa: 0 }
     ],
     distribuicaoDespesas: [
-      { name: 'Combustível', value: 45, color: '#8884d8' },
-      { name: 'Manutenção', value: 25, color: '#82ca9d' },
-      { name: 'Alimentação', value: 20, color: '#ffc658' },
-      { name: 'Outros', value: 10, color: '#ff7300' }
+      { name: 'Nenhuma despesa', value: 1, color: '#cccccc' }
     ]
   };
 
@@ -207,6 +284,148 @@ const Relatorios = () => {
   const handlePrint = () => {
     // Função para imprimir relatórios
     window.print();
+  };
+
+  // Função para exportar para Excel
+  const exportToExcel = () => {
+    try {
+      // Preparar dados para Excel
+      const dadosExcel = {
+        'Resumo Geral': [
+          ['Métrica', 'Valor'],
+          ['Ganho Total', `R$ ${analises.totalGanhos.toFixed(2)}`],
+          ['Total de Despesas', `R$ ${analises.totalDespesas.toFixed(2)}`],
+          ['Lucro Líquido', `R$ ${analises.lucroLiquido.toFixed(2)}`],
+          ['Taxa de Sucesso', `${analises.taxaSucesso.toFixed(1)}%`],
+          ['Dias Trabalhados', analises.diasComTrabalho],
+          ['Total de Entregas', analises.totalEntregas],
+          ['Ganho Médio/Dia', `R$ ${analises.ganhoMedioDia.toFixed(2)}`],
+          ['Despesa Média/Dia', `R$ ${analises.despesaMediaDia.toFixed(2)}`]
+        ],
+        'Dias Trabalhados': [
+          ['Data', 'Horário Início', 'Horário Fim', 'Entregas', 'Não Entregues', 'Tipo Pagamento', 'Valor', 'Status']
+        ],
+        'Despesas': [
+          ['Data', 'Tipo', 'Descrição', 'Valor', 'Categoria']
+        ]
+      };
+
+      // Adicionar dados de dias trabalhados
+      diasTrabalhados.forEach(dia => {
+        dadosExcel['Dias Trabalhados'].push([
+          dia.data,
+          dia.hora_inicio,
+          dia.hora_fim,
+          dia.quantidade_entregues,
+          dia.quantidade_nao_entregues,
+          dia.tipo_pagamento === 'por_entrega' ? 'Por Entrega' : 'Diária',
+          dia.valor,
+          'Concluído'
+        ]);
+      });
+
+      // Adicionar dados de despesas
+      despesas.forEach(despesa => {
+        dadosExcel['Despesas'].push([
+          despesa.data,
+          despesa.tipo_despesa,
+          despesa.descricao,
+          despesa.valor,
+          despesa.tipo_despesa
+        ]);
+      });
+
+      // Criar workbook
+      const wb = XLSX.utils.book_new();
+      
+      // Adicionar cada planilha
+      Object.entries(dadosExcel).forEach(([nome, dados]) => {
+        const ws = XLSX.utils.aoa_to_sheet(dados);
+        XLSX.utils.book_append_sheet(wb, ws, nome);
+      });
+
+      // Salvar arquivo
+      const nomeArquivo = `relatorios_${format(new Date(), 'yyyy-MM-dd_HH-mm-ss')}.xlsx`;
+      XLSX.writeFile(wb, nomeArquivo);
+      
+      console.log('✅ Excel exportado com sucesso!');
+    } catch (error) {
+      console.error('❌ Erro ao exportar Excel:', error);
+      alert('Erro ao exportar para Excel. Tente novamente.');
+    }
+  };
+
+  // Função para exportar para PDF
+  const exportToPDF = async () => {
+    try {
+      const element = document.getElementById('relatorios-content');
+      if (!element) {
+        alert('Elemento não encontrado para exportação.');
+        return;
+      }
+
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      const nomeArquivo = `relatorios_${format(new Date(), 'yyyy-MM-dd_HH-mm-ss')}.pdf`;
+      pdf.save(nomeArquivo);
+      
+      console.log('✅ PDF exportado com sucesso!');
+    } catch (error) {
+      console.error('❌ Erro ao exportar PDF:', error);
+      alert('Erro ao exportar para PDF. Tente novamente.');
+    }
+  };
+
+  // Função para definir período automático
+  const definirPeriodoAutomatico = (tipo) => {
+    const hoje = new Date();
+    let inicio, fim;
+
+    switch (tipo) {
+      case 'semana':
+        inicio = startOfWeek(hoje, { locale: ptBR });
+        fim = endOfWeek(hoje, { locale: ptBR });
+        break;
+      case 'mes':
+        inicio = startOfMonth(hoje);
+        fim = endOfMonth(hoje);
+        break;
+      case 'ano':
+        inicio = startOfYear(hoje);
+        fim = endOfYear(hoje);
+        break;
+      default:
+        inicio = subDays(hoje, 7);
+        fim = hoje;
+    }
+
+    setDataInicio(format(inicio, 'yyyy-MM-dd'));
+    setDataFim(format(fim, 'yyyy-MM-dd'));
+    setPeriodo(tipo);
   };
 
   if (loading) {
@@ -226,7 +445,7 @@ const Relatorios = () => {
   }
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 3, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: 3, mb: 4 }} id="relatorios-content">
       {/* Header com ações */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Box display="flex" alignItems="center">
@@ -241,9 +460,14 @@ const Relatorios = () => {
           </Box>
         </Box>
         <Box display="flex" gap={1}>
-          <Tooltip title="Exportar Relatório">
-            <IconButton onClick={handleExport} color="primary">
+          <Tooltip title="Exportar para Excel">
+            <IconButton onClick={exportToExcel} color="success">
               <DownloadIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Exportar para PDF">
+            <IconButton onClick={exportToPDF} color="error">
+              <PrintIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Imprimir Relatório">
@@ -251,13 +475,92 @@ const Relatorios = () => {
               <PrintIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Filtros">
-            <IconButton color="primary">
-              <FilterIcon />
-            </IconButton>
-          </Tooltip>
         </Box>
       </Box>
+
+      {/* Filtros de Período */}
+      <Card sx={{ mb: 4, borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom>
+            🔍 Filtros de Período
+          </Typography>
+          <Grid container spacing={3} alignItems="center">
+            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+              <FormControl fullWidth>
+                <InputLabel>Período</InputLabel>
+                <Select
+                  value={periodo}
+                  onChange={(e) => definirPeriodoAutomatico(e.target.value)}
+                  label="Período"
+                >
+                  <MenuItem value="semana">Esta Semana</MenuItem>
+                  <MenuItem value="mes">Este Mês</MenuItem>
+                  <MenuItem value="ano">Este Ano</MenuItem>
+                  <MenuItem value="personalizado">Personalizado</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+              <TextField
+                fullWidth
+                label="Data Início"
+                type="date"
+                value={dataInicio}
+                onChange={(e) => setDataInicio(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                disabled={periodo !== 'personalizado'}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+              <TextField
+                fullWidth
+                label="Data Fim"
+                type="date"
+                value={dataFim}
+                onChange={(e) => setDataFim(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                disabled={periodo !== 'personalizado'}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={fetchRelatoriosData}
+                disabled={loading}
+                startIcon={<FilterIcon />}
+              >
+                Aplicar Filtros
+              </Button>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <Box display="flex" gap={1}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => definirPeriodoAutomatico('semana')}
+                >
+                  Última Semana
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => definirPeriodoAutomatico('mes')}
+                >
+                  Último Mês
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => definirPeriodoAutomatico('ano')}
+                >
+                  Último Ano
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
 
       {/* Cards de Resumo Principal */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
