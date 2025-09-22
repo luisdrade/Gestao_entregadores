@@ -111,6 +111,10 @@ const DeliveryDashboard = () => {
         }
       };
       
+      console.log('🔍 Frontend - Dados transformados:', transformedData);
+      console.log('🔍 Frontend - Distribuição de veículos:', transformedData.distribuicao_veiculos);
+      console.log('🔍 Frontend - Total de veículos:', transformedData.total_veiculos);
+      
       setDados(transformedData);
     } catch (err) {
       console.error('❌ Dashboard - Erro ao carregar dados:', err.response?.data || err.message);
@@ -351,7 +355,7 @@ const DeliveryDashboard = () => {
                       dataKey="value"
                     >
                       {dados.distribuicao_veiculos.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -360,7 +364,7 @@ const DeliveryDashboard = () => {
               ) : (
                 <Box display="flex" alignItems="center" justifyContent="center" height={300}>
                   <Typography variant="body1" color="text.secondary">
-                    Nenhum veículo cadastrado ainda
+                    {dados.total_veiculos === 0 ? 'Nenhum veículo cadastrado ainda' : 'Dados de veículos não disponíveis'}
                   </Typography>
                 </Box>
               )}

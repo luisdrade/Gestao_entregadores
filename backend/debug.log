@@ -35578,3 +35578,42 @@ CSRF desabilitado para rota: /api/auth/profile/
 "GET /api/auth/profile/ HTTP/1.1" 200 461
 "GET /registro/api/dashboard-data/ HTTP/1.1" 200 1624
 "GET /registro/api/dashboard-data/ HTTP/1.1" 200 1624
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"GET /api/veiculos/ HTTP/1.1" 200 412
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"GET /api/veiculos/ HTTP/1.1" 200 412
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: luisfilipem13@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 1000
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712

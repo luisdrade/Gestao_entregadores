@@ -593,28 +593,47 @@ def dashboard_data(request):
                     'ganho': float(ganho_mes)
                 })
             
-            # Distribuição de veículos (simulado - em produção viria de uma tabela de veículos)
-            from cadastro_veiculo.models import Veiculo
+            # Distribuição de veículos
             try:
+                from cadastro_veiculo.models import Veiculo
+                print(f"🔍 Backend - Modelo Veiculo importado com sucesso")
+                
                 veiculos = Veiculo.objects.filter(entregador=user)
+                total_veiculos = veiculos.count()
+                print(f"🔍 Backend - Total de veículos encontrados: {total_veiculos}")
+                print(f"🔍 Backend - Veículos: {list(veiculos.values('tipo', 'modelo'))}")
+                
                 distribuicao_veiculos = []
                 tipos_veiculos = {}
                 
                 for veiculo in veiculos:
-                    tipo = veiculo.tipo_veiculo
+                    tipo = veiculo.tipo  # Campo correto do modelo
+                    print(f"🔍 Backend - Veículo: {veiculo.modelo} - Tipo: {tipo}")
                     if tipo in tipos_veiculos:
                         tipos_veiculos[tipo] += 1
                     else:
                         tipos_veiculos[tipo] = 1
                 
+                print(f"🔍 Backend - Tipos de veículos: {tipos_veiculos}")
+                
                 cores = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00']
                 for i, (tipo, quantidade) in enumerate(tipos_veiculos.items()):
+                    # Usar o display name do modelo
+                    nome_tipo = dict(Veiculo.TIPO_CHOICES).get(tipo, tipo.title())
                     distribuicao_veiculos.append({
-                        'name': tipo.title(),
+                        'name': nome_tipo,
                         'value': quantidade,
                         'color': cores[i % len(cores)]
                     })
-            except:
+                
+                print(f"🔍 Backend - Distribuição final: {distribuicao_veiculos}")
+            except ImportError as e:
+                print(f"❌ Backend - Erro ao importar modelo Veiculo: {e}")
+                total_veiculos = 0
+                distribuicao_veiculos = []
+            except Exception as e:
+                print(f"❌ Backend - Erro ao buscar veículos: {e}")
+                total_veiculos = 0
                 distribuicao_veiculos = []
             
             # Últimos registros para a tabela
@@ -661,7 +680,7 @@ def dashboard_data(request):
                     'lucro_liquido': float(lucro_liquido),
                     'taxa_sucesso': round(taxa_sucesso, 1),
                     'ganho_medio_dia': round(ganho_medio_dia, 2),
-                    'veiculos_cadastrados': len(distribuicao_veiculos)
+                    'veiculos_cadastrados': total_veiculos
                 },
                 
                 # Dados para gráficos
