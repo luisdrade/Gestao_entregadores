@@ -35504,3 +35504,77 @@ CSRF desabilitado para rota: /api/auth/profile/
 "GET /comunidade/api/postagens/ HTTP/1.1" 200 1648
 "GET /registro/api/dashboard-data/ HTTP/1.1" 200 373
 "GET /registro/api/dashboard-data/ HTTP/1.1" 200 373
+"OPTIONS /registro/api/registro-trabalho/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/profile/
+"OPTIONS /api/veiculos/ HTTP/1.1" 200 0
+"OPTIONS /api/veiculos/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+"GET /api/veiculos/ HTTP/1.1" 200 412
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"GET /api/veiculos/ HTTP/1.1" 200 412
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/veiculos/ HTTP/1.1" 200 412
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+"GET /api/veiculos/ HTTP/1.1" 200 412
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 373
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: luisfilipem13@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 1000
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 373
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 373
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste3@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 993
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 454
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 454
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 365
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 365
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/veiculos/ HTTP/1.1" 200 2
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 39
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 39
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 39
+"GET /api/veiculos/ HTTP/1.1" 200 2
+"GET /api/auth/profile/ HTTP/1.1" 200 454
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 39
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 454
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1231
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1231
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: luisfilipem13@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 1000
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1624
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1624

@@ -514,6 +514,133 @@ def dashboard_data(request):
             
             lucro_hoje = ganhos_hoje - despesas_hoje
             
+            # Dados para gráficos - Entregas por dia da semana
+            from django.db.models import Sum
+            from datetime import datetime, timedelta
+            
+            # Calcular entregas por dia da semana (últimos 7 dias)
+            entregas_por_dia = []
+            dias_semana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
+            
+            for i in range(7):
+                data_dia = hoje - timedelta(days=6-i)
+                registros_dia = registros_trabalho.filter(data=data_dia)
+                total_entregas_dia = registros_dia.aggregate(total=Sum('quantidade_entregues'))['total'] or 0
+                total_ganho_dia = registros_dia.aggregate(total=Sum('valor'))['total'] or 0
+                
+                entregas_por_dia.append({
+                    'dia': dias_semana[data_dia.weekday()],
+                    'entregas': total_entregas_dia,
+                    'ganho': float(total_ganho_dia)
+                })
+            
+            # Dados para gráfico de ganhos por semana (últimas 4 semanas)
+            ganhos_por_semana = []
+            for i in range(4):
+                semana_inicio = hoje - timedelta(days=(i+1)*7)
+                semana_fim = hoje - timedelta(days=i*7)
+                
+                registros_semana = registros_trabalho.filter(
+                    data__gte=semana_inicio,
+                    data__lt=semana_fim
+                )
+                despesas_semana = despesas.filter(
+                    data__gte=semana_inicio,
+                    data__lt=semana_fim
+                )
+                
+                ganho_semana = registros_semana.aggregate(total=Sum('valor'))['total'] or 0
+                despesa_semana = despesas_semana.aggregate(total=Sum('valor'))['total'] or 0
+                
+                ganhos_por_semana.append({
+                    'semana': f'Sem {4-i}',
+                    'ganho': float(ganho_semana),
+                    'despesa': float(despesa_semana)
+                })
+            
+            # Dados para performance mensal (últimos 6 meses)
+            performance_mensal = []
+            meses_nomes = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+            
+            for i in range(6):
+                # Calcular início e fim do mês
+                if hoje.month - i <= 0:
+                    mes = 12 + (hoje.month - i)
+                    ano = hoje.year - 1
+                else:
+                    mes = hoje.month - i
+                    ano = hoje.year
+                
+                # Primeiro dia do mês
+                mes_inicio = datetime(ano, mes, 1).date()
+                # Último dia do mês
+                if mes == 12:
+                    mes_fim = datetime(ano + 1, 1, 1).date() - timedelta(days=1)
+                else:
+                    mes_fim = datetime(ano, mes + 1, 1).date() - timedelta(days=1)
+                
+                registros_mes = registros_trabalho.filter(
+                    data__gte=mes_inicio,
+                    data__lte=mes_fim
+                )
+                
+                entregas_mes = registros_mes.aggregate(total=Sum('quantidade_entregues'))['total'] or 0
+                ganho_mes = registros_mes.aggregate(total=Sum('valor'))['total'] or 0
+                
+                performance_mensal.append({
+                    'mes': meses_nomes[mes-1],
+                    'entregas': entregas_mes,
+                    'ganho': float(ganho_mes)
+                })
+            
+            # Distribuição de veículos (simulado - em produção viria de uma tabela de veículos)
+            from cadastro_veiculo.models import Veiculo
+            try:
+                veiculos = Veiculo.objects.filter(entregador=user)
+                distribuicao_veiculos = []
+                tipos_veiculos = {}
+                
+                for veiculo in veiculos:
+                    tipo = veiculo.tipo_veiculo
+                    if tipo in tipos_veiculos:
+                        tipos_veiculos[tipo] += 1
+                    else:
+                        tipos_veiculos[tipo] = 1
+                
+                cores = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00']
+                for i, (tipo, quantidade) in enumerate(tipos_veiculos.items()):
+                    distribuicao_veiculos.append({
+                        'name': tipo.title(),
+                        'value': quantidade,
+                        'color': cores[i % len(cores)]
+                    })
+            except:
+                distribuicao_veiculos = []
+            
+            # Últimos registros para a tabela
+            ultimos_registros = []
+            for registro in registros_trabalho.order_by('-data', '-hora_inicio')[:5]:
+                # Buscar despesas do mesmo dia
+                despesas_dia = despesas.filter(data=registro.data).aggregate(total=Sum('valor'))['total'] or 0
+                lucro_dia = float(registro.valor) - float(despesas_dia)
+                
+                ultimos_registros.append({
+                    'data': registro.data.strftime('%d/%m/%Y'),
+                    'tipo_rendimento': 'unitario' if registro.tipo_pagamento == 'por_entrega' else 'diaria',
+                    'ganho': float(registro.valor),
+                    'despesa': float(despesas_dia),
+                    'lucro': lucro_dia
+                })
+            
+            # Calcular métricas adicionais
+            taxa_sucesso = 0
+            if total_entregas_realizadas + total_entregas_nao_realizadas > 0:
+                taxa_sucesso = (total_entregas_realizadas / (total_entregas_realizadas + total_entregas_nao_realizadas)) * 100
+            
+            ganho_medio_dia = 0
+            if dias_trabalhados > 0:
+                ganho_medio_dia = total_ganhos / dias_trabalhados
+
             dashboard_data = {
                 # Resumo diário (hoje)
                 'resumo_diario': {
@@ -531,8 +658,18 @@ def dashboard_data(request):
                     'entregas_nao_realizadas': total_entregas_nao_realizadas,
                     'ganho_total': float(total_ganhos),
                     'despesas_total': float(total_despesas),
-                    'lucro_liquido': float(lucro_liquido)
+                    'lucro_liquido': float(lucro_liquido),
+                    'taxa_sucesso': round(taxa_sucesso, 1),
+                    'ganho_medio_dia': round(ganho_medio_dia, 2),
+                    'veiculos_cadastrados': len(distribuicao_veiculos)
                 },
+                
+                # Dados para gráficos
+                'entregas_por_dia': entregas_por_dia,
+                'ganhos_por_semana': ganhos_por_semana,
+                'performance_mensal': performance_mensal,
+                'distribuicao_veiculos': distribuicao_veiculos,
+                'ultimos_registros': ultimos_registros,
                 
                 'periodo': periodo,
                 'data_inicio': data_inicio.strftime('%d/%m/%Y'),
