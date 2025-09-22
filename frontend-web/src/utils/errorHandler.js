@@ -10,7 +10,8 @@ export const suppressKnownErrors = () => {
       message.includes('A listener indicated an asynchronous response by returning true') ||
       message.includes('message channel closed before a response was received') ||
       message.includes('Failed to reload') ||
-      message.includes('hmr')
+      message.includes('hmr') ||
+      message.includes('Uncaught (in promise) Error: A listener indicated an asynchronous response')
     ) {
       return; // Não exibe esses erros
     }
@@ -26,13 +27,26 @@ export const suppressKnownErrors = () => {
     
     if (
       message.includes('Download the React DevTools') ||
-      message.includes('hmr')
+      message.includes('hmr') ||
+      message.includes('React DevTools')
     ) {
       return; // Não exibe esses warnings
     }
     
     originalWarn.apply(console, args);
   };
+
+  // Suprimir erros de Promise não capturados
+  window.addEventListener('unhandledrejection', (event) => {
+    const message = event.reason?.toString() || '';
+    if (
+      message.includes('A listener indicated an asynchronous response') ||
+      message.includes('message channel closed')
+    ) {
+      event.preventDefault();
+      return;
+    }
+  });
 };
 
 // Função para limpar listeners órfãos
