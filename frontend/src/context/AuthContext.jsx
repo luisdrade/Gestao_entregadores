@@ -160,7 +160,6 @@ export function AuthProvider({ children }) {
 
       // Definir o token no httpClient
       httpClient.defaults.headers.Authorization = `Bearer ${authToken}`;
-      console.log('🔍 AuthContext - Token definido após login:', httpClient.defaults.headers.Authorization);
 
       await AsyncStorage.setItem('@GestaoEntregadores:token', authToken);
       await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(userData));
@@ -169,13 +168,35 @@ export function AuthProvider({ children }) {
       setToken(authToken);
       setUser(userData);
 
-      console.log('✅ AuthContext - Login realizado com sucesso');
       return { success: true };
     } catch (error) {
       console.error('Erro no login:', error);
+      
+      // Capturar diferentes tipos de erro do backend
+      let errorMessage = 'Erro ao fazer login';
+      
+      if (error.response?.data) {
+        const errorData = error.response.data;
+        
+        // Tentar diferentes campos de erro
+        if (errorData.message) {
+          errorMessage = errorData.message;
+        } else if (errorData.detail) {
+          errorMessage = errorData.detail;
+        } else if (errorData.error) {
+          errorMessage = errorData.error;
+        } else if (errorData.non_field_errors && errorData.non_field_errors.length > 0) {
+          errorMessage = errorData.non_field_errors[0];
+        } else if (typeof errorData === 'string') {
+          errorMessage = errorData;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Erro ao fazer login' 
+        error: errorMessage
       };
     }
   }

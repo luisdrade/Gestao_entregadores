@@ -36738,3 +36738,59 @@ Headers: {'Content-Length': '157', 'Content-Type': 'application/json', 'Accept':
 Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')]}
 Bad Request: /api/auth/register/
 "POST /api/auth/register/ HTTP/1.1" 400 106
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Luis Filipe', 'username': 'luis', 'email': 'luisfilipem13@gmail.com', 'telefone': '(18) 64684-6464', 'password': 'testeluis', 'password_confirm': 'testeluis'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '157', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.56.1:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 106
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Luis Filipe', 'username': 'luis', 'email': 'luisfilipem13@gmail.com', 'telefone': '(18) 64684-6464', 'password': 'testeluis', 'password_confirm': 'testeluis'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '157', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.56.1:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 106
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Luis Filipe', 'username': 'luis', 'email': 'luisfilipem13@gmail.com', 'telefone': '(18) 64684-6464', 'password': 'testeluis', 'password_confirm': 'testeluis'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '157', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.56.1:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 106
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Luis Filipe', 'username': 'luis', 'email': 'luis@gmail.com', 'telefone': '(18) 64684-6445', 'password': 'testeluis', 'password_confirm': 'testeluis'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '148', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.56.1:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'User-Agent': 'okhttp/4.9.2'}
+Novo usuário registrado: luis@gmail.com
+"POST /api/auth/register/ HTTP/1.1" 201 898
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: luis@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 898
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1231
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 197
+"GET /api/estatisticas/ HTTP/1.1" 200 197
+"PUT /api/change-password/22/ HTTP/1.1" 200 55
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1231
+"GET /comunidade/ HTTP/1.1" 200 1648

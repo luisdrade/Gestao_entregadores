@@ -43,10 +43,34 @@ export default function LoginScreen() {
       if (result.success) {
         router.replace('/(home)/home');
       } else {
-        Alert.alert('Erro', result.error || 'Erro ao fazer login');
+        // Tratar diferentes tipos de erro
+        let errorMessage = 'Erro ao fazer login';
+        
+        if (result.error) {
+          if (typeof result.error === 'string') {
+            errorMessage = result.error;
+          } else if (result.error.message) {
+            errorMessage = result.error.message;
+          } else if (result.error.detail) {
+            errorMessage = result.error.detail;
+          }
+        }
+        
+        // Mensagens mais específicas baseadas no conteúdo do erro
+        if (errorMessage.toLowerCase().includes('invalid') || errorMessage.toLowerCase().includes('credenciais')) {
+          errorMessage = 'Email ou senha incorretos. Verifique suas credenciais.';
+        } else if (errorMessage.toLowerCase().includes('not found') || errorMessage.toLowerCase().includes('não encontrado')) {
+          errorMessage = 'Usuário não encontrado. Verifique seu email.';
+        } else if (errorMessage.toLowerCase().includes('password') || errorMessage.toLowerCase().includes('senha')) {
+          errorMessage = 'Senha incorreta. Tente novamente.';
+        } else if (errorMessage.toLowerCase().includes('email')) {
+          errorMessage = 'Email inválido ou não cadastrado.';
+        }
+        
+        Alert.alert('Erro no Login', errorMessage);
       }
     } catch (error) {
-      Alert.alert('Erro', 'Erro inesperado ao fazer login');
+      Alert.alert('Erro', 'Erro inesperado ao fazer login. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
