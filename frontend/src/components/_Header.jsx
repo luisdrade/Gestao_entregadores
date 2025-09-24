@@ -1,8 +1,24 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TouchableOpacity, 
+  SafeAreaView 
+} from 'react-native';
 import { useRouter } from 'expo-router';
 
-export default function HeaderWithBack({ title, onBackPress }) {
+export default function HeaderWithBack({ 
+  title, 
+  onBackPress,
+  showBackButton = true,
+  rightComponent,
+  backgroundColor = '#007AFF',
+  titleColor = '#fff',
+  style = {},
+  showWelcome = false,
+  welcomeText,
+}) {
   const router = useRouter();
 
   const handleBack = () => {
@@ -14,36 +30,79 @@ export default function HeaderWithBack({ title, onBackPress }) {
   };
 
   return (
-    <View style={styles.header}>
-      <TouchableOpacity onPress={handleBack}>
-        <Text style={styles.backButton}>← Voltar</Text>
-      </TouchableOpacity>
-      <Text style={styles.headerTitle}>{title}</Text>
-      <View style={{ width: 50 }} />
-    </View>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor }]}>
+      <View style={[styles.header, style]}>
+        <View style={styles.headerContent}>
+          {showBackButton ? (
+            <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+              <Text style={[styles.backButtonText, { color: titleColor }]}>
+                ← Voltar
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.placeholder} />
+          )}
+          
+          <Text style={[styles.headerTitle, { color: titleColor }]}>
+            {title}
+          </Text>
+          
+          {rightComponent ? (
+            <View style={styles.rightComponent}>
+              {rightComponent}
+            </View>
+          ) : (
+            <View style={styles.placeholder} />
+          )}
+        </View>
+        
+        {showWelcome && welcomeText && (
+          <Text style={[styles.welcomeText, { color: titleColor }]}>
+            {welcomeText}
+          </Text>
+        )}
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
+  safeArea: {
     backgroundColor: '#007AFF',
-    paddingTop: 30,
+  },
+  header: {
+    paddingTop: 10,
     paddingBottom: 20,
     paddingHorizontal: 20,
+  },
+  headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   backButton: {
-    color: '#fff',
-    fontSize: 14,
+    padding: 5,
+  },
+  backButtonText: {
+    fontSize: 16,
     fontWeight: '500',
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
     flex: 1,
     textAlign: 'center',
+  },
+  rightComponent: {
+    minWidth: 60,
+    alignItems: 'flex-end',
+  },
+  placeholder: {
+    width: 60,
+  },
+  welcomeText: {
+    fontSize: 16,
+    marginTop: 10,
+    opacity: 0.9,
   },
 });
