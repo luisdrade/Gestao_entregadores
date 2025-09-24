@@ -13,6 +13,7 @@ import {
   Platform,
   Modal,
   FlatList,
+  Animated,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -279,6 +280,7 @@ export default function VeiculosScreen() {
     <TouchableOpacity 
       style={styles.veiculoCard}
       onPress={() => openEditModal(item)}
+      activeOpacity={0.7}
     >
       <View style={styles.veiculoHeader}>
         <View style={styles.veiculoInfo}>
@@ -301,12 +303,14 @@ export default function VeiculosScreen() {
           <TouchableOpacity 
             style={styles.editButton}
             onPress={() => openEditModal(item)}
+            activeOpacity={0.7}
           >
             <Ionicons name="create-outline" size={20} color="#007AFF" />
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.deleteButton}
             onPress={() => handleDeleteVeiculo(item)}
+            activeOpacity={0.7}
           >
             <Ionicons name="trash-outline" size={20} color="#FF3B30" />
           </TouchableOpacity>
@@ -316,12 +320,12 @@ export default function VeiculosScreen() {
       <View style={styles.veiculoDetails}>
         {item.placa && (
           <View style={styles.veiculoDetail}>
-            <Text style={styles.detailLabel}>Placa:</Text>
+            <Text style={styles.detailLabel}>Placa</Text>
             <Text style={styles.detailValue}>{item.placa}</Text>
           </View>
         )}
         <View style={styles.veiculoDetail}>
-          <Text style={styles.detailLabel}>Consumo:</Text>
+          <Text style={styles.detailLabel}>Consumo</Text>
           <Text style={styles.detailValue}>{item.km_por_l} km/l</Text>
         </View>
       </View>
@@ -340,18 +344,30 @@ export default function VeiculosScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
+      {/* Header com gradiente */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Ionicons name="arrow-back" size={20} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Meus Veículos</Text>
-        <TouchableOpacity 
-          style={styles.addButton}
-          onPress={openAddModal}
-        >
-          <Ionicons name="add" size={24} color="#fff" />
-        </TouchableOpacity>
+        <View style={styles.headerGradient}>
+          <View style={styles.headerContent}>
+            <TouchableOpacity 
+              style={styles.backButton} 
+              onPress={handleBack}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="arrow-back" size={24} color="#fff" />
+            </TouchableOpacity>
+            <View style={styles.headerTitleContainer}>
+              <Text style={styles.headerTitle}>Meus Veículos</Text>
+              <Text style={styles.headerSubtitle}>Gerencie sua frota</Text>
+            </View>
+            <TouchableOpacity 
+              style={styles.addButton}
+              onPress={openAddModal}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="add" size={24} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
       {/* Content */}
@@ -366,13 +382,17 @@ export default function VeiculosScreen() {
             <Ionicons name="car-outline" size={64} color="#ccc" />
             <Text style={styles.emptyTitle}>Nenhum veículo cadastrado</Text>
             <Text style={styles.emptyText}>
-              Toque no botão + para cadastrar seu primeiro veículo
+              Cadastre seu primeiro veículo para começar a gerenciar sua frota
             </Text>
             <TouchableOpacity 
               style={styles.addFirstButton}
               onPress={openAddModal}
+              activeOpacity={0.8}
             >
-              <Text style={styles.addFirstButtonText}>Cadastrar Veículo</Text>
+              <View style={styles.addFirstButtonContent}>
+                <Ionicons name="add-circle" size={24} color="#fff" />
+                <Text style={styles.addFirstButtonText}>Cadastrar Veículo</Text>
+              </View>
             </TouchableOpacity>
           </View>
         ) : (
@@ -393,12 +413,22 @@ export default function VeiculosScreen() {
         onRequestClose={closeAddModal}
       >
         <SafeAreaView style={styles.modalContainer}>
+          {/* Header do Modal */}
           <View style={styles.modalHeader}>
-            <TouchableOpacity onPress={closeAddModal}>
-              <Ionicons name="close" size={24} color="#666" />
-            </TouchableOpacity>
-            <Text style={styles.modalTitle}>Adicionar Veículo</Text>
-            <View style={styles.placeholder} />
+            <View style={styles.modalHeaderContent}>
+              <TouchableOpacity 
+                style={styles.modalCloseButton} 
+                onPress={closeAddModal}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close" size={24} color="#666" />
+              </TouchableOpacity>
+              <View style={styles.modalTitleContainer}>
+                <Text style={styles.modalTitle}>Adicionar Veículo</Text>
+                <Text style={styles.modalSubtitle}>Cadastre um novo veículo</Text>
+              </View>
+              <View style={styles.placeholder} />
+            </View>
           </View>
           
           <KeyboardAvoidingView 
@@ -410,7 +440,18 @@ export default function VeiculosScreen() {
               contentContainerStyle={styles.modalScrollContent}
               showsVerticalScrollIndicator={false}
             >
-              <View style={styles.formContainer}>
+              {/* Card principal do formulário */}
+              <View style={styles.formCard}>
+                <View style={styles.formCardHeader}>
+                  <View style={styles.formIconContainer}>
+                    <Ionicons name="car" size={28} color="#007AFF" />
+                  </View>
+                  <View style={styles.formTitleContainer}>
+                    <Text style={styles.formTitle}>Informações do Veículo</Text>
+                    <Text style={styles.formSubtitle}>Preencha os dados do seu veículo</Text>
+                  </View>
+                </View>
+
                 <Formik
                   initialValues={{
                     tipo: 'carro',
@@ -425,179 +466,234 @@ export default function VeiculosScreen() {
                 >
                   {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, setFieldError }) => (
                     <View style={styles.form}>
-                      {/* Tipo do Veículo */}
-                      <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Tipo do Veículo *</Text>
-                        <TouchableOpacity
-                          style={[
-                            styles.selectContainer,
-                            touched.tipo && errors.tipo && styles.inputError
-                          ]}
-                          onPress={() => setShowTipoModal(true)}
-                        >
-                          <Text style={[
-                            styles.selectText,
-                            !tempFormValues.tipo && styles.selectPlaceholder
-                          ]}>
-                            {tempFormValues.tipo === 'carro' ? 'Carro' : tempFormValues.tipo === 'moto' ? 'Moto' : 'Selecione o tipo'}
-                          </Text>
-                          <Ionicons name="chevron-down" size={20} color="#666" />
-                        </TouchableOpacity>
-                        {touched.tipo && errors.tipo && (
-                          <Text style={styles.errorText}>{errors.tipo}</Text>
-                        )}
-                      </View>
-
-                      {/* Categoria */}
-                      <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Categoria *</Text>
-                        <TouchableOpacity
-                          style={[
-                            styles.selectContainer,
-                            touched.categoria && errors.categoria && styles.inputError
-                          ]}
-                          onPress={() => setShowCategoriaModal(true)}
-                        >
-                          <Text style={[
-                            styles.selectText,
-                            !tempFormValues.categoria && styles.selectPlaceholder
-                          ]}>
-                            {tempFormValues.categoria === 'passeio' ? 'Passeio' : tempFormValues.categoria === 'utilitario' ? 'Utilitário' : 'Selecione a categoria'}
-                          </Text>
-                          <Ionicons name="chevron-down" size={20} color="#666" />
-                        </TouchableOpacity>
-                        {touched.categoria && errors.categoria && (
-                          <Text style={styles.errorText}>{errors.categoria}</Text>
-                        )}
-                      </View>
-
-                      {/* Modelo */}
-                      <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Modelo *</Text>
-                        <TextInput
-                          style={[
-                            styles.textInput,
-                            touched.modelo && errors.modelo && styles.inputError
-                          ]}
-                          placeholder="Digite o modelo do veículo"
-                          value={tempFormValues.modelo}
-                          onChangeText={(text) => {
-                            setTempFormValues(prev => ({ ...prev, modelo: text }));
-                            setFieldValue('modelo', text);
-                          }}
-                          onBlur={handleBlur('modelo')}
-                          placeholderTextColor="#666"
-                          autoCapitalize="words"
-                        />
-                        {touched.modelo && errors.modelo && (
-                          <Text style={styles.errorText}>{errors.modelo}</Text>
-                        )}
-                      </View>
-
-                      {/* Placa */}
-                      <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Placa</Text>
-                        <TextInput
-                          style={[
-                            styles.textInput,
-                            touched.placa && errors.placa && styles.inputError
-                          ]}
-                          placeholder="Digite a placa do veículo"
-                          value={tempFormValues.placa}
-                          onChangeText={(text) => {
-                            setTempFormValues(prev => ({ ...prev, placa: text }));
-                            setFieldValue('placa', text);
-                          }}
-                          onBlur={handleBlur('placa')}
-                          placeholderTextColor="#666"
-                          autoCapitalize="characters"
-                          maxLength={10}
-                        />
-                        {touched.placa && errors.placa && (
-                          <Text style={styles.errorText}>{errors.placa}</Text>
-                        )}
-                      </View>
-
-                      {/* KM/L */}
-                      <View style={styles.inputContainer}>
-                        <Text style={styles.label}>KM/L *</Text>
-                        <View style={styles.kmContainer}>
-                          <TextInput
-                            style={[
-                              styles.kmInput,
-                              touched.kmPorL && errors.kmPorL && styles.inputError
-                            ]}
-                            placeholder="0.0"
-                            value={tempFormValues.kmPorL}
-                            onChangeText={(text) => {
-                              setTempFormValues(prev => ({ ...prev, kmPorL: text }));
-                              setFieldValue('kmPorL', text);
-                            }}
-                            onBlur={handleBlur('kmPorL')}
-                            placeholderTextColor="#666"
-                            keyboardType="numeric"
-                            maxLength={5}
-                          />
-                          <TouchableOpacity 
-                            style={styles.kmHelpButton}
-                            onPress={toggleKmHelp}
-                          >
-                            <Text style={styles.kmHelpText}>Ajuda</Text>
-                          </TouchableOpacity>
+                      {/* Seção: Tipo e Categoria */}
+                      <View style={styles.section}>
+                        <View style={styles.sectionHeader}>
+                          <Ionicons name="car-sport" size={20} color="#007AFF" />
+                          <Text style={styles.sectionTitle}>Tipo e Categoria</Text>
                         </View>
-                        {touched.kmPorL && errors.kmPorL && (
-                          <Text style={styles.errorText}>{errors.kmPorL}</Text>
-                        )}
-                        
-                        {/* Dicas de KM/L */}
-                        {showKmHelp && (
-                          <View style={styles.kmTips}>
-                            <Text style={styles.kmTipsTitle}>Dicas de consumo médio:</Text>
-                            <View style={styles.kmTipItem}>
-                              <Ionicons name="car" size={16} color="#34C759" />
-                              <Text style={styles.kmTipText}>Carros pequenos: 10-15 km/l</Text>
-                            </View>
-                            <View style={styles.kmTipItem}>
-                              <Ionicons name="car" size={16} color="#34C759" />
-                              <Text style={styles.kmTipText}>Carros médios: 8-12 km/l</Text>
-                            </View>
-                            <View style={styles.kmTipItem}>
-                              <Ionicons name="bicycle" size={16} color="#34C759" />
-                              <Text style={styles.kmTipText}>Motos: 25-40 km/l</Text>
-                            </View>
-                            <View style={styles.kmTipItem}>
-                              <Ionicons name="information-circle" size={16} color="#007AFF" />
-                              <Text style={styles.kmTipText}>Consulte o manual do veículo</Text>
-                            </View>
+
+                        {/* Tipo do Veículo */}
+                        <View style={styles.inputContainer}>
+                          <Text style={styles.label}>Tipo do Veículo *</Text>
+                          <View style={styles.inputWrapper}>
+                            <Ionicons name="car" size={20} color="#666" style={styles.inputIcon} />
+                            <TouchableOpacity
+                              style={[
+                                styles.selectContainer,
+                                touched.tipo && errors.tipo && styles.inputError
+                              ]}
+                              onPress={() => setShowTipoModal(true)}
+                            >
+                              <Text style={[
+                                styles.selectText,
+                                !tempFormValues.tipo && styles.selectPlaceholder
+                              ]}>
+                                {tempFormValues.tipo === 'carro' ? 'Carro' : tempFormValues.tipo === 'moto' ? 'Moto' : 'Selecione o tipo'}
+                              </Text>
+                              <Ionicons name="chevron-down" size={20} color="#666" />
+                            </TouchableOpacity>
                           </View>
-                        )}
+                          {touched.tipo && errors.tipo && (
+                            <Text style={styles.errorText}>{errors.tipo}</Text>
+                          )}
+                        </View>
+
+                        {/* Categoria */}
+                        <View style={styles.inputContainer}>
+                          <Text style={styles.label}>Categoria *</Text>
+                          <View style={styles.inputWrapper}>
+                            <Ionicons name="list" size={20} color="#666" style={styles.inputIcon} />
+                            <TouchableOpacity
+                              style={[
+                                styles.selectContainer,
+                                touched.categoria && errors.categoria && styles.inputError
+                              ]}
+                              onPress={() => setShowCategoriaModal(true)}
+                            >
+                              <Text style={[
+                                styles.selectText,
+                                !tempFormValues.categoria && styles.selectPlaceholder
+                              ]}>
+                                {tempFormValues.categoria === 'passeio' ? 'Passeio' : tempFormValues.categoria === 'utilitario' ? 'Utilitário' : 'Selecione a categoria'}
+                              </Text>
+                              <Ionicons name="chevron-down" size={20} color="#666" />
+                            </TouchableOpacity>
+                          </View>
+                          {touched.categoria && errors.categoria && (
+                            <Text style={styles.errorText}>{errors.categoria}</Text>
+                          )}
+                        </View>
+                      </View>
+
+                      {/* Seção: Dados do Veículo */}
+                      <View style={styles.section}>
+                        <View style={styles.sectionHeader}>
+                          <Ionicons name="document-text" size={20} color="#007AFF" />
+                          <Text style={styles.sectionTitle}>Dados do Veículo</Text>
+                        </View>
+
+                        {/* Modelo */}
+                        <View style={styles.inputContainer}>
+                          <Text style={styles.label}>Modelo *</Text>
+                          <View style={styles.inputWrapper}>
+                            <Ionicons name="car-outline" size={20} color="#666" style={styles.inputIcon} />
+                            <TextInput
+                              style={[
+                                styles.textInput,
+                                touched.modelo && errors.modelo && styles.inputError
+                              ]}
+                              placeholder="Digite o modelo do veículo"
+                              value={tempFormValues.modelo}
+                              onChangeText={(text) => {
+                                setTempFormValues(prev => ({ ...prev, modelo: text }));
+                                setFieldValue('modelo', text);
+                              }}
+                              onBlur={handleBlur('modelo')}
+                              placeholderTextColor="#999"
+                              autoCapitalize="words"
+                            />
+                          </View>
+                          {touched.modelo && errors.modelo && (
+                            <Text style={styles.errorText}>{errors.modelo}</Text>
+                          )}
+                        </View>
+
+                        {/* Placa */}
+                        <View style={styles.inputContainer}>
+                          <Text style={styles.label}>Placa</Text>
+                          <View style={styles.inputWrapper}>
+                            <Ionicons name="card" size={20} color="#666" style={styles.inputIcon} />
+                            <TextInput
+                              style={[
+                                styles.textInput,
+                                touched.placa && errors.placa && styles.inputError
+                              ]}
+                              placeholder="Digite a placa do veículo"
+                              value={tempFormValues.placa}
+                              onChangeText={(text) => {
+                                setTempFormValues(prev => ({ ...prev, placa: text }));
+                                setFieldValue('placa', text);
+                              }}
+                              onBlur={handleBlur('placa')}
+                              placeholderTextColor="#999"
+                              autoCapitalize="characters"
+                              maxLength={10}
+                            />
+                          </View>
+                          {touched.placa && errors.placa && (
+                            <Text style={styles.errorText}>{errors.placa}</Text>
+                          )}
+                        </View>
+                      </View>
+
+                      {/* Seção: Consumo */}
+                      <View style={styles.section}>
+                        <View style={styles.sectionHeader}>
+                          <Ionicons name="speedometer" size={20} color="#007AFF" />
+                          <Text style={styles.sectionTitle}>Consumo de Combustível</Text>
+                        </View>
+
+                        {/* KM/L */}
+                        <View style={styles.inputContainer}>
+                          <Text style={styles.label}>KM/L *</Text>
+                          <View style={styles.kmContainer}>
+                            <View style={styles.inputWrapper}>
+                              <Ionicons name="speedometer-outline" size={20} color="#666" style={styles.inputIcon} />
+                              <TextInput
+                                style={[
+                                  styles.kmInput,
+                                  touched.kmPorL && errors.kmPorL && styles.inputError
+                                ]}
+                                placeholder="0.0"
+                                value={tempFormValues.kmPorL}
+                                onChangeText={(text) => {
+                                  setTempFormValues(prev => ({ ...prev, kmPorL: text }));
+                                  setFieldValue('kmPorL', text);
+                                }}
+                                onBlur={handleBlur('kmPorL')}
+                                placeholderTextColor="#999"
+                                keyboardType="numeric"
+                                maxLength={5}
+                              />
+                            </View>
+                            <TouchableOpacity 
+                              style={styles.kmHelpButton}
+                              onPress={toggleKmHelp}
+                              activeOpacity={0.8}
+                            >
+                              <Ionicons name="help-circle" size={16} color="#fff" />
+                              <Text style={styles.kmHelpText}>Ajuda</Text>
+                            </TouchableOpacity>
+                          </View>
+                          {touched.kmPorL && errors.kmPorL && (
+                            <Text style={styles.errorText}>{errors.kmPorL}</Text>
+                          )}
+                          
+                          {/* Dicas de KM/L */}
+                          {showKmHelp && (
+                            <View style={styles.kmTips}>
+                              <Text style={styles.kmTipsTitle}>Dicas de consumo médio:</Text>
+                              <View style={styles.kmTipItem}>
+                                <Ionicons name="car" size={16} color="#34C759" />
+                                <Text style={styles.kmTipText}>Carros pequenos: 10-15 km/l</Text>
+                              </View>
+                              <View style={styles.kmTipItem}>
+                                <Ionicons name="car" size={16} color="#34C759" />
+                                <Text style={styles.kmTipText}>Carros médios: 8-12 km/l</Text>
+                              </View>
+                              <View style={styles.kmTipItem}>
+                                <Ionicons name="bicycle" size={16} color="#34C759" />
+                                <Text style={styles.kmTipText}>Motos: 25-40 km/l</Text>
+                              </View>
+                              <View style={styles.kmTipItem}>
+                                <Ionicons name="information-circle" size={16} color="#007AFF" />
+                                <Text style={styles.kmTipText}>Consulte o manual do veículo</Text>
+                              </View>
+                            </View>
+                          )}
+                        </View>
                       </View>
 
                       {/* Botão de cadastrar */}
-                      <TouchableOpacity 
-                        style={[
-                          styles.cadastrarButton, 
-                          (isLoading || Object.keys(errors).length > 0) && styles.buttonDisabled
-                        ]} 
-                        onPress={() => {
-                          // Sincronizar valores temporários com Formik antes de submeter
-                          setFieldValue('tipo', tempFormValues.tipo);
-                          setFieldValue('categoria', tempFormValues.categoria);
-                          setFieldValue('modelo', tempFormValues.modelo);
-                          setFieldValue('placa', tempFormValues.placa);
-                          setFieldValue('kmPorL', tempFormValues.kmPorL);
-                          handleSubmit();
-                        }}
-                        disabled={isLoading || Object.keys(errors).length > 0}
-                      >
-                        {isLoading ? (
-                          <ActivityIndicator color="#fff" />
-                        ) : (
-                          <Text style={styles.cadastrarButtonText}>
-                            {Object.keys(errors).length > 0 ? 'Corrija os erros' : 'Cadastrar veículo'}
-                          </Text>
-                        )}
-                      </TouchableOpacity>
+                      <View style={styles.saveButtonContainer}>
+                        <TouchableOpacity 
+                          style={[
+                            styles.cadastrarButton, 
+                            (isLoading || Object.keys(errors).length > 0) && styles.buttonDisabled,
+                            !isLoading && Object.keys(errors).length > 0 && styles.buttonWithErrors
+                          ]} 
+                          onPress={() => {
+                            // Sincronizar valores temporários com Formik antes de submeter
+                            setFieldValue('tipo', tempFormValues.tipo);
+                            setFieldValue('categoria', tempFormValues.categoria);
+                            setFieldValue('modelo', tempFormValues.modelo);
+                            setFieldValue('placa', tempFormValues.placa);
+                            setFieldValue('kmPorL', tempFormValues.kmPorL);
+                            handleSubmit();
+                          }}
+                          disabled={isLoading || Object.keys(errors).length > 0}
+                          activeOpacity={0.8}
+                        >
+                          {isLoading ? (
+                            <View style={styles.buttonContent}>
+                              <ActivityIndicator color="#fff" size="small" />
+                              <Text style={styles.cadastrarButtonText}>Cadastrando...</Text>
+                            </View>
+                          ) : (
+                            <View style={styles.buttonContent}>
+                              <Ionicons 
+                                name={Object.keys(errors).length > 0 ? "warning" : "checkmark-circle"} 
+                                size={20} 
+                                color="#fff" 
+                              />
+                              <Text style={styles.cadastrarButtonText}>
+                                {Object.keys(errors).length > 0 ? 'Corrija os erros' : 'Cadastrar veículo'}
+                              </Text>
+                            </View>
+                          )}
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   )}
                 </Formik>
@@ -865,95 +961,162 @@ export default function VeiculosScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f0f2f5',
   },
   header: {
     backgroundColor: '#007AFF',
     paddingTop: 10,
     paddingBottom: 20,
+  },
+  headerGradient: {
     paddingHorizontal: 20,
+  },
+  headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   backButton: {
-    padding: 8,
+    padding: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitleContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#fff',
-    flex: 1,
-    textAlign: 'center',
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.8)',
+    marginTop: 2,
   },
   addButton: {
-    padding: 8,
+    padding: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   placeholder: {
-    width: 36,
+    width: 50,
   },
   keyboardView: {
     flex: 1,
   },
   content: {
     flex: 1,
-    padding: 20,
+    padding: 16,
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 20,
   },
-  formContainer: {
+  formCard: {
     backgroundColor: '#fff',
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 20,
-    marginTop: 20,
+    margin: 16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  formCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  formIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#f0f8ff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 16,
+  },
+  formTitleContainer: {
+    flex: 1,
   },
   formTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 25,
-    textAlign: 'center',
+    color: '#1a1a1a',
+    marginBottom: 4,
+  },
+  formSubtitle: {
+    fontSize: 14,
+    color: '#666',
   },
   form: {
-    gap: 20,
+    gap: 16,
   },
-  inputContainer: {
-    marginBottom: 15,
+  section: {
+    backgroundColor: '#fafafa',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
   },
-  label: {
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000',
-    marginBottom: 8,
+    color: '#1a1a1a',
+    marginLeft: 8,
+  },
+  inputContainer: {
+    marginBottom: 12,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 6,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+  inputIcon: {
+    marginRight: 12,
   },
   selectContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
     paddingVertical: 12,
     height: 50,
   },
   selectText: {
     fontSize: 16,
-    color: '#666',
+    color: '#1a1a1a',
     flex: 1,
   },
   selectPlaceholder: {
@@ -981,39 +1144,43 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   textInput: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 15,
+    flex: 1,
     fontSize: 16,
-    height: 50,
+    color: '#1a1a1a',
+    paddingVertical: 12,
   },
   kmContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
   },
   kmInput: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 15,
-    fontSize: 16,
-    height: 50,
     flex: 1,
+    fontSize: 16,
+    color: '#1a1a1a',
+    paddingVertical: 12,
   },
   kmHelpButton: {
     backgroundColor: '#007AFF',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 6,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    shadowColor: '#007AFF',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   kmHelpText: {
     color: '#fff',
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   kmTips: {
     backgroundColor: '#f0f8ff',
@@ -1040,27 +1207,53 @@ const styles = StyleSheet.create({
   inputError: {
     borderColor: '#FF6B6B',
     borderWidth: 2,
+    backgroundColor: '#fff5f5',
   },
   errorText: {
     color: '#FF6B6B',
     fontSize: 12,
-    marginTop: 5,
+    marginTop: 6,
+    marginLeft: 4,
+  },
+  saveButtonContainer: {
+    marginTop: 16,
+    paddingHorizontal: 0,
+    paddingVertical: 12,
   },
   cadastrarButton: {
     backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 15,
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
     alignItems: 'center',
-    marginTop: 20,
+    justifyContent: 'center',
+    shadowColor: '#007AFF',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   cadastrarButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-    textTransform: 'uppercase',
   },
   buttonDisabled: {
     backgroundColor: '#ccc',
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  buttonWithErrors: {
+    backgroundColor: '#FF6B6B',
+    shadowColor: '#FF6B6B',
   },
   modalOverlay: {
     flex: 1,
@@ -1070,7 +1263,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f2f5',
   },
   modalContent: {
     backgroundColor: '#fff',
@@ -1084,40 +1277,62 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modalScrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 20,
   },
   modalHeader: {
+    backgroundColor: '#fff',
+    paddingTop: 8,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  modalHeaderContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    paddingHorizontal: 20,
+  },
+  modalCloseButton: {
+    padding: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalTitleContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#1a1a1a',
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 2,
   },
   veiculosList: {
-    paddingBottom: 100,
+    paddingBottom: 20,
   },
   veiculoCard: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 15,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    marginHorizontal: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowRadius: 8,
+    elevation: 4,
   },
   veiculoHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
+    alignItems: 'flex-start',
+    marginBottom: 12,
   },
   veiculoInfo: {
     flex: 1,
@@ -1125,7 +1340,7 @@ const styles = StyleSheet.create({
   veiculoTipo: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 8,
   },
   veiculoTipoText: {
     fontSize: 18,
@@ -1134,86 +1349,115 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   veiculoModelo: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
-    color: '#000',
-    marginBottom: 5,
+    color: '#1a1a1a',
+    marginBottom: 4,
   },
   veiculoCategoria: {
     fontSize: 14,
     color: '#666',
+    backgroundColor: '#f0f8ff',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
   },
   veiculoActions: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 8,
   },
   editButton: {
-    padding: 8,
+    padding: 12,
+    backgroundColor: '#f0f8ff',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   deleteButton: {
-    padding: 8,
+    padding: 12,
+    backgroundColor: '#fff5f5',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   veiculoDetails: {
     borderTopWidth: 1,
-    borderTopColor: '#eee',
-    paddingTop: 10,
-  },
-  veiculoDetail: {
+    borderTopColor: '#f0f0f0',
+    paddingTop: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 5,
+  },
+  veiculoDetail: {
+    flex: 1,
+    alignItems: 'center',
   },
   detailLabel: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '600',
     color: '#666',
+    marginBottom: 4,
+    textTransform: 'uppercase',
   },
   detailValue: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#000',
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1a1a1a',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f0f2f5',
   },
   loadingText: {
     marginTop: 10,
     color: '#666',
+    fontSize: 16,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#f8f9fa',
+    padding: 24,
+    backgroundColor: '#f0f2f5',
   },
   emptyTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
-    marginTop: 20,
+    color: '#1a1a1a',
+    marginTop: 16,
+    marginBottom: 6,
   },
   emptyText: {
     fontSize: 16,
     color: '#666',
-    marginTop: 10,
     textAlign: 'center',
-    paddingHorizontal: 20,
+    lineHeight: 24,
+    marginBottom: 20,
   },
   addFirstButton: {
     backgroundColor: '#007AFF',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    marginTop: 20,
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    shadowColor: '#007AFF',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  addFirstButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   addFirstButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-    textTransform: 'uppercase',
   },
 });
