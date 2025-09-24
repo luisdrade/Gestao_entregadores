@@ -16,6 +16,7 @@ import TopNavBar from '../../components/_NavBar_Superior';
 import KPICard from '../../components/_KPICard';
 import { httpClient } from '../../services/clientConfig';
 import { API_ENDPOINTS } from '../../config/api';
+import { _Header } from '../../components';
 
 
 export default function HomeScreen() {
@@ -138,14 +139,12 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.headerContent}>
-            <Text style={styles.headerTitle}>Gestão de Entregadores</Text>
-          </View>
-          <Text style={styles.welcomeText}>
-            Bem-vindo, {user?.nome || 'Entregador'}!
-          </Text>
-        </View>
+        <_Header
+          title="Gestão de Entregadores"
+          showBackButton={false}
+          showWelcome={true}
+          welcomeText={`Bem-vindo, ${user?.nome || 'Entregador'}!`}
+        />
 
         {/* NavBar */}
         <TopNavBar />

@@ -3,17 +3,16 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { criarCategoriaDespesa } from '../../../services/clientConfig';
 import TopNavBar from '../../../components/_NavBar_Superior';
+import { _CampoEntrada, _Botao } from '../../../components';
 
 export default function CadastroTipoDespesaScreen() {
   const router = useRouter();
@@ -129,46 +128,40 @@ export default function CadastroTipoDespesaScreen() {
 
         <View style={styles.form}>
           {/* Nome */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Nome do tipo de despesa *</Text>
-            <TextInput
-              style={[styles.input, errors.nome && styles.inputError]}
-              placeholder="Ex: Combustível, Manutenção, Alimentação"
-              value={formData.nome}
-              onChangeText={(value) => handleInputChange('nome', value)}
-              placeholderTextColor="#666"
-            />
-            {errors.nome && <Text style={styles.errorText}>{errors.nome}</Text>}
-          </View>
+          <_CampoEntrada
+            label="Nome do tipo de despesa *"
+            value={formData.nome}
+            onChangeText={(value) => handleInputChange('nome', value)}
+            placeholder="Ex: Combustível, Manutenção, Alimentação"
+            error={!!errors.nome}
+            errorMessage={errors.nome}
+            leftIcon={<Ionicons name="list" size={20} color="#666" />}
+          />
 
           {/* Descrição */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Descrição *</Text>
-            <TextInput
-              style={[styles.input, styles.textArea, errors.descricao && styles.inputError]}
-              placeholder="Descreva detalhadamente este tipo de despesa"
-              value={formData.descricao}
-              onChangeText={(value) => handleInputChange('descricao', value)}
-              placeholderTextColor="#666"
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
-            {errors.descricao && <Text style={styles.errorText}>{errors.descricao}</Text>}
-          </View>
+          <_CampoEntrada
+            label="Descrição *"
+            value={formData.descricao}
+            onChangeText={(value) => handleInputChange('descricao', value)}
+            placeholder="Descreva detalhadamente este tipo de despesa"
+            error={!!errors.descricao}
+            errorMessage={errors.descricao}
+            leftIcon={<Ionicons name="document-text" size={20} color="#666" />}
+            multiline
+            numberOfLines={4}
+            textAlignVertical="top"
+          />
 
           {/* Botão de salvar */}
-          <TouchableOpacity 
-            style={[styles.saveButton, isLoading && styles.buttonDisabled]} 
+          <_Botao
+            title="Salvar Tipo de Despesa"
             onPress={handleSalvar}
+            loading={isLoading}
             disabled={isLoading}
-          >
-            {isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.saveButtonText}>Salvar Tipo de Despesa</Text>
-            )}
-          </TouchableOpacity>
+            variant="primary"
+            icon={<Ionicons name="save" size={20} color="#fff" />}
+            style={styles.saveButton}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

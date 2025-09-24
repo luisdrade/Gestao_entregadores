@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { httpClient } from '../../../services/clientConfig';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { _CampoEntrada, _Botao, _ListaVazia, _ModalConfirmacao } from '../../../components';
 
 // Schema de validação
 const validationSchema = Yup.object().shape({
@@ -182,30 +183,30 @@ export default function VeiculosScreen() {
     }
   };
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [veiculoToDelete, setVeiculoToDelete] = useState(null);
+
   const handleDeleteVeiculo = (veiculo) => {
-    Alert.alert(
-      'Confirmar exclusão',
-      `Tem certeza que deseja excluir o veículo ${veiculo.modelo}?`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { 
-          text: 'Excluir', 
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              const response = await httpClient.delete(`/api/veiculos/${veiculo.id}/`);
-              if (response.data.success) {
-                Alert.alert('Sucesso', 'Veículo excluído com sucesso!');
-                loadVeiculos(); // Recarregar lista
-              }
-            } catch (error) {
-              console.error('Erro ao excluir veículo:', error);
-              Alert.alert('Erro', 'Erro ao excluir veículo');
-            }
-          }
-        }
-      ]
-    );
+    setVeiculoToDelete(veiculo);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!veiculoToDelete) return;
+    
+    try {
+      const response = await httpClient.delete(`/api/veiculos/${veiculoToDelete.id}/`);
+      if (response.data.success) {
+        Alert.alert('Sucesso', 'Veículo excluído com sucesso!');
+        loadVeiculos(); // Recarregar lista
+      }
+    } catch (error) {
+      console.error('Erro ao excluir veículo:', error);
+      Alert.alert('Erro', 'Erro ao excluir veículo');
+    } finally {
+      setShowDeleteModal(false);
+      setVeiculoToDelete(null);
+    }
   };
 
   const openEditModal = (veiculo) => {
@@ -378,23 +379,14 @@ export default function VeiculosScreen() {
             <Text style={styles.loadingText}>Carregando veículos...</Text>
           </View>
         ) : veiculos.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Ionicons name="car-outline" size={64} color="#ccc" />
-            <Text style={styles.emptyTitle}>Nenhum veículo cadastrado</Text>
-            <Text style={styles.emptyText}>
-              Cadastre seu primeiro veículo para começar a gerenciar sua frota
-            </Text>
-            <TouchableOpacity 
-              style={styles.addFirstButton}
-              onPress={openAddModal}
-              activeOpacity={0.8}
-            >
-              <View style={styles.addFirstButtonContent}>
-                <Ionicons name="add-circle" size={24} color="#fff" />
-                <Text style={styles.addFirstButtonText}>Cadastrar Veículo</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          <_ListaVazia
+            icon={<Ionicons name="car-outline" size={64} color="#ccc" />}
+            title="Nenhum veículo cadastrado"
+            message="Cadastre seu primeiro veículo para começar a gerenciar sua frota"
+            actionText="Cadastrar Veículo"
+            onActionPress={openAddModal}
+            showAction={true}
+          />
         ) : (
           <FlatList
             data={veiculos}
@@ -534,30 +526,20 @@ export default function VeiculosScreen() {
                         </View>
 
                         {/* Modelo */}
-                        <View style={styles.inputContainer}>
-                          <Text style={styles.label}>Modelo *</Text>
-                          <View style={styles.inputWrapper}>
-                            <Ionicons name="car-outline" size={20} color="#666" style={styles.inputIcon} />
-                            <TextInput
-                              style={[
-                                styles.textInput,
-                                touched.modelo && errors.modelo && styles.inputError
-                              ]}
-                              placeholder="Digite o modelo do veículo"
-                              value={tempFormValues.modelo}
-                              onChangeText={(text) => {
-                                setTempFormValues(prev => ({ ...prev, modelo: text }));
-                                setFieldValue('modelo', text);
-                              }}
-                              onBlur={handleBlur('modelo')}
-                              placeholderTextColor="#999"
-                              autoCapitalize="words"
-                            />
-                          </View>
-                          {touched.modelo && errors.modelo && (
-                            <Text style={styles.errorText}>{errors.modelo}</Text>
-                          )}
-                        </View>
+                        <_CampoEntrada
+                          label="Modelo *"
+                          value={tempFormValues.modelo}
+                          onChangeText={(text) => {
+                            setTempFormValues(prev => ({ ...prev, modelo: text }));
+                            setFieldValue('modelo', text);
+                          }}
+                          onBlur={handleBlur('modelo')}
+                          placeholder="Digite o modelo do veículo"
+                          error={touched.modelo && !!errors.modelo}
+                          errorMessage={touched.modelo && errors.modelo}
+                          leftIcon={<Ionicons name="car-outline" size={20} color="#666" />}
+                          autoCapitalize="words"
+                        />
 
                         {/* Placa */}
                         <View style={styles.inputContainer}>
@@ -657,12 +639,8 @@ export default function VeiculosScreen() {
 
                       {/* Botão de cadastrar */}
                       <View style={styles.saveButtonContainer}>
-                        <TouchableOpacity 
-                          style={[
-                            styles.cadastrarButton, 
-                            (isLoading || Object.keys(errors).length > 0) && styles.buttonDisabled,
-                            !isLoading && Object.keys(errors).length > 0 && styles.buttonWithErrors
-                          ]} 
+                        <_Botao
+                          title={Object.keys(errors).length > 0 ? 'Corrija os erros' : 'Cadastrar veículo'}
                           onPress={() => {
                             // Sincronizar valores temporários com Formik antes de submeter
                             setFieldValue('tipo', tempFormValues.tipo);
@@ -672,27 +650,16 @@ export default function VeiculosScreen() {
                             setFieldValue('kmPorL', tempFormValues.kmPorL);
                             handleSubmit();
                           }}
+                          loading={isLoading}
                           disabled={isLoading || Object.keys(errors).length > 0}
-                          activeOpacity={0.8}
-                        >
-                          {isLoading ? (
-                            <View style={styles.buttonContent}>
-                              <ActivityIndicator color="#fff" size="small" />
-                              <Text style={styles.cadastrarButtonText}>Cadastrando...</Text>
-                            </View>
-                          ) : (
-                            <View style={styles.buttonContent}>
-                              <Ionicons 
-                                name={Object.keys(errors).length > 0 ? "warning" : "checkmark-circle"} 
-                                size={20} 
-                                color="#fff" 
-                              />
-                              <Text style={styles.cadastrarButtonText}>
-                                {Object.keys(errors).length > 0 ? 'Corrija os erros' : 'Cadastrar veículo'}
-                              </Text>
-                            </View>
-                          )}
-                        </TouchableOpacity>
+                          variant={Object.keys(errors).length > 0 ? 'error' : 'primary'}
+                          icon={!isLoading && <Ionicons 
+                            name={Object.keys(errors).length > 0 ? "warning" : "checkmark-circle"} 
+                            size={20} 
+                            color="#fff" 
+                          />}
+                          style={styles.cadastrarButton}
+                        />
                       </View>
                     </View>
                   )}
@@ -954,6 +921,19 @@ export default function VeiculosScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Modal de Confirmação de Exclusão */}
+      <_ModalConfirmacao
+        visible={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="Confirmar exclusão"
+        message={`Tem certeza que deseja excluir o veículo ${veiculoToDelete?.modelo}?`}
+        type="warning"
+        confirmText="Excluir"
+        cancelText="Cancelar"
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteModal(false)}
+      />
     </SafeAreaView>
   );
 }

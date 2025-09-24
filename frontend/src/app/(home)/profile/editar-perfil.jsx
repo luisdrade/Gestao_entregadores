@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
@@ -11,6 +10,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,6 +21,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TextInputMask } from 'react-native-masked-text';
 import { useAuth } from '../../../context/AuthContext';
+import { _CampoEntrada, _Botao } from '../../../components';
 
 // Função para buscar dados do CEP usando BrasilAPI
 const buscarCEP = async (cep) => {
@@ -391,50 +392,30 @@ export default function EditarPerfilScreen() {
                     </View>
 
                     {/* Nome */}
-                    <View style={styles.inputContainer}>
-                      <Text style={styles.label}>Nome completo *</Text>
-                      <View style={styles.inputWrapper}>
-                        <Ionicons name="person-outline" size={20} color="#666" style={styles.inputIcon} />
-                        <TextInput
-                          style={[
-                            styles.input,
-                            touched.nome && errors.nome && styles.inputError
-                          ]}
-                          placeholder="Digite seu nome completo"
-                          value={values.nome}
-                          onChangeText={handleChange('nome')}
-                          onBlur={handleBlur('nome')}
-                          placeholderTextColor="#999"
-                        />
-                      </View>
-                      {touched.nome && errors.nome && (
-                        <Text style={styles.errorText}>{errors.nome}</Text>
-                      )}
-                    </View>
+                    <_CampoEntrada
+                      label="Nome completo *"
+                      value={values.nome}
+                      onChangeText={handleChange('nome')}
+                      onBlur={handleBlur('nome')}
+                      placeholder="Digite seu nome completo"
+                      error={touched.nome && !!errors.nome}
+                      errorMessage={touched.nome && errors.nome}
+                      leftIcon={<Ionicons name="person-outline" size={20} color="#666" />}
+                    />
 
                     {/* Username */}
-                    <View style={styles.inputContainer}>
-                      <Text style={styles.label}>@Usuário *</Text>
-                      <View style={[
-                        styles.usernameContainer,
-                        touched.username && errors.username && styles.inputError
-                      ]}>
-                        <Ionicons name="at" size={20} color="#666" style={styles.inputIcon} />
-                        <Text style={styles.usernamePrefix}>@</Text>
-                        <TextInput
-                          style={[styles.input, styles.usernameInput]}
-                          placeholder="Usuario"
-                          value={values.username}
-                          onChangeText={handleChange('username')}
-                          onBlur={handleBlur('username')}
-                          placeholderTextColor="#999"
-                          autoCapitalize="none"
-                        />
-                      </View>
-                      {touched.username && errors.username && (
-                        <Text style={styles.errorText}>{errors.username}</Text>
-                      )}
-                    </View>
+                    <_CampoEntrada
+                      label="@Usuário *"
+                      value={values.username}
+                      onChangeText={handleChange('username')}
+                      onBlur={handleBlur('username')}
+                      placeholder="Usuario"
+                      error={touched.username && !!errors.username}
+                      errorMessage={touched.username && errors.username}
+                      leftIcon={<Ionicons name="at" size={20} color="#666" />}
+                      prefix="@"
+                      autoCapitalize="none"
+                    />
 
                     {/* CPF */}
                     <View style={styles.inputContainer}>
@@ -515,20 +496,7 @@ export default function EditarPerfilScreen() {
                             placeholderTextColor="#999"
                           />
                         </View>
-                        <TouchableOpacity
-                          style={[
-                            styles.cepButton,
-                            isLoadingCEP && styles.cepButtonDisabled
-                          ]}
-                          onPress={() => handleBuscarCEP(values.cep, setFieldValue)}
-                          disabled={isLoadingCEP || !values.cep || values.cep.replace(/\D/g, '').length !== 8}
-                        >
-                          {isLoadingCEP ? (
-                            <ActivityIndicator size="small" color="#fff" />
-                          ) : (
-                            <Ionicons name="search" size={16} color="#fff" />
-                          )}
-                        </TouchableOpacity>
+
                       </View>
                       {isLoadingCEP && (
                         <Text style={styles.cepLoadingText}>
@@ -619,28 +587,18 @@ export default function EditarPerfilScreen() {
                     </View>
 
                     {/* Email */}
-                    <View style={styles.inputContainer}>
-                      <Text style={styles.label}>Email *</Text>
-                      <View style={styles.inputWrapper}>
-                        <Ionicons name="mail" size={20} color="#666" style={styles.inputIcon} />
-                        <TextInput
-                          style={[
-                            styles.input,
-                            touched.email && errors.email && styles.inputError
-                          ]}
-                          placeholder="Digite seu email"
-                          value={values.email}
-                          onChangeText={handleChange('email')}
-                          onBlur={handleBlur('email')}
-                          placeholderTextColor="#999"
-                          keyboardType="email-address"
-                          autoCapitalize="none"
-                        />
-                      </View>
-                      {touched.email && errors.email && (
-                        <Text style={styles.errorText}>{errors.email}</Text>
-                      )}
-                    </View>
+                    <_CampoEntrada
+                      label="Email *"
+                      value={values.email}
+                      onChangeText={handleChange('email')}
+                      onBlur={handleBlur('email')}
+                      placeholder="Digite seu email"
+                      error={touched.email && !!errors.email}
+                      errorMessage={touched.email && errors.email}
+                      leftIcon={<Ionicons name="mail" size={20} color="#666" />}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                    />
 
                     {/* Telefone */}
                     <View style={styles.inputContainer}>
@@ -670,29 +628,15 @@ export default function EditarPerfilScreen() {
 
                   {/* Botão de salvar fixo */}
                   <View style={styles.saveButtonContainer}>
-                    <TouchableOpacity
-                      style={[
-                        styles.saveButton,
-                        isLoading && styles.buttonDisabled,
-                        !isLoading && Object.keys(errors).length > 0 && styles.buttonWithErrors
-                      ]}
+                    <_Botao
+                      title={Object.keys(errors).length > 0 ? 'Corrija os erros' : 'Salvar Alterações'}
                       onPress={handleSubmit}
+                      loading={isLoading}
                       disabled={isLoading || Object.keys(errors).length > 0}
-                    >
-                      {isLoading ? (
-                        <View style={styles.buttonContent}>
-                          <ActivityIndicator color="#fff" size="small" />
-                          <Text style={styles.saveButtonText}>Salvando...</Text>
-                        </View>
-                      ) : (
-                        <View style={styles.buttonContent}>
-                          <Ionicons name="checkmark-circle" size={20} color="#fff" />
-                          <Text style={styles.saveButtonText}>
-                            {Object.keys(errors).length > 0 ? 'Corrija os erros' : 'Salvar Alterações'}
-                          </Text>
-                        </View>
-                      )}
-                    </TouchableOpacity>
+                      variant={Object.keys(errors).length > 0 ? 'error' : 'primary'}
+                      icon={!isLoading && <Ionicons name="checkmark-circle" size={20} color="#fff" />}
+                      style={styles.saveButton}
+                    />
                   </View>
                 </View>
               );

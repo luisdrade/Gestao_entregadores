@@ -4,6 +4,7 @@ import {
   Text,
   ActivityIndicator,
   StyleSheet,
+  View,
 } from 'react-native';
 
 const _Botao = ({
