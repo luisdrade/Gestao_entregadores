@@ -53,6 +53,14 @@ export default function ProfileScreen() {
     }
   }, [user]);
 
+  // Navegar para login quando usuário não estiver logado
+  useEffect(() => {
+    if (!user && !loading) {
+      console.log('🚪 ProfileScreen - Usuário não logado, redirecionando para login...');
+      router.replace('/');
+    }
+  }, [user, loading, router]);
+
   const buildPhotoUrl = async () => {
     try {
       const baseUrl = API_CONFIG.BASE_URL;
@@ -561,7 +569,6 @@ export default function ProfileScreen() {
   }
 
   if (!user) {
-    router.replace('/');
     return null;
   }
 

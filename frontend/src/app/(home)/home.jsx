@@ -46,6 +46,24 @@ export default function HomeScreen() {
     loadDashboardData();
   }, [periodo]);
 
+  // Verificar autenticação e redirecionar se necessário
+  useEffect(() => {
+    const checkAuthAndRedirect = async () => {
+      try {
+        const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
+        if (!token) {
+          console.log('⚠️ Debug - Nenhum token encontrado, redirecionando para login');
+          router.replace('/');
+        }
+      } catch (error) {
+        console.error('Erro ao verificar token:', error);
+        router.replace('/');
+      }
+    };
+
+    checkAuthAndRedirect();
+  }, [router]);
+
   const loadDashboardData = async () => {
     try {
       setIsLoading(true);
@@ -59,8 +77,7 @@ export default function HomeScreen() {
       console.log('🔍 Debug - Token no AsyncStorage:', !!token);
       
       if (!token) {
-        console.log('⚠️ Debug - Nenhum token encontrado, redirecionando para login');
-        router.replace('/');
+        console.log('⚠️ Debug - Nenhum token encontrado, não carregando dados');
         return;
       }
 
