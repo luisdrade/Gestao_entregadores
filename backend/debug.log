@@ -35990,3 +35990,375 @@ CSRF desabilitado para rota: /api/auth/profile/
 "GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 748
 "GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 3027
 "GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 748
+"GET /api/relatorios/estatisticas/?data_inicio=2025-09-21&data_fim=2025-09-27&periodo=semana HTTP/1.1" 200 237
+"GET /registro/api/registro-trabalho/?data_inicio=2025-09-21&data_fim=2025-09-27&periodo=semana HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/?data_inicio=2025-09-21&data_fim=2025-09-27&periodo=semana HTTP/1.1" 200 748
+"GET /api/relatorios/estatisticas/?data_inicio=2025-01-01&data_fim=2025-12-31&periodo=ano HTTP/1.1" 200 254
+"GET /registro/api/registro-trabalho/?data_inicio=2025-01-01&data_fim=2025-12-31&periodo=ano HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/?data_inicio=2025-01-01&data_fim=2025-12-31&periodo=ano HTTP/1.1" 200 748
+"GET /api/relatorios/estatisticas/?data_inicio=2025-09-01&data_fim=2025-09-30&periodo=mes HTTP/1.1" 200 246
+"GET /registro/api/registro-trabalho/?data_inicio=2025-09-01&data_fim=2025-09-30&periodo=mes HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/?data_inicio=2025-09-01&data_fim=2025-09-30&periodo=mes HTTP/1.1" 200 748
+"OPTIONS /api/relatorios/estatisticas/?data_inicio=2025-09-01&data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?data_inicio=2025-09-01&data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 246
+"OPTIONS /registro/api/registro-trabalho/?data_inicio=2025-09-01&data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?data_inicio=2025-09-01&data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 3027
+"OPTIONS /registro/api/registro-despesa/?data_inicio=2025-09-01&data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 0
+"GET /registro/api/registro-despesa/?data_inicio=2025-09-01&data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 748
+"OPTIONS /api/relatorios/estatisticas/?data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 251
+"OPTIONS /registro/api/registro-trabalho/?data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 3027
+"OPTIONS /registro/api/registro-despesa/?data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 0
+"GET /registro/api/registro-despesa/?data_fim=2025-09-30&periodo=personalizado HTTP/1.1" 200 748
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 251
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 3027
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 251
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 748
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 748
+"OPTIONS /api/relatorios/estatisticas/?periodo=personalizado HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?periodo=personalizado HTTP/1.1" 200 251
+"OPTIONS /registro/api/registro-trabalho/?periodo=personalizado HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?periodo=personalizado HTTP/1.1" 200 3027
+"OPTIONS /registro/api/registro-despesa/?periodo=personalizado HTTP/1.1" 200 0
+"GET /registro/api/registro-despesa/?periodo=personalizado HTTP/1.1" 200 748
+"OPTIONS /api/relatorios/estatisticas/?data_inicio=0002-03-12&periodo=personalizado HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?data_inicio=0002-03-12&periodo=personalizado HTTP/1.1" 200 251
+"OPTIONS /registro/api/registro-trabalho/?data_inicio=0002-03-12&periodo=personalizado HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?data_inicio=0002-03-12&periodo=personalizado HTTP/1.1" 200 3027
+"OPTIONS /registro/api/registro-despesa/?data_inicio=0002-03-12&periodo=personalizado HTTP/1.1" 200 0
+"GET /registro/api/registro-despesa/?data_inicio=0002-03-12&periodo=personalizado HTTP/1.1" 200 748
+"OPTIONS /api/relatorios/estatisticas/?data_inicio=0020-03-12&periodo=personalizado HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?data_inicio=0020-03-12&periodo=personalizado HTTP/1.1" 200 251
+"OPTIONS /registro/api/registro-trabalho/?data_inicio=0020-03-12&periodo=personalizado HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?data_inicio=0020-03-12&periodo=personalizado HTTP/1.1" 200 3027
+"OPTIONS /registro/api/registro-despesa/?data_inicio=0020-03-12&periodo=personalizado HTTP/1.1" 200 0
+"GET /registro/api/registro-despesa/?data_inicio=0020-03-12&periodo=personalizado HTTP/1.1" 200 748
+"GET /api/relatorios/estatisticas/?periodo=personalizado HTTP/1.1" 200 251
+"GET /registro/api/registro-trabalho/?periodo=personalizado HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/?periodo=personalizado HTTP/1.1" 200 748
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+"GET /api/veiculos/ HTTP/1.1" 200 412
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/veiculos/ HTTP/1.1" 200 412
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: luisfilipem13@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 1000
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 251
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 3027
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 251
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 748
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 748
+"OPTIONS /api/relatorios/estatisticas/?periodo=ano HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?periodo=ano HTTP/1.1" 200 254
+"OPTIONS /registro/api/registro-trabalho/?periodo=ano HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?periodo=ano HTTP/1.1" 200 3027
+"OPTIONS /registro/api/registro-despesa/?periodo=ano HTTP/1.1" 200 0
+"GET /registro/api/registro-despesa/?periodo=ano HTTP/1.1" 200 748
+"OPTIONS /api/relatorios/estatisticas/?periodo=semana HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?periodo=semana HTTP/1.1" 200 237
+"OPTIONS /registro/api/registro-trabalho/?periodo=semana HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?periodo=semana HTTP/1.1" 200 3027
+"OPTIONS /registro/api/registro-despesa/?periodo=semana HTTP/1.1" 200 0
+"GET /registro/api/registro-despesa/?periodo=semana HTTP/1.1" 200 748
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 251
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 748
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+"GET /registro/api/dashboard-data/ HTTP/1.1" 200 1712
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 888
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+"OPTIONS /api/admin/users/ HTTP/1.1" 200 0
+"OPTIONS /api/admin/users/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 1648
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 1648
+Entregador: teste.frontend@email.com, is_active: False
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 1648
+Entregador: joao.teste@email.com, is_active: True
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 1648
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2703
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste.senhas.iguais@email.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: False
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2703
+"OPTIONS /api/admin/users/16/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/16/
+Usuário teste.senhas.iguais@email.com excluído pelo admin admin@gmail.com
+"DELETE /api/admin/users/16/ HTTP/1.1" 200 59
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: teste.frontend@email.com, is_active: False
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2691
+"OPTIONS /api/admin/users/14/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/14/
+Usuário teste.frontend@email.com excluído pelo admin admin@gmail.com
+"DELETE /api/admin/users/14/ HTTP/1.1" 200 59
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2699
+"OPTIONS /api/admin/users/5/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/5/
+Usuário teste10@gmail.com excluído pelo admin admin@gmail.com
+"DELETE /api/admin/users/5/ HTTP/1.1" 200 59
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: teste11@gmail.com, is_active: False
+"GET /api/admin/users/ HTTP/1.1" 200 2700
+"OPTIONS /api/admin/users/6/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/6/
+Usuário teste11@gmail.com excluído pelo admin admin@gmail.com
+"DELETE /api/admin/users/6/ HTTP/1.1" 200 59
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: teste4@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2660
+"OPTIONS /api/admin/users/4/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/4/
+Usuário teste4@gmail.com excluído pelo admin admin@gmail.com
+"DELETE /api/admin/users/4/ HTTP/1.1" 200 59
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: False
+"GET /api/admin/users/ HTTP/1.1" 200 2649
+"OPTIONS /api/admin/users/8/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/8/
+Usuário teste@exemplo.com ativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/8/ HTTP/1.1" 200 317
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2648
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+Entregador: teste@exemplo.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2648
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\views.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: luisfilipem13@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 1000
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"OPTIONS /registro/api/dashboard-data/?data_inicio=2025-09-22&data_fim=2025-09-22 HTTP/1.1" 200 0
+"OPTIONS /registro/api/dashboard-data/?data_inicio=2025-09-22&data_fim=2025-09-22 HTTP/1.1" 200 0
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-22&data_fim=2025-09-22 HTTP/1.1" 200 1319
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-22&data_fim=2025-09-22 HTTP/1.1" 200 1319
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 251
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 3027
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 251
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 748
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 748
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-22&data_fim=2025-09-22 HTTP/1.1" 200 1319
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-22&data_fim=2025-09-22 HTTP/1.1" 200 1319
+"OPTIONS /registro/api/registro-trabalho/ HTTP/1.1" 200 0
+"OPTIONS /api/veiculos/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+"OPTIONS /api/veiculos/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/profile/
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/veiculos/ HTTP/1.1" 200 412
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"GET /api/veiculos/ HTTP/1.1" 200 412
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+"OPTIONS /registro/api/dashboard-data/?data_inicio=2025-09-23&data_fim=2025-09-23 HTTP/1.1" 200 0
+"OPTIONS /registro/api/dashboard-data/?data_inicio=2025-09-23&data_fim=2025-09-23 HTTP/1.1" 200 0
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-23&data_fim=2025-09-23 HTTP/1.1" 200 1319
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-23&data_fim=2025-09-23 HTTP/1.1" 200 1319
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"GET /api/veiculos/ HTTP/1.1" 200 412
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 748
+"GET /api/veiculos/ HTTP/1.1" 200 412
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 3027
+"GET /api/auth/profile/ HTTP/1.1" 200 461
+"OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 450
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 450
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-23&data_fim=2025-09-23 HTTP/1.1" 200 1274
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-23&data_fim=2025-09-23 HTTP/1.1" 200 1274
+"OPTIONS /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 0
+"OPTIONS /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 253
+"OPTIONS /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 596
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 253
+"OPTIONS /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 596
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 408
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 408
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\models.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 39
+"POST /registro/api/categorias-despesas/ HTTP/1.1" 201 141
+Bad Request: /registro/api/categorias-despesas/
+"POST /registro/api/categorias-despesas/ HTTP/1.1" 400 66
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 143
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 143
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 143
+"POST /registro/api/categorias-despesas/ HTTP/1.1" 201 148
+Bad Request: /registro/api/categorias-despesas/
+"POST /registro/api/categorias-despesas/ HTTP/1.1" 400 66
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 255
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: luisfilipem13@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 1000
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1712
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 39
+"POST /registro/api/categorias-despesas/ HTTP/1.1" 201 139
+Bad Request: /registro/api/categorias-despesas/
+"POST /registro/api/categorias-despesas/ HTTP/1.1" 400 66
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 141

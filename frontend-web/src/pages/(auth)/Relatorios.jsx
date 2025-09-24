@@ -70,8 +70,7 @@ import { api, ENDPOINTS } from '../../services/apiClient';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, subDays, subWeeks, subMonths } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { format } from 'date-fns';
 
 const Relatorios = () => {
   const { veiculos, loading: contextLoading, error: contextError } = useContext(RegistrosContext);
@@ -82,8 +81,6 @@ const Relatorios = () => {
   const [diasTrabalhados, setDiasTrabalhados] = useState([]);
   const [despesas, setDespesas] = useState([]);
   const [periodo, setPeriodo] = useState('mes'); // 'semana', 'mes', 'ano'
-  const [dataInicio, setDataInicio] = useState('');
-  const [dataFim, setDataFim] = useState('');
   const [dadosGraficosReais, setDadosGraficosReais] = useState({
     performanceSemanal: [],
     distribuicaoDespesas: []
@@ -91,8 +88,9 @@ const Relatorios = () => {
 
   useEffect(() => {
     console.log('🔍 Relatorios - Veículos do contexto:', veiculos);
+    console.log('🔍 Relatorios - Estado atual:', { periodo });
     fetchRelatoriosData();
-  }, [periodo, dataInicio, dataFim]);
+  }, [periodo]);
 
   const fetchRelatoriosData = async () => {
     try {
@@ -102,9 +100,9 @@ const Relatorios = () => {
       
       // Construir parâmetros de filtro
       const params = new URLSearchParams();
-      if (dataInicio) params.append('data_inicio', dataInicio);
-      if (dataFim) params.append('data_fim', dataFim);
       if (periodo) params.append('periodo', periodo);
+      
+      console.log('🔍 Relatorios - Parâmetros:', { periodo });
       
       // Buscar dados de estatísticas
       const response = await api.get(`/api/relatorios/estatisticas/?${params.toString()}`);
@@ -118,6 +116,7 @@ const Relatorios = () => {
         setDiasTrabalhados(diasResponse.data.results || []);
       } catch (err) {
         console.warn('⚠️ Relatorios - Erro ao buscar dias trabalhados:', err);
+        setDiasTrabalhados([]);
       }
       
       // Buscar dados de despesas
@@ -127,6 +126,7 @@ const Relatorios = () => {
         setDespesas(despesasResponse.data.results || []);
       } catch (err) {
         console.warn('⚠️ Relatorios - Erro ao buscar despesas:', err);
+        setDespesas([]);
       }
       
       // Processar dados para gráficos
@@ -402,30 +402,13 @@ const Relatorios = () => {
 
   // Função para definir período automático
   const definirPeriodoAutomatico = (tipo) => {
-    const hoje = new Date();
-    let inicio, fim;
-
-    switch (tipo) {
-      case 'semana':
-        inicio = startOfWeek(hoje, { locale: ptBR });
-        fim = endOfWeek(hoje, { locale: ptBR });
-        break;
-      case 'mes':
-        inicio = startOfMonth(hoje);
-        fim = endOfMonth(hoje);
-        break;
-      case 'ano':
-        inicio = startOfYear(hoje);
-        fim = endOfYear(hoje);
-        break;
-      default:
-        inicio = subDays(hoje, 7);
-        fim = hoje;
+    try {
+      setPeriodo(tipo);
+      console.log('🔍 Relatorios - Período definido:', { tipo });
+    } catch (error) {
+      console.error('❌ Erro ao definir período:', error);
+      alert('Erro ao definir período. Tente novamente.');
     }
-
-    setDataInicio(format(inicio, 'yyyy-MM-dd'));
-    setDataFim(format(fim, 'yyyy-MM-dd'));
-    setPeriodo(tipo);
   };
 
   if (loading) {
@@ -481,9 +464,16 @@ const Relatorios = () => {
       {/* Filtros de Período */}
       <Card sx={{ mb: 4, borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
         <CardContent>
-          <Typography variant="h6" gutterBottom>
-            🔍 Filtros de Período
-          </Typography>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h6">
+              🔍 Filtros de Período
+            </Typography>
+            {error && (
+              <Alert severity="error" sx={{ maxWidth: 400 }}>
+                {error}
+              </Alert>
+            )}
+          </Box>
           <Grid container spacing={3} alignItems="center">
             <Grid size={{ xs: 12, sm: 6, md: 2 }}>
               <FormControl fullWidth>
@@ -496,45 +486,22 @@ const Relatorios = () => {
                   <MenuItem value="semana">Esta Semana</MenuItem>
                   <MenuItem value="mes">Este Mês</MenuItem>
                   <MenuItem value="ano">Este Ano</MenuItem>
-                  <MenuItem value="personalizado">Personalizado</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-              <TextField
-                fullWidth
-                label="Data Início"
-                type="date"
-                value={dataInicio}
-                onChange={(e) => setDataInicio(e.target.value)}
-                InputLabelProps={{ shrink: true }}
-                disabled={periodo !== 'personalizado'}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-              <TextField
-                fullWidth
-                label="Data Fim"
-                type="date"
-                value={dataFim}
-                onChange={(e) => setDataFim(e.target.value)}
-                InputLabelProps={{ shrink: true }}
-                disabled={periodo !== 'personalizado'}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <Button
                 fullWidth
                 variant="contained"
                 onClick={fetchRelatoriosData}
                 disabled={loading}
-                startIcon={<FilterIcon />}
+                startIcon={loading ? <CircularProgress size={20} /> : <FilterIcon />}
               >
-                Aplicar Filtros
+                {loading ? 'Carregando...' : 'Aplicar Filtros'}
               </Button>
             </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-              <Box display="flex" gap={1}>
+            <Grid size={{ xs: 12, sm: 6, md: 7 }}>
+              <Box display="flex" gap={1} flexWrap="wrap">
                 <Button
                   variant="outlined"
                   size="small"
@@ -555,6 +522,17 @@ const Relatorios = () => {
                   onClick={() => definirPeriodoAutomatico('ano')}
                 >
                   Último Ano
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  color="secondary"
+                  onClick={() => {
+                    setPeriodo('mes');
+                    setError(null);
+                  }}
+                >
+                  Limpar
                 </Button>
               </Box>
             </Grid>

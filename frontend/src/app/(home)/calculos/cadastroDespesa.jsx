@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { criarCategoriaDespesa } from '../../../services/clientConfig';
 import TopNavBar from '../../../components/_NavBar_Superior';
 
 export default function CadastroTipoDespesaScreen() {
@@ -67,25 +68,32 @@ export default function CadastroTipoDespesaScreen() {
 
     setIsLoading(true);
     try {
-      // TODO: Implementar chamada para API para salvar o tipo de despesa
-      // Por enquanto, vamos simular um delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Criar categoria na API
+      const result = await criarCategoriaDespesa({
+        nome: formData.nome,
+        descricao: formData.descricao
+      });
       
-      // Emitir evento global para adicionar o novo tipo
-      if (global.addExpenseType) {
-        global.addExpenseType(formData.nome);
-      }
-      
-      Alert.alert('Sucesso', 'Tipo de despesa cadastrado com sucesso!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            // Voltar para a página anterior
-            router.back();
-          }
+      if (result.success) {
+        // Emitir evento global para adicionar o novo tipo
+        if (global.addExpenseType) {
+          await global.addExpenseType(formData.nome);
         }
-      ]);
+        
+        Alert.alert('Sucesso', 'Tipo de despesa cadastrado com sucesso!', [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Voltar para a página anterior
+              router.back();
+            }
+          }
+        ]);
+      } else {
+        Alert.alert('Erro', result.error || 'Erro ao cadastrar tipo de despesa');
+      }
     } catch (error) {
+      console.error('Erro ao cadastrar categoria:', error);
       Alert.alert('Erro', 'Erro inesperado ao cadastrar tipo de despesa. Tente novamente.');
     } finally {
       setIsLoading(false);

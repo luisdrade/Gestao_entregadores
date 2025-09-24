@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
 import json
-from .models import RegistroEntregaDespesa, RegistroTrabalho, Despesa
+from .models import RegistroEntregaDespesa, RegistroTrabalho, Despesa, CategoriaDespesa
 from usuarios.models import Entregador
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -352,9 +352,22 @@ def registro_despesa(request):
                     'error': 'Valor invalido'
                 }, status=status.HTTP_400_BAD_REQUEST)
             
+            # Verificar se é categoria personalizada
+            categoria_personalizada = None
+            if 'categoria_personalizada' in data and data['categoria_personalizada']:
+                try:
+                    categoria_personalizada = CategoriaDespesa.objects.get(
+                        nome=data['categoria_personalizada'],
+                        entregador=user,
+                        ativa=True
+                    )
+                except CategoriaDespesa.DoesNotExist:
+                    print(f"Categoria personalizada não encontrada: {data['categoria_personalizada']}")
+            
             # Criar registro de despesa
             despesa = Despesa.objects.create(
                 tipo_despesa=data['tipo_despesa'],
+                categoria_personalizada=categoria_personalizada,
                 descricao=data['descricao'],
                 valor=valor,
                 data=data_obj,
@@ -381,13 +394,15 @@ def registro_despesa(request):
             
             despesas_data = []
             for despesa in despesas:
+                categoria_display = despesa.categoria_display
                 despesas_data.append({
                     'id': despesa.id,
                     'tipo_despesa': despesa.tipo_despesa,
+                    'categoria_display': categoria_display,
                     'descricao': despesa.descricao,
                     'valor': float(despesa.valor),
                     'data': despesa.data.strftime('%d/%m/%Y'),
-                    'categoria_despesa': despesa.tipo_despesa,  # Para compatibilidade com frontend
+                    'categoria_despesa': categoria_display,  # Para compatibilidade com frontend
                     'valor_despesa': float(despesa.valor),  # Para compatibilidade com frontend
                     'descricao_outros': despesa.descricao if despesa.tipo_despesa == 'outros' else None
                 })
@@ -438,30 +453,44 @@ def dashboard_data(request):
             
             print(f"✅ Backend - Usuário validado com sucesso: {user.nome}")
             
-            # Parâmetros de período
+            # Parâmetros de período e filtros de data
             periodo = request.GET.get('periodo', 'mes')  # 'semana' ou 'mes'
+            data_inicio_param = request.GET.get('data_inicio')
+            data_fim_param = request.GET.get('data_fim')
+            
             print(f"🔍 Backend - Período solicitado: {periodo}")
+            print(f"🔍 Backend - Data início: {data_inicio_param}")
+            print(f"🔍 Backend - Data fim: {data_fim_param}")
             
             # Calcular datas base
             hoje = timezone.now().date()
-            if periodo == 'semana':
-                data_inicio = hoje - timedelta(days=7)
-            else:  # mês
-                data_inicio = hoje - timedelta(days=30)
             
-            print(f"🔍 Backend - Período calculado: {data_inicio} até {hoje}")
+            if data_inicio_param and data_fim_param:
+                # Filtro personalizado por data
+                from datetime import date
+                data_inicio = date.fromisoformat(data_inicio_param)
+                data_fim = date.fromisoformat(data_fim_param)
+                print(f"🔍 Backend - Filtro personalizado: {data_inicio} até {data_fim}")
+            else:
+                # Período automático
+                if periodo == 'semana':
+                    data_inicio = hoje - timedelta(days=7)
+                else:  # mês
+                    data_inicio = hoje - timedelta(days=30)
+                data_fim = hoje
+                print(f"🔍 Backend - Período automático: {data_inicio} até {data_fim}")
             
             # Filtrar registros por período e pelo entregador autenticado
             registros_trabalho = RegistroTrabalho.objects.filter(
                 entregador=user,
                 data__gte=data_inicio,
-                data__lte=hoje
+                data__lte=data_fim
             )
             
             despesas = Despesa.objects.filter(
                 entregador=user,
                 data__gte=data_inicio,
-                data__lte=hoje
+                data__lte=data_fim
             )
             
             print(f"🔍 Backend - Registros encontrados: {registros_trabalho.count()}")
@@ -487,10 +516,10 @@ def dashboard_data(request):
             lucro_liquido = total_ganhos - total_despesas
             dias_trabalhados = registros_trabalho.count()
             
-            # Dados de hoje
+            # Dados do período filtrado (se for um dia específico, será "hoje")
             registros_hoje = RegistroTrabalho.objects.filter(
                 entregador=user,
-                data=hoje
+                data=data_fim
             )
             
             entregas_hoje = registros_hoje.aggregate(
@@ -507,7 +536,7 @@ def dashboard_data(request):
             
             despesas_hoje = Despesa.objects.filter(
                 entregador=user,
-                data=hoje
+                data=data_fim
             ).aggregate(
                 total=Sum('valor')
             )['total'] or 0
@@ -770,5 +799,209 @@ def test_auth(request):
         'success': False, 
         'error': 'Método não permitido'
     }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+# ===== APIs PARA CATEGORIAS DE DESPESAS =====
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def categorias_despesas(request):
+    """API para listar e criar categorias de despesas"""
+    print(f"=== DEBUG: categorias_despesas chamada ===")
+    print(f"Método HTTP: {request.method}")
+    print(f"URL: {request.path}")
+    
+    if request.method == 'GET':
+        # Listar categorias do usuário
+        try:
+            categorias = CategoriaDespesa.objects.filter(
+                entregador=request.user, 
+                ativa=True
+            ).order_by('nome')
+            
+            categorias_data = []
+            for categoria in categorias:
+                categorias_data.append({
+                    'id': categoria.id,
+                    'nome': categoria.nome,
+                    'descricao': categoria.descricao,
+                    'data_criacao': categoria.data_criacao.strftime('%d/%m/%Y')
+                })
+            
+            return Response({
+                'success': True,
+                'results': categorias_data,
+                'count': len(categorias_data)
+            })
+        except Exception as e:
+            print(f"Erro ao listar categorias: {str(e)}")
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    elif request.method == 'POST':
+        # Criar nova categoria
+        try:
+            data = request.data
+            print(f"Dados recebidos: {data}")
+            
+            # Validar dados obrigatórios
+            if 'nome' not in data or not data['nome'].strip():
+                return Response({
+                    'success': False, 
+                    'error': 'Nome da categoria é obrigatório'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            nome = data['nome'].strip()
+            descricao = data.get('descricao', '').strip()
+            
+            # Verificar se já existe categoria com esse nome para o usuário
+            if CategoriaDespesa.objects.filter(
+                nome__iexact=nome, 
+                entregador=request.user
+            ).exists():
+                return Response({
+                    'success': False, 
+                    'error': 'Já existe uma categoria com esse nome'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Criar categoria
+            categoria = CategoriaDespesa.objects.create(
+                nome=nome,
+                descricao=descricao,
+                entregador=request.user
+            )
+            
+            print(f"Categoria criada com sucesso! ID: {categoria.id}")
+            
+            return Response({
+                'success': True, 
+                'message': 'Categoria criada com sucesso',
+                'data': {
+                    'id': categoria.id,
+                    'nome': categoria.nome,
+                    'descricao': categoria.descricao
+                }
+            }, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            print(f"Erro na criação da categoria: {str(e)}")
+            return Response({
+                'success': False, 
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    else:
+        return Response({
+            'success': False, 
+            'error': f'Método {request.method} não permitido'
+        }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def categoria_despesa_detail(request, categoria_id):
+    """API para atualizar e deletar categoria específica"""
+    print(f"=== DEBUG: categoria_despesa_detail chamada ===")
+    print(f"Método HTTP: {request.method}")
+    print(f"Categoria ID: {categoria_id}")
+    
+    try:
+        categoria = CategoriaDespesa.objects.get(
+            id=categoria_id, 
+            entregador=request.user
+        )
+    except CategoriaDespesa.DoesNotExist:
+        return Response({
+            'success': False, 
+            'error': 'Categoria não encontrada'
+        }, status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'PUT':
+        # Atualizar categoria
+        try:
+            data = request.data
+            print(f"Dados recebidos: {data}")
+            
+            # Validar dados obrigatórios
+            if 'nome' not in data or not data['nome'].strip():
+                return Response({
+                    'success': False, 
+                    'error': 'Nome da categoria é obrigatório'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            nome = data['nome'].strip()
+            descricao = data.get('descricao', '').strip()
+            
+            # Verificar se já existe outra categoria com esse nome para o usuário
+            if CategoriaDespesa.objects.filter(
+                nome__iexact=nome, 
+                entregador=request.user
+            ).exclude(id=categoria_id).exists():
+                return Response({
+                    'success': False, 
+                    'error': 'Já existe uma categoria com esse nome'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Atualizar categoria
+            categoria.nome = nome
+            categoria.descricao = descricao
+            categoria.save()
+            
+            print(f"Categoria atualizada com sucesso! ID: {categoria.id}")
+            
+            return Response({
+                'success': True, 
+                'message': 'Categoria atualizada com sucesso',
+                'data': {
+                    'id': categoria.id,
+                    'nome': categoria.nome,
+                    'descricao': categoria.descricao
+                }
+            })
+            
+        except Exception as e:
+            print(f"Erro na atualização da categoria: {str(e)}")
+            return Response({
+                'success': False, 
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    elif request.method == 'DELETE':
+        # Deletar categoria (soft delete - marcar como inativa)
+        try:
+            # Verificar se há despesas usando esta categoria
+            despesas_count = Despesa.objects.filter(
+                categoria_personalizada=categoria
+            ).count()
+            
+            if despesas_count > 0:
+                # Se há despesas, apenas marcar como inativa
+                categoria.ativa = False
+                categoria.save()
+                message = f'Categoria desativada (há {despesas_count} despesa(s) vinculada(s))'
+            else:
+                # Se não há despesas, deletar completamente
+                categoria.delete()
+                message = 'Categoria excluída com sucesso'
+            
+            print(f"Categoria processada: {message}")
+            
+            return Response({
+                'success': True, 
+                'message': message
+            })
+            
+        except Exception as e:
+            print(f"Erro ao processar categoria: {str(e)}")
+            return Response({
+                'success': False, 
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    else:
+        return Response({
+            'success': False, 
+            'error': f'Método {request.method} não permitido'
+        }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 

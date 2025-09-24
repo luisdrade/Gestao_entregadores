@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { registroDespesa } from '../../../services/clientConfig';
+import { registroDespesa, listarCategoriasDespesas, criarCategoriaDespesa } from '../../../services/clientConfig';
 import HeaderWithBack from '../../../components/_Header.jsx';
 import TopNavBar from '../../../components/_NavBar_Superior';
 import DatePicker from '../../../components/_DataComp';
@@ -69,23 +69,40 @@ export default function FinanceiroScreen() {
   };
 
   // Função para carregar tipos de despesa salvos
-  const loadExpenseTypes = () => {
+  const loadExpenseTypes = async () => {
     try {
-      // TODO: Implementar chamada para API para carregar tipos de despesa
-      // Por enquanto, vamos usar AsyncStorage para persistir localmente
-      // const savedTypes = await AsyncStorage.getItem('expenseTypes');
-      // if (savedTypes) {
-      //   setExpenseTypes(JSON.parse(savedTypes));
-      // }
+      const result = await listarCategoriasDespesas();
+      if (result.success) {
+        const categorias = result.data.map(cat => cat.nome);
+        setExpenseTypes(categorias);
+        console.log('✅ Categorias carregadas:', categorias);
+      } else {
+        console.log('❌ Erro ao carregar categorias:', result.error);
+      }
     } catch (error) {
-      console.log('Erro ao carregar tipos de despesa:', error);
+      console.log('❌ Erro ao carregar tipos de despesa:', error);
     }
   };
 
   // Função para adicionar novo tipo de despesa à lista
-  const addExpenseType = (newType) => {
-    setExpenseTypes(prev => [...prev, newType]);
-    // TODO: Salvar na API e AsyncStorage
+  const addExpenseType = async (newType) => {
+    try {
+      const result = await criarCategoriaDespesa({
+        nome: newType,
+        descricao: `Categoria personalizada: ${newType}`
+      });
+      
+      if (result.success) {
+        setExpenseTypes(prev => [...prev, newType]);
+        console.log('✅ Categoria adicionada:', newType);
+      } else {
+        console.log('❌ Erro ao criar categoria:', result.error);
+        Alert.alert('Erro', result.error || 'Erro ao criar categoria');
+      }
+    } catch (error) {
+      console.log('❌ Erro ao adicionar categoria:', error);
+      Alert.alert('Erro', 'Erro inesperado ao criar categoria');
+    }
   };
 
   // Carregar tipos quando o componente montar
@@ -132,10 +149,11 @@ export default function FinanceiroScreen() {
     try {
       // Preparar dados para a API
       const apiData = {
-        tipo_despesa: formData.tipoDespesa,
+        tipo_despesa: 'outros', // Sempre usar 'outros' para categorias personalizadas
         descricao: formData.descricao,
         valor: parseFloat(formData.valor),
         data: formData.data,
+        categoria_personalizada: formData.tipoDespesa, // Nome da categoria personalizada
       };
 
       const result = await registroDespesa(apiData);

@@ -144,3 +144,75 @@ export const excluirDespesa = async (id) => {
     return { success: false, message: error.response?.data?.error || 'Erro ao excluir' };
   }
 };
+
+// ===== FUNÇÕES PARA CATEGORIAS DE DESPESAS =====
+
+// 📋 Listar categorias de despesas
+export const listarCategoriasDespesas = async () => {
+  try {
+    const response = await httpClient.get('/registro/api/categorias-despesas/');
+    return {
+      success: true,
+      data: response.data.results || []
+    };
+  } catch (error) {
+    console.error('❌ Erro ao listar categorias:', error);
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Erro ao listar categorias'
+    };
+  }
+};
+
+// ➕ Criar categoria de despesa
+export const criarCategoriaDespesa = async (dados) => {
+  try {
+    const response = await httpClient.post('/registro/api/categorias-despesas/', dados);
+    return {
+      success: true,
+      message: 'Categoria criada com sucesso!',
+      data: response.data.data
+    };
+  } catch (error) {
+    console.error('❌ Erro ao criar categoria:', error);
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Erro ao criar categoria'
+    };
+  }
+};
+
+// ✏️ Atualizar categoria de despesa
+export const atualizarCategoriaDespesa = async (id, dados) => {
+  try {
+    const response = await httpClient.put(`/registro/api/categorias-despesas/${id}/`, dados);
+    return {
+      success: true,
+      message: 'Categoria atualizada com sucesso!',
+      data: response.data.data
+    };
+  } catch (error) {
+    console.error('❌ Erro ao atualizar categoria:', error);
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Erro ao atualizar categoria'
+    };
+  }
+};
+
+// 🗑️ Excluir categoria de despesa
+export const excluirCategoriaDespesa = async (id) => {
+  try {
+    const response = await httpClient.delete(`/registro/api/categorias-despesas/${id}/`);
+    return {
+      success: true,
+      message: response.data.message || 'Categoria excluída com sucesso!'
+    };
+  } catch (error) {
+    console.error('❌ Erro ao excluir categoria:', error);
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Erro ao excluir categoria'
+    };
+  }
+};

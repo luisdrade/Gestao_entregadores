@@ -81,8 +81,18 @@ const DeliveryDashboard = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log('🔍 Dashboard - Fazendo chamada para /registro/api/dashboard-data/');
-      const response = await api.get('/registro/api/dashboard-data/');
+      
+      // Obter data de hoje no formato YYYY-MM-DD
+      const hoje = new Date().toISOString().split('T')[0];
+      console.log('🔍 Dashboard - Buscando dados do dia:', hoje);
+      
+      // Buscar dados específicos do dia atual
+      const params = new URLSearchParams();
+      params.append('data_inicio', hoje);
+      params.append('data_fim', hoje);
+      
+      console.log('🔍 Dashboard - Fazendo chamada para /registro/api/dashboard-data/ com filtro de data');
+      const response = await api.get(`/registro/api/dashboard-data/?${params.toString()}`);
       console.log('🔍 Dashboard - Resposta completa:', response.data);
       console.log('🔍 Dashboard - Dados extraídos:', response.data.data || response.data);
       
@@ -145,10 +155,10 @@ const DeliveryDashboard = () => {
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent'
         }}>
-          📊 Dashboard do Entregador
+          📊 Dashboard de Hoje
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Visão geral da sua performance e resultados
+          Performance e resultados do dia atual
         </Typography>
       </Box>
 
@@ -194,7 +204,7 @@ const DeliveryDashboard = () => {
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
                   <Typography variant="h6" gutterBottom>
-                    Ganho Total
+                    Ganho de Hoje
                   </Typography>
                   <Typography variant="h3" fontWeight="bold">
                     R$ {dados.total_ganho.toLocaleString()}
@@ -217,7 +227,7 @@ const DeliveryDashboard = () => {
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
                   <Typography variant="h6" gutterBottom>
-                    Despesas
+                    Despesas de Hoje
                   </Typography>
                   <Typography variant="h3" fontWeight="bold">
                     R$ {dados.total_despesa.toLocaleString()}
@@ -240,7 +250,7 @@ const DeliveryDashboard = () => {
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
                   <Typography variant="h6" gutterBottom>
-                    Lucro Líquido
+                    Lucro de Hoje
                   </Typography>
                   <Typography variant="h3" fontWeight="bold">
                     R$ {dados.lucro.toLocaleString()}
@@ -478,7 +488,7 @@ const DeliveryDashboard = () => {
       <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', mb: 4 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            📋 Últimos Registros
+            📋 Registros de Hoje
           </Typography>
           <TableContainer>
             <Table>

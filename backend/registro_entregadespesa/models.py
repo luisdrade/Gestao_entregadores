@@ -89,6 +89,21 @@ class RegistroTrabalho(models.Model):
         diferenca = fim - inicio
         return diferenca.total_seconds() / 3600  # Converte para horas
 
+class CategoriaDespesa(models.Model):
+    """Modelo para categorias personalizadas de despesas"""
+    nome = models.CharField(max_length=50, unique=True)
+    descricao = models.TextField(blank=True, null=True)
+    entregador = models.ForeignKey('usuarios.Entregador', on_delete=models.CASCADE)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    ativa = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['nome']
+        unique_together = ['nome', 'entregador']  # Nome único por entregador
+
+    def __str__(self):
+        return f"{self.nome} - {self.entregador.nome}"
+
 class Despesa(models.Model):
     """Modelo para registro de despesas"""
     CATEGORIA_CHOICES = [
@@ -103,6 +118,13 @@ class Despesa(models.Model):
     ]
 
     tipo_despesa = models.CharField(max_length=20, choices=CATEGORIA_CHOICES)
+    categoria_personalizada = models.ForeignKey(
+        CategoriaDespesa, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        help_text="Categoria personalizada criada pelo usuário"
+    )
     descricao = models.TextField()
     valor = models.DecimalField(max_digits=8, decimal_places=2)
     data = models.DateField()
@@ -113,4 +135,12 @@ class Despesa(models.Model):
         ordering = ['-data', '-data_criacao']
 
     def __str__(self):
-        return f"{self.tipo_despesa} - R$ {self.valor} - {self.data}"
+        categoria = self.categoria_personalizada.nome if self.categoria_personalizada else self.get_tipo_despesa_display()
+        return f"{categoria} - R$ {self.valor} - {self.data}"
+
+    @property
+    def categoria_display(self):
+        """Retorna o nome da categoria para exibição"""
+        if self.categoria_personalizada:
+            return self.categoria_personalizada.nome
+        return self.get_tipo_despesa_display()
