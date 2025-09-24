@@ -36656,3 +36656,85 @@ CSRF desabilitado para rota: /api/estatisticas/
 "HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
 "GET /api/veiculos/ HTTP/1.1" 200 206
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 1277
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 1277
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=semana HTTP/1.1" 200 1277
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 255
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 295
+"GET /registro/api/registro-trabalho/17/ HTTP/1.1" 200 193
+"GET /registro/api/registro-trabalho/17/ HTTP/1.1" 200 193
+"PUT /registro/api/registro-trabalho/17/ HTTP/1.1" 200 60
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 295
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 255
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 295
+"GET /comunidade/ HTTP/1.1" 200 1648
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Luis Filipe', 'username': 'luis', 'email': 'luisfilipem13@gmail.com', 'telefone': '(18) 64684-6464', 'password': 'testeluis', 'password_confirm': 'testeluis'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '157', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.56.1:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 106
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'Luis Filipe', 'username': 'luis', 'email': 'luisfilipem13@gmail.com', 'telefone': '(18) 64684-6464', 'password': 'testeluis', 'password_confirm': 'testeluis'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '157', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'Host': '192.168.56.1:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 106

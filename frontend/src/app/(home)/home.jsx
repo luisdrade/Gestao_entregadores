@@ -16,7 +16,7 @@ import TopNavBar from '../../components/_NavBar_Superior';
 import KPICard from '../../components/_KPICard';
 import { httpClient } from '../../services/clientConfig';
 import { API_ENDPOINTS } from '../../config/api';
-import { _Header } from '../../components';
+import { _Header, _EstadoCarregamento, _Botao } from '../../components';
 
 
 export default function HomeScreen() {
@@ -127,10 +127,16 @@ export default function HomeScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
-          <Text style={styles.loadingText}>Carregando dashboard...</Text>
-        </View>
+        <_Header
+          title="Gestão de Entregadores"
+          showBackButton={false}
+          showWelcome={true}
+          welcomeText={`Bem-vindo, ${user?.nome || 'Entregador'}!`}
+        />
+        <_EstadoCarregamento
+          loading={true}
+          loadingText="Carregando dashboard..."
+        />
       </SafeAreaView>
     );
   }
@@ -150,14 +156,16 @@ export default function HomeScreen() {
         <TopNavBar />
         
         <View>
-          {/* Botão de Período no canto superior direito */}
+          {/* Botão de Período */}
           <View style={styles.periodButtonContainer}>
-                         <TouchableOpacity style={styles.periodButton} onPress={togglePeriodo}>
-               <Text style={styles.periodButtonText}>
-                 {periodo === 'mes' ? 'Mês' : 'Semana'}
-               </Text>
-               <Text style={styles.periodButtonIcon}>▼</Text>
-             </TouchableOpacity>
+            <_Botao
+              title={`Período: ${periodo === 'mes' ? 'Mês' : 'Semana'}`}
+              onPress={togglePeriodo}
+              variant="outline"
+              size="small"
+              icon={<Text style={styles.periodButtonIcon}>▼</Text>}
+              style={styles.periodButton}
+            />
           </View>
 
           {/* Resumo Diário */}
@@ -181,44 +189,46 @@ export default function HomeScreen() {
         </View>
         
         {/* Indicadores de Performance */}
-        <View style={styles.kpiContainer}>
-            <Text style={styles.kpiTitle}>Indicadores de Performance ({periodo === 'mes' ? 'Mês' : 'Semana'})</Text>
-            <View style={styles.kpiGrid}>
-              <KPICard
-                title="Dias Trabalhados"
-                data={`${dashboardData.indicadores_performance.dias_trabalhados} dias`}
-                color="green"
-              />
-              <KPICard
-                title="Entregas Realizadas"
-                data={`${dashboardData.indicadores_performance.entregas_realizadas} entregas`}
-                color="blue"
-              />
-              <KPICard
-                title="Entregas não realizadas"
-                data={`${dashboardData.indicadores_performance.entregas_nao_realizadas} entregas`}
-                color="red"
-              />
-              <KPICard
-                title="Ganho Total"
-                data={dashboardData.indicadores_performance.ganho_total}
-                color="purple"
-                isCurrency={true}
-              />
-              <KPICard
-                title="Despesas Total"
-                data={dashboardData.indicadores_performance.despesas_total}
-                color="orange"
-                isCurrency={true}
-              />
-              <KPICard
-                title="Lucro Líquido"
-                data={dashboardData.indicadores_performance.lucro_liquido}
-                color="teal"
-                isCurrency={true}
-              />
-            </View>
+        <View style={styles.performanceContainer}>
+          <Text style={styles.sectionTitle}>
+            Indicadores de Performance ({periodo === 'mes' ? 'Mês' : 'Semana'})
+          </Text>
+          <View style={styles.performanceGrid}>
+            <KPICard
+              title="Dias Trabalhados"
+              data={`${dashboardData.indicadores_performance.dias_trabalhados} dias`}
+              color="green"
+            />
+            <KPICard
+              title="Entregas Realizadas"
+              data={`${dashboardData.indicadores_performance.entregas_realizadas} entregas`}
+              color="blue"
+            />
+            <KPICard
+              title="Entregas não realizadas"
+              data={`${dashboardData.indicadores_performance.entregas_nao_realizadas} entregas`}
+              color="red"
+            />
+            <KPICard
+              title="Ganho Total"
+              data={dashboardData.indicadores_performance.ganho_total}
+              color="purple"
+              isCurrency={true}
+            />
+            <KPICard
+              title="Despesas Total"
+              data={dashboardData.indicadores_performance.despesas_total}
+              color="orange"
+              isCurrency={true}
+            />
+            <KPICard
+              title="Lucro Líquido"
+              data={dashboardData.indicadores_performance.lucro_liquido}
+              color="teal"
+              isCurrency={true}
+            />
           </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -235,41 +245,34 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 100, 
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#666',
-  },
-  header: {
-    backgroundColor: '#007AFF',
-    paddingTop: 20,
-    paddingBottom: 10,
+  
+  // Seções
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 16,
     paddingHorizontal: 20,
   },
-  headerContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
+  
+  // Botão de período
+  periodButtonContainer: {
+    paddingHorizontal: 20,
+    marginTop: 10,
+
+    alignItems: 'flex-start',
   },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
+  periodButton: {
+    minWidth: 140,
   },
-  welcomeText: {
-    fontSize: 16,
-    color: '#fff',
-    opacity: 0.9,
+  periodButtonIcon: {
+    fontSize: 12,
+    color: '#666',
   },
+  
+  // Resumo diário (formato original)
   statsContainer: {
-    marginTop: 50,
+    marginTop: 20,
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
@@ -308,47 +311,17 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
   },
-  kpiContainer: {
+  
+  // Indicadores de performance
+  performanceContainer: {
     paddingHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 24,
   },
-  kpiTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 15,
-  },
-  kpiGrid: {
+  performanceGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-  },
-  periodButtonContainer: {
-    position: 'absolute',
-    top: 4,
-    left: 20,
-    zIndex: 10,
-    
-  },
-  periodButton: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  periodButtonText: {
-    color: '#333',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  periodButtonIcon: {
-    fontSize: 10,
-    marginLeft: 8,
-    color: '#666',
+    gap: 12,
   },
 });
 
