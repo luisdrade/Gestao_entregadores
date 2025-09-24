@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { api } from '../services/clientConfig';
+import { httpClient } from '../services/clientConfig';
 import { API_ENDPOINTS } from '../config/api';
 import { AppState } from 'react-native';
 // Importação condicional do Google Sign-In
@@ -66,7 +66,19 @@ export function AuthProvider({ children }) {
           console.log('🚪 AuthContext - Token removido, fazendo logout automático');
           setUser(null);
           setToken(null);
-          delete api.defaults.headers.Authorization;
+          delete httpClient.defaults.headers.Authorization;
+        }
+        
+        // Se há token mas não está definido no httpClient, definir
+        if (storedToken && !httpClient.defaults.headers.Authorization) {
+          httpClient.defaults.headers.Authorization = `Bearer ${storedToken}`;
+          console.log('🔍 AuthContext - Token redefinido no httpClient:', httpClient.defaults.headers.Authorization);
+        }
+        
+        // Se não há token mas está definido no httpClient, limpar
+        if (!storedToken && httpClient.defaults.headers.Authorization) {
+          delete httpClient.defaults.headers.Authorization;
+          console.log('🧹 AuthContext - Header Authorization removido do httpClient');
         }
       } catch (error) {
         console.error('❌ AuthContext - Erro ao verificar status do token:', error);
@@ -98,26 +110,33 @@ export function AuthProvider({ children }) {
       let canKeepSession = true;
       if (lastAppState === 'active') {
         canKeepSession = false;
+        console.log('⚠️ AuthContext - App foi fechado (estado active), expirando sessão');
       } else if (lastAppState === 'background' || lastAppState === 'inactive') {
         const lastBackgroundAt = parseInt(lastBackgroundAtStr || '0', 10);
         const diffMs = Date.now() - (isNaN(lastBackgroundAt) ? 0 : lastBackgroundAt);
         const fiveMinutesMs = 5 * 60 * 1000;
         canKeepSession = diffMs <= fiveMinutesMs;
         console.log('⏱️ AuthContext - Tempo em background (ms):', diffMs, '-> mantém sessão?', canKeepSession);
+      } else {
+        // Se não há informação sobre o último estado, permitir sessão
+        console.log('ℹ️ AuthContext - Sem informação de estado anterior, mantendo sessão');
       }
 
       if (storedToken && storedUser && canKeepSession) {
-        api.defaults.headers.Authorization = `Bearer ${storedToken}`;
-        console.log('🔍 AuthContext - Header Authorization definido:', api.defaults.headers.Authorization);
+        // Definir o token no httpClient
+        httpClient.defaults.headers.Authorization = `Bearer ${storedToken}`;
+        console.log('🔍 AuthContext - Header Authorization definido:', httpClient.defaults.headers.Authorization);
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
+        console.log('✅ AuthContext - Sessão restaurada com sucesso');
       } else {
         if (storedToken || storedUser) {
           // Limpar se não pode manter sessão
           await AsyncStorage.removeItem('@GestaoEntregadores:token');
           await AsyncStorage.removeItem('@GestaoEntregadores:user');
+          console.log('🧹 AuthContext - Dados de sessão removidos');
         }
-        delete api.defaults.headers.Authorization;
+        delete httpClient.defaults.headers.Authorization;
         setToken(null);
         setUser(null);
         console.log('⚠️ AuthContext - Sessão não mantida (app fechado ou tempo excedido)');
@@ -131,7 +150,7 @@ export function AuthProvider({ children }) {
 
   async function signIn(email, password) {
     try {
-      const response = await api.post(API_ENDPOINTS.AUTH.LOGIN, {
+      const response = await httpClient.post(API_ENDPOINTS.AUTH.LOGIN, {
         email,
         password,
       });
@@ -139,7 +158,9 @@ export function AuthProvider({ children }) {
       const { tokens, user: userData } = response.data;
       const authToken = tokens.access;
 
-      api.defaults.headers.Authorization = `Bearer ${authToken}`;
+      // Definir o token no httpClient
+      httpClient.defaults.headers.Authorization = `Bearer ${authToken}`;
+      console.log('🔍 AuthContext - Token definido após login:', httpClient.defaults.headers.Authorization);
 
       await AsyncStorage.setItem('@GestaoEntregadores:token', authToken);
       await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(userData));
@@ -148,6 +169,7 @@ export function AuthProvider({ children }) {
       setToken(authToken);
       setUser(userData);
 
+      console.log('✅ AuthContext - Login realizado com sucesso');
       return { success: true };
     } catch (error) {
       console.error('Erro no login:', error);
@@ -181,7 +203,7 @@ export function AuthProvider({ children }) {
 
   async function signUp(userData) {
     try {
-      const response = await api.post(API_ENDPOINTS.AUTH.REGISTER, userData);
+      const response = await httpClient.post(API_ENDPOINTS.AUTH.REGISTER, userData);
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Erro no cadastro:', error);
@@ -208,7 +230,9 @@ export function AuthProvider({ children }) {
         const { tokens, user: userData } = result.data;
         const authToken = tokens.access;
         
-        api.defaults.headers.Authorization = `Bearer ${authToken}`;
+        // Definir o token no httpClient
+        httpClient.defaults.headers.Authorization = `Bearer ${authToken}`;
+        console.log('🔍 AuthContext - Token definido após Google login:', httpClient.defaults.headers.Authorization);
         
         await AsyncStorage.setItem('@GestaoEntregadores:token', authToken);
         await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(userData));
@@ -217,6 +241,7 @@ export function AuthProvider({ children }) {
         setToken(authToken);
         setUser(userData);
         
+        console.log('✅ AuthContext - Google login realizado com sucesso');
         return { success: true };
       } else {
         return { success: false, error: result.error };
@@ -242,7 +267,8 @@ export function AuthProvider({ children }) {
       
       setToken(null);
       setUser(null);
-      delete api.defaults.headers.Authorization;
+      delete httpClient.defaults.headers.Authorization;
+      console.log('✅ AuthContext - Logout realizado com sucesso');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     }

@@ -16,7 +16,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 // import * as ImagePicker from 'expo-image-picker';
 import communityService from '../services/communityService';
-import { api } from '../services/clientConfig';
+import { httpClient } from '../services/clientConfig';
 
 const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
   const [veiculoSelecionado, setVeiculoSelecionado] = useState(null);
@@ -43,7 +43,7 @@ const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
       setCarregandoVeiculos(true);
       console.log('🔄 Carregando veículos do usuário...');
       
-      const response = await api.get('/api/veiculos/');
+      const response = await httpClient.get('/api/veiculos/');
       
       if (response.data) {
         setVeiculos(response.data);

@@ -15,7 +15,7 @@ import {
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
-import { api } from '../../../services/clientConfig';
+import { httpClient } from '../../../services/clientConfig';
 import { API_CONFIG, API_ENDPOINTS } from '../../../config/api';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -133,7 +133,7 @@ export default function ProfileScreen() {
       const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
       if (!token) return;
 
-      const response = await api.get(API_ENDPOINTS.USER.STATISTICS, {
+      const response = await httpClient.get(API_ENDPOINTS.USER.STATISTICS, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -351,7 +351,7 @@ export default function ProfileScreen() {
       console.log('🔍 URL completa:', `${API_CONFIG.BASE_URL}${API_ENDPOINTS.USER.UPLOAD_PHOTO}`);
       console.log('🔍 Tamanho do base64:', base64Image.length);
       
-      const response = await api.post(API_ENDPOINTS.USER.UPLOAD_PHOTO, {
+      const response = await httpClient.post(API_ENDPOINTS.USER.UPLOAD_PHOTO, {
         foto: fotoData,
       }, {
         headers: {

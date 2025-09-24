@@ -9,11 +9,12 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import TopNavBar from '../../components/_NavBar_Superior';
 import KPICard from '../../components/_KPICard';
-import { api } from '../../services/clientConfig';
+import { httpClient } from '../../services/clientConfig';
 import { API_ENDPOINTS } from '../../config/api';
 
 
@@ -52,11 +53,28 @@ export default function HomeScreen() {
       // Debug: verificar se o usuário está logado
       console.log('🔍 Debug - Usuário logado:', user);
       console.log('🔍 Debug - Token disponível:', !!user?.token);
+      
+      // Verificar se há token no AsyncStorage
+      const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
+      console.log('🔍 Debug - Token no AsyncStorage:', !!token);
+      
+      if (!token) {
+        console.log('⚠️ Debug - Nenhum token encontrado, redirecionando para login');
+        router.replace('/');
+        return;
+      }
+
+      // Garantir que o token esteja definido no httpClient
+      if (!httpClient.defaults.headers.Authorization) {
+        httpClient.defaults.headers.Authorization = `Bearer ${token}`;
+        console.log('🔍 Debug - Token definido no httpClient:', httpClient.defaults.headers.Authorization);
+      }
 
       // Debug: verificar headers da API
-      console.log('🔍 Debug - Headers da API:', api.defaults.headers);
+      console.log('🔍 Debug - Headers da API:', httpClient.defaults.headers);
+      console.log('🔍 Debug - URL da requisição:', `${httpClient.defaults.baseURL}${API_ENDPOINTS.REPORTS.DASHBOARD}?periodo=${periodo}`);
 
-      const response = await api.get(`${API_ENDPOINTS.REPORTS.DASHBOARD}?periodo=${periodo}`);
+      const response = await httpClient.get(`${API_ENDPOINTS.REPORTS.DASHBOARD}?periodo=${periodo}`);
 
       if (response.data.success) {
         setDashboardData(response.data.data);

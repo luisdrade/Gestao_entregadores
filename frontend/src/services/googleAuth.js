@@ -1,5 +1,5 @@
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
-import { api } from './clientConfig';
+import { httpClient } from './clientConfig';
 import { API_ENDPOINTS } from '../config/api';
 import { GOOGLE_CONFIG } from '../config/googleConfig';
 
@@ -28,7 +28,7 @@ export const signInWithGoogle = async () => {
     const { user, idToken } = userInfo;
     
     // Enviar token para o backend para autenticação
-    const response = await api.post(API_ENDPOINTS.AUTH.GOOGLE_LOGIN, {
+    const response = await httpClient.post(API_ENDPOINTS.AUTH.GOOGLE_LOGIN, {
       id_token: idToken,
       email: user.email,
       nome: user.name,

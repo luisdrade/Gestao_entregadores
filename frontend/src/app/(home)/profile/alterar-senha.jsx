@@ -13,7 +13,7 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { api } from '../../../services/clientConfig';
+import { httpClient } from '../../../services/clientConfig';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -78,7 +78,7 @@ export default function AlterarSenhaScreen() {
       console.log('Alterando senha para usuário:', user.id);
       
       // Chamada para API para alterar a senha
-      const response = await api.put(`/api/change-password/${user.id}/`, {
+      const response = await httpClient.put(`/api/change-password/${user.id}/`, {
         senhaAtual: values.senhaAtual,
         novaSenha: values.novaSenha
       });

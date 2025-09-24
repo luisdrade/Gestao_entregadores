@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { api } from '../../services/clientConfig';
+import { httpClient } from '../../services/clientConfig';
 import { API_ENDPOINTS } from '../../config/api';
 
 export default function ForgotPasswordScreen() {
@@ -34,7 +34,7 @@ export default function ForgotPasswordScreen() {
 
     setIsLoading(true);
     try {
-      const response = await api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
+      const response = await httpClient.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
       
       Alert.alert(
         'Email enviado', 

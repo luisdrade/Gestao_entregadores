@@ -17,7 +17,7 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { api } from '../../../services/clientConfig';
+import { httpClient } from '../../../services/clientConfig';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -75,7 +75,7 @@ export default function VeiculosScreen() {
   const loadVeiculos = async () => {
     try {
       setLoadingVeiculos(true);
-      const response = await api.get('/api/veiculos/');
+      const response = await httpClient.get('/api/veiculos/');
       
       if (response.data) {
         setVeiculos(response.data);
@@ -98,7 +98,7 @@ export default function VeiculosScreen() {
     try {
       console.log('Cadastrando veículo:', values);
       
-      const response = await api.post('/api/veiculos/', {
+      const response = await httpClient.post('/api/veiculos/', {
         tipo: values.tipo,
         modelo: values.modelo,
         categoria: values.categoria,
@@ -151,7 +151,7 @@ export default function VeiculosScreen() {
 
     setIsLoading(true);
     try {
-      const response = await api.patch(`/api/veiculos/${editingVeiculo.id}/`, {
+      const response = await httpClient.patch(`/api/veiculos/${editingVeiculo.id}/`, {
         tipo: values.tipo,
         modelo: values.modelo,
         categoria: values.categoria,
@@ -192,7 +192,7 @@ export default function VeiculosScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              const response = await api.delete(`/api/veiculos/${veiculo.id}/`);
+              const response = await httpClient.delete(`/api/veiculos/${veiculo.id}/`);
               if (response.data.success) {
                 Alert.alert('Sucesso', 'Veículo excluído com sucesso!');
                 loadVeiculos(); // Recarregar lista

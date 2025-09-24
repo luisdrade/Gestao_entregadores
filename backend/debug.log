@@ -36485,3 +36485,62 @@ Unauthorized: /registro/api/dashboard-data/
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 68
 Unauthorized: /registro/api/dashboard-data/
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 401 68
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 989
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 304 0
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"PUT /api/entregadores/2/ HTTP/1.1" 200 341
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+- Broken pipe from ('192.168.0.119', 56297)
+- Broken pipe from ('192.168.0.119', 56294)
+- Broken pipe from ('192.168.0.119', 56296)
+- Broken pipe from ('192.168.0.119', 56295)
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 1019
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 1019
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1395
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"PUT /api/entregadores/2/ HTTP/1.1" 200 341
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0

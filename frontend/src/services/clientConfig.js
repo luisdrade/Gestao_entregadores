@@ -16,15 +16,20 @@ export const httpClient = axios.create({
 httpClient.interceptors.request.use(
   async (config) => {
     try {
-      const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
-      console.log('🔍 ClientConfig - Token encontrado:', !!token);
-      console.log('🔍 ClientConfig - Token valor:', token ? `${token.substring(0, 20)}...` : 'Nenhum');
-      
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-        console.log('🔍 ClientConfig - Header Authorization adicionado:', config.headers.Authorization);
+      // Só adicionar token se não estiver já definido nos headers
+      if (!config.headers.Authorization) {
+        const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
+        console.log('🔍 ClientConfig - Token encontrado:', !!token);
+        console.log('🔍 ClientConfig - Token valor:', token ? `${token.substring(0, 20)}...` : 'Nenhum');
+        
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+          console.log('🔍 ClientConfig - Header Authorization adicionado:', config.headers.Authorization);
+        } else {
+          console.log('⚠️ ClientConfig - Nenhum token encontrado no AsyncStorage');
+        }
       } else {
-        console.log('⚠️ ClientConfig - Nenhum token encontrado no AsyncStorage');
+        console.log('🔍 ClientConfig - Header Authorization já definido:', config.headers.Authorization);
       }
     } catch (error) {
       console.error('❌ ClientConfig - Erro ao obter token:', error);
@@ -46,6 +51,7 @@ httpClient.interceptors.response.use(
     if (error.response?.status === 401) {
       // Token expirado ou inválido
       try {
+        console.log('🚨 ClientConfig - Erro 401 detectado, limpando sessão');
         await AsyncStorage.removeItem('@GestaoEntregadores:token');
         await AsyncStorage.removeItem('@GestaoEntregadores:user');
         console.log('🧹 ClientConfig - Storage limpo após erro 401');
