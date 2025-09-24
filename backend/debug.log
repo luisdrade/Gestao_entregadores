@@ -36362,3 +36362,21 @@ Login bem-sucedido para usuário: luisfilipem13@gmail.com (Tipo: entregador)
 Bad Request: /registro/api/categorias-despesas/
 "POST /registro/api/categorias-despesas/ HTTP/1.1" 400 66
 "GET /registro/api/categorias-despesas/ HTTP/1.1" 200 141
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1712
+"HEAD /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 251
+"GET /api/estatisticas/ HTTP/1.1" 200 251
+"HEAD /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 0
+"PUT /api/entregadores/1/ HTTP/1.1" 200 336
+"HEAD /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 251
+"GET /api/estatisticas/ HTTP/1.1" 200 251
+"HEAD /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 0

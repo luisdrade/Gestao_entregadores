@@ -22,6 +22,33 @@ import * as Yup from 'yup';
 import { TextInputMask } from 'react-native-masked-text';
 import { useAuth } from '../../../context/AuthContext';
 
+// Função para buscar dados do CEP usando BrasilAPI
+const buscarCEP = async (cep) => {
+  try {
+    // Remove formatação do CEP (remove hífens e espaços)
+    const cepLimpo = cep.replace(/\D/g, '');
+    
+    if (cepLimpo.length !== 8) {
+      throw new Error('CEP deve ter 8 dígitos');
+    }
+    
+    const response = await fetch(`https://brasilapi.com.br/api/cep/v1/${cepLimpo}`);
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('CEP não encontrado');
+      }
+      throw new Error('Erro ao consultar CEP');
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Erro ao buscar CEP:', error);
+    throw error;
+  }
+};
+
 // Schema de validação
 const validationSchema = Yup.object().shape({
   nome: Yup.string()
@@ -129,6 +156,7 @@ export default function EditarPerfilScreen() {
   const router = useRouter();
   const { updateUserData } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingCEP, setIsLoadingCEP] = useState(false);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -226,6 +254,38 @@ export default function EditarPerfilScreen() {
 
   const handleBack = () => {
     router.back();
+  };
+
+  // Função para buscar CEP e preencher campos automaticamente
+  const handleBuscarCEP = async (cep, setFieldValue) => {
+    if (!cep || cep.replace(/\D/g, '').length !== 8) {
+      return;
+    }
+
+    setIsLoadingCEP(true);
+    try {
+      const dadosCEP = await buscarCEP(cep);
+      
+      // Preencher campos automaticamente
+      setFieldValue('endereco', dadosCEP.street || '');
+      setFieldValue('cidade', dadosCEP.city || '');
+      setFieldValue('estado', dadosCEP.state || '');
+      
+      Alert.alert(
+        'CEP Encontrado!', 
+        `Endereço preenchido automaticamente:\n${dadosCEP.street}, ${dadosCEP.city}/${dadosCEP.state}`,
+        [{ text: 'OK' }]
+      );
+    } catch (error) {
+      console.error('Erro ao buscar CEP:', error);
+      Alert.alert(
+        'CEP não encontrado', 
+        'Verifique se o CEP está correto e tente novamente.',
+        [{ text: 'OK' }]
+      );
+    } finally {
+      setIsLoadingCEP(false);
+    }
   };
 
 
@@ -417,19 +477,49 @@ export default function EditarPerfilScreen() {
                 <View style={styles.row}>
                   <View style={[styles.inputContainer, styles.halfWidth]}>
                     <Text style={styles.label}>CEP *</Text>
-                    <TextInputMask
-                      type={'zip-code'}
-                      placeholder="01234-567"
-                      style={[
-                        styles.input, 
-                        touched.cep && errors.cep && styles.inputError
-                      ]}
-                      keyboardType="numeric"
-                      value={values.cep}
-                      onChangeText={text => setFieldValue('cep', text)}
-                      onBlur={handleBlur('cep')}
-                      placeholderTextColor="#666"
-                    />
+                    <View style={styles.cepContainer}>
+                      <TextInputMask
+                        type={'zip-code'}
+                        placeholder="01234-567"
+                        style={[
+                          styles.input, 
+                          styles.cepInput,
+                          touched.cep && errors.cep && styles.inputError
+                        ]}
+                        keyboardType="numeric"
+                        value={values.cep}
+                        onChangeText={text => {
+                          setFieldValue('cep', text);
+                          // Buscar automaticamente quando CEP estiver completo
+                          if (text.replace(/\D/g, '').length === 8) {
+                            setTimeout(() => {
+                              handleBuscarCEP(text, setFieldValue);
+                            }, 500); // Delay de 500ms para evitar muitas requisições
+                          }
+                        }}
+                        onBlur={handleBlur('cep')}
+                        placeholderTextColor="#666"
+                      />
+                      <TouchableOpacity
+                        style={[
+                          styles.cepButton,
+                          isLoadingCEP && styles.cepButtonDisabled
+                        ]}
+                        onPress={() => handleBuscarCEP(values.cep, setFieldValue)}
+                        disabled={isLoadingCEP || !values.cep || values.cep.replace(/\D/g, '').length !== 8}
+                      >
+                        {isLoadingCEP ? (
+                          <ActivityIndicator size="small" color="#fff" />
+                        ) : (
+                          <Ionicons name="search" size={16} color="#fff" />
+                        )}
+                      </TouchableOpacity>
+                    </View>
+                    {isLoadingCEP && (
+                      <Text style={styles.cepLoadingText}>
+                        🔍 Buscando endereço...
+                      </Text>
+                    )}
                     {touched.cep && errors.cep && (
                       <Text style={styles.errorText}>{errors.cep}</Text>
                     )}
@@ -710,5 +800,31 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#C53030',
     marginBottom: 2,
+  },
+  cepContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  cepInput: {
+    flex: 1,
+  },
+  cepButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 44,
+    height: 44,
+  },
+  cepButtonDisabled: {
+    backgroundColor: '#ccc',
+  },
+  cepLoadingText: {
+    fontSize: 12,
+    color: '#007AFF',
+    marginTop: 5,
+    fontStyle: 'italic',
   },
 });
