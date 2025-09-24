@@ -315,14 +315,19 @@ export default function EditarPerfilScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
+      {/* Header com gradiente */}
       <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <Ionicons name="arrow-back" size={20} color="#fff" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Editar Perfil</Text>
-          <View style={styles.placeholder} />
+        <View style={styles.headerGradient}>
+          <View style={styles.headerContent}>
+            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+              <Ionicons name="arrow-back" size={24} color="#fff" />
+            </TouchableOpacity>
+            <View style={styles.headerTitleContainer}>
+              <Text style={styles.headerTitle}>Editar Perfil</Text>
+              <Text style={styles.headerSubtitle}>Atualize suas informações</Text>
+            </View>
+            <View style={styles.placeholder} />
+          </View>
         </View>
       </View>
 
@@ -336,7 +341,17 @@ export default function EditarPerfilScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.title}>Edite suas informações pessoais</Text>
+          {/* Card principal */}
+          <View style={styles.mainCard}>
+            <View style={styles.cardHeader}>
+              <View style={styles.iconContainer}>
+                <Ionicons name="person-circle" size={32} color="#007AFF" />
+              </View>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>Informações Pessoais</Text>
+                <Text style={styles.subtitle}>Mantenha seus dados sempre atualizados</Text>
+              </View>
+            </View>
 
           <Formik
             initialValues={initialValues}
@@ -373,263 +388,332 @@ export default function EditarPerfilScreen() {
                   </View>
                 )}
 
-                {/* Nome */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Nome completo *</Text>
-                  <TextInput
-                    style={[
-                      styles.input, 
-                      touched.nome && errors.nome && styles.inputError
-                    ]}
-                    placeholder="Digite seu nome completo"
-                    value={values.nome}
-                    onChangeText={handleChange('nome')}
-                    onBlur={handleBlur('nome')}
-                    placeholderTextColor="#666"
-                  />
-                  {touched.nome && errors.nome && (
-                    <Text style={styles.errorText}>{errors.nome}</Text>
-                  )}
-                </View>
-
-                {/* Username */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>@Usuário *</Text>
-                  <View style={[
-                    styles.usernameContainer,
-                    touched.username && errors.username && styles.inputError
-                  ]}>
-                    <Text style={styles.usernamePrefix}>@</Text>
-                    <TextInput
-                      style={[styles.input, styles.usernameInput]}
-                      placeholder="Usuario"
-                      value={values.username}
-                      onChangeText={handleChange('username')}
-                      onBlur={handleBlur('username')}
-                      placeholderTextColor="#666"
-                      autoCapitalize="none"
-                    />
+                {/* Seção: Dados Básicos */}
+                <View style={styles.section}>
+                  <View style={styles.sectionHeader}>
+                    <Ionicons name="person" size={20} color="#007AFF" />
+                    <Text style={styles.sectionTitle}>Dados Básicos</Text>
                   </View>
-                  {touched.username && errors.username && (
-                    <Text style={styles.errorText}>{errors.username}</Text>
-                  )}
-                </View>
-
-
-
-                {/* CPF */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>CPF *</Text>
-                  <TextInputMask
-                    type={'cpf'}
-                    placeholder="123.456.789-00"
-                    style={[
-                      styles.input, 
-                      touched.cpf && errors.cpf && styles.inputError
-                    ]}
-                    keyboardType="numeric"
-                    value={values.cpf}
-                    onChangeText={text => setFieldValue('cpf', text)}
-                    onBlur={handleBlur('cpf')}
-                    placeholderTextColor="#666"
-                  />
-                  {touched.cpf && errors.cpf && (
-                    <Text style={styles.errorText}>{errors.cpf}</Text>
-                  )}
-                </View>
-
-                {/* Data de Nascimento */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Data de Nascimento *</Text>
-                  <DatePicker
-                    value={values.dataNascimento}
-                    onDateChange={(date) => setFieldValue('dataNascimento', date)}
-                    placeholder="DD/MM/AAAA"
-                    error={touched.dataNascimento && !!errors.dataNascimento}
-                    errorMessage={touched.dataNascimento && errors.dataNascimento}
-                    style={styles.datePickerContainer}
-                  />
-                </View>
-
-                {/* Endereço */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Endereço *</Text>
-                  <TextInput
-                    style={[
-                      styles.input, 
-                      styles.textArea, 
-                      touched.endereco && errors.endereco && styles.inputError
-                    ]}
-                    placeholder="Rua, número, bairro"
-                    value={values.endereco}
-                    onChangeText={handleChange('endereco')}
-                    onBlur={handleBlur('endereco')}
-                    placeholderTextColor="#666"
-                    multiline
-                    numberOfLines={2}
-                  />
-                  {touched.endereco && errors.endereco && (
-                    <Text style={styles.errorText}>{errors.endereco}</Text>
-                  )}
-                </View>
-
-                {/* CEP, Cidade e Estado em linha */}
-                <View style={styles.row}>
-                  <View style={[styles.inputContainer, styles.halfWidth]}>
-                    <Text style={styles.label}>CEP *</Text>
-                    <View style={styles.cepContainer}>
-                      <TextInputMask
-                        type={'zip-code'}
-                        placeholder="01234-567"
+                  
+                  {/* Nome */}
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Nome completo *</Text>
+                    <View style={styles.inputWrapper}>
+                      <Ionicons name="person-outline" size={20} color="#666" style={styles.inputIcon} />
+                      <TextInput
                         style={[
                           styles.input, 
-                          styles.cepInput,
-                          touched.cep && errors.cep && styles.inputError
+                          touched.nome && errors.nome && styles.inputError
+                        ]}
+                        placeholder="Digite seu nome completo"
+                        value={values.nome}
+                        onChangeText={handleChange('nome')}
+                        onBlur={handleBlur('nome')}
+                        placeholderTextColor="#999"
+                      />
+                    </View>
+                    {touched.nome && errors.nome && (
+                      <Text style={styles.errorText}>{errors.nome}</Text>
+                    )}
+                  </View>
+
+                  {/* Username */}
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.label}>@Usuário *</Text>
+                    <View style={[
+                      styles.usernameContainer,
+                      touched.username && errors.username && styles.inputError
+                    ]}>
+                      <Ionicons name="at" size={20} color="#666" style={styles.inputIcon} />
+                      <Text style={styles.usernamePrefix}>@</Text>
+                      <TextInput
+                        style={[styles.input, styles.usernameInput]}
+                        placeholder="Usuario"
+                        value={values.username}
+                        onChangeText={handleChange('username')}
+                        onBlur={handleBlur('username')}
+                        placeholderTextColor="#999"
+                        autoCapitalize="none"
+                      />
+                    </View>
+                    {touched.username && errors.username && (
+                      <Text style={styles.errorText}>{errors.username}</Text>
+                    )}
+                  </View>
+                </View>
+
+
+
+                {/* Seção: Documentos */}
+                <View style={styles.section}>
+                  <View style={styles.sectionHeader}>
+                    <Ionicons name="document-text" size={20} color="#007AFF" />
+                    <Text style={styles.sectionTitle}>Documentos</Text>
+                  </View>
+                  
+                  {/* CPF */}
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.label}>CPF *</Text>
+                    <View style={styles.inputWrapper}>
+                      <Ionicons name="card" size={20} color="#666" style={styles.inputIcon} />
+                      <TextInputMask
+                        type={'cpf'}
+                        placeholder="123.456.789-00"
+                        style={[
+                          styles.input, 
+                          touched.cpf && errors.cpf && styles.inputError
                         ]}
                         keyboardType="numeric"
-                        value={values.cep}
-                        onChangeText={text => {
-                          setFieldValue('cep', text);
-                          // Buscar automaticamente quando CEP estiver completo
-                          if (text.replace(/\D/g, '').length === 8) {
-                            setTimeout(() => {
-                              handleBuscarCEP(text, setFieldValue);
-                            }, 500); // Delay de 500ms para evitar muitas requisições
-                          }
-                        }}
-                        onBlur={handleBlur('cep')}
-                        placeholderTextColor="#666"
+                        value={values.cpf}
+                        onChangeText={text => setFieldValue('cpf', text)}
+                        onBlur={handleBlur('cpf')}
+                        placeholderTextColor="#999"
                       />
-                      <TouchableOpacity
-                        style={[
-                          styles.cepButton,
-                          isLoadingCEP && styles.cepButtonDisabled
-                        ]}
-                        onPress={() => handleBuscarCEP(values.cep, setFieldValue)}
-                        disabled={isLoadingCEP || !values.cep || values.cep.replace(/\D/g, '').length !== 8}
-                      >
-                        {isLoadingCEP ? (
-                          <ActivityIndicator size="small" color="#fff" />
-                        ) : (
-                          <Ionicons name="search" size={16} color="#fff" />
-                        )}
-                      </TouchableOpacity>
                     </View>
-                    {isLoadingCEP && (
-                      <Text style={styles.cepLoadingText}>
-                        🔍 Buscando endereço...
-                      </Text>
-                    )}
-                    {touched.cep && errors.cep && (
-                      <Text style={styles.errorText}>{errors.cep}</Text>
+                    {touched.cpf && errors.cpf && (
+                      <Text style={styles.errorText}>{errors.cpf}</Text>
                     )}
                   </View>
 
-                  <View style={[styles.inputContainer, styles.halfWidth]}>
-                    <Text style={styles.label}>Cidade *</Text>
-                    <TextInput
-                      style={[
-                        styles.input, 
-                        touched.cidade && errors.cidade && styles.inputError
-                      ]}
-                      placeholder="São Paulo"
-                      value={values.cidade}
-                      onChangeText={handleChange('cidade')}
-                      onBlur={handleBlur('cidade')}
-                      placeholderTextColor="#666"
-                    />
-                    {touched.cidade && errors.cidade && (
-                      <Text style={styles.errorText}>{errors.cidade}</Text>
+                  {/* Data de Nascimento */}
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Data de Nascimento *</Text>
+                    <View style={styles.inputWrapper}>
+                      <Ionicons name="calendar" size={20} color="#666" style={styles.inputIcon} />
+                      <DatePicker
+                        value={values.dataNascimento}
+                        onDateChange={(date) => setFieldValue('dataNascimento', date)}
+                        placeholder="DD/MM/AAAA"
+                        error={touched.dataNascimento && !!errors.dataNascimento}
+                        errorMessage={touched.dataNascimento && errors.dataNascimento}
+                        style={styles.datePickerContainer}
+                      />
+                    </View>
+                  </View>
+                </View>
+
+                {/* Seção: Endereço */}
+                <View style={styles.section}>
+                  <View style={styles.sectionHeader}>
+                    <Ionicons name="location" size={20} color="#007AFF" />
+                    <Text style={styles.sectionTitle}>Endereço</Text>
+                  </View>
+                  
+                  {/* Endereço */}
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Endereço *</Text>
+                    <View style={styles.inputWrapper}>
+                      <Ionicons name="home" size={20} color="#666" style={styles.inputIcon} />
+                      <TextInput
+                        style={[
+                          styles.input, 
+                          styles.textArea, 
+                          touched.endereco && errors.endereco && styles.inputError
+                        ]}
+                        placeholder="Rua, número, bairro"
+                        value={values.endereco}
+                        onChangeText={handleChange('endereco')}
+                        onBlur={handleBlur('endereco')}
+                        placeholderTextColor="#999"
+                        multiline
+                        numberOfLines={2}
+                      />
+                    </View>
+                    {touched.endereco && errors.endereco && (
+                      <Text style={styles.errorText}>{errors.endereco}</Text>
+                    )}
+                  </View>
+
+                  {/* CEP, Cidade e Estado em linha */}
+                  <View style={styles.row}>
+                    <View style={[styles.inputContainer, styles.halfWidth]}>
+                      <Text style={styles.label}>CEP *</Text>
+                      <View style={styles.cepContainer}>
+                        <View style={styles.inputWrapper}>
+                          <Ionicons name="map" size={20} color="#666" style={styles.inputIcon} />
+                          <TextInputMask
+                            type={'zip-code'}
+                            placeholder="01234-567"
+                            style={[
+                              styles.input, 
+                              styles.cepInput,
+                              touched.cep && errors.cep && styles.inputError
+                            ]}
+                            keyboardType="numeric"
+                            value={values.cep}
+                            onChangeText={text => {
+                              setFieldValue('cep', text);
+                              // Buscar automaticamente quando CEP estiver completo
+                              if (text.replace(/\D/g, '').length === 8) {
+                                setTimeout(() => {
+                                  handleBuscarCEP(text, setFieldValue);
+                                }, 500); // Delay de 500ms para evitar muitas requisições
+                              }
+                            }}
+                            onBlur={handleBlur('cep')}
+                            placeholderTextColor="#999"
+                          />
+                        </View>
+                        <TouchableOpacity
+                          style={[
+                            styles.cepButton,
+                            isLoadingCEP && styles.cepButtonDisabled
+                          ]}
+                          onPress={() => handleBuscarCEP(values.cep, setFieldValue)}
+                          disabled={isLoadingCEP || !values.cep || values.cep.replace(/\D/g, '').length !== 8}
+                        >
+                          {isLoadingCEP ? (
+                            <ActivityIndicator size="small" color="#fff" />
+                          ) : (
+                            <Ionicons name="search" size={16} color="#fff" />
+                          )}
+                        </TouchableOpacity>
+                      </View>
+                      {isLoadingCEP && (
+                        <Text style={styles.cepLoadingText}>
+                          🔍 Buscando endereço...
+                        </Text>
+                      )}
+                      {touched.cep && errors.cep && (
+                        <Text style={styles.errorText}>{errors.cep}</Text>
+                      )}
+                    </View>
+
+                    <View style={[styles.inputContainer, styles.halfWidth]}>
+                      <Text style={styles.label}>Cidade *</Text>
+                      <View style={styles.inputWrapper}>
+                        <Ionicons name="business" size={20} color="#666" style={styles.inputIcon} />
+                        <TextInput
+                          style={[
+                            styles.input, 
+                            touched.cidade && errors.cidade && styles.inputError
+                          ]}
+                          placeholder="São Paulo"
+                          value={values.cidade}
+                          onChangeText={handleChange('cidade')}
+                          onBlur={handleBlur('cidade')}
+                          placeholderTextColor="#999"
+                        />
+                      </View>
+                      {touched.cidade && errors.cidade && (
+                        <Text style={styles.errorText}>{errors.cidade}</Text>
+                      )}
+                    </View>
+                  </View>
+
+                  {/* Estado */}
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Estado *</Text>
+                    <View style={styles.inputWrapper}>
+                      <Ionicons name="flag" size={20} color="#666" style={styles.inputIcon} />
+                      <TextInput
+                        style={[
+                          styles.input, 
+                          touched.estado && errors.estado && styles.inputError
+                        ]}
+                        placeholder="SP"
+                        value={values.estado}
+                        onChangeText={handleChange('estado')}
+                        onBlur={handleBlur('estado')}
+                        placeholderTextColor="#999"
+                        maxLength={2}
+                        autoCapitalize="characters"
+                      />
+                    </View>
+                    {touched.estado && errors.estado && (
+                      <Text style={styles.errorText}>{errors.estado}</Text>
                     )}
                   </View>
                 </View>
 
-                {/* Estado */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Estado *</Text>
-                  <TextInput
-                    style={[
-                      styles.input, 
-                      touched.estado && errors.estado && styles.inputError
-                    ]}
-                    placeholder="SP"
-                    value={values.estado}
-                    onChangeText={handleChange('estado')}
-                    onBlur={handleBlur('estado')}
-                    placeholderTextColor="#666"
-                    maxLength={2}
-                    autoCapitalize="characters"
-                  />
-                  {touched.estado && errors.estado && (
-                    <Text style={styles.errorText}>{errors.estado}</Text>
-                  )}
+                {/* Seção: Contato */}
+                <View style={styles.section}>
+                  <View style={styles.sectionHeader}>
+                    <Ionicons name="call" size={20} color="#007AFF" />
+                    <Text style={styles.sectionTitle}>Contato</Text>
+                  </View>
+                  
+                  {/* Email */}
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Email *</Text>
+                    <View style={styles.inputWrapper}>
+                      <Ionicons name="mail" size={20} color="#666" style={styles.inputIcon} />
+                      <TextInput
+                        style={[
+                          styles.input, 
+                          touched.email && errors.email && styles.inputError
+                        ]}
+                        placeholder="Digite seu email"
+                        value={values.email}
+                        onChangeText={handleChange('email')}
+                        onBlur={handleBlur('email')}
+                        placeholderTextColor="#999"
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                      />
+                    </View>
+                    {touched.email && errors.email && (
+                      <Text style={styles.errorText}>{errors.email}</Text>
+                    )}
+                  </View>
+
+                  {/* Telefone */}
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Telefone *</Text>
+                    <View style={styles.inputWrapper}>
+                      <Ionicons name="call" size={20} color="#666" style={styles.inputIcon} />
+                      <TextInputMask
+                        type={'cel-phone'}
+                        options={{ maskType: 'BRL', withDDD: true, dddMask: '(99) ' }}
+                        placeholder="(11) 99999-9999"
+                        style={[
+                          styles.input, 
+                          touched.telefone && errors.telefone && styles.inputError
+                        ]}
+                        keyboardType="phone-pad"
+                        value={values.telefone}
+                        onChangeText={text => setFieldValue('telefone', text)}
+                        onBlur={handleBlur('telefone')}
+                        placeholderTextColor="#999"
+                      />
+                    </View>
+                    {touched.telefone && errors.telefone && (
+                      <Text style={styles.errorText}>{errors.telefone}</Text>
+                    )}
+                  </View>
                 </View>
 
-                {/* Email */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Email *</Text>
-                  <TextInput
+                {/* Botão de salvar fixo */}
+                <View style={styles.saveButtonContainer}>
+                  <TouchableOpacity 
                     style={[
-                      styles.input, 
-                      touched.email && errors.email && styles.inputError
-                    ]}
-                    placeholder="Digite seu email"
-                    value={values.email}
-                    onChangeText={handleChange('email')}
-                    onBlur={handleBlur('email')}
-                    placeholderTextColor="#666"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                  />
-                  {touched.email && errors.email && (
-                    <Text style={styles.errorText}>{errors.email}</Text>
-                  )}
+                      styles.saveButton, 
+                      isLoading && styles.buttonDisabled,
+                      !isLoading && Object.keys(errors).length > 0 && styles.buttonWithErrors
+                    ]} 
+                    onPress={handleSubmit}
+                    disabled={isLoading || Object.keys(errors).length > 0}
+                  >
+                    {isLoading ? (
+                      <View style={styles.buttonContent}>
+                        <ActivityIndicator color="#fff" size="small" />
+                        <Text style={styles.saveButtonText}>Salvando...</Text>
+                      </View>
+                    ) : (
+                      <View style={styles.buttonContent}>
+                        <Ionicons name="checkmark-circle" size={20} color="#fff" />
+                        <Text style={styles.saveButtonText}>
+                          {Object.keys(errors).length > 0 ? 'Corrija os erros' : 'Salvar Alterações'}
+                        </Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
                 </View>
-
-                {/* Telefone */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Telefone *</Text>
-                  <TextInputMask
-                    type={'cel-phone'}
-                    options={{ maskType: 'BRL', withDDD: true, dddMask: '(99) ' }}
-                    placeholder="(11) 99999-9999"
-                    style={[
-                      styles.input, 
-                      touched.telefone && errors.telefone && styles.inputError
-                    ]}
-                    keyboardType="phone-pad"
-                    value={values.telefone}
-                    onChangeText={text => setFieldValue('telefone', text)}
-                    onBlur={handleBlur('telefone')}
-                    placeholderTextColor="#666"
-                  />
-                  {touched.telefone && errors.telefone && (
-                    <Text style={styles.errorText}>{errors.telefone}</Text>
-                  )}
-                </View>
-
-                {/* Botão de salvar */}
-                <TouchableOpacity 
-                  style={[
-                    styles.saveButton, 
-                    isLoading && styles.buttonDisabled,
-                    !isLoading && Object.keys(errors).length > 0 && styles.buttonWithErrors
-                  ]} 
-                  onPress={handleSubmit}
-                  disabled={isLoading || Object.keys(errors).length > 0}
-                >
-                  {isLoading ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text style={styles.saveButtonText}>
-                      {Object.keys(errors).length > 0 ? 'Corrija os erros' : 'Salvar Alterações'}
-                    </Text>
-                  )}
-                </TouchableOpacity>
               </View>
               );
             }}
           </Formik>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -639,12 +723,14 @@ export default function EditarPerfilScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f0f2f5',
   },
   header: {
     backgroundColor: '#007AFF',
     paddingTop: 10,
     paddingBottom: 20,
+  },
+  headerGradient: {
     paddingHorizontal: 20,
   },
   headerContent: {
@@ -653,94 +739,196 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backButton: {
-    padding: 8,
+    padding: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitleContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#fff',
   },
+  headerSubtitle: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.8)',
+    marginTop: 2,
+  },
   placeholder: {
-    width: 36,
+    width: 50,
   },
   content: {
     flex: 1,
     padding: 20,
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 40,
+  },
+  mainCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 24,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#f0f8ff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 16,
+  },
+  titleContainer: {
+    flex: 1,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 30,
-    textAlign: 'center',
+    color: '#1a1a1a',
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#666',
   },
   form: {
-    gap: 20,
+    gap: 24,
   },
-  inputContainer: {
-    marginBottom: 15,
+  section: {
+    backgroundColor: '#fafafa',
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 16,
   },
-  label: {
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000',
+    color: '#1a1a1a',
+    marginLeft: 8,
+  },
+  inputContainer: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
     marginBottom: 8,
   },
-  input: {
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 15,
-    fontSize: 16,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#e0e0e0',
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+  },
+  inputIcon: {
+    marginRight: 12,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#1a1a1a',
+    paddingVertical: 12,
   },
   textArea: {
     minHeight: 80,
-    paddingTop: 15,
+    paddingTop: 12,
     textAlignVertical: 'top',
   },
   inputError: {
     borderColor: '#FF6B6B',
     borderWidth: 2,
+    backgroundColor: '#fff5f5',
   },
   errorText: {
     color: '#FF6B6B',
     fontSize: 12,
-    marginTop: 5,
+    marginTop: 6,
+    marginLeft: 4,
   },
   row: {
     flexDirection: 'row',
-    gap: 15,
+    gap: 16,
   },
   halfWidth: {
     flex: 1,
   },
+  saveButtonContainer: {
+    marginTop: 24,
+    paddingHorizontal: 0,
+    paddingVertical: 16,
+  },
   saveButton: {
     backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 15,
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
     alignItems: 'center',
-    marginTop: 20,
+    justifyContent: 'center',
+    shadowColor: '#007AFF',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   saveButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-    textTransform: 'uppercase',
   },
   buttonDisabled: {
     backgroundColor: '#ccc',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   buttonWithErrors: {
     backgroundColor: '#FF6B6B',
+    shadowColor: '#FF6B6B',
   },
   datePickerContainer: {
-    marginTop: 10,
+    marginTop: 0,
   },
   keyboardContainer: {
     flex: 1,
@@ -748,15 +936,15 @@ const styles = StyleSheet.create({
   errorSummary: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFBEB',
-    borderRadius: 8,
-    padding: 10,
+    backgroundColor: '#fff5f5',
+    borderRadius: 12,
+    padding: 16,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: '#fed7d7',
   },
   errorSummaryText: {
-    color: '#991B1B',
+    color: '#c53030',
     fontSize: 14,
     marginLeft: 8,
     fontWeight: '600',
@@ -765,66 +953,79 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#e0e0e0',
+    paddingHorizontal: 16,
+    paddingVertical: 4,
   },
   usernamePrefix: {
     fontSize: 16,
     color: '#007AFF',
     fontWeight: '600',
-    paddingLeft: 15,
-    paddingRight: 5,
+    marginLeft: 8,
   },
   usernameInput: {
     flex: 1,
     borderWidth: 0,
     marginBottom: 0,
     paddingLeft: 0,
+    paddingVertical: 12,
   },
   debugContainer: {
     marginTop: 10,
-    padding: 10,
-    backgroundColor: '#FFF5F5',
+    padding: 12,
+    backgroundColor: '#fff5f5',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#FED7D7',
+    borderColor: '#fed7d7',
   },
   debugTitle: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: '#C53030',
+    color: '#c53030',
     marginBottom: 5,
   },
   debugText: {
     fontSize: 11,
-    color: '#C53030',
+    color: '#c53030',
     marginBottom: 2,
   },
   cepContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
   },
   cepInput: {
     flex: 1,
   },
   cepButton: {
     backgroundColor: '#007AFF',
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 44,
-    height: 44,
+    minWidth: 48,
+    height: 48,
+    shadowColor: '#007AFF',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   cepButtonDisabled: {
     backgroundColor: '#ccc',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   cepLoadingText: {
     fontSize: 12,
     color: '#007AFF',
-    marginTop: 5,
+    marginTop: 6,
     fontStyle: 'italic',
+    marginLeft: 4,
   },
 });
