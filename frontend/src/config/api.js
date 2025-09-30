@@ -1,9 +1,6 @@
 // Configurações da API
 export const API_CONFIG = {
-  //BASE_URL: 'http://entregasplus.ddns.net:8000',
-  BASE_URL: 'http://192.168.56.1:8000',
-  //BASE_URL: 'http://localhost:8000',
-  //BASE_URL: 'http://192.168.56.1:8000',
+  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:8000',
   
   TIMEOUT: 15000,
 };

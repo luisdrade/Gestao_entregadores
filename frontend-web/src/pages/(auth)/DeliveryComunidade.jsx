@@ -24,7 +24,7 @@ import {
   Person as PersonIcon,
   CalendarToday as CalendarIcon
 } from '@mui/icons-material';
-import { api, ENDPOINTS } from '../../services/apiClient';
+import { api, ENDPOINTS, API_BASE_URL } from '../../services/apiClient';
 
 const DeliveryComunidade = () => {
   const [postagens, setPostagens] = useState([]);
@@ -382,7 +382,7 @@ const DeliveryComunidade = () => {
                           {anuncio.foto && (
                             <Box sx={{ mt: 1 }}>
                               <img
-                                src={`http://localhost:8000${anuncio.foto}`}
+                                src={`${API_BASE_URL}${anuncio.foto}`}
                                 alt="Foto do veículo"
                                 style={{
                                   width: '100%',
