@@ -103,6 +103,21 @@ function ComunidadeScreen() {
     }
   };
 
+  const formatHandle = (value) => {
+    try {
+      const raw = (value || '').toString().trim();
+      if (!raw) return '@usuario';
+      // remover todos os prefixos '@' e espaços, normalizar para snake-case simples
+      const noAt = raw.replace(/^@+/, '');
+      const compact = noAt.replace(/\s+/g, '_');
+      // remover caracteres não alfanuméricos comuns (mantém _ . -)
+      const safe = compact.replace(/[^a-zA-Z0-9_.-]/g, '');
+      return `@${safe || 'usuario'}`;
+    } catch (_) {
+      return '@usuario';
+    }
+  };
+
   const aoAtualizar = async () => {
     setAtualizando(true);
     await carregarDados();
@@ -121,7 +136,7 @@ function ComunidadeScreen() {
       const autorName = user?.username || user?.nome || user?.email || 'usuario';
       const postDataWithAuthor = {
         ...postData,
-        autor: `@${autorName}`,
+        autor: formatHandle(autorName),
       };
       
       console.log('👤 Nome do autor calculado:', autorName);
@@ -147,7 +162,7 @@ function ComunidadeScreen() {
       // Adicionar @username do usuário logado
       const anuncioDataWithVendedor = {
         ...anuncioData,
-        vendedor: `@${user?.username || user?.nome || 'usuario'}`,
+        vendedor: formatHandle(user?.username || user?.nome || 'usuario'),
       };
       
       console.log('👤 Vendedor do anúncio:', anuncioDataWithVendedor.vendedor);

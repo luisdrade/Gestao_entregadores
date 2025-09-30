@@ -57,3 +57,33 @@ export const cleanupListeners = () => {
     window.removeEventListener('beforeunload', () => {});
   }
 };
+
+// Normaliza erros de API (Axios/fetch) para mensagem legível
+export const handleApiError = (error) => {
+  try {
+    // Axios error com response
+    const data = error?.response?.data;
+    if (data) {
+      if (typeof data === 'string') return data;
+      if (data.message) return data.message;
+      if (data.detail) return data.detail;
+      if (data.error) return data.error;
+      if (Array.isArray(data.non_field_errors) && data.non_field_errors.length > 0) {
+        return data.non_field_errors[0];
+      }
+      // Erros de validação campo a campo
+      if (typeof data === 'object') {
+        const firstKey = Object.keys(data)[0];
+        const firstVal = data[firstKey];
+        if (Array.isArray(firstVal) && firstVal.length > 0) return `${firstKey}: ${firstVal[0]}`;
+        if (typeof firstVal === 'string') return `${firstKey}: ${firstVal}`;
+      }
+    }
+
+    // Fetch error com texto
+    if (error?.message) return error.message;
+    return 'Erro inesperado ao comunicar com o servidor';
+  } catch (_) {
+    return 'Erro inesperado ao comunicar com o servidor';
+  }
+};

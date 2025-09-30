@@ -11,7 +11,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import communityService from '../services/communityService';
+// A criação da postagem é delegada ao pai via aoCriarPostagem
 
 const _ModalCriarPostagem = ({ visivel, aoFechar, aoCriarPostagem }) => {
   const [titulo, setTitulo] = useState('');
@@ -26,8 +26,7 @@ const _ModalCriarPostagem = ({ visivel, aoFechar, aoCriarPostagem }) => {
 
     setCarregando(true);
     try {
-      await communityService.createPost({
-        autor: 'Usuário', // Você pode pegar do contexto de autenticação
+      await aoCriarPostagem({
         titulo: titulo.trim(),
         conteudo: conteudo.trim(),
       });
@@ -35,7 +34,6 @@ const _ModalCriarPostagem = ({ visivel, aoFechar, aoCriarPostagem }) => {
       Alert.alert('Sucesso', 'Postagem criada com sucesso!');
       setTitulo('');
       setConteudo('');
-      aoCriarPostagem();
       aoFechar();
     } catch (error) {
       Alert.alert('Erro', 'Erro ao criar postagem. Tente novamente.');

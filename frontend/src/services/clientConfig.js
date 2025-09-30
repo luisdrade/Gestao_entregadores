@@ -18,17 +18,25 @@ httpClient.interceptors.request.use(
       // Só adicionar token se não estiver já definido nos headers
       if (!config.headers.Authorization) {
         const token = await AsyncStorage.getItem('@GestaoEntregadores:token');
-        console.log('🔍 ClientConfig - Token encontrado:', !!token);
-        console.log('🔍 ClientConfig - Token valor:', token ? `${token.substring(0, 20)}...` : 'Nenhum');
+        if (process.env.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true') {
+          console.log('🔍 ClientConfig - Token encontrado:', !!token);
+          console.log('🔍 ClientConfig - Token valor:', token ? `${token.substring(0, 20)}...` : 'Nenhum');
+        }
         
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
-          console.log('🔍 ClientConfig - Header Authorization adicionado:', config.headers.Authorization);
+          if (process.env.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true') {
+            console.log('🔍 ClientConfig - Header Authorization adicionado:', config.headers.Authorization);
+          }
         } else {
-          console.log('⚠️ ClientConfig - Nenhum token encontrado no AsyncStorage');
+          if (process.env.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true') {
+            console.log('⚠️ ClientConfig - Nenhum token encontrado no AsyncStorage');
+          }
         }
       } else {
-        console.log('🔍 ClientConfig - Header Authorization já definido:', config.headers.Authorization);
+        if (process.env.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true') {
+          console.log('🔍 ClientConfig - Header Authorization já definido:', config.headers.Authorization);
+        }
       }
     } catch (error) {
       console.error('❌ ClientConfig - Erro ao obter token:', error);
@@ -36,7 +44,9 @@ httpClient.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error('❌ ClientConfig - Erro na requisição:', error);
+    if (process.env.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true') {
+      console.error('❌ ClientConfig - Erro na requisição:', error);
+    }
     return Promise.reject(error);
   }
 );
@@ -44,25 +54,38 @@ httpClient.interceptors.request.use(
 // 🛡️ Interceptor para tratar erros de resposta
 httpClient.interceptors.response.use(
   (response) => {
+    if (process.env.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true') {
+      try {
+        console.log('HTTP OK', response.config?.method?.toUpperCase(), response.config?.url, response.status);
+      } catch (e) { /* noop */ }
+    }
     return response;
   },
   async (error) => {
     if (error.response?.status === 401) {
       // Token expirado ou inválido
       try {
-        console.log('🚨 ClientConfig - Erro 401 detectado, limpando sessão');
+        if (process.env.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true') {
+          console.log('🚨 ClientConfig - Erro 401 detectado, limpando sessão');
+        }
         await AsyncStorage.removeItem('@GestaoEntregadores:token');
         await AsyncStorage.removeItem('@GestaoEntregadores:user');
-        console.log('🧹 ClientConfig - Storage limpo após erro 401');
+        if (process.env.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true') {
+          console.log('🧹 ClientConfig - Storage limpo após erro 401');
+        }
         
         // Limpar headers de autorização
         delete httpClient.defaults.headers.Authorization;
         
         // Emitir evento global para logout (se necessário)
         // Isso pode ser usado por outros componentes para detectar logout automático
-        console.log('🚪 ClientConfig - Logout automático devido a token expirado');
+        if (process.env.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true') {
+          console.log('🚪 ClientConfig - Logout automático devido a token expirado');
+        }
       } catch (storageError) {
-        console.error('❌ ClientConfig - Erro ao limpar storage:', storageError);
+        if (process.env.EXPO_PUBLIC_ENABLE_HTTP_LOGS === 'true') {
+          console.error('❌ ClientConfig - Erro ao limpar storage:', storageError);
+        }
       }
     }
     return Promise.reject(error);

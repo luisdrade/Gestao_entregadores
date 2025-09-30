@@ -84,8 +84,17 @@ const DeliveryComunidade = () => {
   const handlePostSubmit = async (e) => {
     e.preventDefault();
     try {
+      const formatHandle = (value) => {
+        const raw = (value || '').toString().trim();
+        if (!raw) return '@usuario';
+        const noAt = raw.replace(/^@+/, '');
+        const compact = noAt.replace(/\s+/g, '_');
+        const safe = compact.replace(/[^a-zA-Z0-9_.-]/g, '');
+        return `@${safe || 'usuario'}`;
+      };
+
       const response = await api.post('/comunidade/api/postagens/', {
-        autor: postData.autor,
+        autor: formatHandle(postData.autor),
         titulo: postData.titulo,
         conteudo: postData.conteudo
       }, {
@@ -102,10 +111,23 @@ const DeliveryComunidade = () => {
   const handleAnuncioSubmit = async (e) => {
     e.preventDefault();
     try {
+      const formatHandle = (value) => {
+        const raw = (value || '').toString().trim();
+        if (!raw) return '@usuario';
+        const noAt = raw.replace(/^@+/, '');
+        const compact = noAt.replace(/\s+/g, '_');
+        const safe = compact.replace(/[^a-zA-Z0-9_.-]/g, '');
+        return `@${safe || 'usuario'}`;
+      };
+
       const formData = new FormData();
       Object.entries(anuncioData).forEach(([key, value]) => {
         if (value) formData.append(key, value);
       });
+      // Normalizar vendedor se existir campo no formulário (opcional)
+      if (formData.has('vendedor')) {
+        formData.set('vendedor', formatHandle(formData.get('vendedor')));
+      }
 
       const response = await api.post('/comunidade/api/anuncios/', formData, {
         headers: { "Content-Type": "multipart/form-data" },
