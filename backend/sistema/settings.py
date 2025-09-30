@@ -1,20 +1,26 @@
 from pathlib import Path
 from datetime import timedelta
+import os
+
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env in the backend root
+load_dotenv(dotenv_path=BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_oafv#ud2k32sm!yt@#(1uja)sa!m6*k*0^2q94-y)v^n9!b^!'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-insecure-placeholder')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() in ['1', 'true', 'yes', 'on']
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
 
 # Application definition
@@ -52,11 +58,11 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'allauth.account.middleware.AccountMiddleware',
     'django.middleware.common.CommonMiddleware',
     'usuarios.middleware.CSRFExemptAPIMiddleware',  # Middleware personalizado para APIs
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'usuarios.email_validation_middleware.EmailValidationMiddleware',  # Middleware de validação de email
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -143,12 +149,12 @@ WSGI_APPLICATION = 'sistema.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Banco_EntregasPlus',     
-        'USER': 'root',                    
-        'PASSWORD': 'root',              
-        'HOST': 'localhost',               
-        'PORT': '3306',
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
+        'NAME': os.getenv('DB_NAME', 'Banco_EntregasPlus'),
+        'USER': os.getenv('DB_USER', 'root'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'root'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '3306'),
     }
 }
 
@@ -187,12 +193,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = os.getenv('STATIC_URL', 'static/')
+# Tratar valores vazios no .env como ausentes
+_env_static_root = os.getenv('STATIC_ROOT')
+STATIC_ROOT = Path(_env_static_root) if _env_static_root else (BASE_DIR / 'staticfiles')
 
 # Media files (Uploads)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
+_env_media_root = os.getenv('MEDIA_ROOT')
+MEDIA_ROOT = Path(_env_media_root) if _env_media_root else (BASE_DIR / 'media')
 
 # Configurações adicionais para arquivos de mídia
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
@@ -209,7 +218,7 @@ LOGGING = {
         },
         'file': {
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'debug.log',
+            'filename': BASE_DIR / os.getenv('LOG_FILE', 'debug.log'),
         },
     },
     'root': {
@@ -287,8 +296,14 @@ CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'Lax'
 
 # Configurações de Email
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Para desenvolvimento
-DEFAULT_FROM_EMAIL = 'noreply@gestaoentregadores.com'
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@gestaoentregadores.com')
+# SMTP (usado quando EMAIL_BACKEND = smtp)
+EMAIL_HOST = os.getenv('EMAIL_HOST', '')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587')) if os.getenv('EMAIL_PORT') else None
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ['1','true','yes','on'] if os.getenv('EMAIL_USE_TLS') else None
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 
 # Para produção, use:
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

@@ -1,0 +1,27 @@
+# Environment and local config
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Django
+staticfiles/
+media/
+
+# Logs
+*.log
+/debug.log
+
+# Virtual envs
+venv/
+.env.local/
+
+# OS
+.DS_Store
+Thumbs.db

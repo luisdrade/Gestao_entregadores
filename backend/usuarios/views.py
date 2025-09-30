@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect
 from .forms import EntregadorForm
 from .models import Entregador
@@ -23,14 +24,9 @@ from django.contrib.auth import get_user_model # Acessa o modelo de usuário
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken  # type: ignore[import]  # pylint: disable=import-error
 from .serializers import EntregadorSerializer 
 
-import requests
-try:
-    from allauth.socialaccount.models import SocialAccount
-except Exception:
-    SocialAccount = None
 from django.db import models # Adicionado para usar models.Sum
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -123,7 +119,6 @@ class EntregadorViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
-        """Atualiza os dados de um entregador"""
         try:
             instance = self.get_object()
             serializer = self.get_serializer(instance, data=request.data, partial=True)
@@ -141,7 +136,7 @@ class EntregadorViewSet(viewsets.ModelViewSet):
                 'message': f'Erro ao atualizar perfil: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
+# EntregadorMeView
 class EntregadorMeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -160,12 +155,10 @@ class LogoutView(APIView):
     
 # Google Login desativado/remoção: a view foi removida
 
+# Verificar se o username já existe
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def check_username(request, username):
-    """
-    Verifica se um username está disponível
-    """
     try:
         # Verificar se o username já existe
         exists = Entregador.objects.filter(username=username).exists()
@@ -179,12 +172,12 @@ def check_username(request, username):
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+# Alterar senha do usuário via API
 @api_view(['PUT'])
 @permission_classes([AllowAny])
 def change_password(request, pk):
-    """
-    Altera a senha de um entregador
-    """
+
     try:
         # Buscar o entregador
         entregador = Entregador.objects.get(pk=pk)
@@ -215,7 +208,6 @@ def change_password(request, pk):
                 'message': 'A nova senha deve ser diferente da atual'
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # Alterar a senha
         entregador.set_password(new_password)
         entregador.save()
         
@@ -235,6 +227,7 @@ def change_password(request, pk):
             'message': f'Erro ao alterar senha: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+# Estatísticas do usuário
 class EstatisticasUsuarioView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -244,6 +237,7 @@ class EstatisticasUsuarioView(APIView):
         # Passa o HttpRequest original para evitar duplo wrap do DRF Request
         return NovaView.as_view()(request._request)
 
+# Upload de foto de perfil
 class UploadFotoPerfilView(APIView):
     permission_classes = [IsAuthenticated]
     
@@ -262,9 +256,7 @@ class UploadFotoPerfilView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            # Decodificar a imagem base64
             try:
-                # Remover o prefixo data:image/...;base64, se existir
                 if ';base64,' in foto_data:
                     foto_data = foto_data.split(';base64,')[1]
                 
@@ -279,14 +271,12 @@ class UploadFotoPerfilView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            # Gerar nome único para o arquivo
             import uuid
             filename = f"perfil_{user.id}_{uuid.uuid4().hex[:8]}.jpg"
             print(f"📸 UploadFotoPerfilView - Nome do arquivo: {filename}")
             
             # Salvar a imagem
             if user.foto:
-                # Remover foto antiga se existir
                 try:
                     if default_storage.exists(user.foto.name):
                         default_storage.delete(user.foto.name)
@@ -320,18 +310,20 @@ class UploadFotoPerfilView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
+# Relatório de trabalho
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def relatorio_trabalho(request):
-    # Compat: delega para a nova função em relatorios_dashboard.api_views
+
     from relatorios_dashboard.api_views import relatorio_trabalho as nova_func
-    # Passa o HttpRequest original para evitar duplo wrap do DRF Request
     return nova_func(request._request)
 
+
+# Relatório de despesas
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def relatorio_despesas(request):
-    # Compat: delega para a nova função em relatorios_dashboard.api_views
+
     from relatorios_dashboard.api_views import relatorio_despesas as nova_func
-    # Passa o HttpRequest original para evitar duplo wrap do DRF Request
     return nova_func(request._request)
