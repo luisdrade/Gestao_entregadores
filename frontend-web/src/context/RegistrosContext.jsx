@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { api, ENDPOINTS } from '../services/apiClient';
+import { handleApiError } from '../utils/errorHandler';
 
 const RegistrosContext = createContext(null);
 
@@ -30,7 +31,10 @@ export function RegistrosProvider({ children }) {
       setVeiculos(response.data.results || response.data || []);
     } catch (err) {
       console.error('❌ RegistrosContext - Erro ao carregar veículos:', err);
-      setError('Erro ao carregar veículos: ' + (err.response?.data?.message || err.message));
+      // Não definir erro global para veículos, apenas log
+      console.warn('Aviso: Não foi possível carregar veículos. Continuando sem eles.');
+      console.warn('Detalhes do erro:', handleApiError(err));
+      setVeiculos([]); // Garantir que o array está vazio
     }
   };
 
@@ -49,8 +53,23 @@ export function RegistrosProvider({ children }) {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      await Promise.all([fetchRegistros(), fetchVeiculos(), fetchDespesas()]);
-      setLoading(false);
+      setError(null);
+      
+      try {
+        // Carregar apenas registros e despesas automaticamente
+        // Veículos serão carregados sob demanda
+        const promises = [
+          fetchRegistros().catch(err => console.warn('Erro ao carregar registros:', err)),
+          fetchDespesas().catch(err => console.warn('Erro ao carregar despesas:', err))
+        ];
+        
+        await Promise.allSettled(promises);
+      } catch (err) {
+        console.error('Erro geral ao carregar dados:', err);
+        setError('Erro ao carregar dados iniciais');
+      } finally {
+        setLoading(false);
+      }
     };
     
     loadData();

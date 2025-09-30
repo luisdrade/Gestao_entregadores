@@ -8,47 +8,8 @@ import json
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def comunidade(request):
-    # Se for uma requisição JSON (API), retornar dados em JSON
-    if request.content_type == 'application/json' or 'application/json' in request.META.get('HTTP_ACCEPT', ''):
-        return comunidade_api(request)
-    
-    # Form simples via POST para postar novo tópico no fórum (interface web)
-    if request.method == "POST":
-        if 'submit_postagem' in request.POST:
-            autor = request.POST.get('autor')
-            titulo = request.POST.get('titulo')
-            conteudo = request.POST.get('conteudo')
-            if autor and titulo and conteudo:
-                Postagem.objects.create(autor=autor, titulo=titulo, conteudo=conteudo)
-                return redirect('comunidade')
-        elif 'submit_anuncio' in request.POST:
-            modelo = request.POST.get('modelo')
-            ano = request.POST.get('ano')
-            quilometragem = request.POST.get('quilometragem')
-            preco = request.POST.get('preco')
-            localizacao = request.POST.get('localizacao')
-            link_externo = request.POST.get('link_externo')
-            foto = request.FILES.get('foto')
-            if modelo and ano and quilometragem and preco and localizacao and link_externo:
-                AnuncioVeiculo.objects.create(
-                    modelo=modelo,
-                    ano=ano,
-                    quilometragem=quilometragem,
-                    preco=preco,
-                    localizacao=localizacao,
-                    link_externo=link_externo,
-                    foto=foto
-                )
-                return redirect('comunidade')
-
-    # Filtrar apenas conteúdo aprovado e visível
-    postagens = Postagem.objects.filter(status='aprovado', is_visivel=True).order_by('-data_criacao')
-    anuncios = AnuncioVeiculo.objects.filter(status='aprovado', is_visivel=True).order_by('-data_publicacao')
-
-    return render(request, 'comunidade/index.html', {
-        'postagens': postagens,
-        'anuncios': anuncios,
-    })
+    # Sempre usar a API JSON - remover lógica duplicada
+    return comunidade_api(request)
 
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
@@ -60,17 +21,20 @@ def comunidade_api(request):
             postagens = Postagem.objects.filter(status='aprovado', is_visivel=True).order_by('-data_criacao')
             anuncios = AnuncioVeiculo.objects.filter(status='aprovado', is_visivel=True).order_by('-data_publicacao')
             
-            # Converter para formato JSON
+            # Serializar postagens
             postagens_data = []
-            for post in postagens:
+            for postagem in postagens:
                 postagens_data.append({
-                    'id': post.id,
-                    'autor': post.autor,
-                    'titulo': post.titulo,
-                    'conteudo': post.conteudo,
-                    'data_criacao': post.data_criacao.isoformat(),
+                    'id': postagem.id,
+                    'autor': postagem.autor,
+                    'titulo': postagem.titulo,
+                    'conteudo': postagem.conteudo,
+                    'data_criacao': postagem.data_criacao.isoformat(),
+                    'curtidas': getattr(postagem, 'curtidas', 0),
+                    'comentarios': getattr(postagem, 'comentarios', 0),
                 })
             
+            # Serializar anúncios
             anuncios_data = []
             for anuncio in anuncios:
                 anuncios_data.append({
@@ -83,6 +47,7 @@ def comunidade_api(request):
                     'link_externo': anuncio.link_externo,
                     'foto': anuncio.foto.url if anuncio.foto else None,
                     'data_publicacao': anuncio.data_publicacao.isoformat(),
+                    'vendedor': getattr(anuncio, 'vendedor', 'Usuário'),
                 })
             
             return JsonResponse({
@@ -92,18 +57,39 @@ def comunidade_api(request):
             })
         
         elif request.method == "POST":
-            # Criar nova postagem ou anúncio
-            if request.content_type == 'application/json':
-                # Dados JSON
-                data = json.loads(request.body)
-                
+            # Debug: verificar o content_type
+            print(f"🔍 DEBUG - Content-Type: {request.content_type}")
+            print(f"🔍 DEBUG - META Content-Type: {request.META.get('CONTENT_TYPE', 'N/A')}")
+            print(f"🔍 DEBUG - Body: {request.body}")
+            print(f"🔍 DEBUG - POST data: {request.POST}")
+            print(f"🔍 DEBUG - FILES data: {request.FILES}")
+            print(f"🔍 DEBUG - All META keys: {list(request.META.keys())}")
+            print(f"🔍 DEBUG - HTTP_CONTENT_TYPE: {request.META.get('HTTP_CONTENT_TYPE', 'N/A')}")
+            
+            # Tentar processar como JSON primeiro
+            data = None
+            try:
+                if request.body:
+                    data = json.loads(request.body)
+                    print(f"🔍 DEBUG - JSON data: {data}")
+            except json.JSONDecodeError:
+                print("🔍 DEBUG - Não é JSON válido, tentando FormData")
+                data = None
+            
+            # Processar dados JSON se disponível
+            if data:
                 if 'titulo' in data and 'conteudo' in data:
                     # Criar postagem
+                    autor = data.get('autor', 'Usuário')
+                    print(f"🔍 DEBUG - Autor recebido: {autor}")
+                    print(f"🔍 DEBUG - Dados completos: {data}")
+                    
                     postagem = Postagem.objects.create(
-                        autor=data.get('autor', 'Usuário'),
+                        autor=autor,
                         titulo=data['titulo'],
                         conteudo=data['conteudo']
                     )
+                    print(f"🔍 DEBUG - Postagem criada com autor: {postagem.autor}")
                     return JsonResponse({
                         'success': True,
                         'message': 'Postagem criada com sucesso!',
@@ -141,72 +127,74 @@ def comunidade_api(request):
                         }
                     })
             
-            else:
-                # Dados FormData (para upload de fotos)
-                if 'submit_postagem' in request.POST:
-                    autor = request.POST.get('autor', 'Usuário')
-                    titulo = request.POST.get('titulo')
-                    conteudo = request.POST.get('conteudo')
-                    if titulo and conteudo:
-                        postagem = Postagem.objects.create(
-                            autor=autor,
-                            titulo=titulo,
-                            conteudo=conteudo
-                        )
-                        return JsonResponse({
-                            'success': True,
-                            'message': 'Postagem criada com sucesso!',
-                            'postagem': {
-                                'id': postagem.id,
-                                'autor': postagem.autor,
-                                'titulo': postagem.titulo,
-                                'conteudo': postagem.conteudo,
-                                'data_criacao': postagem.data_criacao.isoformat(),
-                            }
-                        })
+            # Se não é JSON, tentar FormData
+            if 'submit_postagem' in request.POST:
+                # Dados FormData para postagem
+                autor = request.POST.get('autor', 'Usuário')
+                titulo = request.POST.get('titulo')
+                conteudo = request.POST.get('conteudo')
+                if titulo and conteudo:
+                    postagem = Postagem.objects.create(
+                        autor=autor,
+                        titulo=titulo,
+                        conteudo=conteudo
+                    )
+                    return JsonResponse({
+                        'success': True,
+                        'message': 'Postagem criada com sucesso!',
+                        'postagem': {
+                            'id': postagem.id,
+                            'autor': postagem.autor,
+                            'titulo': postagem.titulo,
+                            'conteudo': postagem.conteudo,
+                            'data_criacao': postagem.data_criacao.isoformat(),
+                        }
+                    })
+            
+            elif 'submit_anuncio' in request.POST:
+                # Dados FormData para anúncio
+                modelo = request.POST.get('modelo')
+                ano = request.POST.get('ano')
+                quilometragem = request.POST.get('quilometragem')
+                preco = request.POST.get('preco')
+                localizacao = request.POST.get('localizacao')
+                link_externo = request.POST.get('link_externo')
+                foto = request.FILES.get('foto')
                 
-                elif 'submit_anuncio' in request.POST:
-                    modelo = request.POST.get('modelo')
-                    ano = request.POST.get('ano')
-                    quilometragem = request.POST.get('quilometragem')
-                    preco = request.POST.get('preco')
-                    localizacao = request.POST.get('localizacao')
-                    link_externo = request.POST.get('link_externo')
-                    foto = request.FILES.get('foto')
-                    
-                    if modelo and ano and quilometragem and preco and localizacao:
-                        anuncio = AnuncioVeiculo.objects.create(
-                            modelo=modelo,
-                            ano=ano,
-                            quilometragem=quilometragem,
-                            preco=preco,
-                            localizacao=localizacao,
-                            link_externo=link_externo or '',
-                            foto=foto
-                        )
-                        return JsonResponse({
-                            'success': True,
-                            'message': 'Anúncio criado com sucesso!',
-                            'anuncio': {
-                                'id': anuncio.id,
-                                'modelo': anuncio.modelo,
-                                'ano': anuncio.ano,
-                                'quilometragem': anuncio.quilometragem,
-                                'preco': float(anuncio.preco),
-                                'localizacao': anuncio.localizacao,
-                                'link_externo': anuncio.link_externo,
-                                'foto': anuncio.foto.url if anuncio.foto else None,
-                                'data_publicacao': anuncio.data_publicacao.isoformat(),
-                            }
-                        })
+                if modelo and ano and quilometragem and preco and localizacao:
+                    anuncio = AnuncioVeiculo.objects.create(
+                        modelo=modelo,
+                        ano=ano,
+                        quilometragem=quilometragem,
+                        preco=preco,
+                        localizacao=localizacao,
+                        link_externo=link_externo or '',
+                        foto=foto
+                    )
+                    return JsonResponse({
+                        'success': True,
+                        'message': 'Anúncio criado com sucesso!',
+                        'anuncio': {
+                            'id': anuncio.id,
+                            'modelo': anuncio.modelo,
+                            'ano': anuncio.ano,
+                            'quilometragem': anuncio.quilometragem,
+                            'preco': float(anuncio.preco),
+                            'localizacao': anuncio.localizacao,
+                            'link_externo': anuncio.link_externo,
+                            'foto': anuncio.foto.url if anuncio.foto else None,
+                            'data_publicacao': anuncio.data_publicacao.isoformat(),
+                        }
+                    })
             
             return JsonResponse({
                 'success': False,
                 'message': 'Dados inválidos'
             }, status=400)
-    
+
     except Exception as e:
+        print(f"❌ Erro na API da comunidade: {str(e)}")
         return JsonResponse({
             'success': False,
-            'message': f'Erro interno: {str(e)}'
+            'message': 'Erro interno do servidor'
         }, status=500)

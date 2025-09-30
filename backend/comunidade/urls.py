@@ -6,13 +6,7 @@ from .admin_views import (
     AdminModerarAnuncioAPIView,
     AdminComunidadeStatsAPIView
 )
-from .web_admin_views import (
-    admin_dashboard,
-    admin_posts,
-    admin_anuncios,
-    admin_moderar_item,
-    admin_stats
-)
+# Views de template removidas - usando apenas API
 
 urlpatterns = [
     # URLs públicas
@@ -22,12 +16,7 @@ urlpatterns = [
     path('api/postagens/', views.comunidade_api, name='comunidade_postagens'),
     path('api/anuncios/', views.comunidade_api, name='comunidade_anuncios'),
     
-    # URLs de administração WEB (templates)
-    path('admin/dashboard/', admin_dashboard, name='admin_comunidade_dashboard'),
-    path('admin/posts/', admin_posts, name='admin_comunidade_posts'),
-    path('admin/anuncios/', admin_anuncios, name='admin_comunidade_anuncios'),
-    path('admin/moderar/<str:item_type>/<int:item_id>/', admin_moderar_item, name='admin_moderar_item'),
-    path('admin/stats/', admin_stats, name='admin_comunidade_stats'),
+    # URLs de template removidas - usando apenas API
     
     # URLs de administração API (JSON)
     path('admin/api/', AdminComunidadeAPIView.as_view(), name='admin_comunidade_api'),

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -27,19 +27,39 @@ import {
 } from '@mui/icons-material';
 import { RegistrosContext } from '../../context/RegistrosContext';
 import { api, ENDPOINTS } from '../../services/apiClient';
+import { handleApiError } from '../../utils/errorHandler';
+import { SUCCESS_MESSAGES } from '../../config/constants';
 
 const CadastroVeiculo = () => {
-  const { veiculos, setVeiculos } = useContext(RegistrosContext);
+  const { veiculos, setVeiculos, fetchVeiculos } = useContext(RegistrosContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   const [formData, setFormData] = useState({
     modelo: "",
     placa: "",
     categoria: ""
   });
+
+  // Carregar veículos apenas quando o componente for montado
+  useEffect(() => {
+    if (initialLoad) {
+      const loadVeiculos = async () => {
+        try {
+          await fetchVeiculos();
+        } catch (err) {
+          console.warn('Erro ao carregar veículos:', err);
+        } finally {
+          setInitialLoad(false);
+        }
+      };
+      
+      loadVeiculos();
+    }
+  }, [initialLoad, fetchVeiculos]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -85,21 +105,21 @@ const CadastroVeiculo = () => {
         novosVeiculos[editingIndex] = { ...formData, id: veiculoId };
         setVeiculos(novosVeiculos);
         setEditingIndex(null);
-        setSuccess("Veículo atualizado com sucesso!");
+        setSuccess(SUCCESS_MESSAGES.VEHICLE_UPDATED);
       } else {
         // Adicionando novo veículo
         const response = await api.post(ENDPOINTS.VEICULOS.CREATE, formData);
         console.log('🔍 CadastroVeiculo - Veículo criado:', response.data);
         
         setVeiculos([...veiculos, { ...formData, id: response.data.id }]);
-        setSuccess("Veículo cadastrado com sucesso!");
+        setSuccess(SUCCESS_MESSAGES.VEHICLE_CREATED);
       }
 
       // Limpa o formulário
       setFormData({ modelo: "", placa: "", categoria: "" });
     } catch (err) {
       console.error('❌ CadastroVeiculo - Erro ao salvar:', err);
-      setError(err.response?.data?.message || err.message);
+      setError(handleApiError(err, 'Erro ao salvar veículo'));
     } finally {
       setLoading(false);
     }
@@ -122,10 +142,10 @@ const CadastroVeiculo = () => {
         
         const novosVeiculos = veiculos.filter((_, i) => i !== index);
         setVeiculos(novosVeiculos);
-        setSuccess("Veículo excluído com sucesso!");
+        setSuccess(SUCCESS_MESSAGES.VEHICLE_DELETED);
       } catch (err) {
         console.error('❌ CadastroVeiculo - Erro ao excluir:', err);
-        setError(err.response?.data?.message || err.message);
+        setError(handleApiError(err, 'Erro ao excluir veículo'));
       }
     }
   };
@@ -244,7 +264,14 @@ const CadastroVeiculo = () => {
             Veículos Cadastrados ({veiculos.length})
           </Typography>
 
-          {veiculos.length > 0 ? (
+          {initialLoad ? (
+            <Box textAlign="center" py={4}>
+              <CircularProgress />
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                Carregando veículos...
+              </Typography>
+            </Box>
+          ) : veiculos.length > 0 ? (
             <Paper>
               <List>
                 {veiculos.map((veiculo, index) => (

@@ -62,8 +62,10 @@ class LoginView(APIView):
             
             # Usar serializer para dados do usuário
             user_serializer = UserProfileSerializer(user)
+            user_data = user_serializer.data
             
             logger.info(f"Login bem-sucedido para usuário: {user.email} (Tipo: {user_type})")
+            logger.info(f"Dados do usuário retornados: {user_data}")
             
             return Response({
                 'success': True,
@@ -72,7 +74,7 @@ class LoginView(APIView):
                     'access': access_token,
                     'refresh': refresh_token
                 },
-                'user': user_serializer.data
+                'user': user_data
             }, status=status.HTTP_200_OK)
             
         except Exception as e:

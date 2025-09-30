@@ -15,42 +15,59 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class AdminDashboardView(TemplateView):
+class AdminDashboardView(APIView):
     """
-    View para o dashboard do admin
+    API para o dashboard do admin
     """
-    template_name = 'usuarios/admin_dashboard.html'
+    permission_classes = [IsAuthenticated]
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Estatísticas básicas
-        total_entregadores = Entregador.objects.count()
-        entregadores_ativos = Entregador.objects.filter(is_active=True).count()
-        entregadores_inativos = Entregador.objects.filter(is_active=False).count()
-        
-        # Entregadores registrados hoje
-        hoje = timezone.now().date()
-        registrados_hoje = Entregador.objects.filter(date_joined__date=hoje).count()
-        
-        # Entregadores registrados na última semana
-        semana_passada = hoje - timedelta(days=7)
-        registrados_semana = Entregador.objects.filter(date_joined__date__gte=semana_passada).count()
-        
-        # Entregadores registrados no último mês
-        mes_passado = hoje - timedelta(days=30)
-        registrados_mes = Entregador.objects.filter(date_joined__date__gte=mes_passado).count()
-        
-        context.update({
-            'total_entregadores': total_entregadores,
-            'entregadores_ativos': entregadores_ativos,
-            'entregadores_inativos': entregadores_inativos,
-            'registrados_hoje': registrados_hoje,
-            'registrados_semana': registrados_semana,
-            'registrados_mes': registrados_mes,
-        })
-        
-        return context
+    def get(self, request):
+        """
+        Obter estatísticas do dashboard do admin
+        """
+        try:
+            # Verificar se é admin
+            if not request.user.is_staff:
+                return Response({
+                    'success': False,
+                    'error': 'Acesso negado. Apenas administradores podem acessar esta funcionalidade.'
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            # Estatísticas básicas
+            total_entregadores = Entregador.objects.count()
+            entregadores_ativos = Entregador.objects.filter(is_active=True).count()
+            entregadores_inativos = Entregador.objects.filter(is_active=False).count()
+            
+            # Entregadores registrados hoje
+            hoje = timezone.now().date()
+            registrados_hoje = Entregador.objects.filter(date_joined__date=hoje).count()
+            
+            # Entregadores registrados na última semana
+            semana_passada = hoje - timedelta(days=7)
+            registrados_semana = Entregador.objects.filter(date_joined__date__gte=semana_passada).count()
+            
+            # Entregadores registrados no último mês
+            mes_passado = hoje - timedelta(days=30)
+            registrados_mes = Entregador.objects.filter(date_joined__date__gte=mes_passado).count()
+            
+            return Response({
+                'success': True,
+                'data': {
+                    'total_entregadores': total_entregadores,
+                    'entregadores_ativos': entregadores_ativos,
+                    'entregadores_inativos': entregadores_inativos,
+                    'registrados_hoje': registrados_hoje,
+                    'registrados_semana': registrados_semana,
+                    'registrados_mes': registrados_mes,
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro ao obter estatísticas do dashboard: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @method_decorator(csrf_exempt, name='dispatch')
 class AdminUsersAPIView(APIView):

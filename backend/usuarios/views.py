@@ -98,7 +98,8 @@ def cadastro_entregador(request):
     else:
         form = EntregadorForm()
 
-    return render(request, 'usuarios/cadastro.html', {'form': form})
+    # View de template removida - usando apenas API
+    return JsonResponse({'success': False, 'error': 'Use a API para cadastro'})
 
 def cadastro_sucesso(request):
     return HttpResponse("Cadastro realizado com sucesso!")

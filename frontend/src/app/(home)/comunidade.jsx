@@ -113,12 +113,19 @@ function ComunidadeScreen() {
     try {
       console.log('📝 Criando nova postagem:', postData);
       console.log('👤 Usuário logado:', user);
+      console.log('👤 Username:', user?.username);
+      console.log('👤 Nome:', user?.nome);
+      console.log('👤 Email:', user?.email);
       
       // Adicionar @username do usuário logado
+      const autorName = user?.username || user?.nome || user?.email || 'usuario';
       const postDataWithAuthor = {
         ...postData,
-        autor: `@${user?.username || user?.nome || 'usuario'}`,
+        autor: `@${autorName}`,
       };
+      
+      console.log('👤 Nome do autor calculado:', autorName);
+      console.log('👤 Autor final:', postDataWithAuthor.autor);
       
       console.log('👤 Autor da postagem:', postDataWithAuthor.autor);
       console.log('📋 Dados completos:', postDataWithAuthor);

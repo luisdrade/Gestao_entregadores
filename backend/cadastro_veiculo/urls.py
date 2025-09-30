@@ -9,6 +9,5 @@ urlpatterns = [
     # Rotas da API (sem o prefixo /api/ pois já está incluído no sistema principal)
     path('', include(router.urls)),
     
-    # Rota para o template HTML (mantida para compatibilidade)
-    path('cadastro/', views.cadastro_veiculo_view, name='cadastro_veiculo'),
+    # Rota de template removida - usando apenas API
 ]

@@ -1,10 +1,8 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from django.shortcuts import render
 from .models import Veiculo
 from .serializers import VeiculoSerializer
-from .forms import VeiculoForm
 
 class VeiculoViewSet(viewsets.ModelViewSet):
     queryset = Veiculo.objects.all()
@@ -85,16 +83,4 @@ class VeiculoViewSet(viewsets.ModelViewSet):
                 'message': f'Erro ao buscar veículos: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-# View para o template HTML (mantida para compatibilidade)
-def cadastro_veiculo_view(request):
-    if request.method == 'POST':
-        form = VeiculoForm(request.POST)
-        if form.is_valid():
-            veiculo = form.save(commit=False)
-            veiculo.entregador = request.user
-            veiculo.save()
-            return render(request, 'cadastro_veiculo/sucesso.html')
-    else:
-        form = VeiculoForm()
-    
-    return render(request, 'cadastro_veiculo/index.html', {'form': form})
+# View de template removida - usando apenas API

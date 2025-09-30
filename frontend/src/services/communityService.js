@@ -44,6 +44,8 @@ class CommunityService {
 
       const data = await response.json();
       console.log('✅ Postagens carregadas:', data);
+      console.log('📝 Primeira postagem (se houver):', data.postagens?.[0]);
+      console.log('👤 Autor da primeira postagem:', data.postagens?.[0]?.autor);
       return data;
     } catch (error) {
       console.error('❌ Erro ao buscar postagens:', error);
@@ -60,27 +62,30 @@ class CommunityService {
       // Buscar token do AsyncStorage
       const token = await this.getAuthToken();
 
-      // Usar FormData em vez de JSON para compatibilidade com Django
-      const formData = new FormData();
-      formData.append('autor', postData.autor || 'Usuário');
-      formData.append('titulo', postData.titulo);
-      formData.append('conteudo', postData.conteudo);
-      formData.append('submit_postagem', 'true');
-
-      console.log('📝 Dados do FormData:', {
-        autor: postData.autor,
+      // Usar JSON em vez de FormData para evitar duplicação
+      const requestBody = JSON.stringify({
+        autor: postData.autor || 'Usuário',
         titulo: postData.titulo,
         conteudo: postData.conteudo,
-        submit_postagem: 'true'
       });
-
+      
+      console.log('📤 Dados sendo enviados:', requestBody);
+      console.log('📤 Headers:', {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
+      });
+      console.log('📤 URL completa:', `${this.baseURL}/comunidade/`);
+      console.log('📤 Token encontrado:', !!token);
+      
       const response = await fetch(`${this.baseURL}/comunidade/`, {
         method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           'Accept': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` }),
         },
-        body: formData,
+        body: requestBody,
       });
 
       console.log('📡 Resposta do servidor:', response.status, response.statusText);

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+# render removido - usando apenas API
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required

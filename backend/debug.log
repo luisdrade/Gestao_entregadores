@@ -36794,3 +36794,513 @@ CSRF desabilitado para rota: /api/estatisticas/
 "PUT /api/change-password/22/ HTTP/1.1" 200 55
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1231
 "GET /comunidade/ HTTP/1.1" 200 1648
+"GET /comunidade/ HTTP/1.1" 200 1648
+"GET /api/veiculos/ HTTP/1.1" 200 2
+"OPTIONS /registro/api/registro-trabalho/ HTTP/1.1" 200 0
+"OPTIONS /api/veiculos/ HTTP/1.1" 200 0
+Unauthorized: /registro/api/registro-trabalho/
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+Unauthorized: /api/veiculos/
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 401 191
+"GET /api/veiculos/ HTTP/1.1" 401 191
+Unauthorized: /registro/api/registro-despesa/
+Unauthorized: /api/auth/profile/
+Unauthorized: /registro/api/registro-trabalho/
+Unauthorized: /api/veiculos/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 401 191
+"GET /api/auth/profile/ HTTP/1.1" 401 191
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 401 191
+Unauthorized: /registro/api/registro-despesa/
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/veiculos/ HTTP/1.1" 401 191
+Unauthorized: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 401 191
+"GET /api/auth/profile/ HTTP/1.1" 401 191
+Unauthorized: /registro/api/registro-trabalho/
+Unauthorized: /api/veiculos/
+Unauthorized: /registro/api/registro-despesa/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 401 68
+"GET /api/veiculos/ HTTP/1.1" 401 68
+"GET /registro/api/registro-despesa/ HTTP/1.1" 401 68
+Unauthorized: /registro/api/registro-trabalho/
+Unauthorized: /api/veiculos/
+Unauthorized: /registro/api/registro-despesa/
+"GET /api/veiculos/ HTTP/1.1" 401 68
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 401 68
+"GET /registro/api/registro-despesa/ HTTP/1.1" 401 68
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 1001
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+C:\Faculdade\TCC\Gestao_entregadores\backend\sistema\urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 77
+"GET /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 70
+"GET / HTTP/1.1" 200 77
+"GET /media/fotos_perfil/perfil_1_495a7a6a.jpg HTTP/1.1" 200 70
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+"POST /api/auth/login/ HTTP/1.1" 200 1001
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 255
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 295
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"GET /comunidade/ HTTP/1.1" 200 1648
+"GET /comunidade/ HTTP/1.1" 200 1648
+Unauthorized: /registro/api/registro-trabalho/
+Unauthorized: /api/veiculos/
+Unauthorized: /registro/api/registro-despesa/
+"GET /api/veiculos/ HTTP/1.1" 401 68
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 401 68
+"GET /registro/api/registro-despesa/ HTTP/1.1" 401 68
+Unauthorized: /registro/api/registro-trabalho/
+Unauthorized: /api/veiculos/
+Unauthorized: /registro/api/registro-despesa/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 401 68
+"GET /api/veiculos/ HTTP/1.1" 401 68
+"GET /registro/api/registro-despesa/ HTTP/1.1" 401 68
+"OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+"POST /api/auth/login/ HTTP/1.1" 200 888
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+"OPTIONS /api/admin/users/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/
+"OPTIONS /comunidade/api/anuncios/ HTTP/1.1" 200 0
+"OPTIONS /comunidade/api/postagens/ HTTP/1.1" 200 0
+"OPTIONS /api/admin/users/ HTTP/1.1" 200 0
+"OPTIONS /comunidade/api/postagens/ HTTP/1.1" 200 0
+"OPTIONS /comunidade/api/anuncios/ HTTP/1.1" 200 0
+Entregadores encontrados: 10
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 1648
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 1648
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 1648
+"GET /api/admin/users/ HTTP/1.1" 200 2633
+CSRF desabilitado para rota: /api/admin/users/
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 1648
+Entregadores encontrados: 10
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2633
+"OPTIONS /comunidade/admin/api/postagens/17/ HTTP/1.1" 200 0
+Postagem 17 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/17/ HTTP/1.1" 200 62
+"OPTIONS /comunidade/admin/api/postagens/16/ HTTP/1.1" 200 0
+Postagem 16 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/16/ HTTP/1.1" 200 62
+"OPTIONS /comunidade/admin/api/postagens/14/ HTTP/1.1" 200 0
+Postagem 14 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/14/ HTTP/1.1" 200 62
+"OPTIONS /comunidade/admin/api/postagens/13/ HTTP/1.1" 200 0
+Postagem 13 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/13/ HTTP/1.1" 200 62
+"OPTIONS /comunidade/admin/api/postagens/12/ HTTP/1.1" 200 0
+Postagem 12 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/12/ HTTP/1.1" 200 62
+"GET /comunidade/ HTTP/1.1" 200 932
+"GET /comunidade/ HTTP/1.1" 200 932
+"POST /comunidade/ HTTP/1.1" 200 213
+"POST /comunidade/ HTTP/1.1" 200 207
+"GET /comunidade/ HTTP/1.1" 200 1206
+"GET /comunidade/ HTTP/1.1" 200 1206
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /comunidade/ HTTP/1.1" 200 229
+Bad Request: /comunidade/
+"POST /comunidade/ HTTP/1.1" 400 53
+"GET / HTTP/1.1" 200 77
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /comunidade/ HTTP/1.1" 200 207
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /comunidade/ HTTP/1.1" 200 1498
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /comunidade/ HTTP/1.1" 200 1742
+"POST /comunidade/ HTTP/1.1" 200 212
+"GET /comunidade/ HTTP/1.1" 200 1915
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /comunidade/ HTTP/1.1" 200 1915
+"POST /comunidade/ HTTP/1.1" 200 236
+Bad Request: /comunidade/
+"POST /comunidade/ HTTP/1.1" 400 53
+"GET /comunidade/ HTTP/1.1" 200 2112
+"GET /comunidade/ HTTP/1.1" 200 2112
+"GET /comunidade/ HTTP/1.1" 200 2112
+"GET /comunidade/ HTTP/1.1" 200 2112
+"GET /comunidade/ HTTP/1.1" 200 2112
+C:\Faculdade\TCC\Gestao_entregadores\backend\comunidade\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /comunidade/ HTTP/1.1" 200 2112
+"GET /comunidade/ HTTP/1.1" 200 2112
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+Watching for file changes with StatReloader
+"OPTIONS /registro/api/registro-trabalho/ HTTP/1.1" 200 0
+"OPTIONS /api/veiculos/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-trabalho/ HTTP/1.1" 200 0
+"OPTIONS /api/veiculos/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 39
+"GET /api/veiculos/ HTTP/1.1" 200 2
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 39
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 39
+"GET /api/veiculos/ HTTP/1.1" 200 2
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 39
+"OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+Dados do usuário retornados: {'id': 11, 'nome': 'Admin', 'email': 'admin@gmail.com', 'cpf': '123456789', 'telefone': '123456789', 'username': 'admin', 'data_nascimento': None, 'endereco': None, 'cep': None, 'cidade': None, 'estado': None, 'foto': None, 'is_staff': True, 'is_superuser': True, 'date_joined': '2025-09-02T19:41:50.649052Z', 'user_type': 'admin', 'email_validado': False}
+"POST /api/auth/login/ HTTP/1.1" 200 888
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+"OPTIONS /comunidade/api/postagens/ HTTP/1.1" 200 0
+"OPTIONS /comunidade/api/postagens/ HTTP/1.1" 200 0
+"OPTIONS /api/admin/users/ HTTP/1.1" 200 0
+"OPTIONS /comunidade/api/anuncios/ HTTP/1.1" 200 0
+"OPTIONS /api/admin/users/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2112
+Entregadores encontrados: 10
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2112
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2112
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2112
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2633
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: True
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2633
+"OPTIONS /api/admin/users/21/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/21/
+Usuário rafa@gmail.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/21/ HTTP/1.1" 200 319
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2634
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'user_type': 'entregador', 'email_validado': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1001
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"OPTIONS /registro/api/dashboard-data/?data_inicio=2025-09-26&data_fim=2025-09-26 HTTP/1.1" 200 0
+"OPTIONS /registro/api/dashboard-data/?data_inicio=2025-09-26&data_fim=2025-09-26 HTTP/1.1" 200 0
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-26&data_fim=2025-09-26 HTTP/1.1" 200 1274
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-26&data_fim=2025-09-26 HTTP/1.1" 200 1274
+"OPTIONS /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 0
+"OPTIONS /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 253
+"OPTIONS /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 253
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 596
+"OPTIONS /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 596
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 474
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 474
+"OPTIONS /api/relatorios/estatisticas/?periodo=semana HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?periodo=semana HTTP/1.1" 200 237
+"OPTIONS /registro/api/registro-trabalho/?periodo=semana HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?periodo=semana HTTP/1.1" 200 596
+"OPTIONS /registro/api/registro-despesa/?periodo=semana HTTP/1.1" 200 0
+"GET /registro/api/registro-despesa/?periodo=semana HTTP/1.1" 200 474
+Unauthorized: /api/veiculos/
+"GET /api/veiculos/ HTTP/1.1" 401 68
+- Broken pipe from ('192.168.56.1', 57751)
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'user_type': 'entregador', 'email_validado': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1001
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-26&data_fim=2025-09-26 HTTP/1.1" 200 1274
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-26&data_fim=2025-09-26 HTTP/1.1" 200 1274
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 253
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 253
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 596
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 596
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 474
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 474
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'user_type': 'entregador', 'email_validado': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1001
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-26&data_fim=2025-09-26 HTTP/1.1" 200 1274
+"GET /registro/api/dashboard-data/?data_inicio=2025-09-26&data_fim=2025-09-26 HTTP/1.1" 200 1274
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 253
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 253
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 596
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 474
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 596
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 474
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2112
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2112
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2112
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2112
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+Dados do usuário retornados: {'id': 11, 'nome': 'Admin', 'email': 'admin@gmail.com', 'cpf': '123456789', 'telefone': '123456789', 'username': 'admin', 'data_nascimento': None, 'endereco': None, 'cep': None, 'cidade': None, 'estado': None, 'foto': None, 'is_staff': True, 'is_superuser': True, 'date_joined': '2025-09-02T19:41:50.649052Z', 'user_type': 'admin', 'email_validado': False}
+"POST /api/auth/login/ HTTP/1.1" 200 888
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 347
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2112
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2112
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2634
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 2112
+CSRF desabilitado para rota: /api/admin/users/
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 2112
+Entregadores encontrados: 10
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2634
+"OPTIONS /api/admin/users/2/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/2/
+Usuário teste2@gmail.com desativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/2/ HTTP/1.1" 200 329
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: False
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2635
+CSRF desabilitado para rota: /api/auth/login/
+Unauthorized: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 401 50
+CSRF desabilitado para rota: /api/admin/users/2/
+Usuário teste2@gmail.com ativado pelo admin admin@gmail.com
+"PATCH /api/admin/users/2/ HTTP/1.1" 200 325
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+Entregador: teste2@gmail.com, is_active: True
+Entregador: teste3@gmail.com, is_active: True
+Entregador: admin@teste.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2634
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'user_type': 'entregador', 'email_validado': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1001
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1393
+"OPTIONS /comunidade/admin/api/postagens/23/ HTTP/1.1" 200 0
+Postagem 23 deletada permanentemente por admin@gmail.com
+"DELETE /comunidade/admin/api/postagens/23/ HTTP/1.1" 200 62
+CSRF desabilitado para rota: /api/relatorios/trabalho/
+"GET /api/relatorios/trabalho/?periodo=mes HTTP/1.1" 200 295
+"GET /comunidade/ HTTP/1.1" 200 1915
+"GET /comunidade/ HTTP/1.1" 200 1915
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"GET /api/estatisticas/ HTTP/1.1" 200 253
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
