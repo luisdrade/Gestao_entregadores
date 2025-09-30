@@ -15,14 +15,12 @@ import {
 import { useRouter } from 'expo-router';
 import { useAuth } from '../context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
-import GoogleSignInButton from '../components/GoogleSignInButton';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const { signIn, signInWithGoogle, signed } = useAuth();
+  const { signIn, signed } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -84,21 +82,7 @@ export default function LoginScreen() {
     router.push('/(auth)/forgot-password');
   };
 
-  const handleGoogleLogin = async () => {
-    setIsGoogleLoading(true);
-    try {
-      const result = await signInWithGoogle();
-      if (result.success) {
-        router.replace('/(home)/home');
-      } else {
-        Alert.alert('Erro', result.error || 'Erro ao fazer login com Google');
-      }
-    } catch (error) {
-      Alert.alert('Erro', 'Erro inesperado ao fazer login com Google');
-    } finally {
-      setIsGoogleLoading(false);
-    }
-  };
+  
 
 
   return (

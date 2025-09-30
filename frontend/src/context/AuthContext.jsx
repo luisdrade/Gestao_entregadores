@@ -3,13 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { httpClient } from '../services/clientConfig';
 import { API_ENDPOINTS } from '../config/api';
 import { AppState } from 'react-native';
-// Importação condicional do Google Sign-In
-let googleAuth = null;
-try {
-  googleAuth = require('../services/googleAuth');
-} catch (error) {
-  console.log('⚠️ Google Sign-In não disponível no Expo Go');
-}
 
 const AuthContext = createContext({});
 
@@ -20,10 +13,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     loadStoredData();
-    // Configurar Google Sign-In na inicialização (se disponível)
-    if (googleAuth && googleAuth.configureGoogleSignIn) {
-      googleAuth.configureGoogleSignIn();
-    }
+    // Google Sign-In removido
 
     // Sincronizar estado inicial do AppState no storage
     (async () => {
@@ -236,52 +226,11 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function signInWithGoogleAuth() {
-    try {
-      if (!googleAuth || !googleAuth.signInWithGoogle) {
-        return { 
-          success: false, 
-          error: 'Google Sign-In não disponível no Expo Go' 
-        };
-      }
-      
-      const result = await googleAuth.signInWithGoogle();
-      
-      if (result.success) {
-        const { tokens, user: userData } = result.data;
-        const authToken = tokens.access;
-        
-        // Definir o token no httpClient
-        httpClient.defaults.headers.Authorization = `Bearer ${authToken}`;
-        console.log('🔍 AuthContext - Token definido após Google login:', httpClient.defaults.headers.Authorization);
-        
-        await AsyncStorage.setItem('@GestaoEntregadores:token', authToken);
-        await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(userData));
-        await AsyncStorage.setItem('@GestaoEntregadores:lastAppState', 'active');
-        
-        setToken(authToken);
-        setUser(userData);
-        
-        console.log('✅ AuthContext - Google login realizado com sucesso');
-        return { success: true };
-      } else {
-        return { success: false, error: result.error };
-      }
-    } catch (error) {
-      console.error('Erro no login com Google:', error);
-      return { 
-        success: false, 
-        error: 'Erro ao fazer login com Google' 
-      };
-    }
-  }
+  // Google Sign-In removido
 
   async function signOut() {
     try {
-      // Fazer logout do Google também (se disponível)
-      if (googleAuth && googleAuth.signOutFromGoogle) {
-        await googleAuth.signOutFromGoogle();
-      }
+      // Google Sign-In removido
       
       await AsyncStorage.removeItem('@GestaoEntregadores:token');
       await AsyncStorage.removeItem('@GestaoEntregadores:user');
@@ -303,7 +252,7 @@ export function AuthProvider({ children }) {
       loading,
       signIn,
       signUp,
-      signInWithGoogle: signInWithGoogleAuth,
+      // Google Sign-In removido
       signOut,
       updateUserPhoto,
       updateUserData,

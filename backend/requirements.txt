@@ -10,7 +10,7 @@ dill==0.4.0
 dj-database-url==3.0.1
 dj-rest-auth==7.0.1
 Django==5.2.3
-django-allauth==65.9.0
+django-allauth==65.9.0  # optional; social login disabled
 django-cors-headers==4.7.0
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.0
@@ -19,7 +19,7 @@ idna==3.10
 isort==6.0.1
 mccabe==0.7.0
 mysqlclient==2.2.7
-oauthlib==3.3.1
+oauthlib==3.3.1  # removable if not using any oauth flows
 packaging==25.0
 platformdirs==4.3.8
 psycopg2-binary==2.9.10
@@ -30,9 +30,9 @@ pylint-django==2.6.1
 pylint-plugin-utils==0.9.0
 python3-openid==3.2.0
 requests==2.32.4
-requests-oauthlib==2.0.0
-social-auth-app-django==5.5.1
-social-auth-core==4.7.0
+requests-oauthlib==2.0.0  # removable if not using any oauth flows
+social-auth-app-django==5.5.1  # unused now; consider removing
+social-auth-core==4.7.0       # unused now; consider removing
 sqlparse==0.5.3
 tomlkit==0.13.3
 tzdata==2025.2

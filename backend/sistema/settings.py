@@ -37,10 +37,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',    
-    
-    #provedores de autenticação social
-    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount',
     
     #apps do projeto
     'corsheaders',
@@ -55,7 +52,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    # 'allauth.account.middleware.AccountMiddleware',
     'django.middleware.common.CommonMiddleware',
     'usuarios.middleware.CSRFExemptAPIMiddleware',  # Middleware personalizado para APIs
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -251,7 +248,6 @@ SITE_ID = 1
 # Configuração do allauth
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 # Configurações do allauth
@@ -262,22 +258,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
 
-# Configuração do Google OAuth2
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'APP': {
-            'client_id': '862844595304-5v4jdmv0gsvt1gleiehkq514r768pqbj.apps.googleusercontent.com',
-            'secret': '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',
-        }
-    }
-}
+# Google OAuth desativado
 
 # Configuração do JWT
 SIMPLE_JWT = {

@@ -27,7 +27,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import EntregadorSerializer 
 
 import requests
-from allauth.socialaccount.models import SocialAccount
+try:
+    from allauth.socialaccount.models import SocialAccount
+except Exception:
+    SocialAccount = None
 from django.db import models # Adicionado para usar models.Sum
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -155,53 +158,7 @@ class LogoutView(APIView):
         request.user.auth_token.delete()
         return Response({"detail": "Logout realizado com sucesso"})
     
-class GoogleLogin(APIView):
-    def post(self, request):
-        access_token = request.data.get('access_token')
-        if not access_token:
-            return Response({'error': 'Token não fornecido'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Verifica o token com o Google
-        google_response = requests.get(
-            'https://www.googleapis.com/oauth2/v3/userinfo',
-            params={'access_token': access_token}
-        )
-        
-        if google_response.status_code != 200:
-            return Response({'error': 'Token inválido'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        user_data = google_response.json()
-        email = user_data.get('email')
-        
-        if not email:
-            return Response({'error': 'Email não encontrado'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Busca ou cria o usuário
-        User = get_user_model()
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            user = User.objects.create_user(
-                email=email,
-                username=email.split('@')[0],
-                password=None  # Senha não é necessária para login social
-            )
-        
-        # Cria/atualiza a conta social
-        SocialAccount.objects.update_or_create(
-            provider='google',
-            uid=user_data['sub'],
-            defaults={'user': user, 'extra_data': user_data}
-        )
-        
-        # Gera token JWT (ou o método de autenticação que você usa)
-        from rest_framework_simplejwt.tokens import RefreshToken
-        refresh = RefreshToken.for_user(user)
-        
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        })
+# Google Login desativado/remoção: a view foi removida
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
