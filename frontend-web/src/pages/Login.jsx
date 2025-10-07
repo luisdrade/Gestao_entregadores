@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button, Container, TextField, Typography, Box, Paper } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import { api, ENDPOINTS } from '../services/apiClient';
+import '../styles/pages/Login.css';
 
 export default function Login() {
   const { login } = useAuth();
@@ -44,21 +44,54 @@ export default function Login() {
   }
 
   return (
-    <>      <Container maxWidth="sm" sx={{ mt: 8 }}>
-        <Paper elevation={2} sx={{ p: 3 }}>
-        <Typography variant="h5" mb={2}>Entrar</Typography>
-        <Box component="form" onSubmit={onSubmit}>
-          <TextField fullWidth label="E-mail" type="email" value={email} onChange={(e) => setEmail(e.target.value)} margin="normal" required />
-          <TextField fullWidth label="Senha" type="password" value={password} onChange={(e) => setPassword(e.target.value)} margin="normal" required />
-          {error && <Typography color="error" variant="body2" sx={{ mt: 1 }}>{error}</Typography>}
-          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }} disabled={loading}>Entrar</Button>
-        </Box>
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          Não tem conta? <Link to="/registrar">Cadastre-se</Link>
-        </Typography>
-        </Paper>
-      </Container>
-    </>
+    <div className="login-container">
+      <div className="login-card">
+        <h1 className="login-title">Login</h1>
+        <form onSubmit={onSubmit} className="login-form">
+          <div className="form-group">
+            <label className="form-label">E-mail</label>
+            <input 
+              type="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              className="form-input"
+              placeholder="E-mail"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Senha</label>
+            <input 
+              type="password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              className="form-input"
+              placeholder="Senha"
+              required
+            />
+          </div>
+          <div className="forgot-password">
+            <Link to="#">Esqueci a senha</Link>
+          </div>
+          {error && <div className="login-error">{error}</div>}
+          <button 
+            type="submit" 
+            className="login-button"
+            disabled={loading}
+          >
+            {loading ? 'Entrando...' : 'ENTRAR'}
+          </button>
+          <div className="divider"></div>
+          <button 
+            type="button" 
+            className="register-button"
+            disabled
+          >
+            CADASTRAR-SE
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }
 

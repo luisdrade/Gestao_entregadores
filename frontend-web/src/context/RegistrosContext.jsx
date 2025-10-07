@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { api, ENDPOINTS } from '../services/apiClient';
+import { api, ENDPOINTS, getAccessToken } from '../services/apiClient';
+import { useAuth } from '../context/AuthContext';
 import { handleApiError } from '../utils/errorHandler';
 
 const RegistrosContext = createContext(null);
@@ -10,8 +11,14 @@ export function RegistrosProvider({ children }) {
   const [despesas, setDespesas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useAuth();
 
   const fetchRegistros = async () => {
+    const token = getAccessToken();
+    if (!token) {
+      console.warn('RegistrosContext - Sem token, pulando fetch de registros');
+      return;
+    }
     try {
       console.log('🔍 RegistrosContext - Carregando registros...');
       const response = await api.get(ENDPOINTS.REGISTROS.LIST);
@@ -24,6 +31,12 @@ export function RegistrosProvider({ children }) {
   };
 
   const fetchVeiculos = async () => {
+    const token = getAccessToken();
+    if (!token) {
+      console.warn('RegistrosContext - Sem token, pulando fetch de veículos');
+      setVeiculos([]);
+      return;
+    }
     try {
       console.log('🔍 RegistrosContext - Carregando veículos...');
       const response = await api.get(ENDPOINTS.VEICULOS.LIST);
@@ -39,6 +52,11 @@ export function RegistrosProvider({ children }) {
   };
 
   const fetchDespesas = async () => {
+    const token = getAccessToken();
+    if (!token) {
+      console.warn('RegistrosContext - Sem token, pulando fetch de despesas');
+      return;
+    }
     try {
       console.log('🔍 RegistrosContext - Carregando despesas...');
       const response = await api.get(ENDPOINTS.DESPESAS.LIST);
@@ -56,6 +74,14 @@ export function RegistrosProvider({ children }) {
       setError(null);
       
       try {
+        const token = getAccessToken();
+        if (!token) {
+          console.warn('RegistrosContext - Sem token no início, não carregando dados');
+          setRegistros([]);
+          setDespesas([]);
+          setLoading(false);
+          return;
+        }
         // Carregar apenas registros e despesas automaticamente
         // Veículos serão carregados sob demanda
         const promises = [
@@ -73,7 +99,7 @@ export function RegistrosProvider({ children }) {
     };
     
     loadData();
-  }, []);
+  }, [user]);
 
   const value = {
     registros,

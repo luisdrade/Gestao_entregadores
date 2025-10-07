@@ -29,22 +29,64 @@ export default function Register() {
   }
 
   return (
-    <>
-      <Container maxWidth="sm" sx={{ mt: 8 }}>
-        <Paper elevation={2} sx={{ p: 3 }}>
-        <Typography variant="h5" mb={2}>Cadastro de Entregador</Typography>
-        <Box component="form" onSubmit={onSubmit}>
-          <TextField fullWidth label="Nome" name="nome" value={form.nome} onChange={handleChange} margin="normal" required />
-          <TextField fullWidth label="E-mail" name="email" type="email" value={form.email} onChange={handleChange} margin="normal" required />
-          <TextField fullWidth label="Senha" name="password" type="password" value={form.password} onChange={handleChange} margin="normal" required />
-          {error && <Typography color="error" variant="body2" sx={{ mt: 1 }}>{error}</Typography>}
-          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }} disabled={loading}>Cadastrar</Button>
-        </Box>
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          Já tem conta? <Link to="/login">Entrar</Link>
-        </Typography>
+    <div className="register-container">
+      <Container maxWidth="sm">
+        <Paper elevation={2} className="register-paper">
+          <Typography variant="h5" className="register-title">Cadastro de Entregador</Typography>
+          <Box component="form" onSubmit={onSubmit} className="register-form">
+            <TextField 
+              fullWidth 
+              label="Nome" 
+              name="nome" 
+              value={form.nome} 
+              onChange={handleChange} 
+              className="register-field"
+              required 
+            />
+            <TextField 
+              fullWidth 
+              label="E-mail" 
+              name="email" 
+              type="email" 
+              value={form.email} 
+              onChange={handleChange} 
+              className="register-field"
+              required 
+            />
+            <TextField 
+              fullWidth 
+              label="Senha" 
+              name="password" 
+              type="password" 
+              value={form.password} 
+              onChange={handleChange} 
+              className="register-field"
+              required 
+            />
+            {error && <div className="register-error">{error}</div>}
+            <Button 
+              type="submit" 
+              variant="contained" 
+              fullWidth 
+              className="register-button"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="register-loading">
+                  <span>Cadastrando...</span>
+                </div>
+              ) : (
+                'Cadastrar'
+              )}
+            </Button>
+          </Box>
+          <div className="register-link">
+            <Typography variant="body2">
+              Já tem conta? <Link to="/login">Entrar</Link>
+            </Typography>
+          </div>
         </Paper>
       </Container>
-    </>
+    </div>
   );
 }

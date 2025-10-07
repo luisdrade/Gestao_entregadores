@@ -198,38 +198,31 @@ const AdminDashboard = () => {
       <Header />
       <Container maxWidth="xl">
         {/* Navegação de abas para admin */}
-        <Box sx={{ 
-          display: 'flex', 
-          gap: 1, 
-          alignItems: 'center', 
-          p: 2, 
-          backgroundColor: 'primary.main',
-          color: 'white'
-        }}>
-          <Button
-            color="inherit"
-            startIcon={<PersonIcon />}
-            onClick={() => setActiveTab('users')}
-            sx={{ backgroundColor: activeTab === 'users' ? 'rgba(255,255,255,0.1)' : 'transparent' }}
-          >
-            Usuários
-          </Button>
-          <Button
-            color="inherit"
-            startIcon={<ForumIcon />}
-            onClick={() => setActiveTab('posts')}
-            sx={{ backgroundColor: activeTab === 'posts' ? 'rgba(255,255,255,0.1)' : 'transparent' }}
-          >
-            Posts
-          </Button>
-          <Button
-            color="inherit"
-            startIcon={<CarIcon />}
-            onClick={() => setActiveTab('anuncios')}
-            sx={{ backgroundColor: activeTab === 'anuncios' ? 'rgba(255,255,255,0.1)' : 'transparent' }}
-          >
-            Anúncios
-          </Button>
+        <Box sx={{ backgroundColor: '#e5e5e5', px: { xs: 1, sm: 2 } }}>
+          <Box sx={{
+            display: 'flex',
+            gap: 2,
+            alignItems: 'center',
+            px: 2,
+            py: 1.5,
+            backgroundColor: 'primary.main',
+            color: 'white',
+            borderRadius: 1,
+            mt: 2
+          }}>
+            <Button color="inherit" startIcon={<PersonIcon />} onClick={() => setActiveTab('users')} sx={{
+              textTransform: 'none', fontWeight: 600, borderRadius: 0,
+              borderBottom: activeTab === 'users' ? '2px solid rgba(255,255,255,0.9)' : '2px solid transparent'
+            }}>Usuários</Button>
+            <Button color="inherit" startIcon={<ForumIcon />} onClick={() => setActiveTab('posts')} sx={{
+              textTransform: 'none', fontWeight: 600, borderRadius: 0,
+              borderBottom: activeTab === 'posts' ? '2px solid rgba(255,255,255,0.9)' : '2px solid transparent'
+            }}>Postagens</Button>
+            <Button color="inherit" startIcon={<CarIcon />} onClick={() => setActiveTab('anuncios')} sx={{
+              textTransform: 'none', fontWeight: 600, borderRadius: 0,
+              borderBottom: activeTab === 'anuncios' ? '2px solid rgba(255,255,255,0.9)' : '2px solid transparent'
+            }}>Anúncios</Button>
+          </Box>
         </Box>
 
       <Box sx={{ mt: 3 }}>
