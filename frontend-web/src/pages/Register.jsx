@@ -34,40 +34,43 @@ export default function Register() {
         <h1 className="register-title">Cadastro</h1>
         <form onSubmit={onSubmit} className="register-form">
           <div className="form-group">
-            <label className="form-label">Nome</label>
-            <input 
-              type="text" 
-              name="nome" 
-              value={form.nome} 
-              onChange={handleChange} 
-              className="form-input"
-              placeholder="Nome completo"
-              required 
-            />
+            <div className="input-container">
+              <input 
+                type="text" 
+                name="nome" 
+                value={form.nome} 
+                onChange={handleChange} 
+                className="form-input"
+                required 
+              />
+              <label className={`form-label ${form.nome ? 'floating' : ''}`}>Nome</label>
+            </div>
           </div>
           <div className="form-group">
-            <label className="form-label">E-mail</label>
-            <input 
-              type="email" 
-              name="email" 
-              value={form.email} 
-              onChange={handleChange} 
-              className="form-input"
-              placeholder="E-mail"
-              required 
-            />
+            <div className="input-container">
+              <input 
+                type="email" 
+                name="email" 
+                value={form.email} 
+                onChange={handleChange} 
+                className="form-input"
+                required 
+              />
+              <label className={`form-label ${form.email ? 'floating' : ''}`}>E-mail</label>
+            </div>
           </div>
           <div className="form-group">
-            <label className="form-label">Senha</label>
-            <input 
-              type="password" 
-              name="password" 
-              value={form.password} 
-              onChange={handleChange} 
-              className="form-input"
-              placeholder="Senha"
-              required 
-            />
+            <div className="input-container">
+              <input 
+                type="password" 
+                name="password" 
+                value={form.password} 
+                onChange={handleChange} 
+                className="form-input"
+                required 
+              />
+              <label className={`form-label ${form.password ? 'floating' : ''}`}>Senha</label>
+            </div>
           </div>
           {error && <div className="register-error">{error}</div>}
           <button 

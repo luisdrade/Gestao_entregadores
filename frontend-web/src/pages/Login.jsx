@@ -50,26 +50,28 @@ export default function Login() {
         <h1 className="login-title">Login</h1>
         <form onSubmit={onSubmit} className="login-form">
           <div className="form-group">
-            <label className="form-label">E-mail</label>
-            <input 
-              type="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              className="form-input"
-              placeholder="E-mail"
-              required
-            />
+            <div className="input-container">
+              <input 
+                type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                className="form-input"
+                required
+              />
+              <label className={`form-label ${email ? 'floating' : ''}`}>E-mail</label>
+            </div>
           </div>
           <div className="form-group">
-            <label className="form-label">Senha</label>
-            <input 
-              type="password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              className="form-input"
-              placeholder="Senha"
-              required
-            />
+            <div className="input-container">
+              <input 
+                type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                className="form-input"
+                required
+              />
+              <label className={`form-label ${password ? 'floating' : ''}`}>Senha</label>
+            </div>
           </div>
           <div className="forgot-password">
             <Link to="#">Esqueci a senha</Link>
