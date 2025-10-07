@@ -148,8 +148,7 @@ export default function Register() {
                 </div>
 
                 <div className="form-group half-width">
-                  <div className="input-container username-container">
-                    <span className="username-prefix">@</span>
+                  <div className="input-container">
                     <input 
                       type="text" 
                       name="username" 
@@ -161,10 +160,10 @@ export default function Register() {
                         }
                       }}
                       onBlur={handleBlur('username')}
-                      className={`form-input username-input ${(touched.username && errors.username) || fieldErrors.username ? 'input-error' : ''}`}
+                      className={`form-input ${(touched.username && errors.username) || fieldErrors.username ? 'input-error' : ''}`}
                       autoCapitalize="none"
                     />
-                    <label className={`form-label username-label ${values.username ? 'floating' : ''}`}>Usuário</label>
+                    <label className={`form-label ${values.username ? 'floating' : ''}`}>Usuário</label>
                   </div>
                   {(touched.username && errors.username) && (
                     <div className="field-error">{errors.username}</div>
@@ -172,7 +171,7 @@ export default function Register() {
                   {fieldErrors.username && (
                     <div className="field-error">{fieldErrors.username}</div>
                   )}
-                </div>
+                </div>  
               </div>
 
               <div className="form-group">

@@ -13,7 +13,7 @@
   border-radius: 20px;
   padding: 2.5rem;
   width: 420px;
-  min-height: 650px;
+  min-height: 450px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -236,9 +236,7 @@
 
 /* Responsive */
 @media (max-width: 400px) {
-  .register-container {
-    padding: 1rem;
-  }
+
   
   .register-card {
     max-width: 350px;
@@ -255,11 +253,6 @@
   /* Em telas pequenas, campos ficam empilhados */
   .form-row {
     flex-direction: column;
-    gap: 0.3rem;
-  }
+}
   
-  .half-width {
-    flex: none;
-    width: 100%;
-  }
 }
