@@ -38,7 +38,7 @@ export default function BottomTabBar() {
                         <Ionicons
                             name="person"
                             size={24}
-                            color={PerfilActive ? '#007AFF' : '#666'}
+                            color={PerfilActive ? '#2B2860' : '#666'}
                         />
                     </View>
                     <Text style={[styles.tabText, PerfilActive && styles.activeTabText]}>
@@ -55,7 +55,7 @@ export default function BottomTabBar() {
                         <Ionicons
                             name="home"
                             size={24}
-                            color={HomeActive ? '#007AFF' : '#666'}
+                            color={HomeActive ? '#2B2860' : '#666'}
                         />
                     </View>
                     <Text style={[styles.tabText, HomeActive && styles.activeTabText]}>
@@ -72,7 +72,7 @@ export default function BottomTabBar() {
                         <Ionicons
                             name="people"
                             size={24}
-                            color={ComunidadeActive ? '#007AFF' : '#666'}
+                            color={ComunidadeActive ? '#2B2860' : '#666'}
                         />
                     </View>
                     <Text style={[styles.tabText, ComunidadeActive && styles.activeTabText]}>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     activeTabText: {
-        color: '#007AFF',
+        color: '#2B2860',
         fontWeight: '600',
     },
 });

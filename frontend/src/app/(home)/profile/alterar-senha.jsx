@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
   },
   header: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     paddingTop: 10,
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
   dicasTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#007AFF',
+    color: '#2B2860',
     marginBottom: 10,
   },
   dicasItem: {
@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   changeButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     borderRadius: 8,
     padding: 15,
     alignItems: 'center',

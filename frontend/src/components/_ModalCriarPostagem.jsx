@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   botaoCancelar: {
     fontSize: 16,
-    color: '#007AFF',
+    color: '#2B2860',
   },
   titulo: {
     fontSize: 18,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   botaoPostar: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,

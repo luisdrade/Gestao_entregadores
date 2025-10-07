@@ -272,7 +272,7 @@ export default function VeiculosScreen() {
         {label}
       </Text>
       {isSelected && (
-        <Ionicons name="checkmark" size={20} color="#007AFF" />
+        <Ionicons name="checkmark" size={20} color="#2B2860" />
       )}
     </TouchableOpacity>
   );
@@ -289,7 +289,7 @@ export default function VeiculosScreen() {
             <Ionicons 
               name={item.tipo === 'carro' ? 'car' : 'bicycle'} 
               size={24} 
-              color="#007AFF" 
+              color="#2B2860" 
             />
             <Text style={styles.veiculoTipoText}>
               {item.tipo === 'carro' ? 'Carro' : 'Moto'}
@@ -306,7 +306,7 @@ export default function VeiculosScreen() {
             onPress={() => openEditModal(item)}
             activeOpacity={0.7}
           >
-            <Ionicons name="create-outline" size={20} color="#007AFF" />
+            <Ionicons name="create-outline" size={20} color="#2B2860" />
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.deleteButton}
@@ -375,7 +375,7 @@ export default function VeiculosScreen() {
       <View style={styles.content}>
         {loadingVeiculos ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#007AFF" />
+            <ActivityIndicator size="large" color="#2B2860" />
             <Text style={styles.loadingText}>Carregando veículos...</Text>
           </View>
         ) : veiculos.length === 0 ? (
@@ -436,7 +436,7 @@ export default function VeiculosScreen() {
               <View style={styles.formCard}>
                 <View style={styles.formCardHeader}>
                   <View style={styles.formIconContainer}>
-                    <Ionicons name="car" size={28} color="#007AFF" />
+                    <Ionicons name="car" size={28} color="#2B2860" />
                   </View>
                   <View style={styles.formTitleContainer}>
                     <Text style={styles.formTitle}>Informações do Veículo</Text>
@@ -461,7 +461,7 @@ export default function VeiculosScreen() {
                       {/* Seção: Tipo e Categoria */}
                       <View style={styles.section}>
                         <View style={styles.sectionHeader}>
-                          <Ionicons name="car-sport" size={20} color="#007AFF" />
+                          <Ionicons name="car-sport" size={20} color="#2B2860" />
                           <Text style={styles.sectionTitle}>Tipo e Categoria</Text>
                         </View>
 
@@ -521,7 +521,7 @@ export default function VeiculosScreen() {
                       {/* Seção: Dados do Veículo */}
                       <View style={styles.section}>
                         <View style={styles.sectionHeader}>
-                          <Ionicons name="document-text" size={20} color="#007AFF" />
+                          <Ionicons name="document-text" size={20} color="#2B2860" />
                           <Text style={styles.sectionTitle}>Dados do Veículo</Text>
                         </View>
 
@@ -572,7 +572,7 @@ export default function VeiculosScreen() {
                       {/* Seção: Consumo */}
                       <View style={styles.section}>
                         <View style={styles.sectionHeader}>
-                          <Ionicons name="speedometer" size={20} color="#007AFF" />
+                          <Ionicons name="speedometer" size={20} color="#2B2860" />
                           <Text style={styles.sectionTitle}>Consumo de Combustível</Text>
                         </View>
 
@@ -629,7 +629,7 @@ export default function VeiculosScreen() {
                                 <Text style={styles.kmTipText}>Motos: 25-40 km/l</Text>
                               </View>
                               <View style={styles.kmTipItem}>
-                                <Ionicons name="information-circle" size={16} color="#007AFF" />
+                                <Ionicons name="information-circle" size={16} color="#2B2860" />
                                 <Text style={styles.kmTipText}>Consulte o manual do veículo</Text>
                               </View>
                             </View>
@@ -944,7 +944,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f2f5',
   },
   header: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     paddingTop: 10,
     paddingBottom: 20,
   },
@@ -1113,14 +1113,14 @@ const styles = StyleSheet.create({
   },
   selectOptionSelected: {
     backgroundColor: '#f0f8ff',
-    borderBottomColor: '#007AFF',
+    borderBottomColor: '#2B2860',
   },
   selectOptionText: {
     fontSize: 16,
     color: '#666',
   },
   selectOptionTextSelected: {
-    color: '#007AFF',
+    color: '#2B2860',
     fontWeight: '600',
   },
   textInput: {
@@ -1141,14 +1141,14 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   kmHelpButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    shadowColor: '#007AFF',
+    shadowColor: '#2B2860',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -1171,7 +1171,7 @@ const styles = StyleSheet.create({
   kmTipsTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#007AFF',
+    color: '#2B2860',
     marginBottom: 10,
   },
   kmTipItem: {
@@ -1201,13 +1201,13 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   cadastrarButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#007AFF',
+    shadowColor: '#2B2860',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -1325,7 +1325,7 @@ const styles = StyleSheet.create({
   veiculoTipoText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#2B2860',
     marginLeft: 8,
   },
   veiculoModelo: {
@@ -1417,11 +1417,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   addFirstButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 32,
-    shadowColor: '#007AFF',
+    shadowColor: '#2B2860',
     shadowOffset: {
       width: 0,
       height: 4,

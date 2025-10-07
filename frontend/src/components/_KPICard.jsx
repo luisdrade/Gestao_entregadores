@@ -75,7 +75,7 @@ const KPICard = ({
           <Text style={[
             styles.kpiCardData,
             variant === 'filled' && styles.filledText,
-            { color: variant === 'filled' ? '#fff' : '#007AFF' }
+            { color: variant === 'filled' ? '#fff' : '#2B2860' }
           ]}>
             {formatValue(data)}
           </Text>
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   kpiCardData: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#2B2860',
   },
   
   subtitle: {

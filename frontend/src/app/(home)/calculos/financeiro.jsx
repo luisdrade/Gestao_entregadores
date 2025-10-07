@@ -278,7 +278,7 @@ export default function FinanceiroScreen() {
                             {type}
                           </Text>
                           {selectedExpenseType === type && (
-                            <Ionicons name="checkmark" size={20} color="#007AFF" />
+                            <Ionicons name="checkmark" size={20} color="#2B2860" />
                           )}
                         </TouchableOpacity>
                       ))}
@@ -293,7 +293,7 @@ export default function FinanceiroScreen() {
                     style={styles.addNewOption}
                     onPress={handleAddNovaDespesa}
                   >
-                    <Ionicons name="add-circle" size={20} color="#007AFF" />
+                    <Ionicons name="add-circle" size={20} color="#2B2860" />
                     <Text style={styles.addNewOptionText}>Adicionar novo tipo</Text>
                   </TouchableOpacity>
                 </ScrollView>
@@ -417,7 +417,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   registerButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     borderRadius: 8,
     marginTop: 20,
     padding: 15,
@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
   },
   optionTextSelected: {
     fontWeight: '600',
-    color: '#007AFF',
+    color: '#2B2860',
   },
   separator: {
     height: 1,
@@ -520,7 +520,7 @@ const styles = StyleSheet.create({
   },
   addNewOptionText: {
     fontSize: 16,
-    color: '#007AFF',
+    color: '#2B2860',
     fontWeight: '600',
     marginLeft: 10,
   },

@@ -263,7 +263,7 @@ const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
             
             {carregandoVeiculos ? (
               <View style={styles.carregandoContainer}>
-                <ActivityIndicator size="large" color="#007AFF" />
+                <ActivityIndicator size="large" color="#2B2860" />
                 <Text style={styles.textoCarregando}>Carregando veículos...</Text>
               </View>
             ) : veiculos.length === 0 ? (
@@ -294,7 +294,7 @@ const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
                         <Ionicons 
                           name={item.tipo === 'carro' ? 'car' : 'bicycle'} 
                           size={20} 
-                          color="#007AFF" 
+                          color="#2B2860" 
                         />
                         <Text style={styles.textoTipoVeiculo}>
                           {item.tipo === 'carro' ? 'Carro' : 'Moto'}
@@ -306,7 +306,7 @@ const _ModalCriarAnuncioVeiculo = ({ visivel, aoFechar, aoCriarAnuncio }) => {
                       </Text>
                     </View>
                     {veiculoSelecionado?.id === item.id && (
-                      <Ionicons name="checkmark-circle" size={24} color="#007AFF" />
+                      <Ionicons name="checkmark-circle" size={24} color="#2B2860" />
                     )}
                   </TouchableOpacity>
                 )}
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
   },
   botaoCancelar: {
     fontSize: 16,
-    color: '#007AFF',
+    color: '#2B2860',
   },
   titulo: {
     fontSize: 18,
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   botaoPublicar: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
   },
   textoBotaoImagem: {
     fontSize: 16,
-    color: '#007AFF',
+    color: '#2B2860',
   },
   // Estilos do seletor de veículos
   seletorVeiculo: {
@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
   textoTipoVeiculo: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#007AFF',
+    color: '#2B2860',
     marginLeft: 6,
   },
   textoModeloVeiculo: {

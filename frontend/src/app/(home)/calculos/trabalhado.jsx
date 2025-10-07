@@ -303,7 +303,7 @@ export default function TrabalhadoScreen() {
                 <Ionicons
                   name="calendar"
                   size={20}
-                  color={selectedPaymentType === 'Diária' ? '#fff' : '#007AFF'}
+                  color={selectedPaymentType === 'Diária' ? '#fff' : '#2B2860'}
                 />
                 <Text style={[
                   styles.paymentTypeText,
@@ -324,7 +324,7 @@ export default function TrabalhadoScreen() {
                 <Ionicons
                   name="cube"
                   size={20}
-                  color={selectedPaymentType === 'Por Pacote' ? '#fff' : '#007AFF'}
+                  color={selectedPaymentType === 'Por Pacote' ? '#fff' : '#2B2860'}
                 />
                 <Text style={[
                   styles.paymentTypeText,
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
   },
   header: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     paddingTop: 10,
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   registerButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     borderRadius: 8,
     padding: 15,
     alignItems: 'center',
@@ -524,13 +524,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   paymentTypeButtonSelected: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: '#2B2860',
+    borderColor: '#2B2860',
   },
   paymentTypeText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#007AFF',
+    color: '#2B2860',
   },
   paymentTypeTextSelected: {
     color: '#fff',
@@ -554,6 +554,6 @@ const styles = StyleSheet.create({
   totalValueText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#2B2860',
   },
 });

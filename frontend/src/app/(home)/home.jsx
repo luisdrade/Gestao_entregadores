@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#2B2860',
     marginBottom: 5,
   },
   statLabel: {

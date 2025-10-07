@@ -13,7 +13,7 @@ export default function HeaderWithBack({
   onBackPress,
   showBackButton = true,
   rightComponent,
-  backgroundColor = '#007AFF',
+  backgroundColor = '#2B2860',
   titleColor = '#fff',
   style = {},
   showWelcome = false,
@@ -68,7 +68,7 @@ export default function HeaderWithBack({
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
   },
   header: {
     paddingTop: 10,

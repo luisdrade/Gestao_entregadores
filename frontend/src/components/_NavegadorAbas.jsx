@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   activeTab: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
   },
   tabText: {
     fontSize: 14,
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   activePillTab: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
   },
   activePillText: {
     color: '#fff',
@@ -152,10 +152,10 @@ const styles = StyleSheet.create({
     borderRadius: 0,
   },
   activeUnderlineTab: {
-    borderBottomColor: '#007AFF',
+    borderBottomColor: '#2B2860',
   },
   activeUnderlineText: {
-    color: '#007AFF',
+    color: '#2B2860',
     fontWeight: 'bold',
   },
 });

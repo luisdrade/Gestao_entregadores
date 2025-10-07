@@ -341,7 +341,7 @@ export default function EditarPerfilScreen() {
         <View style={styles.mainCard}>
           <View style={styles.cardHeader}>
             <View style={styles.iconContainer}>
-              <Ionicons name="person-circle" size={32} color="#007AFF" />
+              <Ionicons name="person-circle" size={32} color="#2B2860" />
             </View>
             <View style={styles.titleContainer}>
               <Text style={styles.title}>Informações Pessoais</Text>
@@ -387,7 +387,7 @@ export default function EditarPerfilScreen() {
                   {/* Seção: Dados Básicos */}
                   <View style={styles.section}>
                     <View style={styles.sectionHeader}>
-                      <Ionicons name="person" size={20} color="#007AFF" />
+                      <Ionicons name="person" size={20} color="#2B2860" />
                       <Text style={styles.sectionTitle}>Dados Básicos</Text>
                     </View>
 
@@ -462,7 +462,7 @@ export default function EditarPerfilScreen() {
                   {/* Seção: Endereço */}
                   <View style={styles.section}>
                     <View style={styles.sectionHeader}>
-                      <Ionicons name="location" size={20} color="#007AFF" />
+                      <Ionicons name="location" size={20} color="#2B2860" />
                       <Text style={styles.sectionTitle}>Endereço</Text>
                     </View>
 
@@ -582,7 +582,7 @@ export default function EditarPerfilScreen() {
                   {/* Seção: Contato */}
                   <View style={styles.section}>
                     <View style={styles.sectionHeader}>
-                      <Ionicons name="call" size={20} color="#007AFF" />
+                      <Ionicons name="call" size={20} color="#2B2860" />
                       <Text style={styles.sectionTitle}>Contato</Text>
                     </View>
 
@@ -651,10 +651,10 @@ export default function EditarPerfilScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f2f5',
+    backgroundColor: 'black',
   },
   header: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     paddingTop: 10,
     paddingBottom: 20,
   },
@@ -695,18 +695,10 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   mainCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    backgroundColor: '#fafafa',
     padding: 24,
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+
   },
   cardHeader: {
     flexDirection: 'row',
@@ -744,7 +736,7 @@ const styles = StyleSheet.create({
   section: {
     backgroundColor: '#fafafa',
     borderRadius: 12,
-    padding: 20,
+    padding: 1,
     marginBottom: 16,
   },
   sectionHeader: {
@@ -773,7 +765,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     borderRadius: 12,
 
     paddingHorizontal: 16,
@@ -817,13 +809,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   saveButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#007AFF',
+    shadowColor: '#2B2860',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -885,7 +877,7 @@ const styles = StyleSheet.create({
   },
   usernamePrefix: {
     fontSize: 16,
-    color: '#007AFF',
+    color: '#2B2860',
     fontWeight: '600',
     marginLeft: 8,
   },
@@ -924,14 +916,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cepButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     borderRadius: 12,
     padding: 12,
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: 48,
     height: 48,
-    shadowColor: '#007AFF',
+    shadowColor: '#2B2860',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -947,7 +939,7 @@ const styles = StyleSheet.create({
   },
   cepLoadingText: {
     fontSize: 12,
-    color: '#007AFF',
+    color: '#2B2860',
     marginTop: 6,
     fontStyle: 'italic',
     marginLeft: 4,

@@ -52,7 +52,7 @@ const _Botao = ({
     >
       {loading ? (
         <ActivityIndicator 
-          color={variant === 'outline' ? '#007AFF' : '#fff'} 
+          color={variant === 'outline' ? '#2B2860' : '#fff'} 
           size="small" 
         />
       ) : (
@@ -76,8 +76,8 @@ const styles = StyleSheet.create({
   
   // Variants
   primaryButton: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: '#2B2860',
+    borderColor: '#2B2860',
   },
   secondaryButton: {
     backgroundColor: '#6c757d',
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   outlineButton: {
     backgroundColor: 'transparent',
-    borderColor: '#007AFF',
+    borderColor: '#2B2860',
   },
   
   // Sizes
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   outlineText: {
-    color: '#007AFF',
+    color: '#2B2860',
   },
   disabledText: {
     color: '#999',

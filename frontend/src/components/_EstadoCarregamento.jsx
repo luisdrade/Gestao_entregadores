@@ -24,7 +24,7 @@ const _EstadoCarregamento = ({
   if (isLoading) {
     return (
       <View style={[styles.container, style]}>
-        <ActivityIndicator size={size} color="#007AFF" />
+        <ActivityIndicator size={size} color="#2B2860" />
         <Text style={styles.loadingText}>{loadingText}</Text>
       </View>
     );
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   retryButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,

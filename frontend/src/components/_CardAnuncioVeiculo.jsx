@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   preco: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#2B2860',
     marginBottom: 12,
   },
   footer: {
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     color: '#999',
   },
   botaoLink: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,

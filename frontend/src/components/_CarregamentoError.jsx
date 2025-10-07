@@ -5,7 +5,7 @@ const LoadingError = ({ isLoading, hasError, onRetry, loadingText = 'Carregando.
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color="#2B2860" />
         <Text style={styles.loadingText}>{loadingText}</Text>
       </View>
     );
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   retryButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,

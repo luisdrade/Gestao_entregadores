@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   autor: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#007AFF',
+    color: '#2B2860',
   },
   data: {
     fontSize: 12,
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   },
   lerMais: {
     fontSize: 14,
-    color: '#007AFF',
+    color: '#2B2860',
     fontWeight: '500',
   },
 });

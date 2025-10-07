@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   addButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     width: 50,
     height: 50,
     borderRadius: 25,
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   activeTab: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
   },
   tabText: {
     fontSize: 16,

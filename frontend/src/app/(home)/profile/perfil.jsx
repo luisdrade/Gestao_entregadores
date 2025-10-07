@@ -667,7 +667,7 @@ export default function ProfileScreen() {
           ) : (
             <View style={styles.statsGrid}>
               <View style={styles.statItem}>
-                <Ionicons name="cube-outline" size={24} color="#007AFF" />
+                <Ionicons name="cube-outline" size={24} color="#2B2860" />
                 <Text style={styles.statValue}>{stats.totalEntregas}</Text>
                 <Text style={styles.statLabel}>Entregas</Text>
               </View>
@@ -696,7 +696,7 @@ export default function ProfileScreen() {
           
           <TouchableOpacity style={styles.actionButton} onPress={handleEditProfile}>
             <View style={styles.actionContent}>
-              <Ionicons name="person-outline" size={20} color="#007AFF" />
+              <Ionicons name="person-outline" size={20} color="#2B2860" />
               <Text style={styles.actionText}>Editar Perfil</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color="#ccc" />
@@ -704,7 +704,7 @@ export default function ProfileScreen() {
 
           <TouchableOpacity style={styles.actionButton} onPress={handleVeiculos}>
             <View style={styles.actionContent}>
-              <Ionicons name="car-outline" size={20} color="#007AFF" />
+              <Ionicons name="car-outline" size={20} color="#2B2860" />
               <Text style={styles.actionText}>Meus Veículos</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color="#ccc" />
@@ -712,7 +712,7 @@ export default function ProfileScreen() {
 
           <TouchableOpacity style={styles.actionButton} onPress={handleChangePassword}>
             <View style={styles.actionContent}>
-              <Ionicons name="lock-closed-outline" size={20} color="#007AFF" />
+              <Ionicons name="lock-closed-outline" size={20} color="#2B2860" />
               <Text style={styles.actionText}>Alterar Senha</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color="#ccc" />
@@ -746,7 +746,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     paddingTop: 30, 
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -782,7 +782,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: '#007AFF',
+    borderColor: '#2B2860',
   },
   profilePhoto: {
     width: '100%',
@@ -798,7 +798,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     borderRadius: 15,
     width: 30,
     height: 30,
@@ -826,7 +826,7 @@ const styles = StyleSheet.create({
   infoText: {
     marginTop: 5,
     fontSize: 12,
-    color: '#007AFF',
+    color: '#2B2860',
     fontStyle: 'italic',
   },
   statsSection: {
@@ -858,7 +858,7 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#2B2860',
     marginTop: 5,
   },
   statLabel: {

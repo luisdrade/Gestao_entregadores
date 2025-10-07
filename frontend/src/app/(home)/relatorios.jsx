@@ -405,7 +405,7 @@ export default function RelatoriosScreen() {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {isLoading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#007AFF" />
+            <ActivityIndicator size="large" color="#2B2860" />
             <Text style={styles.loadingText}>Carregando relatório...</Text>
           </View>
         ) : (
@@ -574,7 +574,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
     paddingTop: 10,
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -613,7 +613,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   activeTab: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
   },
   tabText: {
     fontSize: 13,
@@ -640,8 +640,8 @@ const styles = StyleSheet.create({
     borderColor: '#e0e0e0',
   },
   activePeriodButton: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: '#2B2860',
+    borderColor: '#2B2860',
   },
   periodButtonText: {
     fontSize: 18,
@@ -702,7 +702,7 @@ const styles = StyleSheet.create({
   summaryNumber: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#2B2860',
     marginBottom: 5,
   },
   summaryLabel: {
@@ -762,7 +762,7 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#2B2860',
   },
   diasContainer: {
     backgroundColor: '#fff',
@@ -824,7 +824,7 @@ const styles = StyleSheet.create({
   categoryAmount: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#2B2860',
   },
   progressBar: {
     height: 8,
@@ -937,8 +937,8 @@ const styles = StyleSheet.create({
   cancelButton: {
   },
   saveButton: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: '#2B2860',
+    borderColor: '#2B2860',
   },
   deleteButton: {
     backgroundColor: '#FF3B30',

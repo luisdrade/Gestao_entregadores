@@ -116,8 +116,8 @@ const styles = StyleSheet.create({
     flex: 0,
   },
   selectedOption: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: '#2B2860',
+    borderColor: '#2B2860',
   },
   optionError: {
     borderColor: '#FF6B6B',
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#007AFF',
+    color: '#2B2860',
     textAlign: 'center',
   },
   selectedOptionText: {

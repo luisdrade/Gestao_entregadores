@@ -50,8 +50,8 @@ const _ModalConfirmacao = ({
         };
       default:
         return {
-          iconColor: '#007AFF',
-          confirmButtonColor: '#007AFF',
+          iconColor: '#2B2860',
+          confirmButtonColor: '#2B2860',
         };
     }
   };
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
   },
   confirmButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2B2860',
   },
   disabledButton: {
     backgroundColor: '#ccc',
