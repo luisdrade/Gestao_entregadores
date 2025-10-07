@@ -13,7 +13,7 @@
   border-radius: 20px;
   padding: 2.5rem;
   width: 420px;
-  min-height: 450px;
+  min-height: 650px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -48,6 +48,18 @@
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+}
+
+/* Form row para campos lado a lado */
+.form-row {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.half-width {
+  flex: 1;
+  min-width: 0; /* Permite que os campos encolham */
 }
 
 .input-container {
@@ -174,6 +186,54 @@
   border: 1px solid #feb2b2;
 }
 
+/* Username container */
+.username-container {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #CCCCCC;
+  border-radius: 8px;
+  position: relative;
+}
+
+.username-prefix {
+  font-size: 0.95rem;
+  color: #2B2860;
+  font-weight: 600;
+  padding-left: 0.6rem;
+  padding-right: 0.25rem;
+  z-index: 2;
+}
+
+.username-input {
+  border: none;
+  padding-left: 0;
+  background: transparent;
+}
+
+.username-label {
+  left: 1.2rem;
+}
+
+/* Error styles */
+.input-error {
+  border-color: #e53e3e !important;
+  box-shadow: 0 0 0 1px #e53e3e !important;
+}
+
+.field-error {
+  color: #e53e3e;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  margin-left: 0.25rem;
+}
+
+/* Username container error */
+.username-container.input-error {
+  border-color: #e53e3e;
+  box-shadow: 0 0 0 1px #e53e3e;
+}
+
 /* Responsive */
 @media (max-width: 400px) {
   .register-container {
@@ -190,5 +250,16 @@
   
   .register-title {
     font-size: 1.75rem;
+  }
+  
+  /* Em telas pequenas, campos ficam empilhados */
+  .form-row {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .half-width {
+    flex: none;
+    width: 100%;
   }
 }
