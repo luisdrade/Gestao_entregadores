@@ -92,28 +92,34 @@ export default function LoginScreen() {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.content}>
-          <Text style={styles.title}>Gestão de Entregadores</Text>
-          <Text style={styles.subtitle}>Faça login para continuar</Text>
+          <Text style={styles.title}>Entregas Plus</Text>
+          <Text style={styles.subtitle}>Gerenciamento da suas finanças na palma da sua mão</Text>
 
           <View style={styles.form}>
-            <TextInput
-              placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              style={styles.input}
-              placeholderTextColor="#666"
-            />
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>E-mail</Text>
+              <TextInput
+                placeholder="Digite seu e-mail"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                style={styles.input}
+                placeholderTextColor="#999"
+              />
+            </View>
 
-            <TextInput
-              placeholder="Senha"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              style={styles.input}
-              placeholderTextColor="#666"
-            />
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Senha</Text>
+              <TextInput
+                placeholder="Digite sua senha"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                style={styles.input}
+                placeholderTextColor="#999"
+              />
+            </View>
 
             <TouchableOpacity
               style={[styles.button, isLoading && styles.buttonDisabled]}
@@ -131,7 +137,7 @@ export default function LoginScreen() {
               style={styles.linkButton}
               onPress={handleForgotPassword}
             >
-              <Text style={styles.linkText}>Esqueci minha senha</Text>
+              <Text style={styles.linkText}>Esqueci a senha</Text>
             </TouchableOpacity>
 
             <View style={styles.divider}>
@@ -146,7 +152,7 @@ export default function LoginScreen() {
               style={styles.registerButton}
               onPress={handleRegister}
             >
-              <Text style={styles.registerButtonText}>Criar nova conta</Text>
+              <Text style={styles.registerButtonText}>Cadastrar-se</Text>
             </TouchableOpacity>
 
           </View>
@@ -159,64 +165,93 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F5F5F5',
   },
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
   },
   content: {
-    padding: 20,
+    backgroundColor: '#F5F5F5',
+    padding: 30,
     alignItems: 'center',
   },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
+    color: '#2B2860',
+    marginBottom: 8,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
-    marginBottom: 30,
+    color: '#555555',
+    marginBottom: 40,
     textAlign: 'center',
+    lineHeight: 22,
   },
   form: {
     width: '100%',
     maxWidth: 350,
   },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 16,
+    color: '#555555',
+    marginBottom: 8,
+    fontWeight: '500',
+  },
   input: {
     backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
+    borderRadius: 12,
+    padding: 16,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#E0E0E0',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   button: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 15,
+    backgroundColor: '#2B2860',
+    borderRadius: 12,
+    padding: 18,
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 18,
+    shadowColor: '#2B2860',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   buttonDisabled: {
     backgroundColor: '#ccc',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   linkButton: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   linkText: {
-    color: '#007AFF',
+    color: '#5B9BD5',
     fontSize: 14,
+    fontWeight: '500',
   },
   divider: {
     flexDirection: 'row',
@@ -226,26 +261,34 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#ddd',
+    backgroundColor: '#E0E0E0',
   },
   dividerText: {
     marginHorizontal: 15,
-    color: '#666',
+    color: '#999',
     fontSize: 14,
   },
   registerButton: {
-    backgroundColor: 'transparent',
-    borderRadius: 8,
-    padding: 15,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 12,
+    padding: 18,
     marginBottom: 15,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#007AFF',
+    borderColor: '#E0E0E0',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   registerButtonText: {
-    color: '#007AFF',
-    fontSize: 16,
-    fontWeight: '600',
+    color: '#555555',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

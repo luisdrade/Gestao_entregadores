@@ -38237,3 +38237,68 @@ Watching for file changes with StatReloader
 CSRF desabilitado para rota: /api/auth/login/
 Bad Request: /api/auth/login/
 "POST /api/auth/login/ HTTP/1.1" 400 155
+"OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'user_type': 'entregador', 'email_validado': False}
+"POST /api/auth/login/ HTTP/1.1" 200 995
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+CSRF desabilitado para rota: /api/auth/profile/
+"OPTIONS /registro/api/registro-trabalho/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"OPTIONS /registro/api/dashboard-data/?data_inicio=2025-10-07&data_fim=2025-10-07 HTTP/1.1" 200 0
+"OPTIONS /registro/api/dashboard-data/?data_inicio=2025-10-07&data_fim=2025-10-07 HTTP/1.1" 200 0
+"GET /registro/api/dashboard-data/?data_inicio=2025-10-07&data_fim=2025-10-07 HTTP/1.1" 200 1274
+"GET /registro/api/dashboard-data/?data_inicio=2025-10-07&data_fim=2025-10-07 HTTP/1.1" 200 1274
+"OPTIONS /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 0
+"OPTIONS /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 0
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 249
+"OPTIONS /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 0
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 596
+"GET /api/relatorios/estatisticas/?periodo=mes HTTP/1.1" 200 249
+"OPTIONS /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 0
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 474
+"GET /registro/api/registro-trabalho/?periodo=mes HTTP/1.1" 200 596
+"GET /registro/api/registro-despesa/?periodo=mes HTTP/1.1" 200 474
+"OPTIONS /api/veiculos/ HTTP/1.1" 200 0
+"OPTIONS /api/veiculos/ HTTP/1.1" 200 0
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /registro/api/dashboard-data/?data_inicio=2025-10-07&data_fim=2025-10-07 HTTP/1.1" 200 1274
+"GET /registro/api/dashboard-data/?data_inicio=2025-10-07&data_fim=2025-10-07 HTTP/1.1" 200 1274
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /api/auth/profile/ HTTP/1.1" 200 462
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 596
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 474
+"GET /registro/api/dashboard-data/?data_inicio=2025-10-07&data_fim=2025-10-07 HTTP/1.1" 200 1274
+"GET /registro/api/dashboard-data/?data_inicio=2025-10-07&data_fim=2025-10-07 HTTP/1.1" 200 1274
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'user_type': 'entregador', 'email_validado': False}
+"POST /api/auth/login/ HTTP/1.1" 200 995
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1391
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 249
+"GET /api/estatisticas/ HTTP/1.1" 200 249
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'user_type': 'entregador', 'email_validado': False}
+"POST /api/auth/login/ HTTP/1.1" 200 995
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1391

@@ -76,15 +76,18 @@ export default function ForgotPasswordScreen() {
         </Text>
 
         <View style={styles.form}>
-          <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            style={styles.input}
-            placeholderTextColor="#666"
-          />
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>E-mail</Text>
+            <TextInput
+              placeholder="Digite seu e-mail"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              style={styles.input}
+              placeholderTextColor="#999"
+            />
+          </View>
 
           <TouchableOpacity
             style={[styles.button, isLoading && styles.buttonDisabled]}
@@ -113,25 +116,28 @@ export default function ForgotPasswordScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F5F5F5',
   },
   content: {
     flex: 1,
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    borderRadius: 20,
+    margin: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
+    color: '#2B2860',
+    marginBottom: 8,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
-    marginBottom: 30,
+    color: '#555555',
+    marginBottom: 40,
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -139,35 +145,62 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 350,
   },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 16,
+    color: '#555555',
+    marginBottom: 8,
+    fontWeight: '500',
+  },
   input: {
     backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 20,
+    borderRadius: 12,
+    padding: 16,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#E0E0E0',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   button: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 15,
+    backgroundColor: '#2B2860',
+    borderRadius: 12,
+    padding: 18,
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 16,
+    shadowColor: '#2B2860',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   buttonDisabled: {
     backgroundColor: '#ccc',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   linkButton: {
     alignItems: 'center',
   },
   linkText: {
-    color: '#007AFF',
+    color: '#5B9BD5',
     fontSize: 14,
+    fontWeight: '500',
   },
 });
