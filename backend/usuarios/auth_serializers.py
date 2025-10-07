@@ -87,7 +87,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'nome', 'email', 'cpf', 'telefone', 'username',
             'data_nascimento', 'endereco', 'cep', 'cidade', 'estado',
-            'foto', 'is_staff', 'is_superuser', 'date_joined', 'user_type',
+            'foto', 'is_staff', 'is_superuser', 'date_joined', 'last_login', 'user_type',
             'email_validado'
         ]
         read_only_fields = ['id', 'email', 'cpf', 'is_staff', 'is_superuser', 'date_joined', 'email_validado']
@@ -194,7 +194,7 @@ class UserListSerializer(serializers.ModelSerializer):
         model = Entregador
         fields = [
             'id', 'nome', 'email', 'cpf', 'telefone', 'username',
-            'is_active', 'is_staff', 'is_superuser', 'date_joined', 'user_type'
+            'is_active', 'is_staff', 'is_superuser', 'date_joined', 'last_login', 'user_type'
         ]
     
     def get_user_type(self, obj):

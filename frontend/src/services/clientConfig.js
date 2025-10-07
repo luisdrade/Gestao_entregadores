@@ -8,6 +8,7 @@ export const httpClient = axios.create({
   timeout: API_CONFIG.TIMEOUT || 30000,
   headers: {
     'Content-Type': 'application/json',
+    'X-App-Source': 'mobile-app', // Identificar que é do app mobile
   },
 });
 

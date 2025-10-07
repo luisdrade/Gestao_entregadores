@@ -8,6 +8,7 @@ from django.contrib.auth.hashers import make_password
 from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.utils import timezone
 from .models import Entregador
 from .auth_serializers import (
     LoginSerializer, RegisterSerializer, UserProfileSerializer,
@@ -51,6 +52,24 @@ class LoginView(APIView):
                     'success': False,
                     'error': 'Conta desativada'
                 }, status=status.HTTP_401_UNAUTHORIZED)
+            
+            # Atualizar last_login apenas se for login do app mobile
+            # Verificar se é do app mobile através de múltiplos indicadores
+            user_agent = request.META.get('HTTP_USER_AGENT', '')
+            app_source = request.META.get('HTTP_X_APP_SOURCE', '')
+            is_mobile_app = (
+                request.data.get('is_mobile_app', False) or 
+                app_source == 'mobile-app' or
+                'mobile' in user_agent.lower() or
+                'expo' in user_agent.lower()
+            )
+            
+            if is_mobile_app:
+                user.last_login = timezone.now()
+                user.save(update_fields=['last_login'])
+                logger.info(f"Last login atualizado para usuário: {user.email} (App Mobile)")
+            else:
+                logger.info(f"Login do usuário: {user.email} (Web) - Last login não atualizado")
             
             # Gerar tokens JWT
             refresh = RefreshToken.for_user(user)

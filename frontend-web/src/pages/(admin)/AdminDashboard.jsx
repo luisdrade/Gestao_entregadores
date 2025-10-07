@@ -269,6 +269,7 @@ const AdminDashboard = () => {
                     <TableCell>Email</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell>Data de Cadastro</TableCell>
+                    <TableCell>Último Login</TableCell>
                     <TableCell align="center">Ações</TableCell>
                   </TableRow>
                 </TableHead>
@@ -285,6 +286,15 @@ const AdminDashboard = () => {
                       <TableCell>{getStatusChip(user.is_active)}</TableCell>
                       <TableCell>
                         {user.date_joined ? new Date(user.date_joined).toLocaleDateString('pt-BR') : '-'}
+                      </TableCell>
+                      <TableCell>
+                        {user.last_login ? new Date(user.last_login).toLocaleDateString('pt-BR', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        }) : 'Nunca'}
                       </TableCell>
                       <TableCell align="center">
                         <Box display="flex" gap={1} justifyContent="center">

@@ -143,6 +143,7 @@ export function AuthProvider({ children }) {
       const response = await httpClient.post(API_ENDPOINTS.AUTH.LOGIN, {
         email,
         password,
+        is_mobile_app: true, // Indicar que é login do app mobile
       });
 
       const { tokens, user: userData } = response.data;
