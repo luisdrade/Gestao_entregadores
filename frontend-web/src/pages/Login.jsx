@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { api, ENDPOINTS } from '../services/apiClient';
 import '../styles/pages/Login.css';
 
+
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -85,7 +86,7 @@ export default function Login() {
           <button 
             type="button" 
             className="register-button"
-            disabled
+            onClick={() => navigate('/registrar')}
           >
             CADASTRAR-SE
           </button>
