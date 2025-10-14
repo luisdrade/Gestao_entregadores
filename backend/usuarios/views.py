@@ -153,7 +153,6 @@ class LogoutView(APIView):
         request.user.auth_token.delete()
         return Response({"detail": "Logout realizado com sucesso"})
     
-# Google Login desativado/remoção: a view foi removida
 
 # Verificar se o username já existe
 @api_view(['GET'])

@@ -40,10 +40,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'dj_rest_auth',
-    'dj_rest_auth.registration',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     
     #apps do projeto
     'corsheaders',
@@ -62,13 +58,17 @@ MIDDLEWARE = [
     'usuarios.middleware.CSRFExemptAPIMiddleware',  # Middleware personalizado para APIs
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
     'usuarios.email_validation_middleware.EmailValidationMiddleware',  # Middleware de validação de email
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+# Configurações de CORS
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOW_ALL_ORIGINS = False
+
 CORS_ALLOW_CREDENTIALS = True
 
 # Configurações específicas do CORS
@@ -92,6 +92,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://10.250.108.238:8000",
     "http://10.250.108.238:3000",
     "http://10.250.108.238:8081",
+    # Adicionar domínios de produção quando disponíveis
+    # "https://seu-frontend.vercel.app",
+    # "https://seu-frontend.netlify.app",
 ]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
@@ -147,16 +150,28 @@ WSGI_APPLICATION = 'sistema.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
-        'NAME': os.getenv('DB_NAME', 'Banco_EntregasPlus'),
-        'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'root'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+# Configuração para Render.com + PlanetScale MySQL
+if os.getenv('DATABASE_URL'):
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
+            'NAME': os.getenv('DB_NAME', 'gestao_entregadores'),
+            'USER': os.getenv('DB_USER', 'root'),
+            'PASSWORD': os.getenv('DB_PASSWORD', ''),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '3306'),
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                'charset': 'utf8mb4',
+                'ssl': {'ca': os.getenv('DB_SSL_CA')} if os.getenv('DB_SSL_CA') else {},
+            },
+        }
+    }
 
 
 # Password validation
@@ -197,6 +212,11 @@ STATIC_URL = os.getenv('STATIC_URL', 'static/')
 # Tratar valores vazios no .env como ausentes
 _env_static_root = os.getenv('STATIC_ROOT')
 STATIC_ROOT = Path(_env_static_root) if _env_static_root else (BASE_DIR / 'staticfiles')
+
+# Configurações para produção (Railway)
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 # Media files (Uploads)
 MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
@@ -254,20 +274,10 @@ REST_FRAMEWORK = {
 
 SITE_ID = 1
 
-# Configuração do allauth
+# Configuração de autenticação
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
-
-# Configurações do allauth
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
-
-# Google OAuth desativado
 
 # Configuração do JWT
 SIMPLE_JWT = {
@@ -298,12 +308,18 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 # Configurações de Email
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@gestaoentregadores.com')
+
 # SMTP (usado quando EMAIL_BACKEND = smtp)
-EMAIL_HOST = os.getenv('EMAIL_HOST', '')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587')) if os.getenv('EMAIL_PORT') else None
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ['1','true','yes','on'] if os.getenv('EMAIL_USE_TLS') else None
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587')) if os.getenv('EMAIL_PORT') else 587
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ['1','true','yes','on'] if os.getenv('EMAIL_USE_TLS') else True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+
+# Para desenvolvimento - usar console backend por padrão
+if DEBUG and not EMAIL_HOST_USER:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    print("📧 Modo de desenvolvimento: emails serão exibidos no console")
 
 # Para produção, use:
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

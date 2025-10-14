@@ -12,8 +12,12 @@ from django.utils import timezone
 from .models import Entregador
 from .auth_serializers import (
     LoginSerializer, RegisterSerializer, UserProfileSerializer,
-    ChangePasswordSerializer, AdminCreateUserSerializer, UserListSerializer
+    ChangePasswordSerializer, AdminCreateUserSerializer, UserListSerializer,
+    TwoFactorSetupSerializer, TwoFactorVerifySerializer, TwoFactorDisableSerializer
 )
+from .email_service import TwoFactorEmailService
+from .smart_2fa_service import Smart2FAService
+from email_config import EmailConfig
 import logging
 
 logger = logging.getLogger(__name__)
@@ -71,7 +75,35 @@ class LoginView(APIView):
             else:
                 logger.info(f"Login do usuário: {user.email} (Web) - Last login não atualizado")
             
-            # Gerar tokens JWT
+            # Verificar se deve pedir 2FA usando sistema inteligente
+            device_id = request.data.get('device_id')
+            device_name = request.data.get('device_name', 'Dispositivo Mobile')
+            device_type = request.data.get('device_type', 'mobile')
+            
+            smart_2fa_result = Smart2FAService.should_require_2fa(
+                user, device_id, device_name, device_type
+            )
+            
+            if smart_2fa_result['require_2fa']:
+                # Enviar código 2FA por email
+                email_result = TwoFactorEmailService.send_2fa_code(user, 'login')
+                
+                if not email_result['success']:
+                    return Response({
+                        'success': False,
+                        'error': 'Erro ao enviar código de verificação'
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
+                return Response({
+                    'success': True,
+                    'message': 'Código de verificação enviado para seu email',
+                    'requires_2fa': True,
+                    'user_email': user.email,
+                    'reason': smart_2fa_result['reason'],
+                    'expires_at': email_result['expires_at']
+                }, status=status.HTTP_200_OK)
+            
+            # Gerar tokens JWT (apenas se 2FA não estiver ativado)
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
@@ -89,6 +121,7 @@ class LoginView(APIView):
             return Response({
                 'success': True,
                 'message': 'Login realizado com sucesso',
+                'requires_2fa': False,
                 'tokens': {
                     'access': access_token,
                     'refresh': refresh_token
@@ -388,6 +421,469 @@ class AdminUserManagementView(APIView):
                 
         except Exception as e:
             logger.error(f"Erro ao criar usuário: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TwoFactorLoginView(APIView):
+    """
+    View para verificar código 2FA durante o login
+    """
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        try:
+            email = request.data.get('email')
+            code = request.data.get('code')
+            
+            if not email or not code:
+                return Response({
+                    'success': False,
+                    'error': 'Email e código são obrigatórios'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Buscar usuário
+            try:
+                user = Entregador.objects.get(email=email)
+            except Entregador.DoesNotExist:
+                return Response({
+                    'success': False,
+                    'error': 'Usuário não encontrado'
+                }, status=status.HTTP_404_NOT_FOUND)
+            
+            # Verificar se 2FA está ativado
+            if not user.two_factor_enabled:
+                return Response({
+                    'success': False,
+                    'error': '2FA não está ativado para este usuário'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Verificar código usando o serviço de email
+            verification_result = TwoFactorEmailService.verify_code(user, code, 'login')
+            
+            if not verification_result['success']:
+                return Response({
+                    'success': False,
+                    'error': verification_result['message']
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Adicionar dispositivo como confiável
+            device_id = request.data.get('device_id')
+            device_name = request.data.get('device_name', 'Dispositivo Mobile')
+            device_type = request.data.get('device_type', 'mobile')
+            
+            if device_id:
+                Smart2FAService.add_trusted_device(user, device_id, device_name, device_type)
+            
+            # Gerar tokens JWT
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+            
+            # Determinar tipo de usuário
+            user_type = 'admin' if user.is_staff else 'entregador'
+            
+            # Usar serializer para dados do usuário
+            user_serializer = UserProfileSerializer(user)
+            user_data = user_serializer.data
+            
+            logger.info(f"Login 2FA bem-sucedido para usuário: {user.email} (Tipo: {user_type})")
+            
+            return Response({
+                'success': True,
+                'message': 'Login realizado com sucesso',
+                'tokens': {
+                    'access': access_token,
+                    'refresh': refresh_token
+                },
+                'user': user_data
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro no login 2FA: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# ==================== VIEWS DE 2FA ====================
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TwoFactorSetupView(APIView):
+    """
+    View para configurar 2FA via email
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        try:
+            user = request.user
+            
+            # Se já tem 2FA ativado, retornar erro
+            if user.two_factor_enabled:
+                return Response({
+                    'success': False,
+                    'error': '2FA já está ativado para este usuário'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Enviar código de verificação por email
+            email_result = TwoFactorEmailService.send_2fa_code(user, 'setup')
+            
+            if not email_result['success']:
+                return Response({
+                    'success': False,
+                    'error': email_result['message']
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            logger.info(f"2FA setup iniciado para usuário: {user.email}")
+            
+            return Response({
+                'success': True,
+                'message': 'Código de verificação enviado para seu email',
+                'email': user.email,
+                'expires_at': email_result['expires_at']
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro no setup 2FA: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TwoFactorVerifyView(APIView):
+    """
+    View para verificar código 2FA e ativar
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        try:
+            serializer = TwoFactorVerifySerializer(data=request.data)
+            if not serializer.is_valid():
+                return Response({
+                    'success': False,
+                    'error': 'Dados inválidos',
+                    'details': serializer.errors
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            user = request.user
+            code = serializer.validated_data['code']
+            
+            # Verificar código usando o serviço de email
+            verification_result = TwoFactorEmailService.verify_code(user, code, 'setup')
+            
+            if not verification_result['success']:
+                return Response({
+                    'success': False,
+                    'error': verification_result['message']
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Ativar 2FA
+            user.two_factor_enabled = True
+            user.save(update_fields=['two_factor_enabled'])
+            
+            logger.info(f"2FA ativado para usuário: {user.email}")
+            
+            return Response({
+                'success': True,
+                'message': '2FA ativado com sucesso'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro na verificação 2FA: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TwoFactorDisableView(APIView):
+    """
+    View para desabilitar 2FA
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        try:
+            serializer = TwoFactorDisableSerializer(data=request.data)
+            if not serializer.is_valid():
+                return Response({
+                    'success': False,
+                    'error': 'Dados inválidos',
+                    'details': serializer.errors
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            user = request.user
+            password = serializer.validated_data['password']
+            code = serializer.validated_data['code']
+            
+            # Verificar senha
+            if not user.check_password(password):
+                return Response({
+                    'success': False,
+                    'error': 'Senha incorreta'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Verificar se 2FA está ativado
+            if not user.two_factor_enabled:
+                return Response({
+                    'success': False,
+                    'error': '2FA não está ativado'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Enviar código de verificação por email primeiro
+            email_result = TwoFactorEmailService.send_2fa_code(user, 'disable')
+            
+            if not email_result['success']:
+                return Response({
+                    'success': False,
+                    'error': email_result['message']
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            # Verificar código usando o serviço de email
+            verification_result = TwoFactorEmailService.verify_code(user, code, 'disable')
+            
+            if not verification_result['success']:
+                return Response({
+                    'success': False,
+                    'error': verification_result['message']
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Desabilitar 2FA
+            user.two_factor_enabled = False
+            user.save(update_fields=['two_factor_enabled'])
+            
+            logger.info(f"2FA desabilitado para usuário: {user.email}")
+            
+            return Response({
+                'success': True,
+                'message': '2FA desabilitado com sucesso'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro ao desabilitar 2FA: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TwoFactorStatusView(APIView):
+    """
+    View para verificar status do 2FA
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        try:
+            user = request.user
+            
+            return Response({
+                'success': True,
+                'two_factor_enabled': user.two_factor_enabled,
+                'email': user.email
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro ao verificar status 2FA: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TwoFactorResendView(APIView):
+    """
+    View para reenviar código 2FA
+    """
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        try:
+            email = request.data.get('email')
+            purpose = request.data.get('purpose', 'login')
+            
+            if not email:
+                return Response({
+                    'success': False,
+                    'error': 'Email é obrigatório'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Buscar usuário
+            try:
+                user = Entregador.objects.get(email=email)
+            except Entregador.DoesNotExist:
+                return Response({
+                    'success': False,
+                    'error': 'Usuário não encontrado'
+                }, status=status.HTTP_404_NOT_FOUND)
+            
+            # Verificar se 2FA está ativado (exceto para setup)
+            if purpose != 'setup' and not user.two_factor_enabled:
+                return Response({
+                    'success': False,
+                    'error': '2FA não está ativado para este usuário'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Enviar código
+            email_result = TwoFactorEmailService.send_2fa_code(user, purpose)
+            
+            if not email_result['success']:
+                return Response({
+                    'success': False,
+                    'error': email_result['message']
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            logger.info(f"Código 2FA reenviado para {user.email} (purpose: {purpose})")
+            
+            return Response({
+                'success': True,
+                'message': 'Código reenviado com sucesso',
+                'email': user.email,
+                'expires_at': email_result['expires_at']
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro ao reenviar código 2FA: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TrustedDevicesView(APIView):
+    """
+    View para gerenciar dispositivos confiáveis
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        """Listar dispositivos confiáveis"""
+        try:
+            user = request.user
+            devices = Smart2FAService.get_trusted_devices(user)
+            
+            return Response({
+                'success': True,
+                'devices': devices
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro ao listar dispositivos confiáveis: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def delete(self, request):
+        """Remover dispositivo confiável"""
+        try:
+            user = request.user
+            device_id = request.data.get('device_id')
+            
+            if not device_id:
+                return Response({
+                    'success': False,
+                    'error': 'ID do dispositivo é obrigatório'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            result = Smart2FAService.remove_trusted_device(user, device_id)
+            
+            if not result['success']:
+                return Response({
+                    'success': False,
+                    'error': result['message']
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            return Response({
+                'success': True,
+                'message': result['message']
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro ao remover dispositivo confiável: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class Force2FAView(APIView):
+    """
+    View para forçar 2FA em todos os dispositivos (logout de todos)
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        try:
+            user = request.user
+            
+            result = Smart2FAService.force_2fa_for_all_devices(user)
+            
+            if not result['success']:
+                return Response({
+                    'success': False,
+                    'error': result['message']
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            logger.info(f"2FA forçado para todos os dispositivos: {user.email}")
+            
+            return Response({
+                'success': True,
+                'message': result['message']
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro ao forçar 2FA: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TestEmailView(APIView):
+    """
+    View para testar configuração de email
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        try:
+            user = request.user
+            
+            # Testar configuração de email
+            email_test = EmailConfig.test_email_connection()
+            
+            if email_test['success']:
+                # Enviar email de teste real
+                test_result = TwoFactorEmailService.send_2fa_code(user, 'login')
+                
+                if test_result['success']:
+                    return Response({
+                        'success': True,
+                        'message': 'Email de teste enviado com sucesso!',
+                        'email_config': email_test['config'],
+                        'test_email_sent': True
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({
+                        'success': False,
+                        'error': 'Configuração OK, mas falha ao enviar email de teste',
+                        'email_config': email_test['config']
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            else:
+                return Response({
+                    'success': False,
+                    'error': email_test['message'],
+                    'email_config': email_test['config']
+                }, status=status.HTTP_400_BAD_REQUEST)
+                
+        except Exception as e:
+            logger.error(f"Erro ao testar email: {str(e)}")
             return Response({
                 'success': False,
                 'error': 'Erro interno do servidor'

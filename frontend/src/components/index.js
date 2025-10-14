@@ -20,4 +20,3 @@ export { default as _NavBar_Inferior } from './_NavBar_Inferior';
 export { default as _DataComp } from './_DataComp';
 export { default as _HoraComp } from './_HoraComp';
 export { default as _CarregamentoError } from './_CarregamentoError';
-// GoogleSignInButton removido

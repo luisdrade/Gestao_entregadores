@@ -39,7 +39,22 @@ export default function LoginScreen() {
     try {
       const result = await signIn(email, password);
       if (result.success) {
-        router.replace('/(home)/home');
+        // Verificar se precisa de 2FA
+        if (result.requires_2fa) {
+          // Navegar para tela de verificação 2FA
+          router.push({
+            pathname: '/(auth)/2fa-verify',
+            params: {
+              email: email,
+              deviceId: result.device_id,
+              deviceName: 'Mobile App',
+              deviceType: 'mobile',
+            },
+          });
+        } else {
+          // Login normal - ir para home
+          router.replace('/(home)/home');
+        }
       } else {
         // Tratar diferentes tipos de erro
         let errorMessage = 'Erro ao fazer login';

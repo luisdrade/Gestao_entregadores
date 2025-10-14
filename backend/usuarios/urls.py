@@ -8,7 +8,16 @@ from .auth_views import (
     LogoutView,
     RefreshTokenView,
     UserProfileView,
-    ChangePasswordView
+    ChangePasswordView,
+    TwoFactorLoginView,
+    TwoFactorSetupView,
+    TwoFactorVerifyView,
+    TwoFactorDisableView,
+    TwoFactorStatusView,
+    TwoFactorResendView,
+    TrustedDevicesView,
+    Force2FAView,
+    TestEmailView
 )
 from .admin_views import AdminUsersAPIView, AdminStatsAPIView
 # Views de template removidas - usando apenas API
@@ -28,11 +37,26 @@ urlpatterns = [
     
     # Endpoints de autenticação organizados
     path('auth/login/', LoginView.as_view(), name='auth_login'),
+    path('auth/login/2fa/', TwoFactorLoginView.as_view(), name='auth_login_2fa'),
     path('auth/register/', RegisterView.as_view(), name='auth_register'),
     path('auth/logout/', LogoutView.as_view(), name='auth_logout'),
     path('auth/refresh/', RefreshTokenView.as_view(), name='auth_refresh'),
     path('auth/profile/', UserProfileView.as_view(), name='auth_profile'),
     path('auth/change-password/', ChangePasswordView.as_view(), name='auth_change_password'),
+    
+    # Endpoints de 2FA
+    path('auth/2fa/setup/', TwoFactorSetupView.as_view(), name='auth_2fa_setup'),
+    path('auth/2fa/verify/', TwoFactorVerifyView.as_view(), name='auth_2fa_verify'),
+    path('auth/2fa/disable/', TwoFactorDisableView.as_view(), name='auth_2fa_disable'),
+    path('auth/2fa/status/', TwoFactorStatusView.as_view(), name='auth_2fa_status'),
+    path('auth/2fa/resend/', TwoFactorResendView.as_view(), name='auth_2fa_resend'),
+    
+    # Dispositivos confiáveis
+    path('auth/devices/', TrustedDevicesView.as_view(), name='auth_devices'),
+    path('auth/force-2fa/', Force2FAView.as_view(), name='auth_force_2fa'),
+    
+    # Teste de email
+    path('auth/test-email/', TestEmailView.as_view(), name='auth_test_email'),
     
     path('entregadores/me/', EntregadorMeView.as_view(), name='entregador_me'), # EntregadorMeView para ver o usuário logado
     

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Código de Verificação - Ativar 2FA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat;
+            opacity: 0.3;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .greeting {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            font-size: 16px;
+            color: #5a6c7d;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        
+        .code-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .code {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 36px;
+            font-weight: 700;
+            padding: 25px 40px;
+            border-radius: 12px;
+            letter-spacing: 8px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 1px solid #e1bee7;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: 'ℹ️';
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-box h3 {
+            color: #4a148c;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            margin-top: 10px;
+        }
+        
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .info-box li {
+            color: #5a6c7d;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .info-box li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+        
+        .cta {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .cta p {
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .footer p {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .footer .brand {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 12px;
+            }
+            
+            .header, .content, .footer {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .code {
+                font-size: 28px;
+                padding: 20px 30px;
+                letter-spacing: 6px;
+            }
+            
+            .greeting {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="header-content">
+                <h1>🔒 Ativar 2FA</h1>
+                <p>Gestão de Entregadores</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">Olá, {{ user_name }}!</div>
+            
+            <div class="description">
+                Você está ativando a autenticação de 2 fatores (2FA) para sua conta. 
+                Isso adicionará uma camada extra de segurança para proteger seus dados.
+            </div>
+            
+            <div class="code-container">
+                <div class="code">{{ code }}</div>
+            </div>
+            
+            <div class="info-box">
+                <h3>Sobre o 2FA</h3>
+                <ul>
+                    <li>Você receberá um código por email sempre que fizer login</li>
+                    <li>Este código expira em {{ expires_in }} minutos</li>
+                    <li>Mantenha seu email seguro para proteger sua conta</li>
+                    <li>Dispositivos confiáveis não precisarão de 2FA</li>
+                </ul>
+            </div>
+            
+            <div class="cta">
+                <p>Digite este código no aplicativo para ativar o 2FA</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Este é um email automático, não responda.</p>
+            <p class="brand">© 2025 Gestão de Entregadores</p>
+        </div>
+    </div>
+</body>
+</html>
+

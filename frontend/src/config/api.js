@@ -12,6 +12,13 @@ export const API_ENDPOINTS = {
     REGISTER: '/api/auth/register/',
     FORGOT_PASSWORD: '/api/auth/password/reset/',
     REFRESH_TOKEN: '/api/auth/token/refresh/',
+    // 2FA endpoints
+    TWO_FA_SETUP: '/api/auth/2fa/setup/',
+    TWO_FA_VERIFY: '/api/auth/2fa/verify/',
+    TWO_FA_LOGIN: '/api/auth/login/2fa/',
+    TWO_FA_DISABLE: '/api/auth/2fa/disable/',
+    TWO_FA_STATUS: '/api/auth/2fa/status/',
+    TWO_FA_RESEND: '/api/auth/2fa/resend/',
   },
   USER: {
     PROFILE: '/api/entregadores/me/',

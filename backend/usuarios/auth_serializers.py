@@ -88,7 +88,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'id', 'nome', 'email', 'cpf', 'telefone', 'username',
             'data_nascimento', 'endereco', 'cep', 'cidade', 'estado',
             'foto', 'is_staff', 'is_superuser', 'date_joined', 'last_login', 'user_type',
-            'email_validado'
+            'email_validado', 'two_factor_enabled'
         ]
         read_only_fields = ['id', 'email', 'cpf', 'is_staff', 'is_superuser', 'date_joined', 'email_validado']
     
@@ -199,3 +199,32 @@ class UserListSerializer(serializers.ModelSerializer):
     
     def get_user_type(self, obj):
         return 'admin' if obj.is_staff else 'entregador'
+
+class TwoFactorSetupSerializer(serializers.Serializer):
+    """
+    Serializer para configuração inicial do 2FA via email
+    """
+    pass
+
+class TwoFactorVerifySerializer(serializers.Serializer):
+    """
+    Serializer para verificação do código 2FA
+    """
+    code = serializers.CharField(max_length=6, min_length=6)
+    
+    def validate_code(self, value):
+        if not value.isdigit():
+            raise serializers.ValidationError("O código deve conter apenas números")
+        return value
+
+class TwoFactorDisableSerializer(serializers.Serializer):
+    """
+    Serializer para desabilitar 2FA
+    """
+    password = serializers.CharField(write_only=True)
+    code = serializers.CharField(max_length=6, min_length=6)
+    
+    def validate_code(self, value):
+        if not value.isdigit():
+            raise serializers.ValidationError("O código deve conter apenas números")
+        return value

@@ -178,7 +178,6 @@ Os componentes existentes com prefixo `_` foram mantidos para compatibilidade:
 - `_DataComp`
 - `_HoraComp`
 - `_CarregamentoError`
-- `GoogleSignInButton`
 
 ## Como Usar
 

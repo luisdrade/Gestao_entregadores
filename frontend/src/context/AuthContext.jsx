@@ -13,7 +13,6 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     loadStoredData();
-    // Google Sign-In removido
 
     // Sincronizar estado inicial do AppState no storage
     (async () => {
@@ -138,15 +137,37 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function signIn(email, password) {
+  async function signIn(email, password, skip2FA = false) {
     try {
+      // Gerar device_id único para este dispositivo
+      const deviceId = await AsyncStorage.getItem('@GestaoEntregadores:deviceId') || 
+        `device_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      await AsyncStorage.setItem('@GestaoEntregadores:deviceId', deviceId);
+
       const response = await httpClient.post(API_ENDPOINTS.AUTH.LOGIN, {
         email,
         password,
         is_mobile_app: true, // Indicar que é login do app mobile
+        device_id: deviceId,
+        device_name: 'Mobile App',
+        device_type: 'mobile',
       });
 
-      const { tokens, user: userData } = response.data;
+      const responseData = response.data;
+
+      // Verificar se precisa de 2FA
+      if (responseData.requires_2fa && !skip2FA) {
+        return {
+          success: true,
+          requires_2fa: true,
+          user_email: responseData.user_email,
+          reason: responseData.reason || '2FA required',
+          device_id: deviceId,
+        };
+      }
+
+      // Login normal (sem 2FA ou 2FA já verificado)
+      const { tokens, user: userData } = responseData;
       const authToken = tokens.access;
 
       // Definir o token no httpClient
@@ -227,11 +248,8 @@ export function AuthProvider({ children }) {
     }
   }
 
-  // Google Sign-In removido
-
   async function signOut() {
     try {
-      // Google Sign-In removido
       
       await AsyncStorage.removeItem('@GestaoEntregadores:token');
       await AsyncStorage.removeItem('@GestaoEntregadores:user');
@@ -253,7 +271,6 @@ export function AuthProvider({ children }) {
       loading,
       signIn,
       signUp,
-      // Google Sign-In removido
       signOut,
       updateUserPhoto,
       updateUserData,
