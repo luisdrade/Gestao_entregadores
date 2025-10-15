@@ -263,19 +263,6 @@ export default function VeiculosScreen() {
     setShowKmHelp(!showKmHelp);
   };
 
-  const SelectOption = ({ label, value, onSelect, isSelected }) => (
-    <TouchableOpacity
-      style={[styles.selectOption, isSelected && styles.selectOptionSelected]}
-      onPress={() => onSelect(value)}
-    >
-      <Text style={[styles.selectOptionText, isSelected && styles.selectOptionTextSelected]}>
-        {label}
-      </Text>
-      {isSelected && (
-        <Ionicons name="checkmark" size={20} color="#2B2860" />
-      )}
-    </TouchableOpacity>
-  );
 
   const renderVeiculo = ({ item }) => (
     <TouchableOpacity 
@@ -557,6 +544,7 @@ export default function VeiculosScreen() {
                         <View style={styles.kmInputContainer}>
                           <View style={[
                             styles.inputField,
+                            styles.kmInputField,
                             touched.kmPorL && errors.kmPorL && styles.inputError
                           ]}>
                             <Ionicons name="speedometer-outline" size={20} color="#666" />
@@ -794,27 +782,56 @@ export default function VeiculosScreen() {
                       {/* KM/L */}
                       <View style={styles.inputGroup}>
                         <Text style={styles.inputLabel}>Consumo (KM/L) *</Text>
-                        <View style={[
-                          styles.inputField,
-                          touched.kmPorL && errors.kmPorL && styles.inputError
-                        ]}>
-                          <Ionicons name="speedometer-outline" size={20} color="#666" />
-                          <TextInput
-                            style={styles.textInput}
-                            placeholder="0.0"
-                            value={tempFormValues.kmPorL}
-                            onChangeText={(text) => {
-                              setTempFormValues(prev => ({ ...prev, kmPorL: text }));
-                              setFieldValue('kmPorL', text);
-                            }}
-                            onBlur={handleBlur('kmPorL')}
-                            placeholderTextColor="#999"
-                            keyboardType="numeric"
-                            maxLength={5}
-                          />
+                        <View style={styles.kmInputContainer}>
+                          <View style={[
+                            styles.inputField,
+                            styles.kmInputField,
+                            touched.kmPorL && errors.kmPorL && styles.inputError
+                          ]}>
+                            <Ionicons name="speedometer-outline" size={20} color="#666" />
+                            <TextInput
+                              style={styles.textInput}
+                              placeholder="0.0"
+                              value={tempFormValues.kmPorL}
+                              onChangeText={(text) => {
+                                setTempFormValues(prev => ({ ...prev, kmPorL: text }));
+                                setFieldValue('kmPorL', text);
+                              }}
+                              onBlur={handleBlur('kmPorL')}
+                              placeholderTextColor="#999"
+                              keyboardType="numeric"
+                              maxLength={5}
+                            />
+                          </View>
+                          <TouchableOpacity 
+                            style={styles.helpButton}
+                            onPress={toggleKmHelp}
+                            activeOpacity={0.8}
+                          >
+                            <Ionicons name="help-circle" size={16} color="#fff" />
+                          </TouchableOpacity>
                         </View>
                         {touched.kmPorL && errors.kmPorL && (
                           <Text style={styles.errorText}>{errors.kmPorL}</Text>
+                        )}
+                        
+                        {/* Dicas de KM/L */}
+                        {showKmHelp && (
+                          <View style={styles.helpTips}>
+                            <Text style={styles.helpTipsTitle}>Dicas de consumo médio:</Text>
+                            <View style={styles.helpTipItem}>
+                              <Ionicons name="car" size={16} color="#34C759" />
+                              <Text style={styles.helpTipText}>Carros pequenos: 10-15 km/l</Text>
+                            </View>
+                            <View style={styles.helpTipItem}>
+                              <Ionicons name="car" size={16} color="#34C759" />
+                              <Text style={styles.helpTipText}>Carros médios: 8-12 km/l</Text>
+                            </View>
+                            <View style={styles.helpTipItem}>
+                              <Ionicons name="bicycle" size={16} color="#34C759" />
+                              <Text style={styles.helpTipText}>Motos: 25-40 km/l</Text>
+                            </View>
+                          </View>
                         )}
                       </View>
 
@@ -854,29 +871,84 @@ export default function VeiculosScreen() {
       <Modal
         visible={showTipoModal}
         transparent={true}
-        animationType="slide"
+        animationType="fade"
         onRequestClose={() => setShowTipoModal(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Selecione o tipo</Text>
-              <TouchableOpacity onPress={() => setShowTipoModal(false)}>
-                <Ionicons name="close" size={24} color="#666" />
+        <View style={styles.selectionModalOverlay}>
+          <View style={styles.selectionModalContainer}>
+            <View style={styles.selectionModalHeader}>
+              <Text style={styles.selectionModalTitle}>Selecione o tipo</Text>
+              <TouchableOpacity 
+                style={styles.selectionModalCloseButton}
+                onPress={() => setShowTipoModal(false)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close" size={20} color="#666" />
               </TouchableOpacity>
             </View>
-            <SelectOption
-              label="Carro"
-              value="carro"
-              onSelect={handleSelectTipo}
-              isSelected={tempFormValues.tipo === 'carro'}
-            />
-            <SelectOption
-              label="Moto"
-              value="moto"
-              onSelect={handleSelectTipo}
-              isSelected={tempFormValues.tipo === 'moto'}
-            />
+            <View style={styles.selectionOptionsContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.selectionOption,
+                  tempFormValues.tipo === 'carro' && styles.selectionOptionSelected
+                ]}
+                onPress={() => handleSelectTipo('carro')}
+                activeOpacity={0.7}
+              >
+                <View style={styles.selectionOptionContent}>
+                  <View style={[
+                    styles.selectionOptionIcon,
+                    tempFormValues.tipo === 'carro' && styles.selectionOptionIconSelected
+                  ]}>
+                    <Ionicons 
+                      name="car" 
+                      size={24} 
+                      color={tempFormValues.tipo === 'carro' ? '#fff' : '#2B2860'} 
+                    />
+                  </View>
+                  <Text style={[
+                    styles.selectionOptionText,
+                    tempFormValues.tipo === 'carro' && styles.selectionOptionTextSelected
+                  ]}>
+                    Carro
+                  </Text>
+                </View>
+                {tempFormValues.tipo === 'carro' && (
+                  <Ionicons name="checkmark-circle" size={24} color="#2B2860" />
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.selectionOption,
+                  tempFormValues.tipo === 'moto' && styles.selectionOptionSelected
+                ]}
+                onPress={() => handleSelectTipo('moto')}
+                activeOpacity={0.7}
+              >
+                <View style={styles.selectionOptionContent}>
+                  <View style={[
+                    styles.selectionOptionIcon,
+                    tempFormValues.tipo === 'moto' && styles.selectionOptionIconSelected
+                  ]}>
+                    <Ionicons 
+                      name="bicycle" 
+                      size={24} 
+                      color={tempFormValues.tipo === 'moto' ? '#fff' : '#2B2860'} 
+                    />
+                  </View>
+                  <Text style={[
+                    styles.selectionOptionText,
+                    tempFormValues.tipo === 'moto' && styles.selectionOptionTextSelected
+                  ]}>
+                    Moto
+                  </Text>
+                </View>
+                {tempFormValues.tipo === 'moto' && (
+                  <Ionicons name="checkmark-circle" size={24} color="#2B2860" />
+                )}
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -885,29 +957,84 @@ export default function VeiculosScreen() {
       <Modal
         visible={showCategoriaModal}
         transparent={true}
-        animationType="slide"
+        animationType="fade"
         onRequestClose={() => setShowCategoriaModal(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Selecione a categoria</Text>
-              <TouchableOpacity onPress={() => setShowCategoriaModal(false)}>
-                <Ionicons name="close" size={24} color="#666" />
+        <View style={styles.selectionModalOverlay}>
+          <View style={styles.selectionModalContainer}>
+            <View style={styles.selectionModalHeader}>
+              <Text style={styles.selectionModalTitle}>Selecione a categoria</Text>
+              <TouchableOpacity 
+                style={styles.selectionModalCloseButton}
+                onPress={() => setShowCategoriaModal(false)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close" size={20} color="#666" />
               </TouchableOpacity>
             </View>
-            <SelectOption
-              label="Passeio"
-              value="passeio"
-              onSelect={handleSelectCategoria}
-              isSelected={tempFormValues.categoria === 'passeio'}
-            />
-            <SelectOption
-              label="Utilitário"
-              value="utilitario"
-              onSelect={handleSelectCategoria}
-              isSelected={tempFormValues.categoria === 'utilitario'}
-            />
+            <View style={styles.selectionOptionsContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.selectionOption,
+                  tempFormValues.categoria === 'passeio' && styles.selectionOptionSelected
+                ]}
+                onPress={() => handleSelectCategoria('passeio')}
+                activeOpacity={0.7}
+              >
+                <View style={styles.selectionOptionContent}>
+                  <View style={[
+                    styles.selectionOptionIcon,
+                    tempFormValues.categoria === 'passeio' && styles.selectionOptionIconSelected
+                  ]}>
+                    <Ionicons 
+                      name="happy-outline" 
+                      size={24} 
+                      color={tempFormValues.categoria === 'passeio' ? '#fff' : '#2B2860'} 
+                    />
+                  </View>
+                  <Text style={[
+                    styles.selectionOptionText,
+                    tempFormValues.categoria === 'passeio' && styles.selectionOptionTextSelected
+                  ]}>
+                    Passeio
+                  </Text>
+                </View>
+                {tempFormValues.categoria === 'passeio' && (
+                  <Ionicons name="checkmark-circle" size={24} color="#2B2860" />
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.selectionOption,
+                  tempFormValues.categoria === 'utilitario' && styles.selectionOptionSelected
+                ]}
+                onPress={() => handleSelectCategoria('utilitario')}
+                activeOpacity={0.7}
+              >
+                <View style={styles.selectionOptionContent}>
+                  <View style={[
+                    styles.selectionOptionIcon,
+                    tempFormValues.categoria === 'utilitario' && styles.selectionOptionIconSelected
+                  ]}>
+                    <Ionicons 
+                      name="briefcase-outline" 
+                      size={24} 
+                      color={tempFormValues.categoria === 'utilitario' ? '#fff' : '#2B2860'} 
+                    />
+                  </View>
+                  <Text style={[
+                    styles.selectionOptionText,
+                    tempFormValues.categoria === 'utilitario' && styles.selectionOptionTextSelected
+                  ]}>
+                    Utilitário
+                  </Text>
+                </View>
+                {tempFormValues.categoria === 'utilitario' && (
+                  <Ionicons name="checkmark-circle" size={24} color="#2B2860" />
+                )}
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -1043,7 +1170,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e0e0e0',
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 5,
     minHeight: 56,
   },
   selectField: {
@@ -1055,7 +1182,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e0e0e0',
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 5,
     minHeight: 56,
   },
   selectFieldContent: {
@@ -1078,27 +1205,6 @@ const styles = StyleSheet.create({
     color: '#1a1a1a',
     marginLeft: 12,
   },
-  selectOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  selectOptionSelected: {
-    backgroundColor: '#f0f8ff',
-    borderBottomColor: '#2B2860',
-  },
-  selectOptionText: {
-    fontSize: 16,
-    color: '#666',
-  },
-  selectOptionTextSelected: {
-    color: '#2B2860',
-    fontWeight: '600',
-  },
   textInput: {
     flex: 1,
     fontSize: 16,
@@ -1108,7 +1214,11 @@ const styles = StyleSheet.create({
   kmInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
+    width: '100%',
+  },
+  kmInputField: {
+    flex: 1,
   },
   helpButton: {
     backgroundColor: '#2B2860',
@@ -1116,14 +1226,8 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#2B2860',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    minWidth: 48,
+    height: 56,
   },
   helpTips: {
     backgroundColor: '#f0f8ff',
@@ -1196,6 +1300,93 @@ const styles = StyleSheet.create({
   buttonWithErrors: {
     backgroundColor: '#FF6B6B',
     shadowColor: '#FF6B6B',
+  },
+  // Novos estilos para modais de seleção modernos
+  selectionModalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingHorizontal: 20,
+  },
+  selectionModalContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    width: '100%',
+    maxWidth: 400,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  selectionModalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  selectionModalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1a1a1a',
+  },
+  selectionModalCloseButton: {
+    padding: 8,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectionOptionsContainer: {
+    padding: 16,
+  },
+  selectionOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    marginBottom: 8,
+    borderRadius: 16,
+    backgroundColor: '#fafafa',
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  selectionOptionSelected: {
+    backgroundColor: '#f0f8ff',
+    borderColor: '#2B2860',
+  },
+  selectionOptionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  selectionOptionIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#f0f8ff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 16,
+  },
+  selectionOptionIconSelected: {
+    backgroundColor: '#2B2860',
+  },
+  selectionOptionText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#666',
+  },
+  selectionOptionTextSelected: {
+    color: '#2B2860',
   },
   modalOverlay: {
     flex: 1,
