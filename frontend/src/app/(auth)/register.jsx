@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
+import { httpClient } from '../../services/clientConfig';
+import { API_ENDPOINTS } from '../../config/api';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TextInputMask } from 'react-native-masked-text';
@@ -65,14 +67,32 @@ export default function RegisterScreen() {
       console.log('🔍 Resultado do signUp:', result);
       if (result.success) {
         if (result.requires_verification) {
-          // Navegar para tela de escolha de método de verificação
-          router.push({
-            pathname: '/register-verification-method',
-            params: {
-              userEmail: result.user_email,
-              userPhone: result.user_phone
+          // Enviar código por email automaticamente e navegar direto para verificação
+          try {
+            const emailResponse = await httpClient.post(API_ENDPOINTS.AUTH.REGISTER_RESEND, {
+              email: result.user_email,
+              verification_method: 'email'
+            });
+            
+            if (emailResponse.data.success) {
+              // Navegar direto para tela de verificação
+              router.push({
+                pathname: '/register-verify-code',
+                params: {
+                  userEmail: result.user_email,
+                  userPhone: result.user_phone,
+                  verificationMethod: 'email',
+                  expiresAt: emailResponse.data.expires_at,
+                  attemptsRemaining: emailResponse.data.attempts_remaining
+                }
+              });
+            } else {
+              Alert.alert('Erro', 'Erro ao enviar código de verificação');
             }
-          });
+          } catch (error) {
+            console.error('Erro ao enviar código:', error);
+            Alert.alert('Erro', 'Erro ao enviar código de verificação');
+          }
         } else {
           // Cadastro normal (sem verificação necessária)
           Alert.alert(

@@ -145,26 +145,15 @@ export default function RegisterVerifyCodeScreen() {
   };
 
   const getMethodDisplayName = () => {
-    return verificationMethod === 'email' ? 'Email' : 'SMS';
+    return 'Email';
   };
 
   const getMaskedContact = () => {
-    if (verificationMethod === 'email') {
-      const [username, domain] = userEmail.split('@');
-      const maskedUsername = username.length > 2 
-        ? username[0] + '*'.repeat(username.length - 2) + username[username.length - 1]
-        : username;
-      return `${maskedUsername}@${domain}`;
-    } else {
-      const cleaned = userPhone.replace(/\D/g, '');
-      if (cleaned.length >= 10) {
-        const ddd = cleaned.substring(0, 2);
-        const firstPart = cleaned.substring(2, 6);
-        const lastPart = cleaned.substring(cleaned.length - 4);
-        return `(${ddd}) ${firstPart[0]}${firstPart[1]}**-${lastPart}`;
-      }
-      return userPhone;
-    }
+    const [username, domain] = userEmail.split('@');
+    const maskedUsername = username.length > 2 
+      ? username[0] + '*'.repeat(username.length - 2) + username[username.length - 1]
+      : username;
+    return `${maskedUsername}@${domain}`;
   };
 
   return (
@@ -176,12 +165,12 @@ export default function RegisterVerifyCodeScreen() {
         <View style={styles.content}>
           <Text style={styles.title}>Verificar Código</Text>
           <Text style={styles.subtitle}>
-            Digite o código de 6 dígitos enviado para seu {getMethodDisplayName().toLowerCase()}
+            Digite o código de 6 dígitos enviado para seu email
           </Text>
 
           <View style={styles.contactInfo}>
             <Text style={styles.contactText}>
-              📱 {getMaskedContact()}
+              📧 {getMaskedContact()}
             </Text>
           </View>
 

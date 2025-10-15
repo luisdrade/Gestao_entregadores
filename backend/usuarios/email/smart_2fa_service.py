@@ -1,6 +1,6 @@
 from django.utils import timezone
 from datetime import timedelta
-from .models import Entregador, TrustedDevice
+from ..models import Entregador, TrustedDevice
 import logging
 
 logger = logging.getLogger(__name__)

@@ -147,7 +147,7 @@ class SMSService:
     def cleanup_expired_codes():
         """Remove códigos expirados"""
         try:
-            from .models import Entregador
+            from ..models import Entregador
             
             expired_users = Entregador.objects.filter(
                 registration_code_expires_at__lt=timezone.now(),

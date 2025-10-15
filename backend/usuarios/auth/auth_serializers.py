@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Entregador
+from ..models import Entregador
 from django.contrib.auth.password_validation import validate_password
 
 class LoginSerializer(serializers.Serializer):
@@ -43,13 +43,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         if Entregador.objects.filter(email=attrs['email']).exists():
             raise serializers.ValidationError("Este email já está cadastrado")
         
-        # Verificar se CPF já existe
-        if Entregador.objects.filter(cpf=attrs['cpf']).exists():
-            raise serializers.ValidationError("Este CPF já está cadastrado")
-        
-        # Verificar se username já existe (se fornecido)
-        if attrs.get('username') and Entregador.objects.filter(username=attrs['username']).exists():
+        # Verificar se username já existe
+        if Entregador.objects.filter(username=attrs['username']).exists():
             raise serializers.ValidationError("Este username já está em uso")
+        
+        # Verificar se CPF já existe (apenas se fornecido)
+        if attrs.get('cpf') and Entregador.objects.filter(cpf=attrs['cpf']).exists():
+            raise serializers.ValidationError("Este CPF já está cadastrado")
         
         return attrs
     
@@ -62,9 +62,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password'],
             nome=validated_data['nome'],
-            cpf=validated_data['cpf'],
+            cpf=validated_data.get('cpf'),
             telefone=validated_data['telefone'],
-            username=validated_data.get('username'),
+            username=validated_data['username'],
             data_nascimento=validated_data.get('data_nascimento'),
             endereco=validated_data.get('endereco'),
             cep=validated_data.get('cep'),
@@ -87,9 +87,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'nome', 'email', 'cpf', 'telefone', 'username',
             'data_nascimento', 'endereco', 'cep', 'cidade', 'estado',
-            'foto', 'is_staff', 'is_superuser', 'date_joined', 'user_type'
+            'foto', 'is_staff', 'is_superuser', 'date_joined', 'last_login', 'user_type',
+            'email_validado', 'two_factor_enabled'
         ]
-        read_only_fields = ['id', 'email', 'cpf', 'is_staff', 'is_superuser', 'date_joined']
+        read_only_fields = ['id', 'email', 'cpf', 'is_staff', 'is_superuser', 'date_joined', 'email_validado']
     
     def get_user_type(self, obj):
         return 'admin' if obj.is_staff else 'entregador'
@@ -126,7 +127,8 @@ class AdminCreateUserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
             'password_confirm': {'write_only': True},
-            'username': {'required': False},
+            'username': {'required': True},
+            'cpf': {'required': False},
             'data_nascimento': {'required': False},
             'endereco': {'required': False},
             'cep': {'required': False},
@@ -145,13 +147,13 @@ class AdminCreateUserSerializer(serializers.ModelSerializer):
         if Entregador.objects.filter(email=attrs['email']).exists():
             raise serializers.ValidationError("Este email já está cadastrado")
         
-        # Verificar se CPF já existe
-        if Entregador.objects.filter(cpf=attrs['cpf']).exists():
-            raise serializers.ValidationError("Este CPF já está cadastrado")
-        
-        # Verificar se username já existe (se fornecido)
-        if attrs.get('username') and Entregador.objects.filter(username=attrs['username']).exists():
+        # Verificar se username já existe
+        if Entregador.objects.filter(username=attrs['username']).exists():
             raise serializers.ValidationError("Este username já está em uso")
+        
+        # Verificar se CPF já existe (apenas se fornecido)
+        if attrs.get('cpf') and Entregador.objects.filter(cpf=attrs['cpf']).exists():
+            raise serializers.ValidationError("Este CPF já está cadastrado")
         
         return attrs
     
@@ -168,9 +170,9 @@ class AdminCreateUserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password'],
             nome=validated_data['nome'],
-            cpf=validated_data['cpf'],
+            cpf=validated_data.get('cpf'),
             telefone=validated_data['telefone'],
-            username=validated_data.get('username'),
+            username=validated_data['username'],
             data_nascimento=validated_data.get('data_nascimento'),
             endereco=validated_data.get('endereco'),
             cep=validated_data.get('cep'),
@@ -192,8 +194,37 @@ class UserListSerializer(serializers.ModelSerializer):
         model = Entregador
         fields = [
             'id', 'nome', 'email', 'cpf', 'telefone', 'username',
-            'is_active', 'is_staff', 'is_superuser', 'date_joined', 'user_type'
+            'is_active', 'is_staff', 'is_superuser', 'date_joined', 'last_login', 'user_type'
         ]
     
     def get_user_type(self, obj):
         return 'admin' if obj.is_staff else 'entregador'
+
+class TwoFactorSetupSerializer(serializers.Serializer):
+    """
+    Serializer para configuração inicial do 2FA via email
+    """
+    pass
+
+class TwoFactorVerifySerializer(serializers.Serializer):
+    """
+    Serializer para verificação do código 2FA
+    """
+    code = serializers.CharField(max_length=6, min_length=6)
+    
+    def validate_code(self, value):
+        if not value.isdigit():
+            raise serializers.ValidationError("O código deve conter apenas números")
+        return value
+
+class TwoFactorDisableSerializer(serializers.Serializer):
+    """
+    Serializer para desabilitar 2FA
+    """
+    password = serializers.CharField(write_only=True)
+    code = serializers.CharField(max_length=6, min_length=6)
+    
+    def validate_code(self, value):
+        if not value.isdigit():
+            raise serializers.ValidationError("O código deve conter apenas números")
+        return value

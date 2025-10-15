@@ -38,7 +38,7 @@ class TwoFactorEmailService:
             expires_at = timezone.now() + timedelta(minutes=10)
             
             # Criar registro no banco
-            from .models import TwoFactorVerification
+            from ..models import TwoFactorVerification
             verification = TwoFactorVerification.objects.create(
                 user=user,
                 code=code,
@@ -128,7 +128,7 @@ class TwoFactorEmailService:
             dict: Resultado da verificação
         """
         try:
-            from .models import TwoFactorVerification
+            from ..models import TwoFactorVerification
             
             # Buscar código válido
             verification = TwoFactorVerification.objects.filter(
@@ -296,7 +296,7 @@ class TwoFactorEmailService:
     def cleanup_expired_codes():
         """Remove códigos expirados"""
         try:
-            from .models import TwoFactorVerification
+            from ..models import TwoFactorVerification
             from django.utils import timezone
             
             expired_codes = TwoFactorVerification.objects.filter(

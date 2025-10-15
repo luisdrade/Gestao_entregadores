@@ -9,15 +9,15 @@ from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.utils import timezone
-from .models import Entregador
+from ..models import Entregador
 from .auth_serializers import (
     LoginSerializer, RegisterSerializer, UserProfileSerializer,
     ChangePasswordSerializer, AdminCreateUserSerializer, UserListSerializer,
     TwoFactorSetupSerializer, TwoFactorVerifySerializer, TwoFactorDisableSerializer
 )
-from .registration_verification_service import RegistrationVerificationService
-from .email_service import TwoFactorEmailService
-from .smart_2fa_service import Smart2FAService
+from ..email.registration_verification_service import RegistrationVerificationService
+from ..email.email_service import TwoFactorEmailService
+from ..email.smart_2fa_service import Smart2FAService
 from email_config import EmailConfig
 import logging
 

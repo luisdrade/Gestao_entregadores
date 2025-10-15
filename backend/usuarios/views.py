@@ -1,6 +1,6 @@
 
 from django.shortcuts import render, redirect
-from .forms import EntregadorForm
+# from .forms import EntregadorForm  # Removido - não usado na API
 from .models import Entregador
 
 from django.http import HttpResponse
@@ -25,7 +25,7 @@ from django.contrib.auth import get_user_model # Acessa o modelo de usuário
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken  # type: ignore[import]  # pylint: disable=import-error
-from .serializers import EntregadorSerializer 
+from .auth.auth_serializers import UserProfileSerializer as EntregadorSerializer 
 
 from django.db import models # Adicionado para usar models.Sum
 from django.core.files.storage import default_storage

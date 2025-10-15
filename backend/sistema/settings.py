@@ -55,10 +55,10 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'usuarios.middleware.CSRFExemptAPIMiddleware',  # Middleware personalizado para APIs
+    'usuarios.middleware.middleware.CSRFExemptAPIMiddleware',  # Middleware personalizado para APIs
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'usuarios.email_validation_middleware.EmailValidationMiddleware',  # Middleware de validação de email
+    'usuarios.middleware.email_validation_middleware.EmailValidationMiddleware',  # Middleware de validação de email
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]

@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
 from .views import EntregadorMeView, TestView, EstatisticasUsuarioView, UploadFotoPerfilView
-from .auth_views import (
+from .auth.auth_views import (
     LoginView,
     RegisterView,
     LogoutView,
@@ -21,7 +21,7 @@ from .auth_views import (
     RegistrationVerifyView,
     RegistrationResendView
 )
-from .admin_views import AdminUsersAPIView, AdminStatsAPIView
+from .admin.admin_views import AdminUsersAPIView, AdminStatsAPIView
 # Views de template removidas - usando apenas API
 
 app_name = 'usuarios'

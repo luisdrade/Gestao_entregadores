@@ -99,11 +99,11 @@ export default function RegisterVerificationMethodScreen() {
         <View style={styles.content}>
           <Text style={styles.title}>Verificação de Cadastro</Text>
           <Text style={styles.subtitle}>
-            Escolha como deseja receber o código de verificação
+            Enviaremos o código de verificação para seu email
           </Text>
 
           <View style={styles.methodsContainer}>
-            {/* Opção Email */}
+            {/* Opção Email - Única opção */}
             <TouchableOpacity
               style={[
                 styles.methodButton,
@@ -123,30 +123,6 @@ export default function RegisterVerificationMethodScreen() {
                 </Text>
               </View>
               {selectedMethod === 'email' && isLoading && (
-                <ActivityIndicator size="small" color="#2B2860" />
-              )}
-            </TouchableOpacity>
-
-            {/* Opção SMS */}
-            <TouchableOpacity
-              style={[
-                styles.methodButton,
-                selectedMethod === 'sms' && styles.methodButtonSelected,
-                isLoading && styles.methodButtonDisabled
-              ]}
-              onPress={() => handleMethodSelect('sms')}
-              disabled={isLoading}
-            >
-              <View style={styles.methodIcon}>
-                <Text style={styles.methodIconText}>📱</Text>
-              </View>
-              <View style={styles.methodContent}>
-                <Text style={styles.methodTitle}>Receber por SMS</Text>
-                <Text style={styles.methodDescription}>
-                  Enviaremos o código para {maskPhone(userPhone)}
-                </Text>
-              </View>
-              {selectedMethod === 'sms' && isLoading && (
                 <ActivityIndicator size="small" color="#2B2860" />
               )}
             </TouchableOpacity>
