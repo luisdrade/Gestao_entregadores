@@ -234,9 +234,44 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function loginAfterVerification(tokens, userData) {
+    try {
+      console.log('🔄 AuthContext - Fazendo login após verificação:', userData);
+      
+      // Salvar tokens e dados do usuário
+      await AsyncStorage.setItem('@GestaoEntregadores:token', tokens.access);
+      await AsyncStorage.setItem('@GestaoEntregadores:user', JSON.stringify(userData));
+      await AsyncStorage.setItem('@GestaoEntregadores:lastAppState', 'active');
+      
+      // Atualizar estado
+      setToken(tokens.access);
+      setUser(userData);
+      
+      // Definir token no httpClient
+      httpClient.defaults.headers.Authorization = `Bearer ${tokens.access}`;
+      
+      console.log('✅ AuthContext - Login após verificação realizado com sucesso');
+    } catch (error) {
+      console.error('❌ AuthContext - Erro no login após verificação:', error);
+    }
+  }
+
   async function signUp(userData) {
     try {
       const response = await httpClient.post(API_ENDPOINTS.AUTH.REGISTER, userData);
+      
+      // Verificar se precisa de verificação
+      if (response.data.requires_verification) {
+        return { 
+          success: true, 
+          requires_verification: true,
+          user_email: response.data.user_email,
+          user_phone: response.data.user_phone,
+          user_data: response.data.user_data
+        };
+      }
+      
+      // Cadastro normal (sem verificação necessária)
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Erro no cadastro:', error);
@@ -274,6 +309,7 @@ export function AuthProvider({ children }) {
       signOut,
       updateUserPhoto,
       updateUserData,
+      loginAfterVerification,
     }}>
       {children}
     </AuthContext.Provider>

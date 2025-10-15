@@ -39636,3 +39636,310 @@ CSRF desabilitado para rota: /api/estatisticas/
 "HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
 "HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
 "HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\email_service.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\auth_views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste10', 'username': 'teste10', 'email': 'teste10@gmail.com', 'telefone': '(18) 99700-9892', 'password': 'teste100', 'password_confirm': 'teste100'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '148', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'X-App-Source': 'mobile-app', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Novo usuário registrado: teste10@gmail.com - Aguardando verificação
+"POST /api/auth/register/ HTTP/1.1" 201 573
+CSRF desabilitado para rota: /api/auth/register/resend/
+Código de verificação de cadastro enviado para teste10@gmail.com
+Código de verificação enviado para teste10@gmail.com via email
+Código de verificação reenviado para teste10@gmail.com via email
+"POST /api/auth/register/resend/ HTTP/1.1" 200 127
+CSRF desabilitado para rota: /api/auth/register/resend/
+[DESENVOLVIMENTO] SMS para (18) 99700-9892: Código de verificação: 119269
+Código de verificação enviado para teste10@gmail.com via sms
+Código de verificação reenviado para teste10@gmail.com via sms
+"POST /api/auth/register/resend/ HTTP/1.1" 200 137
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste10', 'username': 'teste10', 'email': 'drade20103@gmail.com', 'telefone': '(18) 99700-9892', 'password': 'teste100', 'password_confirm': 'teste100'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '151', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'X-App-Source': 'mobile-app', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'username': [ErrorDetail(string='entregador com este username já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 112
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste100', 'username': 'teste100', 'email': 'drade20103@gmail.com', 'telefone': '(18) 99700-9892', 'password': 'teste100', 'password_confirm': 'teste100'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '153', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'X-App-Source': 'mobile-app', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Novo usuário registrado: drade20103@gmail.com - Aguardando verificação
+"POST /api/auth/register/ HTTP/1.1" 201 581
+CSRF desabilitado para rota: /api/auth/register/resend/
+Código de verificação de cadastro enviado para drade20103@gmail.com
+Código de verificação enviado para drade20103@gmail.com via email
+Código de verificação reenviado para drade20103@gmail.com via email
+"POST /api/auth/register/resend/ HTTP/1.1" 200 127
+CSRF desabilitado para rota: /api/auth/register/resend/
+Código de verificação de cadastro enviado para drade20103@gmail.com
+Código de verificação enviado para drade20103@gmail.com via email
+Código de verificação reenviado para drade20103@gmail.com via email
+"POST /api/auth/register/resend/ HTTP/1.1" 200 127
+CSRF desabilitado para rota: /api/auth/register/resend/
+Código de verificação de cadastro enviado para drade20103@gmail.com
+Código de verificação enviado para drade20103@gmail.com via email
+Código de verificação reenviado para drade20103@gmail.com via email
+"POST /api/auth/register/resend/ HTTP/1.1" 200 127
+Código de verificação de cadastro enviado para luisfilipem13@gmail.com
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste100', 'username': 'teste100', 'email': 'drade20103@gmail.com', 'telefone': '(18) 99700-9892', 'password': 'teste100', 'password_confirm': 'teste100'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '153', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'X-App-Source': 'mobile-app', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Erro de validação no serializer: {'email': [ErrorDetail(string='entregador com este email já existe.', code='unique')], 'username': [ErrorDetail(string='entregador com este username já existe.', code='unique')]}
+Bad Request: /api/auth/register/
+"POST /api/auth/register/ HTTP/1.1" 400 162
+"OPTIONS /registro/api/registro-trabalho/ HTTP/1.1" 200 0
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/profile/
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+Unauthorized: /registro/api/registro-trabalho/
+Unauthorized: /registro/api/registro-despesa/
+Unauthorized: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 401 193
+"GET /registro/api/registro-despesa/ HTTP/1.1" 401 193
+"GET /api/auth/profile/ HTTP/1.1" 401 193
+Unauthorized: /registro/api/registro-trabalho/
+Unauthorized: /registro/api/registro-despesa/
+CSRF desabilitado para rota: /api/auth/profile/
+Unauthorized: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 401 193
+"GET /api/auth/profile/ HTTP/1.1" 401 193
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 401 193
+"OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Login do usuário: admin@gmail.com (Web) - Last login não atualizado
+Login bem-sucedido para usuário: admin@gmail.com (Tipo: admin)
+Dados do usuário retornados: {'id': 11, 'nome': 'Admin', 'email': 'admin@gmail.com', 'cpf': '123456789', 'telefone': '123456789', 'username': 'admin', 'data_nascimento': None, 'endereco': None, 'cep': None, 'cidade': None, 'estado': None, 'foto': None, 'is_staff': True, 'is_superuser': True, 'date_joined': '2025-09-02T19:41:50.649052Z', 'last_login': '2025-10-07T22:48:44.146599Z', 'user_type': 'admin', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 974
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 417
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /api/auth/profile/ HTTP/1.1" 200 417
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 39
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 39
+"OPTIONS /api/admin/users/ HTTP/1.1" 200 0
+"OPTIONS /comunidade/api/postagens/ HTTP/1.1" 200 0
+"OPTIONS /api/admin/users/ HTTP/1.1" 200 0
+"OPTIONS /comunidade/api/anuncios/ HTTP/1.1" 200 0
+"OPTIONS /comunidade/api/postagens/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/
+"OPTIONS /comunidade/api/anuncios/ HTTP/1.1" 200 0
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 1380
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 1380
+Entregadores encontrados: 10
+Entregador: drade20103@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: luisteste@gmail.com, is_active: True
+Entregador: testezin15@gmail.com, is_active: True
+Entregador: luis@gmail.com, is_active: True
+"GET /comunidade/api/postagens/ HTTP/1.1" 200 1380
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+"GET /comunidade/api/anuncios/ HTTP/1.1" 200 1380
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2834
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: drade20103@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: luisteste@gmail.com, is_active: True
+Entregador: testezin15@gmail.com, is_active: True
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2834
+"OPTIONS /api/admin/users/27/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/27/
+Usuário drade20103@gmail.com excluído pelo admin admin@gmail.com
+"DELETE /api/admin/users/27/ HTTP/1.1" 200 59
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: teste10@gmail.com, is_active: True
+Entregador: luisteste@gmail.com, is_active: True
+Entregador: testezin15@gmail.com, is_active: True
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2870
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste100', 'username': 'teste100', 'email': 'drade20103@gmail.com', 'telefone': '(18) 99700-9892', 'password': 'teste100', 'password_confirm': 'teste100'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '153', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'X-App-Source': 'mobile-app', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Novo usuário registrado: drade20103@gmail.com - Aguardando verificação
+"POST /api/auth/register/ HTTP/1.1" 201 581
+CSRF desabilitado para rota: /api/auth/register/resend/
+Código de verificação de cadastro enviado para drade20103@gmail.com
+Código de verificação enviado para drade20103@gmail.com via email
+Código de verificação reenviado para drade20103@gmail.com via email
+"POST /api/auth/register/resend/ HTTP/1.1" 200 127
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: teste2@gmail.com (App Mobile)
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'last_login': '2025-10-15T07:34:39.194283Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1086
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: drade20103@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: luisteste@gmail.com, is_active: True
+Entregador: testezin15@gmail.com, is_active: True
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2834
+"OPTIONS /api/admin/users/28/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/28/
+Usuário drade20103@gmail.com excluído pelo admin admin@gmail.com
+"DELETE /api/admin/users/28/ HTTP/1.1" 200 59
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: teste10@gmail.com, is_active: True
+Entregador: luisteste@gmail.com, is_active: True
+Entregador: testezin15@gmail.com, is_active: True
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2870
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste100', 'username': 'teste100', 'email': 'drade20103@gmail.com', 'telefone': '(18) 99700-9892', 'password': 'teste100', 'password_confirm': 'teste100'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '153', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'X-App-Source': 'mobile-app', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Novo usuário registrado: drade20103@gmail.com - Aguardando verificação
+"POST /api/auth/register/ HTTP/1.1" 201 581
+CSRF desabilitado para rota: /api/auth/register/resend/
+Código de verificação de cadastro enviado para drade20103@gmail.com
+Código de verificação enviado para drade20103@gmail.com via email
+Código de verificação reenviado para drade20103@gmail.com via email
+"POST /api/auth/register/resend/ HTTP/1.1" 200 127
+Código de verificação de cadastro enviado para luisfilipem13@gmail.com
+Código de verificação de cadastro enviado para luisfilipem13@gmail.com
+CSRF desabilitado para rota: /api/auth/register/resend/
+Código de verificação de cadastro enviado para drade20103@gmail.com
+Código de verificação enviado para drade20103@gmail.com via email
+Código de verificação reenviado para drade20103@gmail.com via email
+"POST /api/auth/register/resend/ HTTP/1.1" 200 127
+CSRF desabilitado para rota: /api/auth/register/verify/
+Bad Request: /api/auth/register/verify/
+"POST /api/auth/register/verify/ HTTP/1.1" 400 45
+Código de verificação de cadastro enviado para luisfilipem13@gmail.com
+CSRF desabilitado para rota: /api/auth/register/resend/
+Código de verificação de cadastro enviado para drade20103@gmail.com
+Código de verificação enviado para drade20103@gmail.com via email
+Código de verificação reenviado para drade20103@gmail.com via email
+"POST /api/auth/register/resend/ HTTP/1.1" 200 127
+Código de verificação de cadastro enviado para luisfilipem13@gmail.com
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: drade20103@gmail.com, is_active: True
+Entregador: teste10@gmail.com, is_active: True
+Entregador: luisteste@gmail.com, is_active: True
+Entregador: testezin15@gmail.com, is_active: True
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2834
+"OPTIONS /api/admin/users/29/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/admin/users/29/
+Usuário drade20103@gmail.com excluído pelo admin admin@gmail.com
+"DELETE /api/admin/users/29/ HTTP/1.1" 200 59
+CSRF desabilitado para rota: /api/admin/users/
+Entregadores encontrados: 10
+Entregador: teste10@gmail.com, is_active: True
+Entregador: luisteste@gmail.com, is_active: True
+Entregador: testezin15@gmail.com, is_active: True
+Entregador: luis@gmail.com, is_active: True
+Entregador: rafa@gmail.com, is_active: False
+Entregador: teste12@gmail.com, is_active: True
+Entregador: joao.teste@email.com, is_active: True
+Entregador: teste2@teste.com, is_active: True
+Entregador: admin@gmail.com, is_active: True
+Entregador: luisfilipem13@gmail.com, is_active: True
+"GET /api/admin/users/ HTTP/1.1" 200 2870
+CSRF desabilitado para rota: /api/auth/register/
+Dados recebidos no registro: {'nome': 'teste100', 'username': 'teste100', 'email': 'drade20103@gmail.com', 'telefone': '(18) 99700-9892', 'password': 'teste100', 'password_confirm': 'teste100'}
+Tipo dos dados: <class 'dict'>
+Headers: {'Content-Length': '153', 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*', 'X-App-Source': 'mobile-app', 'Host': '192.168.0.115:8000', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip', 'Cookie': 'csrftoken=fs2J34lTJjIItFPAbeRSjiXvjTAdVF6N', 'User-Agent': 'okhttp/4.9.2'}
+Novo usuário registrado: drade20103@gmail.com - Aguardando verificação
+"POST /api/auth/register/ HTTP/1.1" 201 581
+CSRF desabilitado para rota: /api/auth/register/resend/
+Código de verificação de cadastro enviado para drade20103@gmail.com
+Código de verificação enviado para drade20103@gmail.com via email
+Código de verificação reenviado para drade20103@gmail.com via email
+"POST /api/auth/register/resend/ HTTP/1.1" 200 127
+CSRF desabilitado para rota: /api/auth/register/verify/
+Código de verificação de cadastro verificado para drade20103@gmail.com
+Usuário drade20103@gmail.com verificado com sucesso via email
+Usuário drade20103@gmail.com verificado com sucesso via email
+"POST /api/auth/register/verify/ HTTP/1.1" 200 953
+CSRF desabilitado para rota: /api/auth/login/
+Bad Request: /api/auth/login/
+"POST /api/auth/login/ HTTP/1.1" 400 107
+Código de verificação de cadastro enviado para luisfilipem13@gmail.com

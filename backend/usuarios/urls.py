@@ -17,7 +17,9 @@ from .auth_views import (
     TwoFactorResendView,
     TrustedDevicesView,
     Force2FAView,
-    TestEmailView
+    TestEmailView,
+    RegistrationVerifyView,
+    RegistrationResendView
 )
 from .admin_views import AdminUsersAPIView, AdminStatsAPIView
 # Views de template removidas - usando apenas API
@@ -39,6 +41,8 @@ urlpatterns = [
     path('auth/login/', LoginView.as_view(), name='auth_login'),
     path('auth/login/2fa/', TwoFactorLoginView.as_view(), name='auth_login_2fa'),
     path('auth/register/', RegisterView.as_view(), name='auth_register'),
+    path('auth/register/verify/', RegistrationVerifyView.as_view(), name='auth_register_verify'),
+    path('auth/register/resend/', RegistrationResendView.as_view(), name='auth_register_resend'),
     path('auth/logout/', LogoutView.as_view(), name='auth_logout'),
     path('auth/refresh/', RefreshTokenView.as_view(), name='auth_refresh'),
     path('auth/profile/', UserProfileView.as_view(), name='auth_profile'),

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificação de Cadastro</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2B2860;
+            margin-bottom: 10px;
+        }
+        .title {
+            font-size: 24px;
+            color: #2B2860;
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .code-container {
+            background-color: #f8f9fa;
+            border: 2px dashed #2B2860;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .code {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2B2860;
+            letter-spacing: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        .code-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .expiry {
+            font-size: 14px;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .instructions {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2B2860;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #2B2860;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin: 8px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #856404;
+        }
+        .button {
+            display: inline-block;
+            background-color: #2B2860;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🚚 Gestão Entregadores</div>
+            <h1 class="title">Verificação de Cadastro</h1>
+            <p class="subtitle">Olá {{ user_name }}, confirme seu cadastro para continuar</p>
+        </div>
+
+        <div class="code-container">
+            <div class="code-label">Seu código de verificação é:</div>
+            <div class="code">{{ code }}</div>
+            <div class="expiry">⏰ Este código expira em {{ expires_in }} minutos</div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 Como usar este código:</h3>
+            <ol>
+                <li>Abra o aplicativo Gestão Entregadores</li>
+                <li>Na tela de verificação, digite o código acima</li>
+                <li>Clique em "Verificar Código"</li>
+                <li>Após a verificação, você terá acesso completo ao sistema</li>
+            </ol>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Importante:</strong> Este código é válido por apenas {{ expires_in }} minutos. 
+            Se não conseguir verificar agora, você pode solicitar um novo código.
+        </div>
+
+        <div class="footer">
+            <p>Se você não solicitou este cadastro, ignore este email.</p>
+            <p>Este é um email automático, não responda a esta mensagem.</p>
+            <p><strong>Gestão Entregadores</strong> - Sistema de Gestão para Entregadores</p>
+        </div>
+    </div>
+</body>
+</html>

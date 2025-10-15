@@ -1,180 +1,171 @@
-# 📧 Configuração de Email para 2FA
-
-## Visão Geral
-
-Este guia explica como configurar o envio de emails para o sistema de autenticação de 2 fatores (2FA).
+# 📧 Configuração de Email para 2FA Pós-Cadastro
 
 ## 🚀 Configuração Rápida
 
-### 1. Modo Desenvolvimento (Console)
-Por padrão, o sistema está configurado para exibir emails no console durante desenvolvimento:
+### 1. **Gmail (Recomendado)**
 
-```bash
-# Os emails aparecerão no terminal quando você executar:
-python manage.py runserver
-```
+#### Passo 1: Ativar Senha de App no Gmail
+1. Acesse sua conta Google: https://myaccount.google.com/
+2. Vá em **Segurança** → **Verificação em duas etapas** (ative se não estiver)
+3. Vá em **Senhas de app** → **Selecionar app** → **Outro (nome personalizado)**
+4. Digite: "Gestão Entregadores"
+5. **COPIE A SENHA GERADA** (16 caracteres)
 
-### 2. Configuração com Gmail
+#### Passo 2: Configurar Variáveis de Ambiente
+Crie/edite o arquivo `.env` na pasta `backend/`:
 
-1. **Ative a verificação em 2 etapas** na sua conta Google
-2. **Gere uma senha de app**:
-   - Vá para: https://myaccount.google.com/security
-   - Clique em "Senhas de app"
-   - Gere uma senha para "Mail"
-3. **Configure as variáveis de ambiente**:
-
-```bash
-# No arquivo .env ou variáveis de ambiente
+```env
+# Configuração de Email
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER=seu-email@gmail.com
-EMAIL_HOST_PASSWORD=sua-senha-de-app
-DEFAULT_FROM_EMAIL=seu-email@gmail.com
+EMAIL_HOST_PASSWORD=sua-senha-de-app-16-caracteres
+DEFAULT_FROM_EMAIL=noreply@gestaoentregadores.com
 ```
 
-### 3. Configuração com Outros Provedores
+### 2. **Outlook/Hotmail**
 
-#### Outlook/Hotmail
-```bash
+```env
+# Configuração de Email
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 EMAIL_HOST=smtp-mail.outlook.com
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER=seu-email@outlook.com
-EMAIL_HOST_PASSWORD=sua-senha
+EMAIL_HOST_PASSWORD=sua-senha-normal
+DEFAULT_FROM_EMAIL=noreply@gestaoentregadores.com
 ```
 
-#### Yahoo
-```bash
+### 3. **Yahoo**
+
+```env
+# Configuração de Email
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 EMAIL_HOST=smtp.mail.yahoo.com
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER=seu-email@yahoo.com
-EMAIL_HOST_PASSWORD=sua-senha
+EMAIL_HOST_PASSWORD=sua-senha-de-app
+DEFAULT_FROM_EMAIL=noreply@gestaoentregadores.com
 ```
 
-## 🧪 Testando a Configuração
+## 🧪 Testar Configuração
 
-### 1. Teste Rápido
+### Opção 1: Via Interface Web
+1. Faça login no sistema
+2. Vá em **Perfil** → **Configurações 2FA**
+3. Clique em **"Testar Email"**
+
+### Opção 2: Via Terminal
 ```bash
 cd backend
-python test_2fa.py
-```
-
-### 2. Teste Manual
-```python
-# No shell do Django
 python manage.py shell
-
-# Execute:
-from django.core.mail import send_mail
-send_mail(
-    'Teste 2FA',
-    'Este é um teste de email.',
-    'noreply@gestaoentregadores.com',
-    ['seu-email@exemplo.com'],
-    fail_silently=False,
-)
 ```
 
-## 📱 Como Funciona o 2FA
+```python
+from usuarios.email_service import TwoFactorEmailService
+from usuarios.models import Entregador
 
-### 1. **Setup do 2FA**
-- Usuário acessa `/api/auth/2fa/setup/`
-- Sistema envia código por email
-- Usuário digita código para ativar
+# Pegar um usuário existente
+user = Entregador.objects.first()
 
-### 2. **Login com 2FA**
-- Usuário faz login normal
-- Se 2FA ativado, sistema pede código
-- Usuário digita código do email
-- Login é completado
+# Testar envio
+result = TwoFactorEmailService.send_registration_code(user)
+print(f"Sucesso: {result['success']}")
+print(f"Mensagem: {result['message']}")
+```
 
-### 3. **Dispositivos Confiáveis**
-- Dispositivos conhecidos não precisam de 2FA
-- Sistema lembra dispositivos por device_id
-- Usuário pode forçar 2FA em todos os dispositivos
-
-## 🎨 Templates de Email
-
-Os emails são enviados com templates HTML bonitos e responsivos:
-
-- **2FA Setup**: Email roxo com gradiente
-- **2FA Login**: Email azul com gradiente  
-- **2FA Disable**: Email vermelho com gradiente
-
-Todos os templates são:
-- ✅ Responsivos (mobile-friendly)
-- ✅ Com gradientes modernos
-- ✅ Com ícones e emojis
-- ✅ Com informações de segurança
+### Opção 3: Script de Teste
+```bash
+cd backend
+python email_config.py
+```
 
 ## 🔧 Solução de Problemas
 
-### Email não chega
-1. Verifique a pasta de spam
-2. Confirme as credenciais SMTP
-3. Teste com console backend primeiro
+### ❌ "Authentication failed"
+- **Gmail**: Use senha de app, não senha normal
+- **Outlook**: Ative "Acesso menos seguro" ou use senha de app
+- **Yahoo**: Use senha de app
 
-### Erro de autenticação SMTP
-1. Use senha de app (não senha normal)
-2. Verifique se 2FA está ativado no Gmail
-3. Confirme host e porta corretos
+### ❌ "Connection refused"
+- Verifique se `EMAIL_HOST` e `EMAIL_PORT` estão corretos
+- Teste com `EMAIL_USE_TLS=True` e `EMAIL_USE_SSL=False`
 
-### Template não renderiza
-1. Verifique se `TEMPLATES` está configurado
-2. Confirme se templates estão em `backend/templates/`
-3. Teste com `python test_2fa.py`
+### ❌ "SMTPAuthenticationError"
+- Verifique se `EMAIL_HOST_USER` e `EMAIL_HOST_PASSWORD` estão corretos
+- Para Gmail: use senha de app de 16 caracteres
 
-## 📊 Monitoramento
+### ❌ "Timeout"
+- Verifique sua conexão com internet
+- Tente com `EMAIL_PORT=465` e `EMAIL_USE_SSL=True`
 
-### Logs de Email
-```bash
-# Ver logs de email no console
-tail -f debug.log | grep "2FA"
+## 📱 Para SMS (Opcional)
+
+Se quiser configurar SMS também, adicione no `.env`:
+
+```env
+# Configuração SMS (opcional)
+SMS_ENABLED=true
+TWILIO_ACCOUNT_SID=seu-account-sid
+TWILIO_AUTH_TOKEN=seu-auth-token
+TWILIO_PHONE_NUMBER=+1234567890
 ```
-
-### Estatísticas
-- Códigos enviados por dia
-- Taxa de sucesso de envio
-- Dispositivos confiáveis por usuário
 
 ## 🚀 Deploy em Produção
 
-### 1. Configure SMTP de produção
-```bash
-EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-EMAIL_HOST=seu-servidor-smtp.com
-EMAIL_HOST_USER=no-reply@seudominio.com
-EMAIL_HOST_PASSWORD=senha-segura
+### Railway/Render
+Adicione as variáveis de ambiente no painel:
+- `EMAIL_BACKEND`
+- `EMAIL_HOST`
+- `EMAIL_PORT`
+- `EMAIL_USE_TLS`
+- `EMAIL_HOST_USER`
+- `EMAIL_HOST_PASSWORD`
+- `DEFAULT_FROM_EMAIL`
+
+### Vercel/Netlify
+Configure as mesmas variáveis no painel de variáveis de ambiente.
+
+## ✅ Verificar se Está Funcionando
+
+1. **Cadastre um novo usuário**
+2. **Escolha "Email" como método de verificação**
+3. **Verifique sua caixa de entrada** (e spam)
+4. **Digite o código** na tela de verificação
+
+## 📧 Exemplo de Email
+
+Você receberá um email assim:
+
+```
+Assunto: Verificação de Cadastro - Gestão Entregadores
+
+🚚 Gestão Entregadores
+Verificação de Cadastro
+
+Olá [Seu Nome], confirme seu cadastro para continuar
+
+Seu código de verificação é:
+123456
+
+⏰ Este código expira em 10 minutos
+
+📋 Como usar este código:
+1. Abra o aplicativo Gestão Entregadores
+2. Na tela de verificação, digite o código acima
+3. Clique em "Verificar Código"
+4. Após a verificação, você terá acesso completo ao sistema
 ```
 
-### 2. Configure domínio
-```bash
-DEFAULT_FROM_EMAIL=no-reply@seudominio.com
-ALLOWED_HOSTS=seudominio.com,www.seudominio.com
-```
+## 🎯 Próximos Passos
 
-### 3. Teste em produção
-```bash
-# Teste o envio de email
-curl -X POST https://seudominio.com/api/auth/2fa/setup/ \
-  -H "Authorization: Bearer SEU_TOKEN"
-```
+1. ✅ Configure as variáveis de ambiente
+2. ✅ Teste o envio de email
+3. ✅ Cadastre um usuário de teste
+4. ✅ Verifique se recebeu o email
+5. ✅ Complete a verificação no app
 
-## 📞 Suporte
-
-Se tiver problemas:
-1. Verifique os logs em `debug.log`
-2. Teste com `python test_2fa.py`
-3. Confirme configurações SMTP
-4. Verifique se templates existem
-
----
-
-**🎉 Pronto! Seu sistema 2FA está configurado e funcionando!**
-
-
+**Pronto! Seu sistema de 2FA pós-cadastro está funcionando! 🎉**

@@ -15,6 +15,7 @@ from .auth_serializers import (
     ChangePasswordSerializer, AdminCreateUserSerializer, UserListSerializer,
     TwoFactorSetupSerializer, TwoFactorVerifySerializer, TwoFactorDisableSerializer
 )
+from .registration_verification_service import RegistrationVerificationService
 from .email_service import TwoFactorEmailService
 from .smart_2fa_service import Smart2FAService
 from email_config import EmailConfig
@@ -162,24 +163,20 @@ class RegisterView(APIView):
             # Criar o usuário usando o serializer
             user = serializer.save()
             
-            # Gerar tokens JWT
-            refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)
-            refresh_token = str(refresh)
-            
             # Usar serializer para dados do usuário criado
             user_serializer = UserProfileSerializer(user)
             
-            logger.info(f"Novo usuário registrado: {user.email}")
+            logger.info(f"Novo usuário registrado: {user.email} - Aguardando verificação")
             
+            # Retornar resposta indicando que precisa de verificação
+            # NÃO gerar tokens JWT ainda - só após verificação
             return Response({
                 'success': True,
-                'message': 'Usuário criado com sucesso',
-                'tokens': {
-                    'access': access_token,
-                    'refresh': refresh_token
-                },
-                'user': user_serializer.data
+                'message': 'Cadastro realizado com sucesso. Verificação necessária.',
+                'requires_verification': True,
+                'user_email': user.email,
+                'user_phone': user.telefone,
+                'user_data': user_serializer.data
             }, status=status.HTTP_201_CREATED)
                 
         except Exception as e:
@@ -884,6 +881,142 @@ class TestEmailView(APIView):
                 
         except Exception as e:
             logger.error(f"Erro ao testar email: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class RegistrationVerifyView(APIView):
+    """
+    View para verificar código de verificação pós-cadastro
+    """
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        try:
+            email = request.data.get('email')
+            code = request.data.get('code')
+            verification_method = request.data.get('verification_method', 'email')
+            
+            if not email or not code:
+                return Response({
+                    'success': False,
+                    'error': 'Email e código são obrigatórios'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Buscar usuário
+            try:
+                user = Entregador.objects.get(email=email)
+            except Entregador.DoesNotExist:
+                return Response({
+                    'success': False,
+                    'error': 'Usuário não encontrado'
+                }, status=status.HTTP_404_NOT_FOUND)
+            
+            # Verificar se já está verificado
+            if user.registration_verified:
+                return Response({
+                    'success': False,
+                    'error': 'Este usuário já foi verificado'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Verificar código usando o serviço unificado
+            verification_result = RegistrationVerificationService.verify_code(
+                user, code, verification_method
+            )
+            
+            if not verification_result['success']:
+                return Response({
+                    'success': False,
+                    'error': verification_result['message']
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Gerar tokens JWT após verificação bem-sucedida
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+            
+            # Usar serializer para dados do usuário
+            user_serializer = UserProfileSerializer(user)
+            user_data = user_serializer.data
+            
+            logger.info(f"Usuário {user.email} verificado com sucesso via {verification_method}")
+            
+            return Response({
+                'success': True,
+                'message': 'Verificação realizada com sucesso',
+                'tokens': {
+                    'access': access_token,
+                    'refresh': refresh_token
+                },
+                'user': user_data
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro na verificação de cadastro: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Erro interno do servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class RegistrationResendView(APIView):
+    """
+    View para reenviar código de verificação pós-cadastro
+    """
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        try:
+            email = request.data.get('email')
+            verification_method = request.data.get('verification_method', 'email')
+            
+            if not email:
+                return Response({
+                    'success': False,
+                    'error': 'Email é obrigatório'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Buscar usuário
+            try:
+                user = Entregador.objects.get(email=email)
+            except Entregador.DoesNotExist:
+                return Response({
+                    'success': False,
+                    'error': 'Usuário não encontrado'
+                }, status=status.HTTP_404_NOT_FOUND)
+            
+            # Verificar se já está verificado
+            if user.registration_verified:
+                return Response({
+                    'success': False,
+                    'error': 'Este usuário já foi verificado'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Enviar código usando o serviço unificado
+            send_result = RegistrationVerificationService.send_verification_code(
+                user, verification_method
+            )
+            
+            if not send_result['success']:
+                return Response({
+                    'success': False,
+                    'error': send_result['message'],
+                    'reason': send_result.get('reason')
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            logger.info(f"Código de verificação reenviado para {user.email} via {verification_method}")
+            
+            return Response({
+                'success': True,
+                'message': send_result['message'],
+                'expires_at': send_result['expires_at'],
+                'attempts_remaining': send_result.get('attempts_remaining', 0)
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Erro ao reenviar código de verificação: {str(e)}")
             return Response({
                 'success': False,
                 'error': 'Erro interno do servidor'

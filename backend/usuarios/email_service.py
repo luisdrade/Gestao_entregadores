@@ -170,6 +170,129 @@ class TwoFactorEmailService:
             }
     
     @staticmethod
+    def send_registration_code(user):
+        """
+        Envia código de verificação pós-cadastro por email
+        
+        Args:
+            user: Instância do usuário
+        
+        Returns:
+            dict: Resultado da operação
+        """
+        try:
+            # Gerar código
+            code = TwoFactorEmailService.generate_code()
+            
+            # Definir tempo de expiração (10 minutos)
+            expires_at = timezone.now() + timedelta(minutes=10)
+            
+            # Atualizar campos do usuário
+            user.registration_code = code
+            user.registration_code_expires_at = expires_at
+            user.save(update_fields=['registration_code', 'registration_code_expires_at'])
+            
+            # Renderizar template HTML
+            html_message = render_to_string('emails/registration_verification.html', {
+                'user_name': user.nome,
+                'code': code,
+                'expires_in': 10
+            })
+            
+            # Enviar email
+            success = send_mail(
+                subject='Verificação de Cadastro - Gestão Entregadores',
+                message=f'Seu código de verificação é: {code}\n\nEste código expira em 10 minutos.',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+                fail_silently=False,
+                html_message=html_message,
+            )
+            
+            if success:
+                logger.info(f"Código de verificação de cadastro enviado para {user.email}")
+                return {
+                    'success': True,
+                    'message': 'Código enviado com sucesso',
+                    'expires_at': expires_at.isoformat()
+                }
+            else:
+                # Limpar código se falhou o envio
+                user.registration_code = None
+                user.registration_code_expires_at = None
+                user.save(update_fields=['registration_code', 'registration_code_expires_at'])
+                return {
+                    'success': False,
+                    'message': 'Erro ao enviar email'
+                }
+                
+        except Exception as e:
+            logger.error(f"Erro ao enviar código de verificação de cadastro: {str(e)}")
+            return {
+                'success': False,
+                'message': 'Erro interno do servidor'
+            }
+    
+    @staticmethod
+    def verify_registration_code(user, code):
+        """
+        Verifica código de verificação pós-cadastro
+        
+        Args:
+            user: Instância do usuário
+            code: Código a ser verificado
+        
+        Returns:
+            dict: Resultado da verificação
+        """
+        try:
+            # Verificar se há código armazenado
+            if not user.registration_code:
+                return {
+                    'success': False,
+                    'message': 'Nenhum código de verificação encontrado'
+                }
+            
+            # Verificar se o código confere
+            if user.registration_code != code:
+                return {
+                    'success': False,
+                    'message': 'Código inválido'
+                }
+            
+            # Verificar se não expirou
+            if user.registration_code_expires_at and timezone.now() > user.registration_code_expires_at:
+                # Limpar código expirado
+                user.registration_code = None
+                user.registration_code_expires_at = None
+                user.save(update_fields=['registration_code', 'registration_code_expires_at'])
+                
+                return {
+                    'success': False,
+                    'message': 'Código expirado'
+                }
+            
+            # Código válido - limpar campos
+            user.registration_code = None
+            user.registration_code_expires_at = None
+            user.registration_verified = True
+            user.save(update_fields=['registration_code', 'registration_code_expires_at', 'registration_verified'])
+            
+            logger.info(f"Código de verificação de cadastro verificado para {user.email}")
+            
+            return {
+                'success': True,
+                'message': 'Código verificado com sucesso'
+            }
+            
+        except Exception as e:
+            logger.error(f"Erro ao verificar código de verificação de cadastro: {str(e)}")
+            return {
+                'success': False,
+                'message': 'Erro interno do servidor'
+            }
+    
+    @staticmethod
     def cleanup_expired_codes():
         """Remove códigos expirados"""
         try:

@@ -10,6 +10,8 @@ export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/api/auth/login/',
     REGISTER: '/api/auth/register/',
+    REGISTER_VERIFY: '/api/auth/register/verify/',
+    REGISTER_RESEND: '/api/auth/register/resend/',
     FORGOT_PASSWORD: '/api/auth/password/reset/',
     REFRESH_TOKEN: '/api/auth/token/refresh/',
     // 2FA endpoints

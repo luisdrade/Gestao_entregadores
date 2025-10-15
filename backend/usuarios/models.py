@@ -43,6 +43,13 @@ class Entregador(AbstractBaseUser, PermissionsMixin):
     two_factor_required = models.BooleanField(default=False)  # Se deve pedir 2FA no próximo login
     last_2fa_check = models.DateTimeField(null=True, blank=True)  # Última verificação 2FA
 
+    # Verificação pós-cadastro
+    registration_verified = models.BooleanField(default=False)  # Indica se completou verificação pós-cadastro
+    registration_code = models.CharField(max_length=6, null=True, blank=True)  # Código temporário de verificação
+    registration_code_expires_at = models.DateTimeField(null=True, blank=True)  # Expiração do código
+    registration_code_attempts = models.IntegerField(default=0)  # Contador de tentativas de reenvio
+    registration_code_blocked_until = models.DateTimeField(null=True, blank=True)  # Bloqueio temporário por excesso de tentativas
+
     # Campos de sistema
     date_joined = models.DateTimeField(default=django.utils.timezone.now)
     last_login = models.DateTimeField(null=True, blank=True)

@@ -64,11 +64,23 @@ export default function RegisterScreen() {
       const result = await signUp(registrationData);
       console.log('🔍 Resultado do signUp:', result);
       if (result.success) {
-        Alert.alert(
-          'Sucesso', 
-          'Conta criada com sucesso! Faça login para continuar.',
-          [{ text: 'OK', onPress: () => router.back() }]
-        );
+        if (result.requires_verification) {
+          // Navegar para tela de escolha de método de verificação
+          router.push({
+            pathname: '/register-verification-method',
+            params: {
+              userEmail: result.user_email,
+              userPhone: result.user_phone
+            }
+          });
+        } else {
+          // Cadastro normal (sem verificação necessária)
+          Alert.alert(
+            'Sucesso', 
+            'Conta criada com sucesso! Faça login para continuar.',
+            [{ text: 'OK', onPress: () => router.back() }]
+          );
+        }
       } else {
         const newFieldErrors = {};
         console.log('🔍 Processando erros:', result.error);
