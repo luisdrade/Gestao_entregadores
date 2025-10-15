@@ -39352,3 +39352,120 @@ CSRF desabilitado para rota: /api/estatisticas/
 "OPTIONS /comunidade/admin/api/anuncios/7/ HTTP/1.1" 200 0
 Anúncio 7 deletado permanentemente por admin@gmail.com
 "DELETE /comunidade/admin/api/anuncios/7/ HTTP/1.1" 200 62
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: teste2@gmail.com (App Mobile)
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'last_login': '2025-10-14T22:48:25.783605Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1086
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1388
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 255
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 255
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1388
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 255
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\models.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: teste2@gmail.com (App Mobile)
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'last_login': '2025-10-15T00:13:08.348116Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1086
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 255
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: teste2@gmail.com (App Mobile)
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'last_login': '2025-10-15T00:15:27.054348Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1086
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 255
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\models.py changed, reloading.
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: teste2@gmail.com (App Mobile)
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'last_login': '2025-10-15T00:18:04.494494Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1086
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 39
+Watching for file changes with StatReloader
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: teste2@gmail.com (App Mobile)
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'last_login': '2025-10-15T00:19:18.753415Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1086
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 39
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\models.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: teste2@gmail.com (App Mobile)
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'last_login': '2025-10-15T00:22:15.073170Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1086
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 39
+"POST /registro/api/categorias-despesas/ HTTP/1.1" 201 174
+Bad Request: /registro/api/categorias-despesas/
+"POST /registro/api/categorias-despesas/ HTTP/1.1" 400 66
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 176
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: teste2@gmail.com (App Mobile)
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'last_login': '2025-10-15T00:25:19.605061Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1086
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 176
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"GET /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 80721
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: luisteste@gmail.com (App Mobile)
+Login bem-sucedido para usuário: luisteste@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 24, 'nome': 'luis', 'email': 'luisteste@gmail.com', 'cpf': '154.864.848-66', 'telefone': '(18) 99545-4854', 'username': 'Luis1', 'data_nascimento': '2003-11-25', 'endereco': 'Rua Professor Benedito Pereira de Moraes', 'cep': '16702-032', 'cidade': 'Guararapes', 'estado': 'SP', 'foto': None, 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-10-13T01:42:32.258901Z', 'last_login': '2025-10-15T00:25:55.768334Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1056
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1380
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 39
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1380
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 39
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 478
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 478
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 478
+"GET /registro/api/categorias-despesas/ HTTP/1.1" 200 478
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\models.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: teste2@gmail.com (App Mobile)
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'last_login': '2025-10-15T00:35:38.278578Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1086
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\apps.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\signals.py changed, reloading.
+Watching for file changes with StatReloader
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274

@@ -91,7 +91,7 @@ class RegistroTrabalho(models.Model):
 
 class CategoriaDespesa(models.Model):
     """Modelo para categorias personalizadas de despesas"""
-    nome = models.CharField(max_length=50, unique=True)
+    nome = models.CharField(max_length=50)
     descricao = models.TextField(blank=True, null=True)
     entregador = models.ForeignKey('usuarios.Entregador', on_delete=models.CASCADE)
     data_criacao = models.DateTimeField(auto_now_add=True)
@@ -114,6 +114,10 @@ class Despesa(models.Model):
         ('estacionamento', 'Estacionamento'),
         ('seguro', 'Seguro'),
         ('licenciamento', 'Licenciamento'),
+        ('ferramentas', 'Ferramentas e Equipamentos'),
+        ('comunicacao', 'Comunicação (Celular/Internet)'),
+        ('uniforme', 'Uniforme e EPIs'),
+        ('documentacao', 'Documentação e Licenças'),
         ('outros', 'Outros'),
     ]
 

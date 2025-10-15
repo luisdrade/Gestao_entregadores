@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { registroDespesa, listarCategoriasDespesas, criarCategoriaDespesa } from '../../../services/clientConfig';
+import { registroDespesa } from '../../../services/clientConfig';
 import HeaderWithBack from '../../../components/_Header.jsx';
 import TopNavBar from '../../../components/_NavBar_Superior';
 import DatePicker from '../../../components/_DataComp';
@@ -32,8 +32,8 @@ export default function FinanceiroScreen() {
 
   const [errors, setErrors] = useState({});
 
-  // Tipos de despesa personalizados (começam vazios)
-  const [expenseTypes, setExpenseTypes] = useState([]);
+  // 4 categorias fixas
+  const [expenseTypes] = useState(['Combustível', 'Manutenção', 'Alimentação', 'Outros']);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -51,64 +51,11 @@ export default function FinanceiroScreen() {
   };
 
   const selectExpenseType = (type) => {
-    if (type === 'Adicionar despesa') {
-      setShowExpenseTypeModal(true);
-    } else {
-      setSelectedExpenseType(type);
-      handleInputChange('tipoDespesa', type);
-      setShowExpenseTypeModal(false);
-    }
-  };
-
-  const handleAddNovaDespesa = () => {
+    setSelectedExpenseType(type);
+    handleInputChange('tipoDespesa', type);
     setShowExpenseTypeModal(false);
-    // Registrar função global para receber o novo tipo
-    global.addExpenseType = addExpenseType;
-    // Navegar para página de cadastro de tipo de despesa
-    router.push('/(home)/calculos/cadastroDespesa');
   };
 
-  // Função para carregar tipos de despesa salvos
-  const loadExpenseTypes = async () => {
-    try {
-      const result = await listarCategoriasDespesas();
-      if (result.success) {
-        const categorias = result.data.map(cat => cat.nome);
-        setExpenseTypes(categorias);
-        console.log('✅ Categorias carregadas:', categorias);
-      } else {
-        console.log('❌ Erro ao carregar categorias:', result.error);
-      }
-    } catch (error) {
-      console.log('❌ Erro ao carregar tipos de despesa:', error);
-    }
-  };
-
-  // Função para adicionar novo tipo de despesa à lista
-  const addExpenseType = async (newType) => {
-    try {
-      const result = await criarCategoriaDespesa({
-        nome: newType,
-        descricao: `Categoria personalizada: ${newType}`
-      });
-      
-      if (result.success) {
-        setExpenseTypes(prev => [...prev, newType]);
-        console.log('✅ Categoria adicionada:', newType);
-      } else {
-        console.log('❌ Erro ao criar categoria:', result.error);
-        Alert.alert('Erro', result.error || 'Erro ao criar categoria');
-      }
-    } catch (error) {
-      console.log('❌ Erro ao adicionar categoria:', error);
-      Alert.alert('Erro', 'Erro inesperado ao criar categoria');
-    }
-  };
-
-  // Carregar tipos quando o componente montar
-  React.useEffect(() => {
-    loadExpenseTypes();
-  }, []);
 
 
 
@@ -153,7 +100,7 @@ export default function FinanceiroScreen() {
         descricao: formData.descricao,
         valor: parseFloat(formData.valor),
         data: formData.data,
-        categoria_personalizada: formData.tipoDespesa, // Nome da categoria personalizada
+        categoria_personalizada: formData.tipoDespesa, // Nome da categoria selecionada
       };
 
       const result = await registroDespesa(apiData);
@@ -252,50 +199,26 @@ export default function FinanceiroScreen() {
                 <Text style={styles.modalTitle}>Selecione o tipo de despesa</Text>
 
                 <ScrollView style={styles.optionsList} showsVerticalScrollIndicator={false}>
-                  {expenseTypes.length === 0 ? (
-                    <View style={styles.emptyState}>
-                      <Ionicons name="document-outline" size={48} color="#ccc" />
-                      <Text style={styles.emptyStateText}>Nenhum tipo de despesa cadastrado</Text>
-                      <Text style={styles.emptyStateSubtext}>
-                        Clique em "Adicionar novo tipo" para começar
+                  {expenseTypes.map((type, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={[
+                        styles.optionItem,
+                        selectedExpenseType === type && styles.optionItemSelected
+                      ]}
+                      onPress={() => selectExpenseType(type)}
+                    >
+                      <Text style={[
+                        styles.optionText,
+                        selectedExpenseType === type && styles.optionTextSelected
+                      ]}>
+                        {type}
                       </Text>
-                    </View>
-                  ) : (
-                    <>
-                      {expenseTypes.map((type, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          style={[
-                            styles.optionItem,
-                            selectedExpenseType === type && styles.optionItemSelected
-                          ]}
-                          onPress={() => selectExpenseType(type)}
-                        >
-                          <Text style={[
-                            styles.optionText,
-                            selectedExpenseType === type && styles.optionTextSelected
-                          ]}>
-                            {type}
-                          </Text>
-                          {selectedExpenseType === type && (
-                            <Ionicons name="checkmark" size={20} color="#2B2860" />
-                          )}
-                        </TouchableOpacity>
-                      ))}
-
-                      {/* Separador */}
-                      <View style={styles.separator} />
-                    </>
-                  )}
-
-                  {/* Opção para adicionar novo tipo */}
-                  <TouchableOpacity
-                    style={styles.addNewOption}
-                    onPress={handleAddNovaDespesa}
-                  >
-                    <Ionicons name="add-circle" size={20} color="#2B2860" />
-                    <Text style={styles.addNewOptionText}>Adicionar novo tipo</Text>
-                  </TouchableOpacity>
+                      {selectedExpenseType === type && (
+                        <Ionicons name="checkmark" size={20} color="#2B2860" />
+                      )}
+                    </TouchableOpacity>
+                  ))}
                 </ScrollView>
 
                 <TouchableOpacity
