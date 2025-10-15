@@ -177,3 +177,4 @@ Se tiver problemas:
 
 **🎉 Pronto! Seu sistema 2FA está configurado e funcionando!**
 
+

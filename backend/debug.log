@@ -39469,3 +39469,60 @@ CSRF desabilitado para rota: /api/estatisticas/
 "HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
 "HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
 "GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+C:\Faculdade\TCC\Gestao_entregadores\backend\registro_entregadespesa\models.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: teste2@gmail.com (App Mobile)
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'last_login': '2025-10-15T05:56:48.058484Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1086
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+CSRF desabilitado para rota: /api/auth/login/
+Last login atualizado para usuário: teste2@gmail.com (App Mobile)
+Login bem-sucedido para usuário: teste2@gmail.com (Tipo: entregador)
+Dados do usuário retornados: {'id': 2, 'nome': 'Teste terencio 2', 'email': 'teste2@gmail.com', 'cpf': '156.841.865-48', 'telefone': '(15) 66416-5468', 'username': 'testezin2', 'data_nascimento': '2003-11-20', 'endereco': 'Rua Santo Antônio', 'cep': '20031-190', 'cidade': 'Rio de Janeiro', 'estado': 'RJ', 'foto': '/media/fotos_perfil/perfil_2_cedd29a6.jpg', 'is_staff': False, 'is_superuser': False, 'date_joined': '2025-08-26T18:04:59.961448Z', 'last_login': '2025-10-15T06:03:23.512116Z', 'user_type': 'entregador', 'email_validado': False, 'two_factor_enabled': False}
+"POST /api/auth/login/ HTTP/1.1" 200 1086
+"GET /registro/api/dashboard-data/?periodo=mes HTTP/1.1" 200 1274
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/estatisticas/
+CSRF desabilitado para rota: /api/estatisticas/
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"GET /api/estatisticas/ HTTP/1.1" 200 237
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
+"GET /api/veiculos/ HTTP/1.1" 200 206
