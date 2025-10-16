@@ -36,3 +36,23 @@ CSRF desabilitado para rota: /api/estatisticas/
 "HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
 "HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
 "HEAD /media/fotos_perfil/perfil_2_cedd29a6.jpg HTTP/1.1" 200 0
+C:\Faculdade\TCC\Gestao_entregadores\backend\usuarios\views.py changed, reloading.
+Watching for file changes with StatReloader
+"OPTIONS /registro/api/registro-trabalho/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-trabalho/ HTTP/1.1" 200 0
+"OPTIONS /api/auth/profile/ HTTP/1.1" 200 0
+"OPTIONS /registro/api/registro-despesa/ HTTP/1.1" 200 0
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 39
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 39
+"GET /api/auth/profile/ HTTP/1.1" 200 417
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 39
+CSRF desabilitado para rota: /api/auth/profile/
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 39
+"GET /api/auth/profile/ HTTP/1.1" 200 417
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 39
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 39
+"GET /registro/api/registro-despesa/ HTTP/1.1" 200 39
+"GET /registro/api/registro-trabalho/ HTTP/1.1" 200 39
