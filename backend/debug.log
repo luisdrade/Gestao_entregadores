@@ -56,3 +56,4 @@ CSRF desabilitado para rota: /api/auth/profile/
 "GET /registro/api/registro-trabalho/ HTTP/1.1" 200 39
 "GET /registro/api/registro-despesa/ HTTP/1.1" 200 39
 "GET /registro/api/registro-trabalho/ HTTP/1.1" 200 39
+Watching for file changes with StatReloader
