@@ -20,15 +20,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-insecure-placeholder')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() in ['1', 'true', 'yes', 'on']
 
-# ALLOWED_HOSTS para produção - hardcoded temporariamente
-ALLOWED_HOSTS = [
-    'entregasplus.onrender.com',
-    'localhost',
-    '127.0.0.1',
-    'gestao-entregadores-backend.onrender.com',  # backup
-    '*',  # fallback para desenvolvimento
-]
-print(f"🔍 DEBUG - ALLOWED_HOSTS hardcoded: {ALLOWED_HOSTS}")
+# ALLOWED_HOSTS para produção
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
