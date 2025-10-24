@@ -73,7 +73,14 @@ else:
 CORS_ALLOW_CREDENTIALS = True
 
 # Configurações específicas do CORS
-CORS_ALLOWED_ORIGINS = ["*"]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8081",
+    "http://127.0.0.1:8081",
+    "https://entregasplus.onrender.com",
+    "https://gestao-entregadores-backend.onrender.com",
+]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^http://192\.168\.\d+\.\d+:\d+$",
