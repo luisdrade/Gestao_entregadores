@@ -21,6 +21,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-insecure-placeholder')
 DEBUG = os.getenv('DEBUG', 'True').lower() in ['1', 'true', 'yes', 'on']
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+print(f"🔍 DEBUG - ALLOWED_HOSTS: {ALLOWED_HOSTS}")
+print(f"🔍 DEBUG - ALLOWED_HOSTS env: {os.getenv('ALLOWED_HOSTS')}")
 
 
 # Application definition
@@ -298,7 +300,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:3000",
     "http://localhost:3000",
-    "https://gestao-entregadores-backend.onrender.com",
     "https://entregasplus.onrender.com",
 ]
 
@@ -332,15 +333,6 @@ if DEBUG and not EMAIL_HOST_USER:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     print("📧 Modo de desenvolvimento: emails serão exibidos no console")
 
-# Para produção, use:
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'seu-email@gmail.com'
-# EMAIL_HOST_PASSWORD = 'sua-senha'
-
-# Configurações do dj-rest-auth para reset de senha
 REST_AUTH = {
     'PASSWORD_RESET_USE_SITES_DOMAIN': True,
     'PASSWORD_RESET_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetSerializer',
