@@ -20,9 +20,15 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-insecure-placeholder')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() in ['1', 'true', 'yes', 'on']
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
-print(f"🔍 DEBUG - ALLOWED_HOSTS: {ALLOWED_HOSTS}")
-print(f"🔍 DEBUG - ALLOWED_HOSTS env: {os.getenv('ALLOWED_HOSTS')}")
+# ALLOWED_HOSTS para produção - hardcoded temporariamente
+ALLOWED_HOSTS = [
+    'entregasplus.onrender.com',
+    'localhost',
+    '127.0.0.1',
+    'gestao-entregadores-backend.onrender.com',  # backup
+    '*',  # fallback para desenvolvimento
+]
+print(f"🔍 DEBUG - ALLOWED_HOSTS hardcoded: {ALLOWED_HOSTS}")
 
 
 # Application definition
@@ -74,30 +80,7 @@ else:
 CORS_ALLOW_CREDENTIALS = True
 
 # Configurações específicas do CORS
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://192.168.56.1:3000",
-    "http://192.168.56.1:8000",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "http://172.18.128.1:3000",
-    "http://172.18.128.1:8000",
-    "http://172.18.128.1:19006",
-    "http://172.18.128.1:19000",
-    # Expo/React Native
-    "http://localhost:8081",
-    "http://127.0.0.1:8081",
-    "http://192.168.0.115:8081",
-    "http://10.20.13.125:8081",
-    # IP atual do servidor
-    "http://10.250.108.238:8000",
-    "http://10.250.108.238:3000",
-    "http://10.250.108.238:8081",
-    # Adicionar domínios de produção quando disponíveis
-    # "https://seu-frontend.vercel.app",
-    # "https://seu-frontend.netlify.app",
-]
+CORS_ALLOWED_ORIGINS = ["*"]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^http://192\.168\.\d+\.\d+:\d+$",
