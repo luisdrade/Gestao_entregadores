@@ -134,13 +134,24 @@ WSGI_APPLICATION = 'sistema.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Configuração para Render.com + PlanetScale MySQL
-if os.getenv('DATABASE_URL'):
+# Configuração para Render.com (PostgreSQL)
+# Se está local sem DATABASE_URL, usa SQLite
+if os.getenv('USE_LOCAL_DB', '').lower() == 'true':
+    # Forçar SQLite localmente
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+elif os.getenv('DATABASE_URL'):
+    # Produção: usa DATABASE_URL do Render (PostgreSQL)
     import dj_database_url
     DATABASES = {
         'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
     }
 else:
+    # Fallback: MySQL configurado
     DATABASES = {
         'default': {
             'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
@@ -283,7 +294,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
     "https://entregasplus.onrender.com",
-    "https://entregasplus.onrender.com",
+    "https://gestao-entregadores-backend.onrender.com",
 ]
 
 # Configurações de CSRF para produção
