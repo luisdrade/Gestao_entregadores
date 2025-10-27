@@ -31,3 +31,5 @@ class Command(BaseCommand):
             self.stdout.write(
                 self.style.ERROR(f'❌ Erro ao criar superusuário: {e}')
             )
+
+

@@ -65,10 +65,8 @@ MIDDLEWARE = [
 ]
 
 # Configurações de CORS
-if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
-else:
-    CORS_ALLOW_ALL_ORIGINS = False
+# Permitir todas as origens em desenvolvimento e produção para permitir app mobile
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -109,6 +107,7 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
+    'x-app-source',  # Cabeçalho do app mobile
 ]
 
 ROOT_URLCONF = 'sistema.urls'
@@ -283,6 +282,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:3000",
     "http://localhost:3000",
+    "https://entregasplus.onrender.com",
     "https://entregasplus.onrender.com",
 ]
 
