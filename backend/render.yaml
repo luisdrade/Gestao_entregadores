@@ -6,7 +6,7 @@ services:
     buildCommand: |
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
-      python manage.py migrate
+      python manage.py migrate --noinput
     startCommand: gunicorn sistema.wsgi:application
     envVars:
       - key: DJANGO_SECRET_KEY
@@ -16,9 +16,7 @@ services:
       - key: ALLOWED_HOSTS
         value: gestao-entregadores-backend.onrender.com,localhost,127.0.0.1
       - key: DATABASE_URL
-        fromDatabase:
-          name: gestao-entregadores-db
-          property: connectionString
+        value: postgresql://user_entregas:C2OjukKx5anKGsMOICoYWxsrun3kDClQ@dpg-d3rsehk9c44c73avmah0-a/entregas_plus
       - key: STATIC_URL
         value: /static/
       - key: STATIC_ROOT
@@ -31,9 +29,3 @@ services:
         value: django.core.mail.backends.console.EmailBackend
       - key: DEFAULT_FROM_EMAIL
         value: noreply@gestaoentregadores.com
-
-databases:
-  - name: gestao-entregadores-db
-    plan: free
-    databaseName: gestao_entregadores
-    user: gestao_user
