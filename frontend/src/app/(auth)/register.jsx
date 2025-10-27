@@ -32,11 +32,7 @@ const validacaoRegister = Yup.object().shape({
     .email('Email inválido')
     .required('Email é obrigatório'),
   telefone: Yup.string()
-    .test('telefone-tamanho', 'Telefone deve ter 10 ou 11 dígitos', (value) => {
-      if (!value) return true; // Yup.required já valida
-      const digitos = value.replace(/\D/g, '');
-      return digitos.length === 10 || digitos.length === 11;
-    })
+    .min(14, 'Telefone deve ter pelo menos 14 caracteres')
     .required('Telefone é obrigatório'),
   senha: Yup.string()
     .min(8, 'Senha deve ter pelo menos 8 caracteres')
@@ -57,24 +53,18 @@ export default function RegisterScreen() {
     setFieldErrors({}); //Limpar erros anteriores
     
     try {
-      // Remover formatação do telefone (apenas números)
-      const telefoneLimpo = values.telefone.replace(/\D/g, '');
-      
       // Mapear os campos para o formato esperado pelo backend
       const registrationData = {
         nome: values.nome,
         username: values.username,
         email: values.email,
-        telefone: telefoneLimpo,
+        telefone: values.telefone,
         password: values.senha,
         password_confirm: values.confirmarSenha, 
       };
       
-      console.log('📤 Enviando dados ao backend:', JSON.stringify(registrationData, null, 2));
-      
       const result = await signUp(registrationData);
       console.log('🔍 Resultado do signUp:', result);
-      
       if (result.success) {
         if (result.requires_verification) {
           // Enviar código por email automaticamente e navegar direto para verificação
@@ -112,8 +102,6 @@ export default function RegisterScreen() {
           );
         }
       } else {
-        console.log('❌ Erro no cadastro - Resultado completo:', JSON.stringify(result, null, 2));
-        
         const newFieldErrors = {};
         console.log('🔍 Processando erros:', result.error);
         
@@ -151,10 +139,7 @@ export default function RegisterScreen() {
         setFieldErrors(newFieldErrors);
       }
     } catch (error) {
-      console.error('❌ Erro inesperado:', error);
-      console.error('❌ Stack trace:', error.stack);
-      setFieldErrors({ general: 'Erro inesperado ao criar conta. Verifique os logs do console.' });
-      Alert.alert('Erro', `Erro inesperado: ${error.message}`);
+      setFieldErrors({ general: 'Erro inesperado ao criar conta' });
     } finally {
       setIsSubmitting(false);
     }

@@ -72,3 +72,4 @@ class Command(BaseCommand):
 6. 🔄 Deploy completo!
 
 
+

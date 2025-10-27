@@ -380,7 +380,3 @@ const styles = StyleSheet.create({
 
 
 
-
-
-
-
