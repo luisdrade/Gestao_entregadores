@@ -258,10 +258,26 @@ export function AuthProvider({ children }) {
 
   async function signUp(userData) {
     try {
+      console.log('📤 AuthContext - Enviando dados de cadastro:', userData);
+      console.log('📤 AuthContext - Endpoint:', API_ENDPOINTS.AUTH.REGISTER);
+      console.log('📤 AuthContext - Base URL:', httpClient.defaults.baseURL);
+      
+      // TENTAR ACORDAR O BACKEND (Render pode estar dormindo)
+      try {
+        console.log('⏰ Tentando acordar o backend...');
+        await httpClient.get('/api/auth/login/'); // GET para acordar
+        console.log('✅ Backend respondeu!');
+      } catch (wakeError) {
+        console.log('⚠️ Backend pode estar dormindo, continuando mesmo assim...');
+      }
+      
       const response = await httpClient.post(API_ENDPOINTS.AUTH.REGISTER, userData);
+      
+      console.log('✅ AuthContext - Resposta do backend:', response.data);
       
       // Verificar se precisa de verificação
       if (response.data.requires_verification) {
+        console.log('📧 AuthContext - Requer verificação por email');
         return { 
           success: true, 
           requires_verification: true,
@@ -274,11 +290,15 @@ export function AuthProvider({ children }) {
       // Cadastro normal (sem verificação necessária)
       return { success: true, data: response.data };
     } catch (error) {
-      console.error('Erro no cadastro:', error);
-      console.error('Dados do erro:', error.response?.data);
+      console.error('❌ AuthContext - Erro no cadastro:');
+      console.error('   Tipo:', error.response?.status);
+      console.error('   Status:', error.response?.statusText);
+      console.error('   Dados:', JSON.stringify(error.response?.data, null, 2));
+      console.error('   Mensagem:', error.message);
+      
       return { 
         success: false, 
-        error: error.response?.data || 'Erro ao fazer cadastro' 
+        error: error.response?.data || { message: error.message || 'Erro ao fazer cadastro' }
       };
     }
   }

@@ -1,38 +1,29 @@
 {
   "expo": {
-    "name": "Gestao_entregadores_front",
-    "slug": "gestao_entregadores_mobile",
+    "name": "frontend_novo",
+    "slug": "frontend_novo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "assets/icon.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "newArchEnabled": true,
     "splash": {
-      "image": "assets/splash-icon.png",
+      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "ios": {
+      "supportsTablet": true
+    },
     "android": {
-      "package": "com.luisdrade.gestaoentregadores",
-      "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "assets/icon.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.INTERNET",
-        "android.permission.CAMERA",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.ACCESS_NETWORK_STATE"
-      ]
+      "edgeToEdgeEnabled": true
     },
-    "extra": {
-      "eas": {
-        "projectId": "216c92ea-ff73-4990-9b61-eea3beaab217"
-      }
-    },
-    "plugins": [
-      "expo-font"
-    ]
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
   }
 }

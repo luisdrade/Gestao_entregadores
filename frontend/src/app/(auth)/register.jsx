@@ -70,8 +70,11 @@ export default function RegisterScreen() {
         password_confirm: values.confirmarSenha, 
       };
       
+      console.log('📤 Enviando dados ao backend:', JSON.stringify(registrationData, null, 2));
+      
       const result = await signUp(registrationData);
       console.log('🔍 Resultado do signUp:', result);
+      
       if (result.success) {
         if (result.requires_verification) {
           // Enviar código por email automaticamente e navegar direto para verificação
@@ -109,6 +112,8 @@ export default function RegisterScreen() {
           );
         }
       } else {
+        console.log('❌ Erro no cadastro - Resultado completo:', JSON.stringify(result, null, 2));
+        
         const newFieldErrors = {};
         console.log('🔍 Processando erros:', result.error);
         
@@ -146,7 +151,10 @@ export default function RegisterScreen() {
         setFieldErrors(newFieldErrors);
       }
     } catch (error) {
-      setFieldErrors({ general: 'Erro inesperado ao criar conta' });
+      console.error('❌ Erro inesperado:', error);
+      console.error('❌ Stack trace:', error.stack);
+      setFieldErrors({ general: 'Erro inesperado ao criar conta. Verifique os logs do console.' });
+      Alert.alert('Erro', `Erro inesperado: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }

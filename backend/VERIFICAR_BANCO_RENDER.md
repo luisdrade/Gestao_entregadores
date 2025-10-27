@@ -5,27 +5,19 @@
 ### 1️⃣ Verificar se o Banco PostgreSQL Existe no Render
 
 1. Acesse: https://dashboard.render.com
-2. Procure por um banco chamado `gestao-entregadores-db`
-3. **Se NÃO existir** → Siga o Passo 2 abaixo
-4. **Se existir** → Anote a Internal Database URL
+2. Procure por um banco chamado `entregas-plus-db` ou similar (seu banco já existe e se chama `entregas_plus`)
+3. **Anote**: Sua Internal Database URL já foi fornecida
 
-### 2️⃣ Criar Banco PostgreSQL (se necessário)
+### 2️⃣ Banco PostgreSQL Já Existe ✅
 
-1. No Dashboard do Render, clique em **"New +"**
-2. Selecione **"PostgreSQL"**
-3. Configure:
-   - **Name**: `gestao-entregadores-db`
-   - **Database**: `gestao_entregadores`
-   - **User**: `gestao_user`
-   - **Plan**: Free
-   - **Region**: Oregon (US West)
-4. Clique em **"Create Database"**
-5. **IMPORTANTE**: Aguarde 2-3 minutos para o banco ficar pronto
-6. Anote a **Internal Database URL** (algo como: `postgresql://gestao_user:senha@host:porta/gestao_entregadores`)
+Seu banco PostgreSQL já está criado:
+- **Database**: `entregas_plus`
+- **User**: `user_entregas`
+- **Internal Database URL**: Já fornecida
 
 ### 3️⃣ Verificar Variável de Ambiente DATABASE_URL
 
-1. No Dashboard do Render, vá para seu **Web Service** (`gestao-entregadores-backend`)
+1. No Dashboard do Render, vá para seu **Web Service** (`entregas-plus-backend` ou similar)
 2. Vá em **"Environment"** (no menu lateral)
 3. Procure pela variável `DATABASE_URL`
 4. **Se NÃO existir**:

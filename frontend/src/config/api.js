@@ -1,8 +1,29 @@
+// ============================================
+// 🔧 CONFIGURAÇÃO DE BACKEND
+// ============================================
+
+// Descomente a linha do backend que você quer usar:
+
+// 🟢 BACKEND LOCAL (Para desenvolvimento)
+// BASE_URL: 'http://10.0.2.2:8000',  // Android Emulator
+// BASE_URL: 'http://localhost:8000', // iOS Simulator
+
+// 🔵 BACKEND ONLINE (Produção no Render)
+// TESTE: Tente estas URLs uma por vez
+const BASE_URL = 'https://entregasplus.onrender.com';
+// const BASE_URL = 'http://10.0.2.2:8000';  // Para backend local
+
 export const API_CONFIG = {
-  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://gestao-entregadores-backend.onrender.com',
+  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || BASE_URL,
   
-  TIMEOUT: Number(process.env.EXPO_PUBLIC_API_TIMEOUT_MS || 15000),
+  TIMEOUT: Number(process.env.EXPO_PUBLIC_API_TIMEOUT_MS || 60000), // Aumentado para 60s
 };
+
+// Log da URL configurada
+console.log('🌐 API_CONFIG:', {
+  BASE_URL: API_CONFIG.BASE_URL,
+  TIMEOUT: API_CONFIG.TIMEOUT
+});
 
 
 export const API_ENDPOINTS = {
