@@ -1,30 +1,25 @@
 import { Stack } from 'expo-router';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import BottomTabBar from '../../components/_NavBar_Inferior';
 
 export default function HomeLayout() {
   return (
-    <View style={styles.container}>
-      <Stack screenOptions={{ headerShown: false }} style={styles.stack}>
-        <Stack.Screen name="home" />
-        <Stack.Screen name="relatorios" />
-        <Stack.Screen name="comunidade" />
-        <Stack.Screen name="calculos" />
-        <Stack.Screen name="profile" />
-      </Stack>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={styles.stackContainer}>
+        <Stack screenOptions={{ headerShown: false }} />
+      </View>
       <BottomTabBar />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
+    backgroundColor: '#F5F5F5',
   },
-  stack: {
+  stackContainer: {
     flex: 1,
-    marginBottom: 80, // Espaço para a barra inferior
   },
 });
 
