@@ -9,8 +9,8 @@ from django.views.generic import TemplateView
 from django.db.models import Count, Q
 from django.utils import timezone
 from datetime import timedelta
-from ..models import Entregador
-from ..auth.auth_serializers import UserListSerializer
+from usuarios.models import Entregador
+from usuarios.auth.auth_serializers import UserListSerializer
 import logging
 
 logger = logging.getLogger(__name__)
