@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Entregador
+from usuarios.models import Entregador
 
 class EntregadorAdmin(UserAdmin):
     model = Entregador
