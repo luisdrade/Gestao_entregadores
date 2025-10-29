@@ -8,9 +8,9 @@ class Command(BaseCommand):
         User = get_user_model()
         
         # Verificar se já existe
-        if User.objects.filter(email='admin@admin.com').exists():
+        if User.objects.filter(email='admin@gmail.com').exists():
             self.stdout.write(
-                self.style.WARNING('Superusuário admin@admin.com já existe!')
+                self.style.WARNING('Superusuário admin@gmail.com já existe!')
             )
             return
         
