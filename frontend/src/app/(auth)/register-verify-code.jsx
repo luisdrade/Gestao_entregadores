@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext.jsx';
 import { httpClient } from '../../services/clientConfig';
 import { API_ENDPOINTS } from '../../config/api';
 import CodeInput from '../../components/CodeInput';

@@ -12,9 +12,9 @@ import {
   ScrollView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext.jsx';
 import { httpClient } from '../../services/clientConfig';
-import { API_ENDPOINTS } from '../../config/api';
+import { API_ENDPOINTS, API_CONFIG } from '../../config/api';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TextInputMask } from 'react-native-masked-text';
@@ -51,8 +51,9 @@ export default function RegisterScreen() {
   const handleRegister = async (values) => {
     setIsSubmitting(true);
     setFieldErrors({}); //Limpar erros anteriores
-    
+  
     try {
+      
       // Mapear os campos para o formato esperado pelo backend
       const registrationData = {
         nome: values.nome,
@@ -62,45 +63,37 @@ export default function RegisterScreen() {
         password: values.senha,
         password_confirm: values.confirmarSenha, 
       };
+      console.log('🔄 Iniciando registro...');
+      console.log('🌐 URL da API:', API_CONFIG.BASE_URL);
+      console.log('📤 Dados sendo enviados:', registrationData);
       
       const result = await signUp(registrationData);
       console.log('🔍 Resultado do signUp:', result);
+
       if (result.success) {
-        if (result.requires_verification) {
-          // Enviar código por email automaticamente e navegar direto para verificação
-          try {
-            const emailResponse = await httpClient.post(API_ENDPOINTS.AUTH.REGISTER_RESEND, {
-              email: result.user_email,
-              verification_method: 'email'
+        if (result.success) {
+          if (result.requires_verification) {
+            // Navegar direto para tela de verificação SEM enviar email automaticamente
+            router.push({
+              pathname: '/register-verify-code',
+              params: {
+                userEmail: result.user_email,
+                userPhone: result.user_phone,
+                verificationMethod: 'email',
+                expiresAt: null, // Sem tempo de expiração
+                attemptsRemaining: 5
+              }
             });
-            
-            if (emailResponse.data.success) {
-              // Navegar direto para tela de verificação
-              router.push({
-                pathname: '/register-verify-code',
-                params: {
-                  userEmail: result.user_email,
-                  userPhone: result.user_phone,
-                  verificationMethod: 'email',
-                  expiresAt: emailResponse.data.expires_at,
-                  attemptsRemaining: emailResponse.data.attempts_remaining
-                }
-              });
-            } else {
-              Alert.alert('Erro', 'Erro ao enviar código de verificação');
-            }
-          } catch (error) {
-            console.error('Erro ao enviar código:', error);
-            Alert.alert('Erro', 'Erro ao enviar código de verificação');
+          } else {
+            // Cadastro normal (sem verificação necessária)
+            Alert.alert(
+              'Sucesso', 
+              'Conta criada com sucesso! Faça login para continuar.',
+              [{ text: 'OK', onPress: () => router.back() }]
+            );
           }
-        } else {
-          // Cadastro normal (sem verificação necessária)
-          Alert.alert(
-            'Sucesso', 
-            'Conta criada com sucesso! Faça login para continuar.',
-            [{ text: 'OK', onPress: () => router.back() }]
-          );
         }
+
       } else {
         const newFieldErrors = {};
         console.log('🔍 Processando erros:', result.error);
@@ -138,8 +131,37 @@ export default function RegisterScreen() {
         console.log('🔍 Erros mapeados para campos:', newFieldErrors);
         setFieldErrors(newFieldErrors);
       }
+      
     } catch (error) {
-      setFieldErrors({ general: 'Erro inesperado ao criar conta' });
+      console.error('❌ Erro detalhado no registro:', error);
+      console.error('❌ Response data:', error.response?.data);
+      console.error('❌ Status:', error.response?.status);
+      console.error('❌ Headers:', error.response?.headers);
+      
+      // Capturar diferentes tipos de erro
+      let errorMessage = 'Erro inesperado ao criar conta';
+      
+      if (error.response?.data) {
+        const errorData = error.response.data;
+        
+        if (errorData.error) {
+          errorMessage = errorData.error;
+        } else if (errorData.details) {
+          // Se há detalhes de validação, mostrar o primeiro erro
+          const firstError = Object.values(errorData.details)[0];
+          if (Array.isArray(firstError)) {
+            errorMessage = firstError[0];
+          } else {
+            errorMessage = firstError;
+          }
+        } else if (typeof errorData === 'string') {
+          errorMessage = errorData;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setFieldErrors({ general: errorMessage });
     } finally {
       setIsSubmitting(false);
     }

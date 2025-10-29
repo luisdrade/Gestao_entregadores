@@ -1,6 +1,6 @@
 // Configurações da API
 export const API_CONFIG = {
-  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:8000',
+  BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://entregasplus.onrender.com',
   
   TIMEOUT: Number(process.env.EXPO_PUBLIC_API_TIMEOUT_MS || 15000),
 };
@@ -9,7 +9,7 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/api/auth/login/',
-    REGISTER: '/api/auth/register/',
+    REGISTER: '/api/auth/register/', 
     REGISTER_VERIFY: '/api/auth/register/verify/',
     REGISTER_RESEND: '/api/auth/register/resend/',
     FORGOT_PASSWORD: '/api/auth/password/reset/',

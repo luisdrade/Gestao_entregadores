@@ -8,10 +8,10 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Alert,
-} from 'react-native';
+} from 'react-native';  
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext.jsx';
 import TopNavBar from '../../components/_NavBar_Superior';
 import KPICard from '../../components/_KPICard';
 import { httpClient } from '../../services/clientConfig';

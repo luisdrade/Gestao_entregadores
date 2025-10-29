@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext.jsx';
 import Header from '../../components/_Header';
 import _CardPostagem from '../../components/_CardPostagem';
 import _CardAnuncioVeiculo from '../../components/_CardAnuncioVeiculo';

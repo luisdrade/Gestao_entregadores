@@ -10,7 +10,7 @@ import {
   Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext.jsx';
 import { httpClient } from '../../../services/clientConfig';
 import { API_ENDPOINTS } from '../../../config/api';
 
@@ -376,6 +376,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
+
 
 
 

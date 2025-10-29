@@ -20,7 +20,7 @@ import DatePicker from '../../../components/_DataComp';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TextInputMask } from 'react-native-masked-text';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext.jsx';
 import { _CampoEntrada, _Botao } from '../../../components';
 
 // Função para buscar dados do CEP usando BrasilAPI

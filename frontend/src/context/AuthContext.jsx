@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { httpClient } from '../services/clientConfig';
-import { API_ENDPOINTS } from '../config/api';
+import { API_ENDPOINTS, API_CONFIG } from '../config/api';
 import { AppState } from 'react-native';
 
 const AuthContext = createContext({});
@@ -258,6 +258,10 @@ export default function AuthProvider({ children }) {
 
   async function signUp(userData) {
     try {
+      console.log('🔍 URL completa sendo chamada:', API_CONFIG.BASE_URL + API_ENDPOINTS.AUTH.REGISTER);
+      console.log('🔍 BASE_URL:', API_CONFIG.BASE_URL);
+      console.log('🔍 ENDPOINT:', API_ENDPOINTS.AUTH.REGISTER);
+      
       const response = await httpClient.post(API_ENDPOINTS.AUTH.REGISTER, userData);
       
       // Verificar se precisa de verificação

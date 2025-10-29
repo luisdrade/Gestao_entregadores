@@ -12,7 +12,7 @@ import {
   TextInput,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext.jsx';
 import TopNavBar from '../../components/_NavBar_Superior';
 import { httpClient as api, atualizarRegistroTrabalho, excluirRegistroTrabalho, atualizarDespesa, excluirDespesa } from '../../services/clientConfig';
 import { API_ENDPOINTS } from '../../config/api';

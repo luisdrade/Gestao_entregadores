@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { httpClient } from '../../../services/clientConfig';
 import { API_CONFIG, API_ENDPOINTS } from '../../../config/api';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext.jsx';
 
 export default function ProfileScreen() {
   const router = useRouter();
