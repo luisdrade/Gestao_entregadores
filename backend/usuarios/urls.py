@@ -21,8 +21,8 @@ from .auth.auth_views import (
     RegistrationVerifyView,
     RegistrationResendView
 )
-from .admin.admin_views import AdminUsersAPIView, AdminStatsAPIView
-# Views de template removidas - usando apenas API
+from .admin_views import AdminUsersAPIView, AdminStatsAPIView
+
 
 app_name = 'usuarios'
 
