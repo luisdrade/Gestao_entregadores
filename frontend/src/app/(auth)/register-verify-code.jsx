@@ -102,22 +102,26 @@ export default function RegisterVerifyCodeScreen() {
     setError(null);
 
     try {
+      console.log('📤 Reenviando código para:', userEmail);
       const response = await httpClient.post(API_ENDPOINTS.AUTH.REGISTER_RESEND, {
         email: userEmail,
-        verification_method: verificationMethod
+        verification_method: verificationMethod || 'email'
       });
+
+      console.log('✅ Resposta do reenvio:', response.data);
 
       if (response.data.success) {
         setCode(''); // Limpar código atual
         setTimeLeft(600); // Resetar timer
-        setAttemptsRemaining(response.data.attempts_remaining || 0);
+        setAttemptsRemaining(response.data.attempts_remaining || 5);
         
         Alert.alert(
           'Código Reenviado',
-          'Um novo código foi enviado para você.'
+          response.data.message || 'Um novo código foi enviado para você.'
         );
       } else {
-        const errorData = error.response?.data;
+        // CORRIGIDO: usar response.data ao invés de error.response?.data
+        const errorData = response.data;
         if (errorData?.reason === 'max_attempts_exceeded') {
           setIsBlocked(true);
           setError('Você excedeu o limite de tentativas. Tente novamente em 5 minutos.');
@@ -126,14 +130,21 @@ export default function RegisterVerifyCodeScreen() {
         }
       }
     } catch (error) {
-      console.error('Erro ao reenviar código:', error);
+      console.error('❌ Erro ao reenviar código:', error);
       
-      const errorData = error.response?.data;
-      if (errorData?.reason === 'max_attempts_exceeded') {
-        setIsBlocked(true);
-        setError('Você excedeu o limite de tentativas. Tente novamente em 5 minutos.');
+      // Melhor tratamento de erro de rede
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        setError('Tempo de espera esgotado. Verifique sua conexão e tente novamente.');
+      } else if (error.code === 'ERR_NETWORK' || !error.response) {
+        setError('Erro de conexão. Verifique sua internet e tente novamente.');
       } else {
-        setError(errorData?.error || 'Erro ao reenviar código');
+        const errorData = error.response?.data;
+        if (errorData?.reason === 'max_attempts_exceeded') {
+          setIsBlocked(true);
+          setError('Você excedeu o limite de tentativas. Tente novamente em 5 minutos.');
+        } else {
+          setError(errorData?.error || errorData?.message || 'Erro ao reenviar código');
+        }
       }
     } finally {
       setIsResending(false);
