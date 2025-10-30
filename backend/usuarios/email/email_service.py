@@ -275,7 +275,8 @@ class TwoFactorEmailService:
                     message=f'Seu código de verificação é: {code}\n\nEste código expira em 10 minutos.',
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[user.email],
-                    fail_silently=False,
+                    # Não deixar o fluxo falhar por email em produção free-tier
+                    fail_silently=True,
                     html_message=html_message,
                 )
                 
@@ -298,31 +299,12 @@ class TwoFactorEmailService:
                     
             except Exception as email_error:
                 logger.error(f"❌ Erro ao enviar email para {user.email}: {str(email_error)}")
-                
-                # Se está usando console backend, considerar sucesso
-                if using_console:
-                    logger.info(f"ℹ️ Usando console backend - código será exibido nos logs")
-                    logger.info(f"📧 Código de registro para {user.email}: {code}")
-                    return {
-                        'success': True,
-                        'message': 'Código gerado (modo console - verifique os logs)',
-                        'expires_at': expires_at.isoformat()
-                    }
-                
-                # Limpar código se falhou o envio
-                user.registration_code = None
-                user.registration_code_expires_at = None
-                user.save(update_fields=['registration_code', 'registration_code_expires_at'])
-                
-                error_message = str(email_error)
-                if 'authentication' in error_message.lower():
-                    error_message = 'Erro de autenticação no servidor de email.'
-                elif 'connection' in error_message.lower():
-                    error_message = 'Erro de conexão com servidor de email.'
-                
+                # Mesmo sem email, não devemos quebrar o fluxo de cadastro
+                logger.info(f"ℹ️ Prosseguindo sem envio de email. Código: {code}")
                 return {
-                    'success': False,
-                    'message': f'Erro ao enviar email: {error_message}'
+                    'success': True,
+                    'message': 'Código gerado (envio de email indisponível)',
+                    'expires_at': expires_at.isoformat()
                 }
                 
         except Exception as e:

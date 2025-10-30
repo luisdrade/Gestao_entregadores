@@ -2,7 +2,7 @@
 export const API_CONFIG = {
   BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://entregasplus.onrender.com',
   
-  TIMEOUT: Number(process.env.EXPO_PUBLIC_API_TIMEOUT_MS || 30000),
+  TIMEOUT: Number(process.env.EXPO_PUBLIC_API_TIMEOUT_MS || 60000),
 };
 
 // Endpoints da API
