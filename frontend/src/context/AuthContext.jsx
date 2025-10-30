@@ -271,18 +271,51 @@ export default function AuthProvider({ children }) {
           requires_verification: true,
           user_email: response.data.user_email,
           user_phone: response.data.user_phone,
-          user_data: response.data.user_data
+          user_data: response.data.user_data,
+          email_sent: response.data.email_sent || false,
+          email_error: response.data.email_error || null
         };
       }
       
       // Cadastro normal (sem verificação necessária)
       return { success: true, data: response.data };
     } catch (error) {
-      console.error('Erro no cadastro:', error);
-      console.error('Dados do erro:', error.response?.data);
+      console.error('❌ Erro no cadastro:', error);
+      console.error('📋 Dados do erro:', error.response?.data);
+      console.error('📋 Status do erro:', error.response?.status);
+      console.error('📋 Mensagem do erro:', error.message);
+      
+      // Tratamento melhorado de erros
+      let errorMessage = 'Erro ao fazer cadastro';
+      
+      if (error.response?.data) {
+        const errorData = error.response.data;
+        
+        // Se é um erro estruturado do backend
+        if (errorData.error) {
+          errorMessage = typeof errorData.error === 'string' 
+            ? errorData.error 
+            : 'Erro ao processar cadastro';
+        } else if (errorData.message) {
+          errorMessage = errorData.message;
+        } else if (errorData.detail) {
+          errorMessage = errorData.detail;
+        } else if (errorData.non_field_errors && Array.isArray(errorData.non_field_errors)) {
+          errorMessage = errorData.non_field_errors[0];
+        }
+      } else if (error.message) {
+        // Se é Network Error, o servidor pode estar offline ou com problema
+        if (error.message.includes('Network Error') || error.code === 'ERR_NETWORK') {
+          errorMessage = 'Erro de conexão. Verifique sua internet ou tente novamente mais tarde.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       return { 
         success: false, 
-        error: error.response?.data || 'Erro ao fazer cadastro' 
+        error: errorMessage,
+        errorDetails: error.response?.data
       };
     }
   }

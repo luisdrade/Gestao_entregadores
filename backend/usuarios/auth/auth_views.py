@@ -168,41 +168,59 @@ class RegisterView(APIView):
             
             logger.info(f"Novo usuário registrado: {user.email} - Aguardando verificação")
             
-            # ENVIAR CÓDIGO DE VERIFICAÇÃO AUTOMATICAMENTE
+            # ENVIAR CÓDIGO DE VERIFICAÇÃO AUTOMATICAMENTE (NÃO CRASHAR SE FALHAR)
+            email_sent = False
+            email_error = None
             try:
                 from ..email.registration_verification_service import RegistrationVerificationService
                 send_result = RegistrationVerificationService.send_verification_code(
                     user, 'email'
                 )
                 
-                if send_result['success']:
+                if send_result.get('success'):
                     logger.info(f"✅ Código de verificação enviado automaticamente para {user.email}")
+                    email_sent = True
                 else:
                     logger.warning(f"⚠️ Falha ao enviar código automaticamente: {send_result.get('message')}")
-                    # Continuar mesmo se falhar - usuário pode solicitar reenvio
+                    email_error = send_result.get('message', 'Erro desconhecido')
+            except ImportError as import_error:
+                logger.error(f"❌ Erro ao importar RegistrationVerificationService: {str(import_error)}")
+                email_error = "Serviço de verificação não disponível"
             except Exception as e:
                 logger.error(f"❌ Erro ao enviar código de verificação no registro: {str(e)}", exc_info=True)
-                # Continuar mesmo se falhar - usuário pode solicitar reenvio
+                import traceback
+                logger.error(f"Traceback: {traceback.format_exc()}")
+                email_error = str(e)
             
             # Retornar resposta indicando que precisa de verificação
             # NÃO gerar tokens JWT ainda - só após verificação
-            return Response({
+            response_data = {
                 'success': True,
                 'message': 'Cadastro realizado com sucesso. Verificação necessária.',
                 'requires_verification': True,
                 'user_email': user.email,
                 'user_phone': user.telefone,
                 'user_data': user_serializer.data
-            }, status=status.HTTP_201_CREATED)
+            }
+            
+            # Adicionar informação sobre envio de email (se falhou, usuário pode solicitar reenvio)
+            if email_error:
+                response_data['email_sent'] = False
+                response_data['email_error'] = email_error
+                logger.info(f"ℹ️ Usuário será informado que pode solicitar reenvio de código")
+            elif email_sent:
+                response_data['email_sent'] = True
+            
+            return Response(response_data, status=status.HTTP_201_CREATED)
                 
         except Exception as e:
-            logger.error(f"Erro no registro: {str(e)}")
+            logger.error(f"❌ ERRO CRÍTICO no registro: {str(e)}", exc_info=True)
             logger.error(f"Tipo do erro: {type(e)}")
             import traceback
             logger.error(f"Traceback completo: {traceback.format_exc()}")
             return Response({
                 'success': False,
-                'error': 'Erro interno do servidor'
+                'error': f'Erro interno do servidor: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @method_decorator(csrf_exempt, name='dispatch')
