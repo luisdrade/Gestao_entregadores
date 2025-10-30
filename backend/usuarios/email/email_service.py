@@ -32,8 +32,14 @@ class TwoFactorEmailService:
         """
         try:
             # Verificar configuração de email antes de continuar
-            if not settings.EMAIL_HOST_USER and settings.EMAIL_BACKEND != 'django.core.mail.backends.console.EmailBackend':
-                logger.warning("EMAIL_HOST_USER não configurado, usando console backend")
+            email_backend = getattr(settings, 'EMAIL_BACKEND', '')
+            email_host_user = getattr(settings, 'EMAIL_HOST_USER', '')
+            
+            # Se está usando console backend, ainda pode funcionar (para logs)
+            using_console = email_backend == 'django.core.mail.backends.console.EmailBackend'
+            
+            if not using_console and not email_host_user:
+                logger.warning("EMAIL_HOST_USER não configurado, mas tentando enviar mesmo assim")
             
             # Gerar código
             code = TwoFactorEmailService.generate_code()
@@ -100,7 +106,7 @@ class TwoFactorEmailService:
                 # Usar mensagem simples se o template falhar
                 html_message = None
             
-            # Enviar email
+            # Enviar email com tratamento robusto de erros
             try:
                 success = send_mail(
                     subject=subject,
@@ -110,34 +116,58 @@ class TwoFactorEmailService:
                     fail_silently=False,
                     html_message=html_message,
                 )
+                
+                if success:
+                    logger.info(f"✅ Código 2FA enviado para {user.email} (purpose: {purpose}, código: {code})")
+                    return {
+                        'success': True,
+                        'message': 'Código enviado com sucesso',
+                        'expires_at': expires_at.isoformat()
+                    }
+                else:
+                    logger.error(f"❌ send_mail retornou False para {user.email}")
+                    verification.delete()
+                    return {
+                        'success': False,
+                        'message': 'Erro ao enviar email (retorno False)'
+                    }
+                    
             except Exception as email_error:
-                logger.error(f"Erro ao enviar email para {user.email}: {str(email_error)}")
-                logger.error(f"Configuração de email - BACKEND: {settings.EMAIL_BACKEND}")
-                logger.error(f"Configuração de email - HOST: {settings.EMAIL_HOST}")
-                logger.error(f"Configuração de email - USER: {settings.EMAIL_HOST_USER}")
-                verification.delete()  # Remove o código se falhou o envio
+                logger.error(f"❌ Erro ao enviar email para {user.email}: {str(email_error)}")
+                logger.error(f"Configuração - BACKEND: {email_backend}")
+                logger.error(f"Configuração - HOST: {getattr(settings, 'EMAIL_HOST', 'N/A')}")
+                logger.error(f"Configuração - USER: {email_host_user}")
+                logger.error(f"Configuração - PORT: {getattr(settings, 'EMAIL_PORT', 'N/A')}")
+                
+                # Se está usando console backend, ainda considerar sucesso (para desenvolvimento)
+                if using_console:
+                    logger.info(f"ℹ️ Usando console backend - código será exibido nos logs")
+                    logger.info(f"📧 Código para {user.email}: {code}")
+                    return {
+                        'success': True,
+                        'message': 'Código gerado (modo console - verifique os logs)',
+                        'expires_at': expires_at.isoformat()
+                    }
+                
+                # Para produção sem email configurado, deletar código e retornar erro
+                verification.delete()
+                error_message = str(email_error)
+                
+                # Mensagens de erro mais amigáveis
+                if 'authentication' in error_message.lower() or 'login' in error_message.lower():
+                    error_message = 'Erro de autenticação no servidor de email. Verifique as credenciais.'
+                elif 'connection' in error_message.lower() or 'timeout' in error_message.lower():
+                    error_message = 'Erro de conexão com servidor de email. Tente novamente mais tarde.'
+                elif 'smtp' in error_message.lower():
+                    error_message = 'Erro na configuração do servidor de email.'
+                
                 return {
                     'success': False,
-                    'message': f'Erro ao enviar email: {str(email_error)}. Verifique as configurações de email no servidor.'
-                }
-            
-            if success:
-                logger.info(f"Código 2FA enviado para {user.email} (purpose: {purpose}, código: {code})")
-                return {
-                    'success': True,
-                    'message': 'Código enviado com sucesso',
-                    'expires_at': expires_at.isoformat()
-                }
-            else:
-                verification.delete()  # Remove o código se falhou o envio
-                logger.error(f"send_mail retornou False para {user.email}")
-                return {
-                    'success': False,
-                    'message': 'Erro ao enviar email (retorno False)'
+                    'message': f'Erro ao enviar email: {error_message}'
                 }
                 
         except Exception as e:
-            logger.error(f"Erro ao enviar código 2FA: {str(e)}", exc_info=True)
+            logger.error(f"❌ Erro ao enviar código 2FA: {str(e)}", exc_info=True)
             import traceback
             logger.error(f"Traceback completo: {traceback.format_exc()}")
             return {
@@ -212,6 +242,10 @@ class TwoFactorEmailService:
             dict: Resultado da operação
         """
         try:
+            # Verificar configuração de email
+            email_backend = getattr(settings, 'EMAIL_BACKEND', '')
+            using_console = email_backend == 'django.core.mail.backends.console.EmailBackend'
+            
             # Gerar código
             code = TwoFactorEmailService.generate_code()
             
@@ -224,44 +258,89 @@ class TwoFactorEmailService:
             user.save(update_fields=['registration_code', 'registration_code_expires_at'])
             
             # Renderizar template HTML
-            html_message = render_to_string('emails/registration_verification.html', {
-                'user_name': user.nome,
-                'code': code,
-                'expires_in': 10
-            })
+            try:
+                html_message = render_to_string('emails/registration_verification.html', {
+                    'user_name': user.nome,
+                    'code': code,
+                    'expires_in': 10
+                })
+            except Exception as template_error:
+                logger.error(f"Erro ao renderizar template: {str(template_error)}")
+                html_message = None
             
-            # Enviar email
-            success = send_mail(
-                subject='Verificação de Cadastro - Gestão Entregadores',
-                message=f'Seu código de verificação é: {code}\n\nEste código expira em 10 minutos.',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-                fail_silently=False,
-                html_message=html_message,
-            )
-            
-            if success:
-                logger.info(f"Código de verificação de cadastro enviado para {user.email}")
-                return {
-                    'success': True,
-                    'message': 'Código enviado com sucesso',
-                    'expires_at': expires_at.isoformat()
-                }
-            else:
+            # Enviar email com tratamento robusto
+            try:
+                success = send_mail(
+                    subject='Verificação de Cadastro - Gestão Entregadores',
+                    message=f'Seu código de verificação é: {code}\n\nEste código expira em 10 minutos.',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[user.email],
+                    fail_silently=False,
+                    html_message=html_message,
+                )
+                
+                if success:
+                    logger.info(f"✅ Código de verificação de cadastro enviado para {user.email}")
+                    return {
+                        'success': True,
+                        'message': 'Código enviado com sucesso',
+                        'expires_at': expires_at.isoformat()
+                    }
+                else:
+                    logger.error(f"❌ send_mail retornou False para {user.email}")
+                    user.registration_code = None
+                    user.registration_code_expires_at = None
+                    user.save(update_fields=['registration_code', 'registration_code_expires_at'])
+                    return {
+                        'success': False,
+                        'message': 'Erro ao enviar email (retorno False)'
+                    }
+                    
+            except Exception as email_error:
+                logger.error(f"❌ Erro ao enviar email para {user.email}: {str(email_error)}")
+                
+                # Se está usando console backend, considerar sucesso
+                if using_console:
+                    logger.info(f"ℹ️ Usando console backend - código será exibido nos logs")
+                    logger.info(f"📧 Código de registro para {user.email}: {code}")
+                    return {
+                        'success': True,
+                        'message': 'Código gerado (modo console - verifique os logs)',
+                        'expires_at': expires_at.isoformat()
+                    }
+                
                 # Limpar código se falhou o envio
                 user.registration_code = None
                 user.registration_code_expires_at = None
                 user.save(update_fields=['registration_code', 'registration_code_expires_at'])
+                
+                error_message = str(email_error)
+                if 'authentication' in error_message.lower():
+                    error_message = 'Erro de autenticação no servidor de email.'
+                elif 'connection' in error_message.lower():
+                    error_message = 'Erro de conexão com servidor de email.'
+                
                 return {
                     'success': False,
-                    'message': 'Erro ao enviar email'
+                    'message': f'Erro ao enviar email: {error_message}'
                 }
                 
         except Exception as e:
-            logger.error(f"Erro ao enviar código de verificação de cadastro: {str(e)}")
+            logger.error(f"❌ Erro ao enviar código de verificação de cadastro: {str(e)}", exc_info=True)
+            import traceback
+            logger.error(f"Traceback completo: {traceback.format_exc()}")
+            
+            # Limpar código em caso de erro
+            try:
+                user.registration_code = None
+                user.registration_code_expires_at = None
+                user.save(update_fields=['registration_code', 'registration_code_expires_at'])
+            except:
+                pass
+            
             return {
                 'success': False,
-                'message': 'Erro interno do servidor'
+                'message': f'Erro interno do servidor: {str(e)}'
             }
     
     @staticmethod

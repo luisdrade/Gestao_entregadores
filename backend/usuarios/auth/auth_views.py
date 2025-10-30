@@ -168,6 +168,22 @@ class RegisterView(APIView):
             
             logger.info(f"Novo usuário registrado: {user.email} - Aguardando verificação")
             
+            # ENVIAR CÓDIGO DE VERIFICAÇÃO AUTOMATICAMENTE
+            try:
+                from ..email.registration_verification_service import RegistrationVerificationService
+                send_result = RegistrationVerificationService.send_verification_code(
+                    user, 'email'
+                )
+                
+                if send_result['success']:
+                    logger.info(f"✅ Código de verificação enviado automaticamente para {user.email}")
+                else:
+                    logger.warning(f"⚠️ Falha ao enviar código automaticamente: {send_result.get('message')}")
+                    # Continuar mesmo se falhar - usuário pode solicitar reenvio
+            except Exception as e:
+                logger.error(f"❌ Erro ao enviar código de verificação no registro: {str(e)}", exc_info=True)
+                # Continuar mesmo se falhar - usuário pode solicitar reenvio
+            
             # Retornar resposta indicando que precisa de verificação
             # NÃO gerar tokens JWT ainda - só após verificação
             return Response({
@@ -1002,10 +1018,20 @@ class RegistrationResendView(APIView):
                 }, status=status.HTTP_400_BAD_REQUEST)
             
             logger.info(f"📤 Enviando código via {verification_method}")
-            # Enviar código usando o serviço unificado
-            send_result = RegistrationVerificationService.send_verification_code(
-                user, verification_method
-            )
+            
+            # Enviar código usando o serviço unificado COM TRATAMENTO ROBUSTO DE ERROS
+            try:
+                send_result = RegistrationVerificationService.send_verification_code(
+                    user, verification_method
+                )
+            except Exception as service_error:
+                logger.error(f"❌ ERRO ao chamar RegistrationVerificationService: {str(service_error)}", exc_info=True)
+                import traceback
+                logger.error(f"Traceback: {traceback.format_exc()}")
+                return Response({
+                    'success': False,
+                    'error': f'Erro ao processar solicitação de reenvio: {str(service_error)}'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
             logger.info(f"📋 Resultado do envio: {send_result.get('success')}")
             
@@ -1022,13 +1048,15 @@ class RegistrationResendView(APIView):
             return Response({
                 'success': True,
                 'message': send_result['message'],
-                'expires_at': send_result['expires_at'],
+                'expires_at': send_result.get('expires_at'),
                 'attempts_remaining': send_result.get('attempts_remaining', 0)
             }, status=status.HTTP_200_OK)
             
         except Exception as e:
             logger.error(f"❌ ERRO CRÍTICO ao reenviar código de verificação: {str(e)}", exc_info=True)
+            import traceback
+            logger.error(f"Traceback completo: {traceback.format_exc()}")
             return Response({
                 'success': False,
-                'error': 'Erro interno do servidor'
+                'error': f'Erro interno do servidor: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

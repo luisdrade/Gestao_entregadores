@@ -112,21 +112,30 @@ class RegistrationVerificationService:
                     'reason': 'max_attempts_exceeded'
                 }
             
-            # Enviar código conforme método escolhido
-            if method == 'email':
-                from .email_service import TwoFactorEmailService
-                result = TwoFactorEmailService.send_registration_code(user)
-            elif method == 'sms':
-                from .sms_service import SMSService
-                result = SMSService.send_registration_code(user, user.telefone)
-            else:
+            # Enviar código conforme método escolhido COM TRATAMENTO DE ERRO
+            try:
+                if method == 'email':
+                    from .email_service import TwoFactorEmailService
+                    result = TwoFactorEmailService.send_registration_code(user)
+                elif method == 'sms':
+                    from .sms_service import SMSService
+                    result = SMSService.send_registration_code(user, user.telefone)
+                else:
+                    return {
+                        'success': False,
+                        'message': 'Método de verificação inválido'
+                    }
+            except Exception as send_error:
+                logger.error(f"❌ Erro ao chamar serviço de envio ({method}): {str(send_error)}", exc_info=True)
+                import traceback
+                logger.error(f"Traceback: {traceback.format_exc()}")
                 return {
                     'success': False,
-                    'message': 'Método de verificação inválido'
+                    'message': f'Erro ao enviar código via {method}: {str(send_error)}'
                 }
             
             if result['success']:
-                logger.info(f"Código de verificação enviado para {user.email} via {method}")
+                logger.info(f"✅ Código de verificação enviado para {user.email} via {method}")
                 return {
                     'success': True,
                     'message': result['message'],
@@ -134,13 +143,16 @@ class RegistrationVerificationService:
                     'attempts_remaining': RegistrationVerificationService.MAX_ATTEMPTS - user.registration_code_attempts
                 }
             else:
+                logger.warning(f"⚠️ Falha no envio de código: {result.get('message')}")
                 return result
                 
         except Exception as e:
-            logger.error(f"Erro ao enviar código de verificação: {str(e)}")
+            logger.error(f"❌ Erro ao enviar código de verificação: {str(e)}", exc_info=True)
+            import traceback
+            logger.error(f"Traceback completo: {traceback.format_exc()}")
             return {
                 'success': False,
-                'message': 'Erro interno do servidor'
+                'message': f'Erro interno do servidor: {str(e)}'
             }
     
     @staticmethod
