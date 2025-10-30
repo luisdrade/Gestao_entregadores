@@ -321,10 +321,15 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ['1','true','yes',
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 
-# Para desenvolvimento - usar console backend por padrão
+# Para desenvolvimento - usar console backend por padrão se não tiver configuração SMTP
 if DEBUG and not EMAIL_HOST_USER:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     print("📧 Modo de desenvolvimento: emails serão exibidos no console")
+else:
+    # Garantir que está usando SMTP backend quando tem credenciais
+    if EMAIL_HOST_USER and EMAIL_BACKEND == 'django.core.mail.backends.console.EmailBackend':
+        EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+        print(f"📧 Configurando SMTP: {EMAIL_HOST_USER}@{EMAIL_HOST}")
 
 REST_AUTH = {
     'PASSWORD_RESET_USE_SITES_DOMAIN': True,

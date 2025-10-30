@@ -31,6 +31,10 @@ class TwoFactorEmailService:
             dict: Resultado da operação
         """
         try:
+            # Verificar configuração de email antes de continuar
+            if not settings.EMAIL_HOST_USER and settings.EMAIL_BACKEND != 'django.core.mail.backends.console.EmailBackend':
+                logger.warning("EMAIL_HOST_USER não configurado, usando console backend")
+            
             # Gerar código
             code = TwoFactorEmailService.generate_code()
             
@@ -39,6 +43,14 @@ class TwoFactorEmailService:
             
             # Criar registro no banco
             from ..models import TwoFactorVerification
+            
+            # Deletar códigos antigos não usados para o mesmo propósito antes de criar novo
+            TwoFactorVerification.objects.filter(
+                user=user,
+                purpose=purpose,
+                is_used=False
+            ).delete()
+            
             verification = TwoFactorVerification.objects.create(
                 user=user,
                 code=code,
@@ -81,20 +93,36 @@ class TwoFactorEmailService:
                 }
             
             # Renderizar template HTML
-            html_message = render_to_string(template, context)
+            try:
+                html_message = render_to_string(template, context)
+            except Exception as template_error:
+                logger.error(f"Erro ao renderizar template {template}: {str(template_error)}")
+                # Usar mensagem simples se o template falhar
+                html_message = None
             
             # Enviar email
-            success = send_mail(
-                subject=subject,
-                message=f'Seu código de verificação é: {code}\n\nEste código expira em 10 minutos.',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-                fail_silently=False,
-                html_message=html_message,
-            )
+            try:
+                success = send_mail(
+                    subject=subject,
+                    message=f'Seu código de verificação é: {code}\n\nEste código expira em 10 minutos.',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[user.email],
+                    fail_silently=False,
+                    html_message=html_message,
+                )
+            except Exception as email_error:
+                logger.error(f"Erro ao enviar email para {user.email}: {str(email_error)}")
+                logger.error(f"Configuração de email - BACKEND: {settings.EMAIL_BACKEND}")
+                logger.error(f"Configuração de email - HOST: {settings.EMAIL_HOST}")
+                logger.error(f"Configuração de email - USER: {settings.EMAIL_HOST_USER}")
+                verification.delete()  # Remove o código se falhou o envio
+                return {
+                    'success': False,
+                    'message': f'Erro ao enviar email: {str(email_error)}. Verifique as configurações de email no servidor.'
+                }
             
             if success:
-                logger.info(f"Código 2FA enviado para {user.email} (purpose: {purpose})")
+                logger.info(f"Código 2FA enviado para {user.email} (purpose: {purpose}, código: {code})")
                 return {
                     'success': True,
                     'message': 'Código enviado com sucesso',
@@ -102,16 +130,19 @@ class TwoFactorEmailService:
                 }
             else:
                 verification.delete()  # Remove o código se falhou o envio
+                logger.error(f"send_mail retornou False para {user.email}")
                 return {
                     'success': False,
-                    'message': 'Erro ao enviar email'
+                    'message': 'Erro ao enviar email (retorno False)'
                 }
                 
         except Exception as e:
-            logger.error(f"Erro ao enviar código 2FA: {str(e)}")
+            logger.error(f"Erro ao enviar código 2FA: {str(e)}", exc_info=True)
+            import traceback
+            logger.error(f"Traceback completo: {traceback.format_exc()}")
             return {
                 'success': False,
-                'message': 'Erro interno do servidor'
+                'message': f'Erro interno do servidor: {str(e)}'
             }
     
     @staticmethod

@@ -969,10 +969,14 @@ class RegistrationResendView(APIView):
     
     def post(self, request):
         try:
+            logger.info(f"🔔 RegistrationResendView - Request recebido")
+            logger.info(f"📧 Email recebido: {request.data.get('email')}")
+            
             email = request.data.get('email')
             verification_method = request.data.get('verification_method', 'email')
             
             if not email:
+                logger.warning("⚠️ Email não fornecido")
                 return Response({
                     'success': False,
                     'error': 'Email é obrigatório'
@@ -981,7 +985,9 @@ class RegistrationResendView(APIView):
             # Buscar usuário
             try:
                 user = Entregador.objects.get(email=email)
+                logger.info(f"✅ Usuário encontrado: {user.email}")
             except Entregador.DoesNotExist:
+                logger.warning(f"❌ Usuário não encontrado: {email}")
                 return Response({
                     'success': False,
                     'error': 'Usuário não encontrado'
@@ -989,24 +995,29 @@ class RegistrationResendView(APIView):
             
             # Verificar se já está verificado
             if user.registration_verified:
+                logger.info(f"ℹ️ Usuário já verificado: {user.email}")
                 return Response({
                     'success': False,
                     'error': 'Este usuário já foi verificado'
                 }, status=status.HTTP_400_BAD_REQUEST)
             
+            logger.info(f"📤 Enviando código via {verification_method}")
             # Enviar código usando o serviço unificado
             send_result = RegistrationVerificationService.send_verification_code(
                 user, verification_method
             )
             
+            logger.info(f"📋 Resultado do envio: {send_result.get('success')}")
+            
             if not send_result['success']:
+                logger.warning(f"⚠️ Falha ao enviar código: {send_result.get('message')}")
                 return Response({
                     'success': False,
                     'error': send_result['message'],
                     'reason': send_result.get('reason')
                 }, status=status.HTTP_400_BAD_REQUEST)
             
-            logger.info(f"Código de verificação reenviado para {user.email} via {verification_method}")
+            logger.info(f"✅ Código de verificação reenviado para {user.email} via {verification_method}")
             
             return Response({
                 'success': True,
@@ -1016,7 +1027,7 @@ class RegistrationResendView(APIView):
             }, status=status.HTTP_200_OK)
             
         except Exception as e:
-            logger.error(f"Erro ao reenviar código de verificação: {str(e)}")
+            logger.error(f"❌ ERRO CRÍTICO ao reenviar código de verificação: {str(e)}", exc_info=True)
             return Response({
                 'success': False,
                 'error': 'Erro interno do servidor'

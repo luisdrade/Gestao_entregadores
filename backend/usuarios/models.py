@@ -86,7 +86,8 @@ class TwoFactorVerification(models.Model):
         return f"2FA Code for {self.user.email} - {self.code} ({self.purpose})"
     
     def is_expired(self):
-        return django.utils.timezone.now() > self.expires_at
+        from django.utils import timezone
+        return timezone.now() > self.expires_at
 
 class TrustedDevice(models.Model):
     """
