@@ -310,32 +310,17 @@ else:
     CSRF_COOKIE_HTTPONLY = False
     CSRF_COOKIE_SAMESITE = 'Lax'
 
-# Configurações de Email
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@gestaoentregadores.com')
+# Configurações de Email (SendGrid)
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "sendgrid_backend.SendgridBackend")
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+SENDGRID_SANDBOX_MODE_IN_DEBUG = os.getenv("SENDGRID_SANDBOX_MODE_IN_DEBUG", "False").lower() in ['1', 'true', 'yes', 'on']
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@entregasplus.com")
 
-# SMTP (usado quando EMAIL_BACKEND = smtp)
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587')) if os.getenv('EMAIL_PORT') else 587
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ['1','true','yes','on'] if os.getenv('EMAIL_USE_TLS') else True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-
-# Para desenvolvimento - usar console backend por padrão se não tiver configuração SMTP
-if DEBUG and not EMAIL_HOST_USER:
+if DEBUG and not SENDGRID_API_KEY:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    print("📧 Modo de desenvolvimento: emails serão exibidos no console")
+    print("📧 Modo desenvolvimento: e-mails aparecem no console.")
 else:
-    # Garantir que está usando SMTP backend quando tem credenciais
-    if EMAIL_HOST_USER and EMAIL_BACKEND == 'django.core.mail.backends.console.EmailBackend':
-        EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-        print(f"📧 Configurando SMTP: {EMAIL_HOST_USER}@{EMAIL_HOST}")
-
-REST_AUTH = {
-    'PASSWORD_RESET_USE_SITES_DOMAIN': True,
-    'PASSWORD_RESET_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetSerializer',
-    'PASSWORD_RESET_CONFIRM_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetConfirmSerializer',
-}
+    print("📧 SendGrid configurado corretamente.")
 
 # Configurações para Admin Django em produção
 if not DEBUG:
