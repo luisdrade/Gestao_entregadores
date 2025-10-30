@@ -77,7 +77,7 @@ export default function RegisterVerifyCodeScreen() {
         await loginAfterVerification(tokens, user);
         
         // Redirecionar direto para o dashboard
-        router.replace('/(home)');
+        router.replace('/(home/home)');
       } else {
         setError(response.data.error || 'Código inválido');
       }
