@@ -12,11 +12,17 @@ __pycache__/
 
 # Django
 staticfiles/
-media/
+# media/ - NÃO ignorar, precisa dos arquivos de upload
 
 # Logs
 *.log
 /debug.log
+debug.log
+
+# Database
+db.sqlite3
+*.db
+*.sqlite3
 
 # Virtual envs
 venv/

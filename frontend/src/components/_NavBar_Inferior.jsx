@@ -36,13 +36,13 @@ export default function BottomTabBar() {
                 >
                     <View style={styles.iconContainer}>
                         <Ionicons
-                            name="Perfil"
+                            name="person"
                             size={24}
                             color={PerfilActive ? '#2B2860' : '#666'}
                         />
                     </View>
                     <Text style={[styles.tabText, PerfilActive && styles.activeTabText]}>
-                        profile
+                        Perfil
                     </Text>
                 </TouchableOpacity>
                 
@@ -53,13 +53,13 @@ export default function BottomTabBar() {
                 >
                     <View style={styles.iconContainer}>
                         <Ionicons
-                            name="Home"
+                            name="home"
                             size={24}
                             color={HomeActive ? '#2B2860' : '#666'}
                         />
                     </View>
                     <Text style={[styles.tabText, HomeActive && styles.activeTabText]}>
-                        home
+                        Home
                     </Text>
                 </TouchableOpacity>
 
@@ -70,13 +70,13 @@ export default function BottomTabBar() {
                 >
                     <View style={styles.iconContainer}>
                         <Ionicons
-                            name="Comunidade"
+                            name="people"
                             size={24}
                             color={ComunidadeActive ? '#2B2860' : '#666'}
                         />
                     </View>
                     <Text style={[styles.tabText, ComunidadeActive && styles.activeTabText]}>
-                        comunity
+                        Comunidade
                     </Text>
                 </TouchableOpacity>
             </View>

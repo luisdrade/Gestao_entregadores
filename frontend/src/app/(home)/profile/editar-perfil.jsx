@@ -50,107 +50,146 @@ const buscarCEP = async (cep) => {
   }
 };
 
-// Schema de validação
+// Schema de validação - Tornar campos opcionais, mas validar formato quando preenchidos
 const validationSchema = Yup.object().shape({
   nome: Yup.string()
     .trim()
-    .min(2, 'Nome deve ter pelo menos 2 caracteres')
-    .max(100, 'Nome deve ter no máximo 100 caracteres')
-    .required('Nome é obrigatório'),
+    .when('$nome', {
+      is: (value) => value && value.length > 0,
+      then: (schema) => schema
+        .min(2, 'Nome deve ter pelo menos 2 caracteres')
+        .max(100, 'Nome deve ter no máximo 100 caracteres'),
+      otherwise: (schema) => schema.notRequired()
+    }),
   username: Yup.string()
     .trim()
-    .min(3, 'Username deve ter pelo menos 3 caracteres')
-    .max(20, 'Username deve ter no máximo 20 caracteres')
-    .matches(/^[a-zA-Z0-9_]+$/, 'Username pode conter apenas letras, números e _')
-    .required('Username é obrigatório'),
+    .when('$username', {
+      is: (value) => value && value.length > 0,
+      then: (schema) => schema
+        .min(3, 'Username deve ter pelo menos 3 caracteres')
+        .max(20, 'Username deve ter no máximo 20 caracteres')
+        .matches(/^[a-zA-Z0-9_]+$/, 'Username pode conter apenas letras, números e _'),
+      otherwise: (schema) => schema.notRequired()
+    }),
   email: Yup.string()
     .trim()
-    .email('Email inválido')
-    .max(150, 'Email deve ter no máximo 150 caracteres')
-    .required('Email é obrigatório'),
+    .when('$email', {
+      is: (value) => value && value.length > 0,
+      then: (schema) => schema
+        .email('Email inválido')
+        .max(150, 'Email deve ter no máximo 150 caracteres'),
+      otherwise: (schema) => schema.notRequired()
+    }),
   telefone: Yup.string()
     .trim()
-    .required('Telefone é obrigatório')
-    .test('telefone-length', 'Telefone deve ter formato válido', function (value) {
-      if (!value) return false;
-      // Aceita tanto (11) 99999-9999 quanto (11) 9999-9999
-      return value.length >= 14 && value.length <= 15;
-    })
-    .test('telefone-format', 'Formato de telefone inválido', function (value) {
-      if (!value) return false;
-      const telefoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
-      return telefoneRegex.test(value);
+    .when('$telefone', {
+      is: (value) => value && value.length > 0,
+      then: (schema) => schema
+        .test('telefone-length', 'Telefone deve ter formato válido', function (value) {
+          if (!value) return true;
+          return value.length >= 14 && value.length <= 15;
+        })
+        .test('telefone-format', 'Formato de telefone inválido', function (value) {
+          if (!value) return true;
+          const telefoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
+          return telefoneRegex.test(value);
+        }),
+      otherwise: (schema) => schema.notRequired()
     }),
   cpf: Yup.string()
     .trim()
-    .required('CPF é obrigatório')
-    .test('cpf-length', 'CPF deve ter 14 caracteres (formato: 123.456.789-00)', function (value) {
-      if (!value) return false;
-      return value.length === 14;
-    })
-    .test('cpf-format', 'Formato de CPF inválido', function (value) {
-      if (!value) return false;
-      const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-      return cpfRegex.test(value);
+    .when('$cpf', {
+      is: (value) => value && value.length > 0,
+      then: (schema) => schema
+        .test('cpf-length', 'CPF deve ter 14 caracteres (formato: 123.456.789-00)', function (value) {
+          if (!value) return true;
+          return value.length === 14;
+        })
+        .test('cpf-format', 'Formato de CPF inválido', function (value) {
+          if (!value) return true;
+          const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+          return cpfRegex.test(value);
+        }),
+      otherwise: (schema) => schema.notRequired()
     }),
   dataNascimento: Yup.string()
     .trim()
-    .required('Data de nascimento é obrigatória')
-    .test('valid-date', 'Data de nascimento inválida', function (value) {
-      if (!value || value.trim() === '') return false;
+    .when('$dataNascimento', {
+      is: (value) => value && value.length > 0,
+      then: (schema) => schema
+        .test('valid-date', 'Data de nascimento inválida', function (value) {
+          if (!value || value.trim() === '') return true;
 
-      // Verificar formato DD/MM/AAAA
-      const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-      if (!dateRegex.test(value)) return false;
+          // Verificar formato DD/MM/AAAA
+          const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+          if (!dateRegex.test(value)) return false;
 
-      const [, day, month, year] = value.match(dateRegex);
-      const dayNum = parseInt(day);
-      const monthNum = parseInt(month);
-      const yearNum = parseInt(year);
+          const [, day, month, year] = value.match(dateRegex);
+          const dayNum = parseInt(day);
+          const monthNum = parseInt(month);
+          const yearNum = parseInt(year);
 
-      // Verificar se é uma data válida
-      const date = new Date(yearNum, monthNum - 1, dayNum);
-      if (date.getDate() !== dayNum || date.getMonth() !== monthNum - 1 || date.getFullYear() !== yearNum) {
-        return false;
-      }
+          // Verificar se é uma data válida
+          const date = new Date(yearNum, monthNum - 1, dayNum);
+          if (date.getDate() !== dayNum || date.getMonth() !== monthNum - 1 || date.getFullYear() !== yearNum) {
+            return false;
+          }
 
-      // Verificar se não é uma data futura
-      const today = new Date();
-      if (date > today) return false;
+          // Verificar se não é uma data futura
+          const today = new Date();
+          if (date > today) return false;
 
-      // Verificar se não é muito antiga (mais de 120 anos)
-      const minYear = today.getFullYear() - 120;
-      if (yearNum < minYear) return false;
+          // Verificar se não é muito antiga (mais de 120 anos)
+          const minYear = today.getFullYear() - 120;
+          if (yearNum < minYear) return false;
 
-      // Verificar se não é muito nova (menos de 16 anos)
-      const maxYear = today.getFullYear() - 16;
-      if (yearNum > maxYear) return false;
+          // Verificar se não é muito nova (menos de 16 anos)
+          const maxYear = today.getFullYear() - 16;
+          if (yearNum > maxYear) return false;
 
-      return true;
+          return true;
+        }),
+      otherwise: (schema) => schema.notRequired()
     }),
   endereco: Yup.string()
     .trim()
-    .min(10, 'Endereço deve ter pelo menos 10 caracteres')
-    .max(200, 'Endereço deve ter no máximo 200 caracteres')
-    .required('Endereço é obrigatório'),
+    .when('$endereco', {
+      is: (value) => value && value.length > 0,
+      then: (schema) => schema
+        .min(10, 'Endereço deve ter pelo menos 10 caracteres')
+        .max(200, 'Endereço deve ter no máximo 200 caracteres'),
+      otherwise: (schema) => schema.notRequired()
+    }),
   cep: Yup.string()
     .trim()
-    .required('CEP é obrigatório')
-    .test('cep-format', 'CEP deve ter formato 12345-678', function (value) {
-      if (!value) return false;
-      const cepRegex = /^\d{5}-\d{3}$/;
-      return cepRegex.test(value);
+    .when('$cep', {
+      is: (value) => value && value.length > 0,
+      then: (schema) => schema
+        .test('cep-format', 'CEP deve ter formato 12345-678', function (value) {
+          if (!value) return true;
+          const cepRegex = /^\d{5}-\d{3}$/;
+          return cepRegex.test(value);
+        }),
+      otherwise: (schema) => schema.notRequired()
     }),
   cidade: Yup.string()
     .trim()
-    .min(2, 'Cidade deve ter pelo menos 2 caracteres')
-    .max(100, 'Cidade deve ter no máximo 100 caracteres')
-    .required('Cidade é obrigatória'),
+    .when('$cidade', {
+      is: (value) => value && value.length > 0,
+      then: (schema) => schema
+        .min(2, 'Cidade deve ter pelo menos 2 caracteres')
+        .max(100, 'Cidade deve ter no máximo 100 caracteres'),
+      otherwise: (schema) => schema.notRequired()
+    }),
   estado: Yup.string()
     .trim()
-    .min(2, 'Estado deve ter pelo menos 2 caracteres')
-    .max(2, 'Estado deve ter no máximo 2 caracteres')
-    .required('Estado é obrigatório'),
+    .when('$estado', {
+      is: (value) => value && value.length > 0,
+      then: (schema) => schema
+        .min(2, 'Estado deve ter pelo menos 2 caracteres')
+        .max(2, 'Estado deve ter exatamente 2 caracteres'),
+      otherwise: (schema) => schema.notRequired()
+    }),
 });
 
 export default function EditarPerfilScreen() {
@@ -187,13 +226,48 @@ export default function EditarPerfilScreen() {
   const handleSalvar = async (values, { setSubmitting, setFieldError }) => {
     setIsLoading(true);
     try {
-      // Preparar dados para envio (converter data de DD/MM/AAAA para YYYY-MM-DD)
-      const dataToSend = { ...values };
+      // Preparar dados para envio - APENAS campos que foram modificados ou preenchidos
+      const dataToSend = {};
+      
+      // Comparar com valores iniciais para enviar apenas o que mudou
+      const initialValues = {
+        nome: user.nome || '',
+        username: user.username || '',
+        email: user.email || '',
+        telefone: user.telefone || '',
+        cpf: user.cpf || '',
+        dataNascimento: user.dataNascimento || '',
+        endereco: user.endereco || '',
+        cep: user.cep || '',
+        cidade: user.cidade || '',
+        estado: user.estado || ''
+      };
 
-      if (dataToSend.dataNascimento) {
-        const [day, month, year] = dataToSend.dataNascimento.split('/');
-        dataToSend.data_nascimento = `${year}-${month}-${day}`;
-        delete dataToSend.dataNascimento; // Remover campo antigo
+      // Adicionar apenas campos que mudaram ou foram preenchidos
+      Object.keys(values).forEach(key => {
+        const currentValue = values[key];
+        const initialValue = initialValues[key];
+        
+        // Se o campo tem valor e é diferente do inicial, incluir no envio
+        if (currentValue && currentValue.trim() !== '' && currentValue !== initialValue) {
+          if (key === 'dataNascimento') {
+            // Converter data de DD/MM/AAAA para YYYY-MM-DD
+            const [day, month, year] = currentValue.split('/');
+            dataToSend.data_nascimento = `${year}-${month}-${day}`;
+          } else {
+            // Mapear nome do campo se necessário
+            const backendField = key === 'dataNascimento' ? 'data_nascimento' : key;
+            dataToSend[backendField] = currentValue;
+          }
+        }
+      });
+
+      // Se não há dados para enviar, avisar o usuário
+      if (Object.keys(dataToSend).length === 0) {
+        Alert.alert('Aviso', 'Nenhuma alteração foi detectada. Modifique algum campo antes de salvar.');
+        setIsLoading(false);
+        setSubmitting(false);
+        return;
       }
 
       console.log('Dados a serem enviados:', dataToSend);
@@ -238,8 +312,14 @@ export default function EditarPerfilScreen() {
       console.error('Detalhes do erro:', error.response?.data);
 
       // Tratar erros específicos do backend
-      if (error.response?.data?.errors) {
+      if (error.response?.data?.details) {
         // Se o backend retornou erros de validação específicos
+        Object.keys(error.response.data.details).forEach(field => {
+          const fieldName = field === 'data_nascimento' ? 'dataNascimento' : field;
+          const errors = error.response.data.details[field];
+          setFieldError(fieldName, Array.isArray(errors) ? errors[0] : errors);
+        });
+      } else if (error.response?.data?.errors) {
         Object.keys(error.response.data.errors).forEach(field => {
           const fieldName = field === 'data_nascimento' ? 'dataNascimento' : field;
           setFieldError(fieldName, error.response.data.errors[field][0]);
@@ -393,7 +473,7 @@ export default function EditarPerfilScreen() {
 
                     {/* Nome */}
                     <_CampoEntrada
-                      label="Nome completo *"
+                      label="Nome completo"
                       value={values.nome}
                       onChangeText={handleChange('nome')}
                       onBlur={handleBlur('nome')}
@@ -405,7 +485,7 @@ export default function EditarPerfilScreen() {
 
                     {/* Username */}
                     <_CampoEntrada
-                      label="@Usuário *"
+                      label="@Usuário"
                       value={values.username}
                       onChangeText={handleChange('username')}
                       onBlur={handleBlur('username')}
@@ -419,7 +499,7 @@ export default function EditarPerfilScreen() {
 
                     {/* CPF */}
                     <View style={styles.inputContainer}>
-                      <Text style={styles.label}>CPF *</Text>
+                      <Text style={styles.label}>CPF</Text>
                       <View style={styles.inputWrapper}>
                         <Ionicons name="card" size={20} color="#666" style={styles.inputIcon} />
                         <TextInputMask
@@ -443,7 +523,7 @@ export default function EditarPerfilScreen() {
 
                     {/* Data de Nascimento */}
                     <View style={styles.inputContainer}>
-                      <Text style={styles.label}>Data de Nascimento *</Text>
+                      <Text style={styles.label}>Data de Nascimento</Text>
                       <View style={styles.inputWrapper}>
                         <Ionicons name="calendar" size={20} color="#666" style={styles.inputIcon} />
                         <DatePicker
@@ -469,7 +549,7 @@ export default function EditarPerfilScreen() {
 
                     {/* CEP, Cidade e Estado em linha */}
                     <View style={[styles.inputContainer, styles.halfWidth]}>
-                      <Text style={styles.label}>CEP *</Text>
+                      <Text style={styles.label}>CEP</Text>
                       <View style={styles.cepContainer}>
                         <View style={styles.inputWrapper}>
                           <Ionicons name="map" size={20} color="#666" style={styles.inputIcon} />
@@ -509,7 +589,7 @@ export default function EditarPerfilScreen() {
                     </View>
 
                     <View style={[styles.inputContainer, styles.halfWidth]}>
-                      <Text style={styles.label}>Cidade *</Text>
+                      <Text style={styles.label}>Cidade</Text>
                       <View style={styles.inputWrapper}>
                         <Ionicons name="business" size={20} color="#666" style={styles.inputIcon} />
                         <TextInput
@@ -531,7 +611,7 @@ export default function EditarPerfilScreen() {
 
                     {/* Estado */}
                     <View style={styles.inputContainer}>
-                      <Text style={styles.label}>Estado *</Text>
+                      <Text style={styles.label}>Estado</Text>
                       <View style={styles.inputWrapper}>
                         <Ionicons name="flag" size={20} color="#666" style={styles.inputIcon} />
                         <TextInput
@@ -555,7 +635,7 @@ export default function EditarPerfilScreen() {
 
                     {/* Endereço */}
                     <View style={styles.inputContainer}>
-                      <Text style={styles.label}>Endereço *</Text>
+                      <Text style={styles.label}>Endereço</Text>
                       <View style={styles.inputWrapper}>
                         <Ionicons name="home" size={20} color="#666" style={styles.inputIcon} />
                         <TextInput
@@ -588,7 +668,7 @@ export default function EditarPerfilScreen() {
 
                     {/* Email */}
                     <_CampoEntrada
-                      label="Email *"
+                      label="Email"
                       value={values.email}
                       onChangeText={handleChange('email')}
                       onBlur={handleBlur('email')}
@@ -602,7 +682,7 @@ export default function EditarPerfilScreen() {
 
                     {/* Telefone */}
                     <View style={styles.inputContainer}>
-                      <Text style={styles.label}>Telefone *</Text>
+                      <Text style={styles.label}>Telefone</Text>
                       <View style={styles.inputWrapper}>
                         <Ionicons name="call" size={20} color="#666" style={styles.inputIcon} />
                         <TextInputMask
@@ -629,11 +709,11 @@ export default function EditarPerfilScreen() {
                   {/* Botão de salvar fixo */}
                   <View style={styles.saveButtonContainer}>
                     <_Botao
-                      title={Object.keys(errors).length > 0 ? 'Corrija os erros' : 'Salvar Alterações'}
+                      title="Salvar Alterações"
                       onPress={handleSubmit}
                       loading={isLoading}
-                      disabled={isLoading || Object.keys(errors).length > 0}
-                      variant={Object.keys(errors).length > 0 ? 'error' : 'primary'}
+                      disabled={isLoading}
+                      variant="primary"
                       icon={!isLoading && <Ionicons name="checkmark-circle" size={20} color="#fff" />}
                       style={styles.saveButton}
                     />
