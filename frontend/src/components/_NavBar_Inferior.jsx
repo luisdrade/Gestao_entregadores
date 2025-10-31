@@ -36,7 +36,7 @@ export default function BottomTabBar() {
                 >
                     <View style={styles.iconContainer}>
                         <Ionicons
-                            name="person"
+                            name="Perfil"
                             size={24}
                             color={PerfilActive ? '#2B2860' : '#666'}
                         />
@@ -53,7 +53,7 @@ export default function BottomTabBar() {
                 >
                     <View style={styles.iconContainer}>
                         <Ionicons
-                            name="home"
+                            name="Home"
                             size={24}
                             color={HomeActive ? '#2B2860' : '#666'}
                         />
@@ -70,7 +70,7 @@ export default function BottomTabBar() {
                 >
                     <View style={styles.iconContainer}>
                         <Ionicons
-                            name="people"
+                            name="Comunidade"
                             size={24}
                             color={ComunidadeActive ? '#2B2860' : '#666'}
                         />

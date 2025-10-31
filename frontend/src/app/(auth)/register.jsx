@@ -97,34 +97,61 @@ export default function RegisterScreen() {
       } else {
         const newFieldErrors = {};
         console.log('🔍 Processando erros:', result.error);
+        console.log('🔍 Detalhes dos erros:', result.details);
         
-        if (result.error && result.error.details) {
-          const details = result.error.details;
-          console.log('🔍 Detalhes dos erros:', details);
+        // Processar erros de detalhes (vindos do backend)
+        if (result.details) {
+          const details = result.details;
           
           // Mapear erros do back para campos do front
-          if (details.email) {
+          if (details.email && Array.isArray(details.email)) {
             newFieldErrors.email = details.email[0];
+          } else if (details.email) {
+            newFieldErrors.email = details.email;
           }
-          if (details.username) {
+          
+          if (details.username && Array.isArray(details.username)) {
             newFieldErrors.username = details.username[0];
+          } else if (details.username) {
+            newFieldErrors.username = details.username;
           }
-          if (details.telefone) {
+          
+          if (details.telefone && Array.isArray(details.telefone)) {
             newFieldErrors.telefone = details.telefone[0];
+          } else if (details.telefone) {
+            newFieldErrors.telefone = details.telefone;
           }
-          if (details.password) {
+          
+          if (details.password && Array.isArray(details.password)) {
             newFieldErrors.senha = details.password[0];
+          } else if (details.password) {
+            newFieldErrors.senha = details.password;
           }
-          if (details.password_confirm) {
+          
+          if (details.password_confirm && Array.isArray(details.password_confirm)) {
             newFieldErrors.confirmarSenha = details.password_confirm[0];
+          } else if (details.password_confirm) {
+            newFieldErrors.confirmarSenha = details.password_confirm;
           }
-          if (details.nome) {
+          
+          if (details.nome && Array.isArray(details.nome)) {
             newFieldErrors.nome = details.nome[0];
+          } else if (details.nome) {
+            newFieldErrors.nome = details.nome;
           }
-          if (details.non_field_errors) {//erro de senhas não coincidem
-            newFieldErrors.confirmarSenha = details.non_field_errors[0];
+          
+          if (details.non_field_errors && Array.isArray(details.non_field_errors)) {
+            // Se não há erro específico em confirmarSenha, colocar o erro geral lá
+            if (!newFieldErrors.confirmarSenha) {
+              newFieldErrors.confirmarSenha = details.non_field_errors[0];
+            } else {
+              newFieldErrors.general = details.non_field_errors[0];
+            }
           }
-        } else if (result.error && typeof result.error === 'string') {//erro geral
+        }
+        
+        // Se não houve erros de campo específicos mas há erro geral
+        if (Object.keys(newFieldErrors).length === 0 && result.error) {
           newFieldErrors.general = result.error;
         }
         
@@ -135,33 +162,66 @@ export default function RegisterScreen() {
     } catch (error) {
       console.error('❌ Erro detalhado no registro:', error);
       console.error('❌ Response data:', error.response?.data);
-      console.error('❌ Status:', error.response?.status);
-      console.error('❌ Headers:', error.response?.headers);
       
       // Capturar diferentes tipos de erro
       let errorMessage = 'Erro inesperado ao criar conta';
+      const newFieldErrors = {};
       
       if (error.response?.data) {
         const errorData = error.response.data;
         
-        if (errorData.error) {
-          errorMessage = errorData.error;
-        } else if (errorData.details) {
-          // Se há detalhes de validação, mostrar o primeiro erro
-          const firstError = Object.values(errorData.details)[0];
-          if (Array.isArray(firstError)) {
-            errorMessage = firstError[0];
-          } else {
-            errorMessage = firstError;
+        // Processar details primeiro (validações de campo)
+        if (errorData.details) {
+          const details = errorData.details;
+          
+          if (details.email) {
+            newFieldErrors.email = Array.isArray(details.email) ? details.email[0] : details.email;
           }
-        } else if (typeof errorData === 'string') {
-          errorMessage = errorData;
+          if (details.username) {
+            newFieldErrors.username = Array.isArray(details.username) ? details.username[0] : details.username;
+          }
+          if (details.telefone) {
+            newFieldErrors.telefone = Array.isArray(details.telefone) ? details.telefone[0] : details.telefone;
+          }
+          if (details.password) {
+            newFieldErrors.senha = Array.isArray(details.password) ? details.password[0] : details.password;
+          }
+          if (details.password_confirm) {
+            newFieldErrors.confirmarSenha = Array.isArray(details.password_confirm) ? details.password_confirm[0] : details.password_confirm;
+          }
+          if (details.nome) {
+            newFieldErrors.nome = Array.isArray(details.nome) ? details.nome[0] : details.nome;
+          }
+          if (details.non_field_errors) {
+            if (!newFieldErrors.confirmarSenha) {
+              newFieldErrors.confirmarSenha = Array.isArray(details.non_field_errors) ? details.non_field_errors[0] : details.non_field_errors;
+            } else {
+              newFieldErrors.general = Array.isArray(details.non_field_errors) ? details.non_field_errors[0] : details.non_field_errors;
+            }
+          }
+        }
+        
+        // Se não há erros de campo, usar mensagem geral
+        if (Object.keys(newFieldErrors).length === 0) {
+          if (errorData.error) {
+            errorMessage = typeof errorData.error === 'string' ? errorData.error : 'Erro ao processar cadastro';
+          } else if (errorData.message) {
+            errorMessage = errorData.message;
+          } else if (typeof errorData === 'string') {
+            errorMessage = errorData;
+          }
+          newFieldErrors.general = errorMessage;
         }
       } else if (error.message) {
-        errorMessage = error.message;
+        if (error.message.includes('Network Error') || error.code === 'ERR_NETWORK') {
+          errorMessage = 'Erro de conexão. Verifique sua internet.';
+        } else {
+          errorMessage = error.message;
+        }
+        newFieldErrors.general = errorMessage;
       }
       
-      setFieldErrors({ general: errorMessage });
+      setFieldErrors(newFieldErrors);
     } finally {
       setIsSubmitting(false);
     }

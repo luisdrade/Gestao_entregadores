@@ -286,25 +286,51 @@ export default function AuthProvider({ children }) {
       console.error('📋 Mensagem do erro:', error.message);
       
       // Tratamento melhorado de erros
-      let errorMessage = 'Erro ao fazer cadastro';
-      
       if (error.response?.data) {
         const errorData = error.response.data;
         
+        // Se tem details, retornar os detalhes completos
+        if (errorData.details) {
+          return { 
+            success: false, 
+            error: errorData.error || 'Erro de validação',
+            details: errorData.details
+          };
+        }
+        
         // Se é um erro estruturado do backend
         if (errorData.error) {
-          errorMessage = typeof errorData.error === 'string' 
-            ? errorData.error 
-            : 'Erro ao processar cadastro';
+          return {
+            success: false,
+            error: typeof errorData.error === 'string' 
+              ? errorData.error 
+              : 'Erro ao processar cadastro',
+            details: errorData.details || {}
+          };
         } else if (errorData.message) {
-          errorMessage = errorData.message;
+          return {
+            success: false,
+            error: errorData.message,
+            details: {}
+          };
         } else if (errorData.detail) {
-          errorMessage = errorData.detail;
+          return {
+            success: false,
+            error: errorData.detail,
+            details: {}
+          };
         } else if (errorData.non_field_errors && Array.isArray(errorData.non_field_errors)) {
-          errorMessage = errorData.non_field_errors[0];
+          return {
+            success: false,
+            error: errorData.non_field_errors[0],
+            details: {}
+          };
         }
-      } else if (error.message) {
-        // Se é Network Error, o servidor pode estar offline ou com problema
+      }
+      
+      // Erros de rede
+      let errorMessage = 'Erro ao fazer cadastro';
+      if (error.message) {
         if (error.message.includes('Network Error') || error.code === 'ERR_NETWORK') {
           errorMessage = 'Erro de conexão. Verifique sua internet ou tente novamente mais tarde.';
         } else {
@@ -315,7 +341,7 @@ export default function AuthProvider({ children }) {
       return { 
         success: false, 
         error: errorMessage,
-        errorDetails: error.response?.data
+        details: {}
       };
     }
   }

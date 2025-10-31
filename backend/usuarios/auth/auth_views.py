@@ -154,10 +154,19 @@ class RegisterView(APIView):
             serializer = RegisterSerializer(data=request.data)
             if not serializer.is_valid():
                 logger.error(f"Erro de validação no serializer: {serializer.errors}")
+                
+                # Processar erros para mensagens mais claras
+                error_details = {}
+                for field, errors in serializer.errors.items():
+                    if isinstance(errors, list):
+                        error_details[field] = errors
+                    else:
+                        error_details[field] = [str(errors)]
+                
                 return Response({
                     'success': False,
-                    'error': 'Dados inválidos',
-                    'details': serializer.errors
+                    'error': 'Erro de validação',
+                    'details': error_details
                 }, status=status.HTTP_400_BAD_REQUEST)
             
             # Criar o usuário usando o serializer

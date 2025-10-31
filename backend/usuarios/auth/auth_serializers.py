@@ -34,22 +34,60 @@ class RegisterSerializer(serializers.ModelSerializer):
             'estado': {'required': False}
         }
     
+    def validate_password(self, value):
+        """
+        Validação customizada para senha com mensagens mais claras
+        """
+        try:
+            validate_password(value)
+        except Exception as e:
+            # Converter erros de validação em mensagens mais amigáveis
+            error_messages = []
+            for error in e.messages if hasattr(e, 'messages') else [str(e)]:
+                if 'too short' in error.lower() or 'curta' in error.lower():
+                    error_messages.append('Senha muito curta. Use pelo menos 8 caracteres.')
+                elif 'too common' in error.lower() or 'comum' in error.lower():
+                    error_messages.append('Senha muito comum. Escolha uma senha mais segura.')
+                elif 'similar' in error.lower() or 'parecida' in error.lower():
+                    error_messages.append('Senha muito parecida com seus dados pessoais.')
+                elif 'numeric' in error.lower() or 'numérica' in error.lower():
+                    error_messages.append('Senha não pode ser apenas números.')
+                else:
+                    error_messages.append(error)
+            
+            raise serializers.ValidationError(error_messages[0] if error_messages else 'Senha inválida. Verifique os requisitos.')
+        return value
+    
     def validate(self, attrs):
         # Verificar se as senhas coincidem
         if attrs['password'] != attrs['password_confirm']:
-            raise serializers.ValidationError("As senhas não coincidem")
+            raise serializers.ValidationError({
+                'password_confirm': ['As senhas não coincidem']
+            })
         
         # Verificar se email já existe
         if Entregador.objects.filter(email=attrs['email']).exists():
-            raise serializers.ValidationError("Este email já está cadastrado")
+            raise serializers.ValidationError({
+                'email': ['Este email já está cadastrado']
+            })
         
         # Verificar se username já existe
         if Entregador.objects.filter(username=attrs['username']).exists():
-            raise serializers.ValidationError("Este username já está em uso")
+            raise serializers.ValidationError({
+                'username': ['Este username já está em uso']
+            })
         
         # Verificar se CPF já existe (apenas se fornecido)
         if attrs.get('cpf') and Entregador.objects.filter(cpf=attrs['cpf']).exists():
-            raise serializers.ValidationError("Este CPF já está cadastrado")
+            raise serializers.ValidationError({
+                'cpf': ['Este CPF já está cadastrado']
+            })
+        
+        # Verificar se telefone já existe
+        if Entregador.objects.filter(telefone=attrs.get('telefone')).exists():
+            raise serializers.ValidationError({
+                'telefone': ['Este telefone já está cadastrado']
+            })
         
         return attrs
     
