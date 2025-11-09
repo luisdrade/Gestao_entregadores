@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Platform,
   Modal,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -212,18 +213,24 @@ export default function TrabalhadoScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderWithBack 
-      title="Registro de Trabalho"
-      style={{ fontSize: 10 }} />
-
-      <TopNavBar />
-
-      {/* Content */}
-      <ScrollView
-        style={styles.content}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
+        <HeaderWithBack 
+        title="Registro de Trabalho"
+        style={{ fontSize: 10 }} />
+
+        <TopNavBar />
+
+        {/* Content */}
+        <ScrollView
+          style={styles.content}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
 
         <View style={styles.form}>
           {/* Data */}
@@ -396,6 +403,7 @@ export default function TrabalhadoScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -432,7 +440,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   scrollContent: {
-    paddingBottom: 100, // Espaço para a barra inferior
+    paddingBottom: 150, // Espaço para a barra inferior e teclado
+  },
+  keyboardContainer: {
+    flex: 1,
   },
   form: {
     gap: 20,

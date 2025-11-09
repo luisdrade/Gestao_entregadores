@@ -10,6 +10,8 @@ import {
   Alert,
   ActivityIndicator,
   Modal,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -152,18 +154,24 @@ export default function FinanceiroScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <HeaderWithBack title="Registro de Despesas" />
-
-      {/* Navigation Bar */}
-      <TopNavBar />
-
-      {/* Content */}
-      <ScrollView
-        style={styles.content}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
+        {/* Header */}
+        <HeaderWithBack title="Registro de Despesas" />
+
+        {/* Navigation Bar */}
+        <TopNavBar />
+
+        {/* Content */}
+        <ScrollView
+          style={styles.content}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
 
         <View style={styles.form}>
           {/* Tipo de despesa */}
@@ -287,6 +295,7 @@ export default function FinanceiroScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -301,7 +310,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 150,
+  },
+  keyboardContainer: {
+    flex: 1,
   },
   form: {
     gap: 20,

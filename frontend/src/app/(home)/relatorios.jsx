@@ -10,6 +10,8 @@ import {
   Alert,
   Modal,
   TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -415,154 +417,178 @@ export default function RelatoriosScreen() {
 
       {/* Modal Editar Trabalho */}
       <Modal visible={editTrabalhoVisible} transparent animationType="slide" onRequestClose={() => setEditTrabalhoVisible(false)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Editar Dia Trabalhado</Text>
-            <DatePicker
-              label="Data"
-              value={editTrabalhoForm.data}
-              onDateChange={(v) => setEditTrabalhoForm(prev => ({ ...prev, data: v }))}
-            />
-            <View style={styles.rowInputs}>
-              <View style={{ flex: 1, marginRight: 6 }}>
-                <Text style={styles.inputLabel}>Entregas</Text>
+        <KeyboardAvoidingView 
+          style={styles.modalOverlay}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalCard}>
+              <ScrollView 
+                contentContainerStyle={styles.modalScrollContent}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+              >
+                <Text style={styles.modalTitle}>Editar Dia Trabalhado</Text>
+                <DatePicker
+                  label="Data"
+                  value={editTrabalhoForm.data}
+                  onDateChange={(v) => setEditTrabalhoForm(prev => ({ ...prev, data: v }))}
+                />
+                <View style={styles.rowInputs}>
+                  <View style={{ flex: 1, marginRight: 6 }}>
+                    <Text style={styles.inputLabel}>Entregas</Text>
+                    <TextInput
+                      style={styles.input}
+                      keyboardType="numeric"
+                      value={editTrabalhoForm.quantidade_entregues}
+                      onChangeText={(v) => setEditTrabalhoForm(prev => ({ ...prev, quantidade_entregues: v.replace(/\D/g,'') }))}
+                      placeholder="0"
+                    />
+                  </View>
+                  <View style={{ flex: 1, marginLeft: 6 }}>
+                    <Text style={styles.inputLabel}>Não Entregues</Text>
+                    <TextInput
+                      style={styles.input}
+                      keyboardType="numeric"
+                      value={editTrabalhoForm.quantidade_nao_entregues}
+                      onChangeText={(v) => setEditTrabalhoForm(prev => ({ ...prev, quantidade_nao_entregues: v.replace(/\D/g,'') }))}
+                      placeholder="0"
+                    />
+                  </View>
+                </View>
+                <Text style={styles.inputLabel}>Valor Recebido (R$)</Text>
                 <TextInput
                   style={styles.input}
-                  keyboardType="numeric"
-                  value={editTrabalhoForm.quantidade_entregues}
-                  onChangeText={(v) => setEditTrabalhoForm(prev => ({ ...prev, quantidade_entregues: v.replace(/\D/g,'') }))}
-                  placeholder="0"
+                  keyboardType="decimal-pad"
+                  value={String(editTrabalhoForm.valor)}
+                  onChangeText={(v) => setEditTrabalhoForm(prev => ({ ...prev, valor: v.replace(',', '.').replace(/[^0-9.]/g,'') }))}
+                  placeholder="0.00"
                 />
-              </View>
-              <View style={{ flex: 1, marginLeft: 6 }}>
-                <Text style={styles.inputLabel}>Não Entregues</Text>
-                <TextInput
-                  style={styles.input}
-                  keyboardType="numeric"
-                  value={editTrabalhoForm.quantidade_nao_entregues}
-                  onChangeText={(v) => setEditTrabalhoForm(prev => ({ ...prev, quantidade_nao_entregues: v.replace(/\D/g,'') }))}
-                  placeholder="0"
-                />
-              </View>
-            </View>
-            <Text style={styles.inputLabel}>Valor Recebido (R$)</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="decimal-pad"
-              value={String(editTrabalhoForm.valor)}
-              onChangeText={(v) => setEditTrabalhoForm(prev => ({ ...prev, valor: v.replace(',', '.').replace(/[^0-9.]/g,'') }))}
-              placeholder="0.00"
-            />
 
-            <View style={styles.modalActions}>
-              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setEditTrabalhoVisible(false)}>
-                <Text style={styles.modalButtonText}>Cancelar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.saveButton]}
-                onPress={async () => {
-                  const payload = {
-                    data: toISO(editTrabalhoForm.data),
-                    quantidade_entregues: parseInt(editTrabalhoForm.quantidade_entregues || '0'),
-                    quantidade_nao_entregues: parseInt(editTrabalhoForm.quantidade_nao_entregues || '0'),
-                    valor: parseFloat(editTrabalhoForm.valor || '0'),
-                  };
-                  const res = await atualizarRegistroTrabalho(selectedTrabalhoId, payload);
-                  if (res.success) {
-                    setEditTrabalhoVisible(false);
-                    loadRelatorioData();
-                  } else {
-                    Alert.alert('Erro', res.message || 'Falha ao salvar');
-                  }
-                }}
-              >
-                <Text style={[styles.modalButtonText, { color: '#fff' }]}>Salvar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.deleteButton]}
-                onPress={async () => {
-                  const res = await excluirRegistroTrabalho(selectedTrabalhoId);
-                  if (res.success) {
-                    setEditTrabalhoVisible(false);
-                    loadRelatorioData();
-                  } else {
-                    Alert.alert('Erro', res.message || 'Falha ao excluir');
-                  }
-                }}
-              >
-                <Text style={[styles.modalButtonText, { color: '#fff' }]}>Excluir</Text>
-              </TouchableOpacity>
+                <View style={styles.modalActions}>
+                  <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setEditTrabalhoVisible(false)}>
+                    <Text style={styles.modalButtonText}>Cancelar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.saveButton]}
+                    onPress={async () => {
+                      const payload = {
+                        data: toISO(editTrabalhoForm.data),
+                        quantidade_entregues: parseInt(editTrabalhoForm.quantidade_entregues || '0'),
+                        quantidade_nao_entregues: parseInt(editTrabalhoForm.quantidade_nao_entregues || '0'),
+                        valor: parseFloat(editTrabalhoForm.valor || '0'),
+                      };
+                      const res = await atualizarRegistroTrabalho(selectedTrabalhoId, payload);
+                      if (res.success) {
+                        setEditTrabalhoVisible(false);
+                        loadRelatorioData();
+                      } else {
+                        Alert.alert('Erro', res.message || 'Falha ao salvar');
+                      }
+                    }}
+                  >
+                    <Text style={[styles.modalButtonText, { color: '#fff' }]}>Salvar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.deleteButton]}
+                    onPress={async () => {
+                      const res = await excluirRegistroTrabalho(selectedTrabalhoId);
+                      if (res.success) {
+                        setEditTrabalhoVisible(false);
+                        loadRelatorioData();
+                      } else {
+                        Alert.alert('Erro', res.message || 'Falha ao excluir');
+                      }
+                    }}
+                  >
+                    <Text style={[styles.modalButtonText, { color: '#fff' }]}>Excluir</Text>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* Modal Editar Despesa */}
       <Modal visible={editDespesaVisible} transparent animationType="slide" onRequestClose={() => setEditDespesaVisible(false)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Editar Despesa</Text>
-            <DatePicker
-              label="Data"
-              value={editDespesaForm.data}
-              onDateChange={(v) => setEditDespesaForm(prev => ({ ...prev, data: v }))}
-            />
-            <Text style={styles.inputLabel}>Valor (R$)</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="decimal-pad"
-              value={String(editDespesaForm.valor)}
-              onChangeText={(v) => setEditDespesaForm(prev => ({ ...prev, valor: v.replace(',', '.').replace(/[^0-9.]/g,'') }))}
-              placeholder="0.00"
-            />
-            <Text style={styles.inputLabel}>Descrição</Text>
-            <TextInput
-              style={styles.input}
-              value={editDespesaForm.descricao}
-              onChangeText={(v) => setEditDespesaForm(prev => ({ ...prev, descricao: v }))}
-              placeholder="Opcional"
-            />
+        <KeyboardAvoidingView 
+          style={styles.modalOverlay}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalCard}>
+              <ScrollView 
+                contentContainerStyle={styles.modalScrollContent}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+              >
+                <Text style={styles.modalTitle}>Editar Despesa</Text>
+                <DatePicker
+                  label="Data"
+                  value={editDespesaForm.data}
+                  onDateChange={(v) => setEditDespesaForm(prev => ({ ...prev, data: v }))}
+                />
+                <Text style={styles.inputLabel}>Valor (R$)</Text>
+                <TextInput
+                  style={styles.input}
+                  keyboardType="decimal-pad"
+                  value={String(editDespesaForm.valor)}
+                  onChangeText={(v) => setEditDespesaForm(prev => ({ ...prev, valor: v.replace(',', '.').replace(/[^0-9.]/g,'') }))}
+                  placeholder="0.00"
+                />
+                <Text style={styles.inputLabel}>Descrição</Text>
+                <TextInput
+                  style={styles.input}
+                  value={editDespesaForm.descricao}
+                  onChangeText={(v) => setEditDespesaForm(prev => ({ ...prev, descricao: v }))}
+                  placeholder="Opcional"
+                />
 
-            <View style={styles.modalActions}>
-              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setEditDespesaVisible(false)}>
-                <Text style={styles.modalButtonText}>Cancelar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.saveButton]}
-                onPress={async () => {
-                  const payload = {
-                    data: toISO(editDespesaForm.data),
-                    valor: parseFloat(editDespesaForm.valor || '0'),
-                    descricao: editDespesaForm.descricao || '',
-                  };
-                  const res = await atualizarDespesa(selectedDespesaId, payload);
-                  if (res.success) {
-                    setEditDespesaVisible(false);
-                    loadRelatorioData();
-                  } else {
-                    Alert.alert('Erro', res.message || 'Falha ao salvar');
-                  }
-                }}
-              >
-                <Text style={[styles.modalButtonText, { color: '#fff' }]}>Salvar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.deleteButton]}
-                onPress={async () => {
-                  const res = await excluirDespesa(selectedDespesaId);
-                  if (res.success) {
-                    setEditDespesaVisible(false);
-                    loadRelatorioData();
-                  } else {
-                    Alert.alert('Erro', res.message || 'Falha ao excluir');
-                  }
-                }}
-              >
-                <Text style={[styles.modalButtonText, { color: '#fff' }]}>Excluir</Text>
-              </TouchableOpacity>
+                <View style={styles.modalActions}>
+                  <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setEditDespesaVisible(false)}>
+                    <Text style={styles.modalButtonText}>Cancelar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.saveButton]}
+                    onPress={async () => {
+                      const payload = {
+                        data: toISO(editDespesaForm.data),
+                        valor: parseFloat(editDespesaForm.valor || '0'),
+                        descricao: editDespesaForm.descricao || '',
+                      };
+                      const res = await atualizarDespesa(selectedDespesaId, payload);
+                      if (res.success) {
+                        setEditDespesaVisible(false);
+                        loadRelatorioData();
+                      } else {
+                        Alert.alert('Erro', res.message || 'Falha ao salvar');
+                      }
+                    }}
+                  >
+                    <Text style={[styles.modalButtonText, { color: '#fff' }]}>Salvar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.deleteButton]}
+                    onPress={async () => {
+                      const res = await excluirDespesa(selectedDespesaId);
+                      if (res.success) {
+                        setEditDespesaVisible(false);
+                        loadRelatorioData();
+                      } else {
+                        Alert.alert('Erro', res.message || 'Falha ao excluir');
+                      }
+                    }}
+                  >
+                    <Text style={[styles.modalButtonText, { color: '#fff' }]}>Excluir</Text>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </SafeAreaView>
   );
@@ -893,7 +919,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
+    maxHeight: '90%',
+  },
+  modalScrollContent: {
     padding: 20,
+    paddingBottom: 40,
   },
   modalTitle: {
     fontSize: 18,

@@ -150,10 +150,14 @@ export default function TwoFactorVerifyScreen({ route, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
         style={styles.keyboardView}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={styles.header}>
             <Text style={styles.title}>🔐 Verificação 2FA</Text>
             <Text style={styles.subtitle}>
@@ -390,6 +394,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
+
+
+
+
+
+
 
 
 

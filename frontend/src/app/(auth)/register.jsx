@@ -230,9 +230,14 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView 
       style={styles.container} 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
     >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.conteudo}>
           <Text style={styles.titulo}>Criar Conta</Text>
           <Text style={styles.subtitulo}>Preencha os dados para se cadastrar</Text>
@@ -447,6 +452,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
+    paddingBottom: 50,
   },
   conteudo: {
     backgroundColor: '#F5F5F5',

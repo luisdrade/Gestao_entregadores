@@ -394,12 +394,14 @@ export default function VeiculosScreen() {
         <SafeAreaView style={styles.modalContainer}>
           <KeyboardAvoidingView 
             style={styles.keyboardView}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
           >
             <ScrollView 
               style={styles.modalContent} 
               contentContainerStyle={styles.modalScrollContent}
               showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
             >
               {/* Card integrado com header */}
               <View style={styles.formCard}>
@@ -635,12 +637,14 @@ export default function VeiculosScreen() {
         <SafeAreaView style={styles.modalContainer}>
           <KeyboardAvoidingView 
             style={styles.keyboardView}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
           >
             <ScrollView 
               style={styles.modalContent} 
               contentContainerStyle={styles.modalScrollContent}
               showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
             >
               {/* Card integrado com header */}
               <View style={styles.formCard}>

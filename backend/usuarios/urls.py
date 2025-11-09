@@ -26,15 +26,11 @@ from .admin_views import AdminUsersAPIView, AdminStatsAPIView
 
 app_name = 'usuarios'
 
-router = DefaultRouter() # cria um router para o viewset | Cria o crud para o entregador
+router = DefaultRouter()
 router.register(r'entregadores', views.EntregadorViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),  # raiz do app já é /api/
-    path('cadastro/', views.cadastro_entregador, name='cadastro_entregador'),
-    path('cadastro/sucesso/', views.cadastro_sucesso, name='cadastro_sucesso'),
-    
-    # Endpoint de teste
+    path('', include(router.urls)),
     path('test/', TestView.as_view(), name='test'),
     
     # Endpoints de autenticação organizados
@@ -62,7 +58,7 @@ urlpatterns = [
     # Teste de email
     path('auth/test-email/', TestEmailView.as_view(), name='auth_test_email'),
     
-    path('entregadores/me/', EntregadorMeView.as_view(), name='entregador_me'), # EntregadorMeView para ver o usuário logado
+    path('entregadores/me/', EntregadorMeView.as_view(), name='entregador_me'),
     
     # Endpoint para verificar username (mantido para compatibilidade)
     path('check-username/<str:username>/', views.check_username, name='check_username'),
@@ -84,6 +80,4 @@ urlpatterns = [
     path('admin/users/', AdminUsersAPIView.as_view(), name='admin_users'),
     path('admin/users/<int:user_id>/', AdminUsersAPIView.as_view(), name='admin_user_detail'),
     path('admin/stats/', AdminStatsAPIView.as_view(), name='admin_stats'),
-    
-    # URLs de template removidas - usando apenas API
 ]

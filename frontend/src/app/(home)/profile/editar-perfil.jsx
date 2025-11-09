@@ -396,8 +396,13 @@ export default function EditarPerfilScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header com gradiente */}
-      <View style={styles.header}>
+      <KeyboardAvoidingView
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      >
+        {/* Header com gradiente */}
+        <View style={styles.header}>
         <View style={styles.headerGradient}>
           <View style={styles.headerContent}>
             <TouchableOpacity style={styles.backButton} onPress={handleBack}>
@@ -416,6 +421,7 @@ export default function EditarPerfilScreen() {
         style={styles.content}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         {/* Card principal */}
         <View style={styles.mainCard}>
@@ -724,6 +730,7 @@ export default function EditarPerfilScreen() {
           </Formik>
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -772,7 +779,7 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-    paddingBottom: 40,
+    paddingBottom: 100,
   },
   mainCard: {
     backgroundColor: '#fafafa',

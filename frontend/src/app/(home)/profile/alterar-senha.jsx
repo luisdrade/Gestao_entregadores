@@ -9,6 +9,8 @@ import {
   SafeAreaView,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -144,23 +146,29 @@ export default function AlterarSenhaScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <Ionicons name="arrow-back" size={20} color="#fff" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Alterar Senha</Text>
-          <View style={styles.placeholder} />
-        </View>
-      </View>
-
-      {/* Content */}
-      <ScrollView 
-        style={styles.content} 
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.headerContent}>
+            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+              <Ionicons name="arrow-back" size={20} color="#fff" />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Alterar Senha</Text>
+            <View style={styles.placeholder} />
+          </View>
+        </View>
+
+        {/* Content */}
+        <ScrollView 
+          style={styles.content} 
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
         <Text style={styles.title}>Altere sua senha</Text>
         <Text style={styles.subtitle}>Digite sua senha atual e a nova senha desejada</Text>
 
@@ -310,6 +318,7 @@ export default function AlterarSenhaScreen() {
           )}
         </Formik>
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -348,7 +357,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 150,
+  },
+  keyboardContainer: {
+    flex: 1,
   },
   title: {
     fontSize: 20,

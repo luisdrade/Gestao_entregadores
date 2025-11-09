@@ -1,33 +1,28 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+import logging
 
 from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Load environment variables from .env in the backend root
 load_dotenv(dotenv_path=BASE_DIR / '.env')
 
+logger = logging.getLogger(__name__)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# ============================================================================
+# SEGURANÇA E CONFIGURAÇÕES BÁSICAS
+# ============================================================================
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-insecure-placeholder')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() in ['1', 'true', 'yes', 'on']
-
-# ALLOWED_HOSTS para produção
 ALLOWED_HOSTS = ['*']
 
-
-# Application definition
+# ============================================================================
+# APLICAÇÕES E MIDDLEWARE
+# ============================================================================
 
 INSTALLED_APPS = [
-    #apps do django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,14 +30,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    
-    #apps de terceiros
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'dj_rest_auth',
-    
-    #apps do projeto
     'corsheaders',
     'usuarios',
     'cadastro_veiculo',
@@ -56,21 +47,21 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'usuarios.middleware.middleware.CSRFExemptAPIMiddleware',  # Middleware personalizado para APIs
+    'usuarios.middleware.middleware.CSRFExemptAPIMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'usuarios.middleware.email_validation_middleware.EmailValidationMiddleware',  # Middleware de validação de email
+    'usuarios.middleware.email_validation_middleware.EmailValidationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Configurações de CORS
-# Permitir todas as origens em desenvolvimento e produção para permitir app mobile
-CORS_ALLOW_ALL_ORIGINS = True
+# ============================================================================
+# CORS - Cross-Origin Resource Sharing
+# ============================================================================
 
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
-# Configurações específicas do CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
@@ -87,14 +78,7 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^http://127\.0\.0\.1:\d+$",
 ]
 
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
+CORS_ALLOW_METHODS = ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT']
 
 CORS_ALLOW_HEADERS = [
     'accept',
@@ -106,8 +90,12 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
-    'x-app-source',  # Cabeçalho do app mobile
+    'x-app-source',
 ]
+
+# ============================================================================
+# CONFIGURAÇÕES DO DJANGO
+# ============================================================================
 
 ROOT_URLCONF = 'sistema.urls'
 
@@ -128,15 +116,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sistema.wsgi.application'
 
+# ============================================================================
+# BANCO DE DADOS
+# ============================================================================
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# Configuração para Render.com (PostgreSQL)
-# Se está local sem DATABASE_URL, usa SQLite
 if os.getenv('USE_LOCAL_DB', '').lower() == 'true':
-    # Forçar SQLite localmente
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -144,13 +128,9 @@ if os.getenv('USE_LOCAL_DB', '').lower() == 'true':
         }
     }
 elif os.getenv('DATABASE_URL'):
-    # Produção: usa DATABASE_URL do Render (PostgreSQL)
     import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
-    }
+    DATABASES = {'default': dj_database_url.parse(os.getenv('DATABASE_URL'))}
 else:
-    # Fallback: MySQL configurado
     DATABASES = {
         'default': {
             'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
@@ -167,62 +147,123 @@ else:
         }
     }
 
+# ============================================================================
+# AUTENTICAÇÃO E SENHAS
+# ============================================================================
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+AUTH_USER_MODEL = 'usuarios.Entregador'
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
+# ============================================================================
+# INTERNACIONALIZAÇÃO
+# ============================================================================
 
 LANGUAGE_CODE = 'pt-br'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# ============================================================================
+# ARQUIVOS ESTÁTICOS E MÍDIA
+# ============================================================================
 
 STATIC_URL = os.getenv('STATIC_URL', 'static/')
-# Tratar valores vazios no .env como ausentes
-_env_static_root = os.getenv('STATIC_ROOT')
-STATIC_ROOT = Path(_env_static_root) if _env_static_root else (BASE_DIR / 'staticfiles')
+STATIC_ROOT = Path(os.getenv('STATIC_ROOT')) if os.getenv('STATIC_ROOT') else (BASE_DIR / 'staticfiles')
 
-# Configurações para produção (Railway)
+MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
+MEDIA_ROOT = Path(os.getenv('MEDIA_ROOT')) if os.getenv('MEDIA_ROOT') else (BASE_DIR / 'media')
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+
+# Configuração do WhiteNoise para arquivos estáticos em produção
 if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
-# Media files (Uploads)
-MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-_env_media_root = os.getenv('MEDIA_ROOT')
-MEDIA_ROOT = Path(_env_media_root) if _env_media_root else (BASE_DIR / 'media')
+# ============================================================================
+# DJANGO REST FRAMEWORK
+# ============================================================================
 
-# Configurações adicionais para arquivos de mídia
-FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
-FILE_UPLOAD_TEMP_DIR = None
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
 
-# Configurações de logging para debug
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+REST_USE_JWT = True
+JWT_AUTH_COOKIE = 'jwt-auth'
+
+# ============================================================================
+# EMAIL
+# ============================================================================
+
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "sendgrid_backend.SendgridBackend")
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+SENDGRID_SANDBOX_MODE_IN_DEBUG = os.getenv("SENDGRID_SANDBOX_MODE_IN_DEBUG", "False").lower() in ['1', 'true', 'yes', 'on']
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@entregasplus.com")
+
+if DEBUG and not SENDGRID_API_KEY:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    logger.info("Modo desenvolvimento: e-mails aparecem no console.")
+else:
+    logger.info("SendGrid configurado corretamente.")
+
+# ============================================================================
+# SEGURANÇA E CSRF
+# ============================================================================
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "https://entregasplus.onrender.com",
+]
+
+if not DEBUG:
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_SAMESITE = 'Strict'
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    SECURE_SSL_REDIRECT = False  # Render já tem SSL
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Strict'
+else:
+    CSRF_COOKIE_SECURE = False
+    CSRF_COOKIE_HTTPONLY = False
+    CSRF_COOKIE_SAMESITE = 'Lax'
+
+# ============================================================================
+# LOGGING
+# ============================================================================
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -236,118 +277,21 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['console', 'file'],
+        'handlers': ['console', 'file'] if DEBUG else ['console'],
         'level': 'INFO',
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'file'] if DEBUG else ['console'],
             'level': 'INFO',
             'propagate': False,
         },
     },
 }
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+# ============================================================================
+# OUTRAS CONFIGURAÇÕES
+# ============================================================================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-AUTH_USER_MODEL = 'usuarios.Entregador'
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
-}
-
 SITE_ID = 1
-
-# Configuração de autenticação
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-]
-
-# Configuração do JWT
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'AUTH_HEADER_TYPES': ('Bearer',),
-}
-
-# Configuração do dj-rest-auth
-REST_USE_JWT = True
-JWT_AUTH_COOKIE = 'jwt-auth'
-
-# Configurações de CSRF para APIs
-CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:8000",
-    "http://localhost:8000",
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-    "https://entregasplus.onrender.com",
-    "https://gestao-entregadores-backend.onrender.com",
-]
-
-# Configurações de CSRF para produção
-if not DEBUG:
-    CSRF_COOKIE_SECURE = True
-    CSRF_COOKIE_HTTPONLY = True
-    CSRF_COOKIE_SAMESITE = 'Strict'
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
-else:
-    # Para desenvolvimento
-    CSRF_COOKIE_SECURE = False
-    CSRF_COOKIE_HTTPONLY = False
-    CSRF_COOKIE_SAMESITE = 'Lax'
-
-# Configurações de Email (SendGrid)
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "sendgrid_backend.SendgridBackend")
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-SENDGRID_SANDBOX_MODE_IN_DEBUG = os.getenv("SENDGRID_SANDBOX_MODE_IN_DEBUG", "False").lower() in ['1', 'true', 'yes', 'on']
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@entregasplus.com")
-
-if DEBUG and not SENDGRID_API_KEY:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    print("📧 Modo desenvolvimento: e-mails aparecem no console.")
-else:
-    print("📧 SendGrid configurado corretamente.")
-
-# Configurações para Admin Django em produção
-if not DEBUG:
-    # Configurações de segurança para admin
-    SECURE_SSL_REDIRECT = False  # Render já tem SSL
-    SESSION_COOKIE_SECURE = True
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Strict'
-    
-    # Configurações de logging para debug
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
-            },
-        },
-        'root': {
-            'handlers': ['console'],
-            'level': 'INFO',
-        },
-        'loggers': {
-            'django': {
-                'handlers': ['console'],
-                'level': 'INFO',
-                'propagate': False,
-            },
-        },
-    }

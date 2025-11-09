@@ -1,18 +1,24 @@
-# render removido - usando apenas API
+"""
+Views para registro de entregas, trabalho e despesas
+"""
+import json
+import logging
+
+from django.contrib.auth import get_user_model
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
-import json
-from .models import RegistroEntregaDespesa, RegistroTrabalho, Despesa, CategoriaDespesa
-from usuarios.models import Entregador
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
-from django.contrib.auth import get_user_model
+
+from .models import RegistroEntregaDespesa, RegistroTrabalho, Despesa, CategoriaDespesa
+from usuarios.models import Entregador
+
+logger = logging.getLogger(__name__)
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def registro_trabalho_detail(request, registro_id):
@@ -111,16 +117,12 @@ def registro_entrega_despesa(request):
 @api_view(['POST', 'GET'])
 @permission_classes([IsAuthenticated])
 def registro_trabalho(request):
-    print(f"=== DEBUG: registro_trabalho chamada ===")
-    print(f"Método HTTP: {request.method}")
-    print(f"URL: {request.path}")
-    print(f"Headers: {dict(request.headers)}")
-    print(f"Body: {request.body}")
+    logger.info(f"Registro trabalho chamado - Método: {request.method}, URL: {request.path}")
     
     if request.method == 'POST':
         try:
             data = request.data
-            print(f"Dados recebidos: {data}")
+            logger.debug(f"Dados recebidos: {data}")
             
             # Validar dados obrigatórios
             campos_obrigatorios = ['data', 'hora_inicio', 'hora_fim', 'quantidade_entregues', 
@@ -129,7 +131,7 @@ def registro_trabalho(request):
             # Validar campos obrigatórios (exceto quantidade_nao_entregues que pode ser 0)
             for campo in campos_obrigatorios:
                 if campo not in data or (data[campo] is None and campo != 'quantidade_nao_entregues'):
-                    print(f"Campo obrigatório faltando: {campo}")
+                    logger.warning(f"Campo obrigatório faltando: {campo}")
                     return Response({
                         'success': False, 
                         'error': f'Campo obrigatorio nao informado: {campo}'
@@ -137,7 +139,7 @@ def registro_trabalho(request):
             
             # Validar quantidade_nao_entregues separadamente (pode ser 0)
             if 'quantidade_nao_entregues' not in data:
-                print("Campo obrigatório faltando: quantidade_nao_entregues")
+                logger.warning("Campo obrigatório faltando: quantidade_nao_entregues")
                 return Response({
                     'success': False, 
                     'error': 'Campo obrigatorio nao informado: quantidade_nao_entregues'
@@ -168,7 +170,7 @@ def registro_trabalho(request):
             
             # Usar o usuário autenticado
             user = request.user
-            print(f"Entregador autenticado: {user.nome}")
+            logger.debug(f"Entregador autenticado: {user.nome}")
             
             # Validar formato da data
             try:
@@ -177,22 +179,19 @@ def registro_trabalho(request):
                 # Tentar formato brasileiro primeiro (DD/MM/YYYY)
                 try:
                     data_obj = datetime.strptime(data['data'], '%d/%m/%Y').date()
-                    print(f"Data validada (formato BR): {data_obj}")
                 except ValueError:
                     # Tentar formato internacional (YYYY-MM-DD)
                     try:
                         data_obj = datetime.strptime(data['data'], '%Y-%m-%d').date()
-                        print(f"Data validada (formato INT): {data_obj}")
                     except ValueError:
                         # Tentar outros formatos comuns
                         try:
                             data_obj = datetime.strptime(data['data'], '%d-%m-%Y').date()
-                            print(f"Data validada (formato BR com hífen): {data_obj}")
                         except ValueError:
                             raise ValueError(f"Formato de data inválido: {data['data']}. Use DD/MM/YYYY ou YYYY-MM-DD")
                 
             except ValueError as e:
-                print(f"Erro na data: {data['data']}")
+                logger.warning(f"Erro na data: {data['data']}")
                 return Response({
                     'success': False, 
                     'error': str(e)
@@ -202,9 +201,8 @@ def registro_trabalho(request):
             try:
                 hora_inicio = datetime.strptime(data['hora_inicio'], '%H:%M').time()
                 hora_fim = datetime.strptime(data['hora_fim'], '%H:%M').time()
-                print(f"Horas validadas: {hora_inicio} - {hora_fim}")
             except ValueError:
-                print(f"Erro nas horas: {data['hora_inicio']} - {data['hora_fim']}")
+                logger.warning(f"Erro nas horas: {data['hora_inicio']} - {data['hora_fim']}")
                 return Response({
                     'success': False, 
                     'error': 'Formato de hora invalido. Use HH:MM'
@@ -222,7 +220,7 @@ def registro_trabalho(request):
                 entregador=user
             )
             
-            print(f"Registro criado com sucesso! ID: {registro.id}")
+            logger.info(f"Registro criado com sucesso! ID: {registro.id}")
             
             return Response({
                 'success': True, 
@@ -230,7 +228,7 @@ def registro_trabalho(request):
                 'id': registro.id
             }, status=status.HTTP_201_CREATED)
         except Exception as e:
-            print(f"Erro na criação: {str(e)}")
+            logger.error(f"Erro na criação: {str(e)}", exc_info=True)
             return Response({
                 'success': False, 
                 'error': str(e)
@@ -265,14 +263,14 @@ def registro_trabalho(request):
                 'count': len(registros_data)
             })
         except Exception as e:
-            print(f"Erro ao listar registros: {str(e)}")
+            logger.error(f"Erro ao listar registros: {str(e)}", exc_info=True)
             return Response({
                 'success': False,
                 'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     else:
-        print(f"Método {request.method} não permitido")
+        logger.warning(f"Método {request.method} não permitido")
         return Response({
             'success': False, 
             'error': f'Método {request.method} não permitido'
@@ -281,23 +279,19 @@ def registro_trabalho(request):
 @api_view(['POST', 'GET'])
 @permission_classes([IsAuthenticated])
 def registro_despesa(request):
-    print(f"=== DEBUG: registro_despesa chamada ===")
-    print(f"Método HTTP: {request.method}")
-    print(f"URL: {request.path}")
-    print(f"Headers: {dict(request.headers)}")
-    print(f"Body: {request.body}")
+    logger.info(f"Registro despesa chamado - Método: {request.method}, URL: {request.path}")
     
     if request.method == 'POST':
         try:
             data = request.data
-            print(f"Dados recebidos: {data}")
+            logger.debug(f"Dados recebidos: {data}")
             
             # Validar dados obrigatórios
             campos_obrigatorios = ['tipo_despesa', 'descricao', 'valor', 'data']
             
             for campo in campos_obrigatorios:
                 if campo not in data or not data[campo]:
-                    print(f"Campo obrigatório faltando: {campo}")
+                    logger.warning(f"Campo obrigatório faltando: {campo}")
                     return Response({
                         'success': False, 
                         'error': f'Campo obrigatorio nao informado: {campo}'
@@ -305,7 +299,7 @@ def registro_despesa(request):
             
             # Usar o usuário autenticado
             user = request.user
-            print(f"Entregador autenticado: {user.nome}")
+            logger.debug(f"Entregador autenticado: {user.nome}")
             
             # Validar formato da data
             try:
@@ -314,22 +308,19 @@ def registro_despesa(request):
                 # Tentar formato brasileiro primeiro (DD/MM/YYYY)
                 try:
                     data_obj = datetime.strptime(data['data'], '%d/%m/%Y').date()
-                    print(f"Data validada (formato BR): {data_obj}")
                 except ValueError:
                     # Tentar formato internacional (YYYY-MM-DD)
                     try:
                         data_obj = datetime.strptime(data['data'], '%Y-%m-%d').date()
-                        print(f"Data validada (formato INT): {data_obj}")
                     except ValueError:
                         # Tentar outros formatos comuns
                         try:
                             data_obj = datetime.strptime(data['data'], '%d-%m-%Y').date()
-                            print(f"Data validada (formato BR com hífen): {data_obj}")
                         except ValueError:
                             raise ValueError(f"Formato de data inválido: {data['data']}. Use DD/MM/YYYY ou YYYY-MM-DD")
                 
             except ValueError as e:
-                print(f"Erro na data: {data['data']}")
+                logger.warning(f"Erro na data: {data['data']}")
                 return Response({
                     'success': False, 
                     'error': str(e)
@@ -339,14 +330,13 @@ def registro_despesa(request):
             try:
                 valor = float(data['valor'])
                 if valor <= 0:
-                    print(f"Valor inválido: {valor}")
+                    logger.warning(f"Valor inválido: {valor}")
                     return Response({
                         'success': False, 
                         'error': 'Valor deve ser maior que zero'
                     }, status=status.HTTP_400_BAD_REQUEST)
-                print(f"Valor validado: {valor}")
             except ValueError:
-                print(f"Erro no valor: {data['valor']}")
+                logger.warning(f"Erro no valor: {data['valor']}")
                 return Response({
                     'success': False, 
                     'error': 'Valor invalido'
@@ -362,7 +352,7 @@ def registro_despesa(request):
                         ativa=True
                     )
                 except CategoriaDespesa.DoesNotExist:
-                    print(f"Categoria personalizada não encontrada: {data['categoria_personalizada']}")
+                    logger.warning(f"Categoria personalizada não encontrada: {data['categoria_personalizada']}")
             
             # Criar registro de despesa
             despesa = Despesa.objects.create(
@@ -374,7 +364,7 @@ def registro_despesa(request):
                 entregador=user
             )
             
-            print(f"Despesa criada com sucesso! ID: {despesa.id}")
+            logger.info(f"Despesa criada com sucesso! ID: {despesa.id}")
             
             return Response({
                 'success': True, 
@@ -382,7 +372,7 @@ def registro_despesa(request):
                 'id': despesa.id
             }, status=status.HTTP_201_CREATED)
         except Exception as e:
-            print(f"Erro na criação: {str(e)}")
+            logger.error(f"Erro na criação: {str(e)}", exc_info=True)
             return Response({
                 'success': False, 
                 'error': str(e)
@@ -413,14 +403,14 @@ def registro_despesa(request):
                 'count': len(despesas_data)
             })
         except Exception as e:
-            print(f"Erro ao listar despesas: {str(e)}")
+            logger.error(f"Erro ao listar despesas: {str(e)}", exc_info=True)
             return Response({
                 'success': False,
                 'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     else:
-        print(f"Método {request.method} não permitido")
+        logger.warning(f"Método {request.method} não permitido")
         return Response({
             'success': False, 
             'error': f'Método {request.method} não permitido'
@@ -436,31 +426,23 @@ def dashboard_data(request):
             from django.db.models import Sum, Count, Q
             
             # Debug: verificar autenticação
-            print(f"🔍 Backend - Usuário autenticado: {request.user}")
-            print(f"🔍 Backend - ID do usuário: {request.user.id}")
-            print(f"🔍 Backend - Nome do usuário: {request.user.nome}")
-            print(f"🔍 Backend - Email do usuário: {request.user.email}")
-            print(f"🔍 Backend - Headers da requisição: {dict(request.headers)}")
+            logger.debug(f"Usuário autenticado: {request.user.email}")
             
             # Buscar o entregador autenticado através do token JWT
             user = request.user
             if not hasattr(user, 'id'):
-                print("❌ Backend - Usuário não tem ID")
+                logger.warning("Usuário não tem ID")
                 return Response({
                     'success': False, 
                     'error': 'Usuário não autenticado'
                 }, status=status.HTTP_401_UNAUTHORIZED)
             
-            print(f"✅ Backend - Usuário validado com sucesso: {user.nome}")
+            logger.debug(f"Usuário validado: {user.nome}")
             
             # Parâmetros de período e filtros de data
-            periodo = request.GET.get('periodo', 'mes')  # 'semana' ou 'mes'
+            periodo = request.GET.get('periodo', 'mes')
             data_inicio_param = request.GET.get('data_inicio')
             data_fim_param = request.GET.get('data_fim')
-            
-            print(f"🔍 Backend - Período solicitado: {periodo}")
-            print(f"🔍 Backend - Data início: {data_inicio_param}")
-            print(f"🔍 Backend - Data fim: {data_fim_param}")
             
             # Calcular datas base
             hoje = timezone.now().date()
@@ -470,7 +452,7 @@ def dashboard_data(request):
                 from datetime import date
                 data_inicio = date.fromisoformat(data_inicio_param)
                 data_fim = date.fromisoformat(data_fim_param)
-                print(f"🔍 Backend - Filtro personalizado: {data_inicio} até {data_fim}")
+                logger.debug(f"Filtro personalizado: {data_inicio} até {data_fim}")
             else:
                 # Período automático
                 if periodo == 'semana':
@@ -478,7 +460,7 @@ def dashboard_data(request):
                 else:  # mês
                     data_inicio = hoje - timedelta(days=30)
                 data_fim = hoje
-                print(f"🔍 Backend - Período automático: {data_inicio} até {data_fim}")
+                logger.debug(f"Período automático: {data_inicio} até {data_fim}")
             
             # Filtrar registros por período e pelo entregador autenticado
             registros_trabalho = RegistroTrabalho.objects.filter(
@@ -493,8 +475,7 @@ def dashboard_data(request):
                 data__lte=data_fim
             )
             
-            print(f"🔍 Backend - Registros encontrados: {registros_trabalho.count()}")
-            print(f"🔍 Backend - Despesas encontradas: {despesas.count()}")
+            logger.debug(f"Registros encontrados: {registros_trabalho.count()}, Despesas: {despesas.count()}")
             
             # Dados do período selecionado
             total_entregas_realizadas = registros_trabalho.aggregate(
@@ -625,25 +606,21 @@ def dashboard_data(request):
             # Distribuição de veículos
             try:
                 from cadastro_veiculo.models import Veiculo
-                print(f"🔍 Backend - Modelo Veiculo importado com sucesso")
                 
                 veiculos = Veiculo.objects.filter(entregador=user)
                 total_veiculos = veiculos.count()
-                print(f"🔍 Backend - Total de veículos encontrados: {total_veiculos}")
-                print(f"🔍 Backend - Veículos: {list(veiculos.values('tipo', 'modelo'))}")
+                logger.debug(f"Total de veículos: {total_veiculos}")
                 
                 distribuicao_veiculos = []
                 tipos_veiculos = {}
                 
                 for veiculo in veiculos:
                     tipo = veiculo.tipo  # Campo correto do modelo
-                    print(f"🔍 Backend - Veículo: {veiculo.modelo} - Tipo: {tipo}")
                     if tipo in tipos_veiculos:
                         tipos_veiculos[tipo] += 1
                     else:
                         tipos_veiculos[tipo] = 1
                 
-                print(f"🔍 Backend - Tipos de veículos: {tipos_veiculos}")
                 
                 cores = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00']
                 for i, (tipo, quantidade) in enumerate(tipos_veiculos.items()):
@@ -655,13 +632,12 @@ def dashboard_data(request):
                         'color': cores[i % len(cores)]
                     })
                 
-                print(f"🔍 Backend - Distribuição final: {distribuicao_veiculos}")
             except ImportError as e:
-                print(f"❌ Backend - Erro ao importar modelo Veiculo: {e}")
+                logger.error(f"Erro ao importar modelo Veiculo: {e}", exc_info=True)
                 total_veiculos = 0
                 distribuicao_veiculos = []
             except Exception as e:
-                print(f"❌ Backend - Erro ao buscar veículos: {e}")
+                logger.error(f"Erro ao buscar veículos: {e}", exc_info=True)
                 total_veiculos = 0
                 distribuicao_veiculos = []
             
@@ -739,76 +715,13 @@ def dashboard_data(request):
         'error': 'Método não permitido'
     }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-@csrf_exempt
-def test_connection(request):
-    """View simples para testar conexão com o banco"""
-    if request.method == 'GET':
-        try:
-            # Teste simples de conexão com o banco
-            from django.db import connection
-            cursor = connection.cursor()
-            cursor.execute("SELECT 1")
-            result = cursor.fetchone()
-            
-            return JsonResponse({
-                'success': True,
-                'message': 'Conexão com banco OK!',
-                'test_query': result[0],
-                'database': connection.settings_dict['ENGINE'],
-                'endpoint': 'test-connection funcionando!'
-            })
-        except Exception as e:
-            return JsonResponse({
-                'success': False, 
-                'error': f'Erro na conexão com banco: {str(e)}'
-            })
-    
-    return JsonResponse({'success': False, 'error': 'Método não permitido'})
-
-@csrf_exempt
-def test_dashboard_endpoint(request):
-    """View de teste simples para verificar se o endpoint está funcionando"""
-    if request.method == 'GET':
-        return JsonResponse({
-            'success': True,
-            'message': 'Endpoint do dashboard está funcionando!',
-            'endpoint': 'test-dashboard-endpoint',
-            'method': request.method,
-            'url': request.path
-        })
-    
-    return JsonResponse({'success': False, 'error': 'Método não permitido'})
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def test_auth(request):
-    """View de teste para verificar se a autenticação JWT está funcionando"""
-    if request.method == 'GET':
-        return Response({
-            'success': True,
-            'message': 'Autenticação JWT funcionando!',
-            'user_id': request.user.id,
-            'user_nome': request.user.nome,
-            'user_email': request.user.email,
-            'endpoint': 'test-auth',
-            'method': request.method,
-            'url': request.path
-        })
-    
-    return Response({
-        'success': False, 
-        'error': 'Método não permitido'
-    }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 # ===== APIs PARA CATEGORIAS DE DESPESAS =====
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def categorias_despesas(request):
     """API para listar e criar categorias de despesas"""
-    print(f"=== DEBUG: categorias_despesas chamada ===")
-    print(f"Método HTTP: {request.method}")
-    print(f"URL: {request.path}")
+    logger.info(f"Categorias despesas chamado - Método: {request.method}, URL: {request.path}")
     
     if request.method == 'GET':
         # Listar categorias do usuário
@@ -833,7 +746,7 @@ def categorias_despesas(request):
                 'count': len(categorias_data)
             })
         except Exception as e:
-            print(f"Erro ao listar categorias: {str(e)}")
+            logger.error(f"Erro ao listar categorias: {str(e)}", exc_info=True)
             return Response({
                 'success': False,
                 'error': str(e)
@@ -843,7 +756,7 @@ def categorias_despesas(request):
         # Criar nova categoria
         try:
             data = request.data
-            print(f"Dados recebidos: {data}")
+            logger.debug(f"Dados recebidos: {data}")
             
             # Validar dados obrigatórios
             if 'nome' not in data or not data['nome'].strip():
@@ -872,7 +785,7 @@ def categorias_despesas(request):
                 entregador=request.user
             )
             
-            print(f"Categoria criada com sucesso! ID: {categoria.id}")
+            logger.info(f"Categoria criada com sucesso! ID: {categoria.id}")
             
             return Response({
                 'success': True, 
@@ -885,7 +798,7 @@ def categorias_despesas(request):
             }, status=status.HTTP_201_CREATED)
             
         except Exception as e:
-            print(f"Erro na criação da categoria: {str(e)}")
+            logger.error(f"Erro na criação da categoria: {str(e)}", exc_info=True)
             return Response({
                 'success': False, 
                 'error': str(e)
@@ -901,9 +814,7 @@ def categorias_despesas(request):
 @permission_classes([IsAuthenticated])
 def categoria_despesa_detail(request, categoria_id):
     """API para atualizar e deletar categoria específica"""
-    print(f"=== DEBUG: categoria_despesa_detail chamada ===")
-    print(f"Método HTTP: {request.method}")
-    print(f"Categoria ID: {categoria_id}")
+    logger.info(f"Categoria despesa detail chamado - Método: {request.method}, ID: {categoria_id}")
     
     try:
         categoria = CategoriaDespesa.objects.get(
@@ -920,7 +831,7 @@ def categoria_despesa_detail(request, categoria_id):
         # Atualizar categoria
         try:
             data = request.data
-            print(f"Dados recebidos: {data}")
+            logger.debug(f"Dados recebidos: {data}")
             
             # Validar dados obrigatórios
             if 'nome' not in data or not data['nome'].strip():
@@ -947,7 +858,7 @@ def categoria_despesa_detail(request, categoria_id):
             categoria.descricao = descricao
             categoria.save()
             
-            print(f"Categoria atualizada com sucesso! ID: {categoria.id}")
+            logger.info(f"Categoria atualizada com sucesso! ID: {categoria.id}")
             
             return Response({
                 'success': True, 
@@ -960,7 +871,7 @@ def categoria_despesa_detail(request, categoria_id):
             })
             
         except Exception as e:
-            print(f"Erro na atualização da categoria: {str(e)}")
+            logger.error(f"Erro na atualização da categoria: {str(e)}", exc_info=True)
             return Response({
                 'success': False, 
                 'error': str(e)
@@ -984,7 +895,7 @@ def categoria_despesa_detail(request, categoria_id):
                 categoria.delete()
                 message = 'Categoria excluída com sucesso'
             
-            print(f"Categoria processada: {message}")
+            logger.debug(f"Categoria processada: {message}")
             
             return Response({
                 'success': True, 
@@ -992,7 +903,7 @@ def categoria_despesa_detail(request, categoria_id):
             })
             
         except Exception as e:
-            print(f"Erro ao processar categoria: {str(e)}")
+            logger.error(f"Erro ao processar categoria: {str(e)}", exc_info=True)
             return Response({
                 'success': False, 
                 'error': str(e)

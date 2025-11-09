@@ -33,6 +33,12 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "ios": {
+      "bundleIdentifier": "com.luisdrade.gestaoentregadores",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    }
   }
 }
