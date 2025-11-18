@@ -167,8 +167,8 @@ const CadastroVeiculo = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 3 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
+    <Container maxWidth="md" sx={{ mt: { xs: 2, sm: 3 }, mb: 4, px: { xs: 1, sm: 2 } }}>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}>
         Cadastro de Veículo
       </Typography>
 
@@ -185,18 +185,18 @@ const CadastroVeiculo = () => {
       )}
 
       {/* Formulário */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
+      <Card sx={{ mb: { xs: 2, sm: 3 }, borderRadius: { xs: 2, sm: 3 } }}>
+        <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
           <Box display="flex" alignItems="center" mb={2}>
-            <CarIcon color="primary" sx={{ mr: 1 }} />
-            <Typography variant="h6">
+            <CarIcon color="primary" sx={{ mr: 1, fontSize: { xs: 20, sm: 24 } }} />
+            <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
               {editingIndex !== null ? 'Editar Veículo' : 'Novo Veículo'}
             </Typography>
           </Box>
 
           <Box component="form" onSubmit={handleSubmit}>
-            <Grid container spacing={3}>
-              <Grid size={{ xs: 12, sm: 4 }}>
+            <Grid container spacing={{ xs: 2, sm: 3 }}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   label="Modelo"
@@ -206,7 +206,7 @@ const CadastroVeiculo = () => {
                   required
                 />
               </Grid>
-              <Grid size={{ xs: 12, sm: 4 }}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   label="Placa"
@@ -217,7 +217,7 @@ const CadastroVeiculo = () => {
                   inputProps={{ style: { textTransform: 'uppercase' } }}
                 />
               </Grid>
-              <Grid size={{ xs: 12, sm: 4 }}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   label="Categoria"
@@ -229,7 +229,7 @@ const CadastroVeiculo = () => {
                 />
               </Grid>
 
-              <Grid size={{ xs: 12 }}>
+              <Grid item xs={12}>
                 <Box display="flex" gap={2} justifyContent="center">
                   <Button
                     type="submit"
@@ -258,9 +258,9 @@ const CadastroVeiculo = () => {
       </Card>
 
       {/* Lista de Veículos */}
-      <Card>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
+      <Card sx={{ borderRadius: { xs: 2, sm: 3 } }}>
+        <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+          <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
             Veículos Cadastrados ({veiculos.length})
           </Typography>
 

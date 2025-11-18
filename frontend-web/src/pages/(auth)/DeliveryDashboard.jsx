@@ -19,7 +19,11 @@ import {
   Paper,
   Chip,
   Divider,
-  LinearProgress
+  LinearProgress,
+  ToggleButton,
+  ToggleButtonGroup,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import {
   DirectionsCar as CarIcon,
@@ -52,85 +56,105 @@ import {
 import { api, ENDPOINTS } from '../../services/apiClient';
 
 const DeliveryDashboard = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [periodo, setPeriodo] = useState('mes'); // 'semana' ou 'mes'
   const [dados, setDados] = useState({
-    total_veiculos: 0,
-    total_ganho: 0,
-    total_despesa: 0,
-    lucro: 0,
-    ultimos_registros: [],
+    // Resumo diário (hoje)
+    resumo_diario: {
+      entregas_hoje: 0,
+      nao_entregas_hoje: 0,
+      ganhos_hoje: 0,
+      despesas_hoje: 0,
+      lucro_hoje: 0
+    },
+    // Indicadores de performance (período)
+    indicadores_performance: {
+      dias_trabalhados: 0,
+      entregas_realizadas: 0,
+      entregas_nao_realizadas: 0,
+      ganho_total: 0,
+      despesas_total: 0,
+      lucro_liquido: 0,
+      taxa_sucesso: 0,
+      ganho_medio_dia: 0,
+      veiculos_cadastrados: 0
+    },
     // Dados para gráficos
     entregas_por_dia: [],
     ganhos_por_semana: [],
     performance_mensal: [],
     distribuicao_veiculos: [],
-    resumo_periodo: {
-      dias_trabalhados: 0,
-      entregas_realizadas: 0,
-      taxa_sucesso: 0,
-      ganho_medio_dia: 0
-    }
+    ultimos_registros: []
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [periodo]);
 
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // Obter data de hoje no formato YYYY-MM-DD
-      const hoje = new Date().toISOString().split('T')[0];
-      console.log('🔍 Dashboard - Buscando dados do dia:', hoje);
+      console.log('🔍 Dashboard - Buscando dados para período:', periodo);
       
-      // Buscar dados específicos do dia atual
+      // Buscar dados do período selecionado
       const params = new URLSearchParams();
-      params.append('data_inicio', hoje);
-      params.append('data_fim', hoje);
+      params.append('periodo', periodo);
       
-      console.log('🔍 Dashboard - Fazendo chamada para /registro/api/dashboard-data/ com filtro de data');
+      console.log('🔍 Dashboard - Fazendo chamada para /registro/api/dashboard-data/');
       const response = await api.get(`/registro/api/dashboard-data/?${params.toString()}`);
       console.log('🔍 Dashboard - Resposta completa:', response.data);
-      console.log('🔍 Dashboard - Dados extraídos:', response.data.data || response.data);
       
-      // Transformar dados do backend para o formato esperado pelo frontend
-      const backendData = response.data.data || response.data;
-      
-      // Usar dados reais do backend
-      const transformedData = {
-        total_veiculos: backendData.indicadores_performance?.veiculos_cadastrados || 0,
-        total_ganho: backendData.indicadores_performance?.ganho_total || 0,
-        total_despesa: backendData.indicadores_performance?.despesas_total || 0,
-        lucro: backendData.indicadores_performance?.lucro_liquido || 0,
-        ultimos_registros: backendData.ultimos_registros || [],
+      if (response.data.success && response.data.data) {
+        const backendData = response.data.data;
         
-        // Dados para gráficos baseados nos dados reais
-        entregas_por_dia: backendData.entregas_por_dia || [],
-        ganhos_por_semana: backendData.ganhos_por_semana || [],
-        performance_mensal: backendData.performance_mensal || [],
-        distribuicao_veiculos: backendData.distribuicao_veiculos || [],
+        // Mapear dados diretamente do backend
+        setDados({
+          resumo_diario: backendData.resumo_diario || {
+            entregas_hoje: 0,
+            nao_entregas_hoje: 0,
+            ganhos_hoje: 0,
+            despesas_hoje: 0,
+            lucro_hoje: 0
+          },
+          indicadores_performance: backendData.indicadores_performance || {
+            dias_trabalhados: 0,
+            entregas_realizadas: 0,
+            entregas_nao_realizadas: 0,
+            ganho_total: 0,
+            despesas_total: 0,
+            lucro_liquido: 0,
+            taxa_sucesso: 0,
+            ganho_medio_dia: 0,
+            veiculos_cadastrados: 0
+          },
+          entregas_por_dia: backendData.entregas_por_dia || [],
+          ganhos_por_semana: backendData.ganhos_por_semana || [],
+          performance_mensal: backendData.performance_mensal || [],
+          distribuicao_veiculos: backendData.distribuicao_veiculos || [],
+          ultimos_registros: backendData.ultimos_registros || []
+        });
         
-        resumo_periodo: {
-          dias_trabalhados: backendData.indicadores_performance?.dias_trabalhados || 0,
-          entregas_realizadas: backendData.indicadores_performance?.entregas_realizadas || 0,
-          taxa_sucesso: backendData.indicadores_performance?.taxa_sucesso || 0,
-          ganho_medio_dia: backendData.indicadores_performance?.ganho_medio_dia || 0
-        }
-      };
-      
-      console.log('🔍 Frontend - Dados transformados:', transformedData);
-      console.log('🔍 Frontend - Distribuição de veículos:', transformedData.distribuicao_veiculos);
-      console.log('🔍 Frontend - Total de veículos:', transformedData.total_veiculos);
-      
-      setDados(transformedData);
+        console.log('✅ Dashboard - Dados carregados com sucesso');
+      } else {
+        throw new Error(response.data.error || 'Resposta inválida do servidor');
+      }
     } catch (err) {
-      console.error('❌ Dashboard - Erro ao carregar dados:', err.response?.data || err.message);
-      setError('Erro ao carregar dados do dashboard: ' + (err.response?.data?.message || err.message));
+      console.error('❌ Dashboard - Erro ao carregar dados:', err);
+      const errorMessage = err.response?.data?.error || err.response?.data?.message || err.message || 'Erro desconhecido';
+      setError(`Erro ao carregar dados do dashboard: ${errorMessage}`);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePeriodoChange = (event, newPeriodo) => {
+    if (newPeriodo !== null) {
+      setPeriodo(newPeriodo);
     }
   };
 
@@ -145,21 +169,51 @@ const DeliveryDashboard = () => {
   const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00'];
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 3, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: { xs: 1, sm: 3 }, mb: { xs: 2, sm: 4 }, px: { xs: 1, sm: 2, md: 3 } }}>
       {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom sx={{ 
-          fontWeight: 'bold',
-          background: 'linear-gradient(45deg, #1976d2, #42a5f5)',
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
-        }}>
-          📊 Dashboard de Hoje
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary">
-          Performance e resultados do dia atual
-        </Typography>
+      <Box sx={{ 
+        mb: { xs: 2, sm: 4 }, 
+        display: 'flex', 
+        flexDirection: { xs: 'column', sm: 'row' },
+        justifyContent: 'space-between', 
+        alignItems: { xs: 'flex-start', sm: 'center' },
+        gap: { xs: 2, sm: 0 }
+      }}>
+        <Box>
+          <Typography 
+            variant="h4" 
+            component="h1" 
+            gutterBottom 
+            sx={{ 
+              fontWeight: 'bold',
+              fontSize: { xs: '1.5rem', sm: '2rem' },
+              background: 'linear-gradient(45deg, #1976d2, #42a5f5)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
+          >
+            📊 Dashboard
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+            Performance e resultados {periodo === 'semana' ? 'da semana' : 'do mês'}
+          </Typography>
+        </Box>
+        <ToggleButtonGroup
+          value={periodo}
+          exclusive
+          onChange={handlePeriodoChange}
+          aria-label="período"
+          size="small"
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
+        >
+          <ToggleButton value="semana" aria-label="semana" sx={{ flex: { xs: 1, sm: 'none' } }}>
+            Semana
+          </ToggleButton>
+          <ToggleButton value="mes" aria-label="mês" sx={{ flex: { xs: 1, sm: 'none' } }}>
+            Mês
+          </ToggleButton>
+        </ToggleButtonGroup>
       </Box>
 
       {error && (
@@ -168,95 +222,95 @@ const DeliveryDashboard = () => {
         </Alert>
       )}
 
-      {/* Cards de Resumo Principal */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+      {/* Cards de Resumo Principal - Hoje */}
+      <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 4 } }}>
+        <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             color: 'white',
-            borderRadius: 3,
+            borderRadius: { xs: 2, sm: 3 },
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Box>
-                  <Typography variant="h6" gutterBottom>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Box display="flex" alignItems="center" justifyContent="space-between" flexDirection={{ xs: 'row', sm: 'row' }} gap={1}>
+                <Box flex={1} minWidth={0}>
+                  <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.75rem', sm: '1rem' }, mb: { xs: 0.5, sm: 1 } }}>
                     Total de Veículos
                   </Typography>
-                  <Typography variant="h3" fontWeight="bold">
-                    {dados.total_veiculos}
+                  <Typography variant="h3" fontWeight="bold" sx={{ fontSize: { xs: '1.5rem', sm: '2.5rem' }, lineHeight: 1.2 }}>
+                    {dados.indicadores_performance.veiculos_cadastrados || 0}
                   </Typography>
                 </Box>
-                <CarIcon sx={{ fontSize: 48, opacity: 0.8 }} />
+                <CarIcon sx={{ fontSize: { xs: 28, sm: 48 }, opacity: 0.8, flexShrink: 0 }} />
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
             color: 'white',
-            borderRadius: 3,
+            borderRadius: { xs: 2, sm: 3 },
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Box>
-                  <Typography variant="h6" gutterBottom>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Box display="flex" alignItems="center" justifyContent="space-between" flexDirection={{ xs: 'row', sm: 'row' }} gap={1}>
+                <Box flex={1} minWidth={0}>
+                  <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.75rem', sm: '1rem' }, mb: { xs: 0.5, sm: 1 } }}>
                     Ganho de Hoje
                   </Typography>
-                  <Typography variant="h3" fontWeight="bold">
-                    R$ {dados.total_ganho.toLocaleString()}
+                  <Typography variant="h3" fontWeight="bold" sx={{ fontSize: { xs: '1.25rem', sm: '2.5rem' }, lineHeight: 1.2, wordBreak: 'break-word' }}>
+                    R$ {Number(dados.resumo_diario.ganhos_hoje || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </Typography>
                 </Box>
-                <TrendingUpIcon sx={{ fontSize: 48, opacity: 0.8 }} />
+                <TrendingUpIcon sx={{ fontSize: { xs: 28, sm: 48 }, opacity: 0.8, flexShrink: 0 }} />
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
             color: 'white',
-            borderRadius: 3,
+            borderRadius: { xs: 2, sm: 3 },
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Box>
-                  <Typography variant="h6" gutterBottom>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Box display="flex" alignItems="center" justifyContent="space-between" flexDirection={{ xs: 'row', sm: 'row' }} gap={1}>
+                <Box flex={1} minWidth={0}>
+                  <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.75rem', sm: '1rem' }, mb: { xs: 0.5, sm: 1 } }}>
                     Despesas de Hoje
                   </Typography>
-                  <Typography variant="h3" fontWeight="bold">
-                    R$ {dados.total_despesa.toLocaleString()}
+                  <Typography variant="h3" fontWeight="bold" sx={{ fontSize: { xs: '1.25rem', sm: '2.5rem' }, lineHeight: 1.2, wordBreak: 'break-word' }}>
+                    R$ {Number(dados.resumo_diario.despesas_hoje || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </Typography>
                 </Box>
-                <TrendingDownIcon sx={{ fontSize: 48, opacity: 0.8 }} />
+                <TrendingDownIcon sx={{ fontSize: { xs: 28, sm: 48 }, opacity: 0.8, flexShrink: 0 }} />
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
             color: 'white',
-            borderRadius: 3,
+            borderRadius: { xs: 2, sm: 3 },
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Box>
-                  <Typography variant="h6" gutterBottom>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Box display="flex" alignItems="center" justifyContent="space-between" flexDirection={{ xs: 'row', sm: 'row' }} gap={1}>
+                <Box flex={1} minWidth={0}>
+                  <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.75rem', sm: '1rem' }, mb: { xs: 0.5, sm: 1 } }}>
                     Lucro de Hoje
                   </Typography>
-                  <Typography variant="h3" fontWeight="bold">
-                    R$ {dados.lucro.toLocaleString()}
+                  <Typography variant="h3" fontWeight="bold" sx={{ fontSize: { xs: '1.25rem', sm: '2.5rem' }, lineHeight: 1.2, wordBreak: 'break-word' }}>
+                    R$ {Number(dados.resumo_diario.lucro_hoje || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </Typography>
                 </Box>
-                <MoneyIcon sx={{ fontSize: 48, opacity: 0.8 }} />
+                <MoneyIcon sx={{ fontSize: { xs: 28, sm: 48 }, opacity: 0.8, flexShrink: 0 }} />
               </Box>
             </CardContent>
           </Card>
@@ -264,78 +318,78 @@ const DeliveryDashboard = () => {
       </Grid>
 
       {/* Métricas de Performance */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" mb={2}>
-                <ScheduleIcon color="primary" sx={{ mr: 1 }} />
-                <Typography variant="h6">Dias Trabalhados</Typography>
+      <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 4 } }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%' }}>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Box display="flex" alignItems="center" mb={{ xs: 1, sm: 2 }}>
+                <ScheduleIcon color="primary" sx={{ mr: 1, fontSize: { xs: 18, sm: 24 } }} />
+                <Typography variant="h6" sx={{ fontSize: { xs: '0.75rem', sm: '1rem' } }}>Dias Trabalhados</Typography>
               </Box>
-              <Typography variant="h4" color="primary" fontWeight="bold">
-                {dados.resumo_periodo.dias_trabalhados}
+              <Typography variant="h4" color="primary" fontWeight="bold" sx={{ fontSize: { xs: '1.25rem', sm: '2rem' }, mb: { xs: 0.5, sm: 1 } }}>
+                {dados.indicadores_performance.dias_trabalhados || 0}
               </Typography>
               <LinearProgress 
                 variant="determinate" 
-                value={75} 
+                value={Math.min((dados.indicadores_performance.dias_trabalhados / (periodo === 'semana' ? 7 : 30)) * 100, 100)} 
                 sx={{ mt: 1, borderRadius: 2, height: 6 }}
               />
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" mb={2}>
-                <DeliveryIcon color="success" sx={{ mr: 1 }} />
-                <Typography variant="h6">Entregas Realizadas</Typography>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%' }}>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Box display="flex" alignItems="center" mb={{ xs: 1, sm: 2 }}>
+                <DeliveryIcon color="success" sx={{ mr: 1, fontSize: { xs: 18, sm: 24 } }} />
+                <Typography variant="h6" sx={{ fontSize: { xs: '0.75rem', sm: '1rem' } }}>Entregas Realizadas</Typography>
               </Box>
-              <Typography variant="h4" color="success.main" fontWeight="bold">
-                {dados.resumo_periodo.entregas_realizadas}
+              <Typography variant="h4" color="success.main" fontWeight="bold" sx={{ fontSize: { xs: '1.25rem', sm: '2rem' }, mb: { xs: 0.5, sm: 1 } }}>
+                {dados.indicadores_performance.entregas_realizadas || 0}
               </Typography>
               <Chip 
-                label={`${dados.resumo_periodo.taxa_sucesso}% sucesso`} 
+                label={`${dados.indicadores_performance.taxa_sucesso || 0}% sucesso`} 
                 color="success" 
                 size="small" 
-                sx={{ mt: 1 }}
+                sx={{ mt: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
               />
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" mb={2}>
-                <StarIcon color="warning" sx={{ mr: 1 }} />
-                <Typography variant="h6">Taxa de Sucesso</Typography>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%' }}>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Box display="flex" alignItems="center" mb={{ xs: 1, sm: 2 }}>
+                <StarIcon color="warning" sx={{ mr: 1, fontSize: { xs: 18, sm: 24 } }} />
+                <Typography variant="h6" sx={{ fontSize: { xs: '0.75rem', sm: '1rem' } }}>Taxa de Sucesso</Typography>
               </Box>
-              <Typography variant="h4" color="warning.main" fontWeight="bold">
-                {dados.resumo_periodo.taxa_sucesso}%
+              <Typography variant="h4" color="warning.main" fontWeight="bold" sx={{ fontSize: { xs: '1.25rem', sm: '2rem' }, mb: { xs: 0.5, sm: 1 } }}>
+                {dados.indicadores_performance.taxa_sucesso || 0}%
               </Typography>
-              <Box display="flex" alignItems="center" mt={1}>
-                <StarIcon sx={{ color: '#ffc107', fontSize: 16, mr: 0.5 }} />
-                <Typography variant="body2" color="text.secondary">
-                  Excelente performance
+              <Box display="flex" alignItems="center" mt={{ xs: 0.5, sm: 1 }}>
+                <StarIcon sx={{ color: '#ffc107', fontSize: { xs: 12, sm: 16 }, mr: 0.5 }} />
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.65rem', sm: '0.875rem' } }}>
+                  {dados.indicadores_performance.taxa_sucesso >= 90 ? 'Excelente' : dados.indicadores_performance.taxa_sucesso >= 70 ? 'Bom' : 'Pode melhorar'}
                 </Typography>
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" mb={2}>
-                <SpeedIcon color="info" sx={{ mr: 1 }} />
-                <Typography variant="h6">Ganho Médio/Dia</Typography>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%' }}>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Box display="flex" alignItems="center" mb={{ xs: 1, sm: 2 }}>
+                <SpeedIcon color="info" sx={{ mr: 1, fontSize: { xs: 18, sm: 24 } }} />
+                <Typography variant="h6" sx={{ fontSize: { xs: '0.75rem', sm: '1rem' } }}>Ganho Médio/Dia</Typography>
               </Box>
-              <Typography variant="h4" color="info.main" fontWeight="bold">
-                R$ {dados.resumo_periodo.ganho_medio_dia.toFixed(0)}
+              <Typography variant="h4" color="info.main" fontWeight="bold" sx={{ fontSize: { xs: '1rem', sm: '2rem' }, mb: { xs: 0.5, sm: 1 }, wordBreak: 'break-word' }}>
+                R$ {Number(dados.indicadores_performance.ganho_medio_dia || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                Média dos últimos 30 dias
+              <Typography variant="body2" color="text.secondary" sx={{ mt: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.65rem', sm: '0.875rem' } }}>
+                Média do período
               </Typography>
             </CardContent>
           </Card>
@@ -343,24 +397,24 @@ const DeliveryDashboard = () => {
       </Grid>
 
       {/* Gráficos */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 4 } }}>
         {/* Gráfico de Pizza - Distribuição de Veículos */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: 400 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: { xs: 280, sm: 400 } }}>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1.25rem' }, mb: { xs: 1, sm: 2 } }}>
                 🚗 Distribuição de Veículos
               </Typography>
               {dados.distribuicao_veiculos && dados.distribuicao_veiculos.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
                   <PieChart>
                     <Pie
                       data={dados.distribuicao_veiculos}
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
+                      label={({ name, percent }) => !isMobile ? `${name} ${(percent * 100).toFixed(0)}%` : ''}
+                      outerRadius={isMobile ? 60 : 80}
                       fill="#8884d8"
                       dataKey="value"
                     >
@@ -372,9 +426,9 @@ const DeliveryDashboard = () => {
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <Box display="flex" alignItems="center" justifyContent="center" height={300}>
-                  <Typography variant="body1" color="text.secondary">
-                    {dados.total_veiculos === 0 ? 'Nenhum veículo cadastrado ainda' : 'Dados de veículos não disponíveis'}
+                <Box display="flex" alignItems="center" justifyContent="center" height={{ xs: 200, sm: 300 }}>
+                  <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, textAlign: 'center', px: 2 }}>
+                    {dados.indicadores_performance.veiculos_cadastrados === 0 ? 'Nenhum veículo cadastrado ainda' : 'Dados de veículos não disponíveis'}
                   </Typography>
                 </Box>
               )}
@@ -383,25 +437,25 @@ const DeliveryDashboard = () => {
         </Grid>
 
         {/* Gráfico de Barras - Entregas por Dia */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: 400 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: { xs: 280, sm: 400 } }}>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1.25rem' }, mb: { xs: 1, sm: 2 } }}>
                 📦 Entregas por Dia da Semana
               </Typography>
               {dados.entregas_por_dia && dados.entregas_por_dia.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
                   <BarChart data={dados.entregas_por_dia}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="dia" />
-                    <YAxis />
+                    <XAxis dataKey="dia" tick={{ fontSize: isMobile ? 10 : 12 }} />
+                    <YAxis tick={{ fontSize: isMobile ? 10 : 12 }} />
                     <Tooltip />
                     <Bar dataKey="entregas" fill="#8884d8" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <Box display="flex" alignItems="center" justifyContent="center" height={300}>
-                  <Typography variant="body1" color="text.secondary">
+                <Box display="flex" alignItems="center" justifyContent="center" height={{ xs: 200, sm: 300 }}>
+                  <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, textAlign: 'center', px: 2 }}>
                     Nenhuma entrega registrada ainda
                   </Typography>
                 </Box>
@@ -411,18 +465,18 @@ const DeliveryDashboard = () => {
         </Grid>
 
         {/* Gráfico de Linha - Performance Mensal */}
-        <Grid size={{ xs: 12, md: 8 }}>
-          <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: 400 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
+        <Grid item xs={12} md={8}>
+          <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: { xs: 280, sm: 400 } }}>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1.25rem' }, mb: { xs: 1, sm: 2 } }}>
                 📈 Performance Mensal
               </Typography>
               {dados.performance_mensal && dados.performance_mensal.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
                   <AreaChart data={dados.performance_mensal}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="mes" />
-                    <YAxis />
+                    <XAxis dataKey="mes" tick={{ fontSize: isMobile ? 10 : 12 }} />
+                    <YAxis tick={{ fontSize: isMobile ? 10 : 12 }} />
                     <Tooltip />
                     <Area 
                       type="monotone" 
@@ -443,8 +497,8 @@ const DeliveryDashboard = () => {
                   </AreaChart>
                 </ResponsiveContainer>
               ) : (
-                <Box display="flex" alignItems="center" justifyContent="center" height={300}>
-                  <Typography variant="body1" color="text.secondary">
+                <Box display="flex" alignItems="center" justifyContent="center" height={{ xs: 200, sm: 300 }}>
+                  <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, textAlign: 'center', px: 2 }}>
                     Dados de performance não disponíveis
                   </Typography>
                 </Box>
@@ -454,27 +508,27 @@ const DeliveryDashboard = () => {
         </Grid>
 
         {/* Gráfico de Barras - Ganhos vs Despesas */}
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: 400 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
+        <Grid item xs={12} md={4}>
+          <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: { xs: 280, sm: 400 } }}>
+            <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+              <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1.25rem' }, mb: { xs: 1, sm: 2 } }}>
                 💰 Ganhos vs Despesas
               </Typography>
               {dados.ganhos_por_semana && dados.ganhos_por_semana.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
                   <BarChart data={dados.ganhos_por_semana}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="semana" />
-                    <YAxis />
+                    <XAxis dataKey="semana" tick={{ fontSize: isMobile ? 10 : 12 }} />
+                    <YAxis tick={{ fontSize: isMobile ? 10 : 12 }} />
                     <Tooltip />
-                    <Legend />
+                    <Legend wrapperStyle={{ fontSize: isMobile ? '10px' : '12px' }} />
                     <Bar dataKey="ganho" fill="#82ca9d" name="Ganhos" />
                     <Bar dataKey="despesa" fill="#ffc658" name="Despesas" />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <Box display="flex" alignItems="center" justifyContent="center" height={300}>
-                  <Typography variant="body1" color="text.secondary">
+                <Box display="flex" alignItems="center" justifyContent="center" height={{ xs: 200, sm: 300 }}>
+                  <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, textAlign: 'center', px: 2 }}>
                     Dados financeiros não disponíveis
                   </Typography>
                 </Box>
@@ -485,58 +539,46 @@ const DeliveryDashboard = () => {
       </Grid>
 
       {/* Tabela de Últimos Registros */}
-      <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', mb: 4 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            📋 Registros de Hoje
+      <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', mb: { xs: 2, sm: 4 } }}>
+        <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+          <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1.25rem' }, mb: { xs: 1.5, sm: 2 } }}>
+            📋 Últimos Registros ({periodo === 'semana' ? 'Semana' : 'Mês'})
           </Typography>
-          <TableContainer>
-            <Table>
+          <TableContainer sx={{ overflowX: 'auto', maxWidth: '100%', WebkitOverflowScrolling: 'touch' }}>
+            <Table sx={{ minWidth: { xs: 500, sm: 600 } }}>
               <TableHead>
                 <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Data</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Tipo</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Ganho</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Despesa</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Lucro</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Data</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Entregas</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Ganho</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Despesa</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Lucro</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {dados.ultimos_registros && dados.ultimos_registros.length > 0 ? (
                   dados.ultimos_registros.map((registro, index) => (
                     <TableRow key={index} hover>
-                      <TableCell>{registro.data}</TableCell>
-                      <TableCell>
-                        <Chip 
-                          label={registro.tipo_rendimento} 
-                          color={registro.tipo_rendimento === 'unitario' ? 'primary' : 'secondary'}
-                          size="small"
-                        />
+                      <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>{registro.data || registro.dia || '-'}</TableCell>
+                      <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
+                        {registro.entregas || registro.quantidade_entregues || 0}
                       </TableCell>
-                      <TableCell sx={{ color: 'success.main', fontWeight: 'bold' }}>
-                        R$ {registro.ganho}
+                      <TableCell sx={{ color: 'success.main', fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>
+                        R$ {Number(registro.ganho || registro.ganho_total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </TableCell>
-                      <TableCell sx={{ color: 'error.main', fontWeight: 'bold' }}>
-                        R$ {registro.despesa}
+                      <TableCell sx={{ color: 'error.main', fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>
+                        R$ {Number(registro.despesa || registro.despesa_total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </TableCell>
-                      <TableCell sx={{ color: registro.lucro > 0 ? 'success.main' : 'error.main', fontWeight: 'bold' }}>
-                        R$ {registro.lucro}
-                      </TableCell>
-                      <TableCell>
-                        <Chip 
-                          label={registro.lucro > 0 ? 'Positivo' : 'Negativo'} 
-                          color={registro.lucro > 0 ? 'success' : 'error'}
-                          size="small"
-                        />
+                      <TableCell sx={{ color: (registro.lucro || registro.lucro_liquido || 0) > 0 ? 'success.main' : 'error.main', fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>
+                        R$ {Number(registro.lucro || registro.lucro_liquido || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={6} align="center">
-                      <Typography variant="body2" color="text.secondary">
-                        Nenhum registro encontrado
+                    <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
+                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                        Nenhum registro encontrado para este período
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -548,18 +590,26 @@ const DeliveryDashboard = () => {
       </Card>
 
       {/* Botões de Ação */}
-      <Box display="flex" justifyContent="center" gap={2} sx={{ mt: 4 }}>
+      <Box 
+        display="flex" 
+        flexDirection={{ xs: 'column', sm: 'row' }}
+        justifyContent="center" 
+        gap={2} 
+        sx={{ mt: { xs: 2, sm: 4 } }}
+      >
         <Button
           component={Link}
           to="/relatorios"
           variant="contained"
           size="large"
+          fullWidth={isMobile}
           startIcon={<ReportIcon />}
           sx={{ 
             background: 'linear-gradient(45deg, #1976d2, #42a5f5)',
-            borderRadius: 3,
-            px: 4,
-            py: 1.5,
+            borderRadius: { xs: 2, sm: 3 },
+            px: { xs: 2, sm: 4 },
+            py: { xs: 1.25, sm: 1.5 },
+            fontSize: { xs: '0.875rem', sm: '1rem' },
             boxShadow: '0 4px 20px rgba(25, 118, 210, 0.3)',
             '&:hover': {
               background: 'linear-gradient(45deg, #1565c0, #1976d2)',
@@ -574,11 +624,13 @@ const DeliveryDashboard = () => {
           to="/cadastro-veiculo"
           variant="outlined"
           size="large"
+          fullWidth={isMobile}
           startIcon={<CarIcon />}
           sx={{ 
-            borderRadius: 3,
-            px: 4,
-            py: 1.5,
+            borderRadius: { xs: 2, sm: 3 },
+            px: { xs: 2, sm: 4 },
+            py: { xs: 1.25, sm: 1.5 },
+            fontSize: { xs: '0.875rem', sm: '1rem' },
             borderColor: '#1976d2',
             color: '#1976d2',
             '&:hover': {

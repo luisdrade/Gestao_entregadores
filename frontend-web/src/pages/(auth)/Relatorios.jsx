@@ -27,7 +27,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  TextField
+  TextField,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import {
   Assessment as ReportIcon,
@@ -73,6 +75,8 @@ import html2canvas from 'html2canvas';
 import { format } from 'date-fns';
 
 const Relatorios = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { veiculos, loading: contextLoading, error: contextError } = useContext(RegistrosContext);
   const [relatoriosData, setRelatoriosData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -109,11 +113,15 @@ const Relatorios = () => {
       console.log('🔍 Relatorios - Resposta dos relatórios:', response.data);
       setRelatoriosData(response.data);
       
+      let diasTrabalhadosData = [];
+      let despesasData = [];
+      
       // Buscar dados detalhados de dias trabalhados
       try {
         const diasResponse = await api.get(`/registro/api/registro-trabalho/?${params.toString()}`);
         console.log('🔍 Relatorios - Dias trabalhados:', diasResponse.data);
-        setDiasTrabalhados(diasResponse.data.results || []);
+        diasTrabalhadosData = diasResponse.data.results || [];
+        setDiasTrabalhados(diasTrabalhadosData);
       } catch (err) {
         console.warn('⚠️ Relatorios - Erro ao buscar dias trabalhados:', err);
         setDiasTrabalhados([]);
@@ -123,14 +131,15 @@ const Relatorios = () => {
       try {
         const despesasResponse = await api.get(`/registro/api/registro-despesa/?${params.toString()}`);
         console.log('🔍 Relatorios - Despesas:', despesasResponse.data);
-        setDespesas(despesasResponse.data.results || []);
+        despesasData = despesasResponse.data.results || [];
+        setDespesas(despesasData);
       } catch (err) {
         console.warn('⚠️ Relatorios - Erro ao buscar despesas:', err);
         setDespesas([]);
       }
       
-      // Processar dados para gráficos
-      processarDadosGraficos();
+      // Processar dados para gráficos DEPOIS de carregar os dados
+      processarDadosGraficos(diasTrabalhadosData, despesasData);
       
     } catch (err) {
       console.error('❌ Relatorios - Erro ao carregar dados dos relatórios:', err);
@@ -202,29 +211,43 @@ const Relatorios = () => {
   const analises = calcularAnalisesDetalhadas();
 
   // Função para processar dados dos gráficos
-  const processarDadosGraficos = () => {
+  const processarDadosGraficos = (diasTrabalhadosData = diasTrabalhados, despesasData = despesas) => {
     // Processar performance semanal
     const performanceSemanal = [];
-    const diasSemana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+    const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
     
-    diasSemana.forEach((dia, index) => {
-      const diaDados = diasTrabalhados.filter(d => {
-        const dataDia = new Date(d.data);
-        return dataDia.getDay() === (index + 1) % 7;
+    // Mapear dias da semana (0 = Domingo, 1 = Segunda, etc.)
+    diasSemana.forEach((diaNome, index) => {
+      const diaDados = diasTrabalhadosData.filter(d => {
+        try {
+          const dataDia = new Date(d.data);
+          const diaSemana = dataDia.getDay(); // 0 = Domingo, 1 = Segunda, etc.
+          return diaSemana === index;
+        } catch (e) {
+          console.warn('Erro ao processar data:', d.data, e);
+          return false;
+        }
       });
       
-      const entregas = diaDados.reduce((sum, d) => sum + (d.quantidade_entregues || 0), 0);
-      const ganho = diaDados.reduce((sum, d) => sum + (d.valor || 0), 0);
-      const despesa = despesas.filter(d => {
-        const dataDespesa = new Date(d.data);
-        return dataDespesa.getDay() === (index + 1) % 7;
-      }).reduce((sum, d) => sum + (d.valor || 0), 0);
+      const entregas = diaDados.reduce((sum, d) => sum + (parseFloat(d.quantidade_entregues) || 0), 0);
+      const ganho = diaDados.reduce((sum, d) => sum + (parseFloat(d.valor) || 0), 0);
+      
+      const despesa = despesasData.filter(d => {
+        try {
+          const dataDespesa = new Date(d.data);
+          const diaSemana = dataDespesa.getDay();
+          return diaSemana === index;
+        } catch (e) {
+          console.warn('Erro ao processar data de despesa:', d.data, e);
+          return false;
+        }
+      }).reduce((sum, d) => sum + (parseFloat(d.valor) || 0), 0);
       
       performanceSemanal.push({
-        dia,
-        entregas,
-        ganho,
-        despesa
+        dia: diaNome,
+        entregas: Math.round(entregas),
+        ganho: parseFloat(ganho.toFixed(2)),
+        despesa: parseFloat(despesa.toFixed(2))
       });
     });
 
@@ -232,45 +255,54 @@ const Relatorios = () => {
     const distribuicaoDespesas = [];
     const categorias = {};
     
-    despesas.forEach(despesa => {
+    despesasData.forEach(despesa => {
       const categoria = despesa.tipo_despesa || 'Outros';
+      const valor = parseFloat(despesa.valor) || 0;
       if (categorias[categoria]) {
-        categorias[categoria] += despesa.valor || 0;
+        categorias[categoria] += valor;
       } else {
-        categorias[categoria] = despesa.valor || 0;
+        categorias[categoria] = valor;
       }
     });
 
-    const cores = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00', '#ff6b6b'];
+    const cores = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00', '#ff6b6b', '#4ecdc4', '#95e1d3', '#f38181', '#aa96da'];
     Object.entries(categorias).forEach(([categoria, valor], index) => {
       distribuicaoDespesas.push({
         name: categoria,
-        value: valor,
+        value: parseFloat(valor.toFixed(2)),
         color: cores[index % cores.length]
       });
     });
+
+    // Ordenar por valor (maior para menor)
+    distribuicaoDespesas.sort((a, b) => b.value - a.value);
 
     setDadosGraficosReais({
       performanceSemanal,
       distribuicaoDespesas
     });
+    
+    console.log('📊 Dados processados para gráficos:', { performanceSemanal, distribuicaoDespesas });
   };
 
-  // Dados para gráficos (fallback se não houver dados reais)
-  const dadosGraficos = dadosGraficosReais.performanceSemanal.length > 0 ? dadosGraficosReais : {
-    performanceSemanal: [
-      { dia: 'Seg', entregas: 0, ganho: 0, despesa: 0 },
-      { dia: 'Ter', entregas: 0, ganho: 0, despesa: 0 },
-      { dia: 'Qua', entregas: 0, ganho: 0, despesa: 0 },
-      { dia: 'Qui', entregas: 0, ganho: 0, despesa: 0 },
-      { dia: 'Sex', entregas: 0, ganho: 0, despesa: 0 },
-      { dia: 'Sáb', entregas: 0, ganho: 0, despesa: 0 },
-      { dia: 'Dom', entregas: 0, ganho: 0, despesa: 0 }
-    ],
-    distribuicaoDespesas: [
-      { name: 'Nenhuma despesa', value: 1, color: '#cccccc' }
-    ]
-  };
+  // Dados para gráficos (usar dados reais ou fallback)
+  const dadosGraficos = dadosGraficosReais.performanceSemanal.length > 0 && 
+    dadosGraficosReais.performanceSemanal.some(d => d.entregas > 0 || d.ganho > 0 || d.despesa > 0)
+    ? dadosGraficosReais 
+    : {
+        performanceSemanal: [
+          { dia: 'Dom', entregas: 0, ganho: 0, despesa: 0 },
+          { dia: 'Seg', entregas: 0, ganho: 0, despesa: 0 },
+          { dia: 'Ter', entregas: 0, ganho: 0, despesa: 0 },
+          { dia: 'Qua', entregas: 0, ganho: 0, despesa: 0 },
+          { dia: 'Qui', entregas: 0, ganho: 0, despesa: 0 },
+          { dia: 'Sex', entregas: 0, ganho: 0, despesa: 0 },
+          { dia: 'Sáb', entregas: 0, ganho: 0, despesa: 0 }
+        ],
+        distribuicaoDespesas: despesas.length === 0 ? [
+          { name: 'Nenhuma despesa', value: 1, color: '#cccccc' }
+        ] : dadosGraficosReais.distribuicaoDespesas
+      };
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -428,21 +460,28 @@ const Relatorios = () => {
   }
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 3, mb: 4 }} id="relatorios-content">
+    <Container maxWidth="xl" sx={{ mt: { xs: 2, sm: 3 }, mb: 4, px: { xs: 1, sm: 2 } }} id="relatorios-content">
       {/* Header com ações */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-        <Box display="flex" alignItems="center">
-          <ReportIcon color="primary" sx={{ mr: 2, fontSize: 40 }} />
+      <Box 
+        display="flex" 
+        flexDirection={{ xs: 'column', sm: 'row' }}
+        justifyContent="space-between" 
+        alignItems={{ xs: 'flex-start', sm: 'center' }} 
+        mb={{ xs: 2, sm: 4 }}
+        gap={2}
+      >
+        <Box display="flex" alignItems="center" flexWrap="wrap">
+          <ReportIcon color="primary" sx={{ mr: { xs: 1, sm: 2 }, fontSize: { xs: 32, sm: 40 } }} />
           <Box>
-            <Typography variant="h4" component="h1" gutterBottom>
+            <Typography variant="h4" component="h1" gutterBottom sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}>
               📊 Relatórios Detalhados
             </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
+            <Typography variant="subtitle1" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
               Análise completa da sua performance e finanças
             </Typography>
           </Box>
         </Box>
-        <Box display="flex" gap={1}>
+        <Box display="flex" gap={1} flexWrap="wrap">
           <Tooltip title="Exportar para Excel">
             <IconButton onClick={exportToExcel} color="success">
               <DownloadIcon />
@@ -462,10 +501,10 @@ const Relatorios = () => {
       </Box>
 
       {/* Filtros de Período */}
-      <Card sx={{ mb: 4, borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-        <CardContent>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="h6">
+      <Card sx={{ mb: { xs: 2, sm: 4 }, borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+        <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2} flexWrap="wrap" gap={2}>
+            <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
               🔍 Filtros de Período
             </Typography>
             {error && (
@@ -475,7 +514,7 @@ const Relatorios = () => {
             )}
           </Box>
           <Grid container spacing={3} alignItems="center">
-            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <Grid item xs={12} sm={6} md={2}>
               <FormControl fullWidth>
                 <InputLabel>Período</InputLabel>
                 <Select
@@ -489,7 +528,7 @@ const Relatorios = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid item xs={12} sm={6} md={3}>
               <Button
                 fullWidth
                 variant="contained"
@@ -500,7 +539,7 @@ const Relatorios = () => {
                 {loading ? 'Carregando...' : 'Aplicar Filtros'}
               </Button>
             </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 7 }}>
+            <Grid item xs={12} sm={6} md={7}>
               <Box display="flex" gap={1} flexWrap="wrap">
                 <Button
                   variant="outlined"
@@ -541,94 +580,94 @@ const Relatorios = () => {
       </Card>
 
       {/* Cards de Resumo Principal */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+      <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 2, sm: 4 } }}>
+        <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             color: 'white',
-            borderRadius: 3,
+            borderRadius: { xs: 2, sm: 3 },
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
+            <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+              <Box display="flex" alignItems="center" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={1}>
                 <Box>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                     Ganho Total
                   </Typography>
-                  <Typography variant="h3" fontWeight="bold">
+                  <Typography variant="h3" fontWeight="bold" sx={{ fontSize: { xs: '1.5rem', sm: '2.5rem' } }}>
                     R$ {analises.totalGanhos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </Typography>
                 </Box>
-                <MoneyIcon sx={{ fontSize: 48, opacity: 0.8 }} />
+                <MoneyIcon sx={{ fontSize: { xs: 36, sm: 48 }, opacity: 0.8 }} />
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
             color: 'white',
-            borderRadius: 3,
+            borderRadius: { xs: 2, sm: 3 },
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
+            <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+              <Box display="flex" alignItems="center" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={1}>
                 <Box>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                     Total de Despesas
                   </Typography>
-                  <Typography variant="h3" fontWeight="bold">
+                  <Typography variant="h3" fontWeight="bold" sx={{ fontSize: { xs: '1.5rem', sm: '2.5rem' } }}>
                     R$ {analises.totalDespesas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </Typography>
                 </Box>
-                <ReceiptIcon sx={{ fontSize: 48, opacity: 0.8 }} />
+                <ReceiptIcon sx={{ fontSize: { xs: 36, sm: 48 }, opacity: 0.8 }} />
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
             color: 'white',
-            borderRadius: 3,
+            borderRadius: { xs: 2, sm: 3 },
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
+            <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+              <Box display="flex" alignItems="center" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={1}>
                 <Box>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                     Lucro Líquido
                   </Typography>
-                  <Typography variant="h3" fontWeight="bold">
+                  <Typography variant="h3" fontWeight="bold" sx={{ fontSize: { xs: '1.5rem', sm: '2.5rem' } }}>
                     R$ {analises.lucroLiquido.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </Typography>
                 </Box>
-                <TrendingUpIcon sx={{ fontSize: 48, opacity: 0.8 }} />
+                <TrendingUpIcon sx={{ fontSize: { xs: 36, sm: 48 }, opacity: 0.8 }} />
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
             color: 'white',
-            borderRadius: 3,
+            borderRadius: { xs: 2, sm: 3 },
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}>
-            <CardContent>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
+            <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+              <Box display="flex" alignItems="center" justifyContent="space-between" flexDirection={{ xs: 'column', sm: 'row' }} gap={1}>
                 <Box>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                     Taxa de Sucesso
                   </Typography>
-                  <Typography variant="h3" fontWeight="bold">
+                  <Typography variant="h3" fontWeight="bold" sx={{ fontSize: { xs: '1.5rem', sm: '2.5rem' } }}>
                     {analises.taxaSucesso.toFixed(1)}%
                   </Typography>
                 </Box>
-                <StarIcon sx={{ fontSize: 48, opacity: 0.8 }} />
+                <StarIcon sx={{ fontSize: { xs: 36, sm: 48 }, opacity: 0.8 }} />
               </Box>
             </CardContent>
           </Card>
@@ -636,25 +675,38 @@ const Relatorios = () => {
       </Grid>
 
       {/* Tabs para diferentes seções */}
-      <Card sx={{ mb: 4 }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={activeTab} onChange={handleTabChange} aria-label="relatórios tabs">
-            <Tab icon={<TimelineIcon />} label="Visão Geral" />
-            <Tab icon={<CalendarIcon />} label="Dias Trabalhados" />
-            <Tab icon={<ReceiptIcon />} label="Despesas" />
-            <Tab icon={<BarChartIcon />} label="Gráficos" />
+      <Card sx={{ mb: { xs: 2, sm: 4 } }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', overflowX: 'auto' }}>
+          <Tabs 
+            value={activeTab} 
+            onChange={handleTabChange} 
+            aria-label="relatórios tabs"
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{
+              '& .MuiTab-root': {
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                minWidth: { xs: 80, sm: 120 },
+                padding: { xs: '8px 12px', sm: '12px 16px' }
+              }
+            }}
+          >
+            <Tab icon={<TimelineIcon />} iconPosition="start" label="Visão Geral" />
+            <Tab icon={<CalendarIcon />} iconPosition="start" label="Dias Trabalhados" />
+            <Tab icon={<ReceiptIcon />} iconPosition="start" label="Despesas" />
+            <Tab icon={<BarChartIcon />} iconPosition="start" label="Gráficos" />
           </Tabs>
         </Box>
 
         {/* Tab 1: Visão Geral */}
         {activeTab === 0 && (
-          <CardContent>
-            <Grid container spacing={3}>
+          <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+            <Grid container spacing={{ xs: 2, sm: 3 }}>
               {/* Métricas de Performance */}
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
+              <Grid item xs={12} md={6}>
+                <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                    <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                       📈 Métricas de Performance
                     </Typography>
                     <Box mb={2}>
@@ -692,10 +744,10 @@ const Relatorios = () => {
               </Grid>
 
               {/* Resumo Financeiro */}
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
+              <Grid item xs={12} md={6}>
+                <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                    <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                       💰 Resumo Financeiro
                     </Typography>
                     <Box display="flex" justifyContent="space-between" mb={2}>
@@ -732,60 +784,62 @@ const Relatorios = () => {
 
         {/* Tab 2: Dias Trabalhados */}
         {activeTab === 1 && (
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
+          <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+            <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '1rem', sm: '1.25rem' }, mb: 2 }}>
               📅 Histórico de Dias Trabalhados
             </Typography>
-            <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-              <Table>
+            <TableContainer component={Paper} sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', overflowX: 'auto' }}>
+              <Table sx={{ minWidth: 700 }}>
                 <TableHead>
                   <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Data</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Horário</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Entregas</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Não Entregues</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Tipo Pagamento</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Valor</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Data</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Horário</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Entregas</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Não Entregues</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Tipo Pagamento</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Valor</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Status</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {diasTrabalhados.length > 0 ? (
                     diasTrabalhados.map((dia, index) => (
                       <TableRow key={index} hover>
-                        <TableCell>{dia.data}</TableCell>
-                        <TableCell>
+                        <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>{dia.data}</TableCell>
+                        <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>
                           {dia.hora_inicio} - {dia.hora_fim}
                         </TableCell>
-                        <TableCell sx={{ color: 'success.main', fontWeight: 'bold' }}>
+                        <TableCell sx={{ color: 'success.main', fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                           {dia.quantidade_entregues}
                         </TableCell>
-                        <TableCell sx={{ color: 'error.main', fontWeight: 'bold' }}>
+                        <TableCell sx={{ color: 'error.main', fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                           {dia.quantidade_nao_entregues}
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                           <Chip 
                             label={dia.tipo_pagamento === 'por_entrega' ? 'Por Entrega' : 'Diária'}
                             color={dia.tipo_pagamento === 'por_entrega' ? 'primary' : 'secondary'}
                             size="small"
+                            sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
                           />
                         </TableCell>
-                        <TableCell sx={{ color: 'success.main', fontWeight: 'bold' }}>
+                        <TableCell sx={{ color: 'success.main', fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>
                           R$ {dia.valor}
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                           <Chip 
                             label="Concluído" 
                             color="success" 
                             size="small"
+                            sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
                           />
                         </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={7} align="center">
-                        <Typography variant="body2" color="text.secondary">
+                      <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                           Nenhum dia trabalhado registrado
                         </Typography>
                       </TableCell>
@@ -799,50 +853,52 @@ const Relatorios = () => {
 
         {/* Tab 3: Despesas */}
         {activeTab === 2 && (
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
+          <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+            <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '1rem', sm: '1.25rem' }, mb: 2 }}>
               💸 Histórico de Despesas
             </Typography>
-            <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-              <Table>
+            <TableContainer component={Paper} sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', overflowX: 'auto' }}>
+              <Table sx={{ minWidth: 600 }}>
                 <TableHead>
                   <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Data</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Tipo</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Descrição</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Valor</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Categoria</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Data</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Tipo</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>Descrição</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Valor</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>Categoria</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {despesas.length > 0 ? (
                     despesas.map((despesa, index) => (
                       <TableRow key={index} hover>
-                        <TableCell>{despesa.data}</TableCell>
-                        <TableCell>
+                        <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>{despesa.data}</TableCell>
+                        <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                           <Chip 
                             label={despesa.tipo_despesa}
                             color="warning"
                             size="small"
+                            sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
                           />
                         </TableCell>
-                        <TableCell>{despesa.descricao}</TableCell>
-                        <TableCell sx={{ color: 'error.main', fontWeight: 'bold' }}>
+                        <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>{despesa.descricao}</TableCell>
+                        <TableCell sx={{ color: 'error.main', fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '0.875rem' }, whiteSpace: 'nowrap' }}>
                           R$ {despesa.valor}
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                           <Chip 
                             label={despesa.tipo_despesa}
                             color="info"
                             size="small"
+                            sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
                           />
                         </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} align="center">
-                        <Typography variant="body2" color="text.secondary">
+                      <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                           Nenhuma despesa registrada
                         </Typography>
                       </TableCell>
@@ -856,57 +912,219 @@ const Relatorios = () => {
 
         {/* Tab 4: Gráficos */}
         {activeTab === 3 && (
-          <CardContent>
-            <Grid container spacing={3}>
+          <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+            <Grid container spacing={{ xs: 2, sm: 3 }}>
               {/* Gráfico de Performance Semanal */}
-              <Grid size={{ xs: 12, md: 8 }}>
-                <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: 400 }}>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
+              <Grid item xs={12} md={8}>
+                <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: { xs: 320, sm: 450 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+                    <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1.25rem' }, mb: { xs: 1, sm: 2 } }}>
                       📊 Performance Semanal
                     </Typography>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={dadosGraficos.performanceSemanal}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="dia" />
-                        <YAxis />
-                        <RechartsTooltip />
-                        <Legend />
-                        <Bar dataKey="entregas" fill="#8884d8" name="Entregas" />
-                        <Bar dataKey="ganho" fill="#82ca9d" name="Ganho (R$)" />
-                        <Bar dataKey="despesa" fill="#ffc658" name="Despesa (R$)" />
-                      </BarChart>
-                    </ResponsiveContainer>
+                    {dadosGraficos.performanceSemanal.some(d => d.entregas > 0 || d.ganho > 0 || d.despesa > 0) ? (
+                      <ResponsiveContainer width="100%" height={isMobile ? 250 : 350}>
+                        <BarChart data={dadosGraficos.performanceSemanal} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                          <XAxis 
+                            dataKey="dia" 
+                            tick={{ fontSize: isMobile ? 10 : 12, fill: '#666' }}
+                            stroke="#666"
+                          />
+                          <YAxis 
+                            yAxisId="left"
+                            tick={{ fontSize: isMobile ? 10 : 12, fill: '#666' }}
+                            stroke="#666"
+                          />
+                          <YAxis 
+                            yAxisId="right"
+                            orientation="right"
+                            tick={{ fontSize: isMobile ? 10 : 12, fill: '#666' }}
+                            stroke="#666"
+                            tickFormatter={(value) => `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
+                          />
+                          <RechartsTooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                              border: '1px solid #ccc',
+                              borderRadius: '8px',
+                              fontSize: isMobile ? '11px' : '12px'
+                            }}
+                            formatter={(value, name) => {
+                              if (name === 'Entregas') {
+                                return [`${value} entregas`, name];
+                              }
+                              return [`R$ ${Number(value).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, name];
+                            }}
+                          />
+                          <Legend 
+                            wrapperStyle={{ fontSize: isMobile ? '10px' : '12px', paddingTop: '10px' }}
+                            iconType="square"
+                          />
+                          <Bar 
+                            yAxisId="left"
+                            dataKey="entregas" 
+                            fill="#8884d8" 
+                            name="Entregas" 
+                            radius={[4, 4, 0, 0]}
+                          />
+                          <Bar 
+                            yAxisId="right"
+                            dataKey="ganho" 
+                            fill="#82ca9d" 
+                            name="Ganho (R$)" 
+                            radius={[4, 4, 0, 0]}
+                          />
+                          <Bar 
+                            yAxisId="right"
+                            dataKey="despesa" 
+                            fill="#ffc658" 
+                            name="Despesa (R$)" 
+                            radius={[4, 4, 0, 0]}
+                          />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <Box display="flex" alignItems="center" justifyContent="center" height={isMobile ? 250 : 350}>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, textAlign: 'center', px: 2 }}>
+                          Nenhum dado disponível para o período selecionado
+                        </Typography>
+                      </Box>
+                    )}
                   </CardContent>
                 </Card>
               </Grid>
 
               {/* Gráfico de Distribuição de Despesas */}
-              <Grid size={{ xs: 12, md: 4 }}>
-                <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: 400 }}>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
+              <Grid item xs={12} md={4}>
+                <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: { xs: 320, sm: 450 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+                    <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1.25rem' }, mb: { xs: 1, sm: 2 } }}>
                       💰 Distribuição de Despesas
                     </Typography>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <PieChart>
-                        <Pie
-                          data={dadosGraficos.distribuicaoDespesas}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                          outerRadius={80}
-                          fill="#8884d8"
-                          dataKey="value"
-                        >
-                          {dadosGraficos.distribuicaoDespesas.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <RechartsTooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
+                    {dadosGraficos.distribuicaoDespesas.length > 0 && 
+                     dadosGraficos.distribuicaoDespesas[0].name !== 'Nenhuma despesa' ? (
+                      <ResponsiveContainer width="100%" height={isMobile ? 250 : 350}>
+                        <PieChart>
+                          <Pie
+                            data={dadosGraficos.distribuicaoDespesas}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            label={({ name, percent, value }) => {
+                              if (isMobile) return '';
+                              return `${name}: ${(percent * 100).toFixed(0)}%`;
+                            }}
+                            outerRadius={isMobile ? 70 : 100}
+                            fill="#8884d8"
+                            dataKey="value"
+                            nameKey="name"
+                          >
+                            {dadosGraficos.distribuicaoDespesas.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color || '#8884d8'} />
+                            ))}
+                          </Pie>
+                          <RechartsTooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                              border: '1px solid #ccc',
+                              borderRadius: '8px',
+                              fontSize: isMobile ? '11px' : '12px'
+                            }}
+                            formatter={(value, name) => [
+                              `R$ ${Number(value).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+                              name
+                            ]}
+                          />
+                          <Legend 
+                            wrapperStyle={{ fontSize: isMobile ? '10px' : '12px', paddingTop: '10px' }}
+                            iconType="circle"
+                            formatter={(value) => value}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <Box display="flex" alignItems="center" justifyContent="center" height={isMobile ? 250 : 350}>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, textAlign: 'center', px: 2 }}>
+                          Nenhuma despesa registrada
+                        </Typography>
+                      </Box>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {/* Gráfico de Evolução de Ganhos */}
+              <Grid item xs={12}>
+                <Card sx={{ borderRadius: { xs: 2, sm: 3 }, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: { xs: 320, sm: 400 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+                    <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1.25rem' }, mb: { xs: 1, sm: 2 } }}>
+                      📈 Evolução de Ganhos e Despesas
+                    </Typography>
+                    {dadosGraficos.performanceSemanal.some(d => d.ganho > 0 || d.despesa > 0) ? (
+                      <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
+                        <AreaChart data={dadosGraficos.performanceSemanal} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                          <defs>
+                            <linearGradient id="colorGanho" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
+                              <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+                            </linearGradient>
+                            <linearGradient id="colorDespesa" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#ffc658" stopOpacity={0.8}/>
+                              <stop offset="95%" stopColor="#ffc658" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                          <XAxis 
+                            dataKey="dia" 
+                            tick={{ fontSize: isMobile ? 10 : 12, fill: '#666' }}
+                            stroke="#666"
+                          />
+                          <YAxis 
+                            tick={{ fontSize: isMobile ? 10 : 12, fill: '#666' }}
+                            stroke="#666"
+                            tickFormatter={(value) => `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
+                          />
+                          <RechartsTooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                              border: '1px solid #ccc',
+                              borderRadius: '8px',
+                              fontSize: isMobile ? '11px' : '12px'
+                            }}
+                            formatter={(value) => [
+                              `R$ ${Number(value).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+                              ''
+                            ]}
+                          />
+                          <Legend 
+                            wrapperStyle={{ fontSize: isMobile ? '10px' : '12px', paddingTop: '10px' }}
+                            iconType="square"
+                          />
+                          <Area 
+                            type="monotone" 
+                            dataKey="ganho" 
+                            stroke="#82ca9d" 
+                            fillOpacity={1} 
+                            fill="url(#colorGanho)" 
+                            name="Ganho (R$)"
+                          />
+                          <Area 
+                            type="monotone" 
+                            dataKey="despesa" 
+                            stroke="#ffc658" 
+                            fillOpacity={1} 
+                            fill="url(#colorDespesa)" 
+                            name="Despesa (R$)"
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <Box display="flex" alignItems="center" justifyContent="center" height={isMobile ? 250 : 300}>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' }, textAlign: 'center', px: 2 }}>
+                          Nenhum dado financeiro disponível
+                        </Typography>
+                      </Box>
+                    )}
                   </CardContent>
                 </Card>
               </Grid>
