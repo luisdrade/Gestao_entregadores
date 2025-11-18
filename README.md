@@ -82,7 +82,11 @@ npm run dev
 
 ## 📚 Documentação
 
-Toda a documentação está organizada na pasta [`docs/`](./docs/):
+### 📖 Para Entender o Projeto
+- **[SOBRE_O_PROJETO.md](./SOBRE_O_PROJETO.md)** - Explicação simples e didática de tudo que o projeto faz (perfeito para iniciantes!)
+
+### 📁 Documentação Técnica
+Toda a documentação técnica está organizada na pasta [`docs/`](./docs/):
 
 - 📦 **Deploy**: Guias completos de deploy em produção
 - 🛠️ **Desenvolvimento**: Troubleshooting e guias de desenvolvimento
