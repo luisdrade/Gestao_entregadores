@@ -172,6 +172,13 @@ Vou explicar de forma simples o que cada tecnologia faz:
   - É um sistema para controlar versões do código
   - Tipo um "histórico" que guarda todas as mudanças
 
+### 📚 **Resumo Rápido de Tecnologias e Bibliotecas**
+
+- **Mobile:** React Native, Expo, JavaScript e Axios para falar com o backend.
+- **Web:** React, Vite, Material UI (MUI), JavaScript e Axios.
+- **Backend:** Python, Django, Django REST Framework, PostgreSQL ou MySQL, JWT para autenticação.
+- **Ferramentas de apoio:** Git para versionamento e o ecossistema Expo que acelera o desenvolvimento mobile.
+
 ---
 
 ## 🎨 Como Tudo Funciona Juntos?

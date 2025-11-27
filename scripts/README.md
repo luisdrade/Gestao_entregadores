@@ -23,6 +23,33 @@ node scripts/sync-env.js
 
 ---
 
+### `start-demo-backend.ps1` (Windows PowerShell)
+Inicia o backend Django localmente e cria um túnel ngrok para demo mobile.
+
+**Uso:**
+```powershell
+.\scripts\start-demo-backend.ps1
+```
+
+**O que faz:**
+- Verifica se ngrok está instalado
+- Ativa ambiente virtual do backend
+- Inicia servidor Django na porta 8000
+- Cria túnel ngrok HTTPS automaticamente
+- Mostra instruções para configurar o app mobile
+
+**Requisitos:**
+- ngrok instalado e configurado (veja `docs/deployment/alternativas-render.md`)
+- Ambiente virtual do backend configurado
+- Python instalado
+
+**Ideal para:**
+- Demonstrações mobile quando Render está "dormindo"
+- Testes locais com HTTPS
+- Apresentações rápidas sem deploy
+
+---
+
 ## 💡 Dicas
 
 - Execute `sync-env.js` sempre que alterar a URL da API na raiz
