@@ -18,7 +18,6 @@ import { RegistrosContext } from '../../context/RegistrosContext';
 import { api } from '../../services/apiClient';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { format } from 'date-fns';
 import '../../styles/pages/Relatorios.css';
 
@@ -323,41 +322,274 @@ const Relatorios = () => {
     }
   };
 
-  const exportToPDF = async () => {
+  const exportToPDF = () => {
     try {
-      const element = document.getElementById('relatorios-content');
-      if (!element) {
-        alert('Elemento não encontrado para exportação.');
-        return;
-      }
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 15;
+      let yPosition = margin;
+      const lineHeight = 7;
+      const sectionSpacing = 10;
 
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true
+      // Cores
+      const primaryColor = [25, 118, 210];
+      const successColor = [76, 175, 80];
+      const errorColor = [244, 67, 54];
+      const darkGray = [66, 66, 66];
+      const lightGray = [245, 245, 245];
+
+      // Função para adicionar nova página se necessário
+      const checkPageBreak = (requiredSpace) => {
+        if (yPosition + requiredSpace > pageHeight - margin) {
+          pdf.addPage();
+          yPosition = margin;
+          return true;
+        }
+        return false;
+      };
+
+      // Função para adicionar linha
+      const addLine = (text, fontSize = 10, isBold = false, color = darkGray, align = 'left') => {
+        checkPageBreak(lineHeight);
+        pdf.setFontSize(fontSize);
+        pdf.setFont('helvetica', isBold ? 'bold' : 'normal');
+        pdf.setTextColor(...color);
+        
+        const xPosition = align === 'center' ? pageWidth / 2 : 
+                          align === 'right' ? pageWidth - margin : margin;
+        
+        pdf.text(text, xPosition, yPosition, { align });
+        yPosition += lineHeight;
+      };
+
+      // Função para adicionar retângulo colorido
+      const addColoredBox = (x, y, width, height, color) => {
+        pdf.setFillColor(...color);
+        pdf.rect(x, y, width, height, 'F');
+      };
+
+      // Cabeçalho
+      pdf.setFillColor(...primaryColor);
+      pdf.rect(0, 0, pageWidth, 40, 'F');
+      
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(24);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('📊 RELATÓRIO DETALHADO', pageWidth / 2, 20, { align: 'center' });
+      
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      const periodoText = periodo === 'semana' ? 'Esta Semana' : 
+                         periodo === 'mes' ? 'Este Mês' : 'Este Ano';
+      pdf.text(`Período: ${periodoText} | Gerado em: ${format(new Date(), 'dd/MM/yyyy HH:mm')}`, 
+               pageWidth / 2, 30, { align: 'center' });
+
+      yPosition = 50;
+
+      // Resumo Executivo
+      addLine('RESUMO EXECUTIVO', 16, true, primaryColor, 'center');
+      yPosition += 5;
+
+      // Cards de resumo
+      const cardWidth = (pageWidth - 2 * margin - 10) / 4;
+      const cardHeight = 30;
+      const cardY = yPosition;
+
+      // Card 1 - Ganho Total
+      addColoredBox(margin, cardY, cardWidth, cardHeight, [102, 126, 234]);
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(8);
+      pdf.text('GANHO TOTAL', margin + cardWidth / 2, cardY + 8, { align: 'center' });
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`R$ ${formatCurrency(analises.totalGanhos)}`, margin + cardWidth / 2, cardY + 18, { align: 'center' });
+
+      // Card 2 - Despesas
+      addColoredBox(margin + cardWidth + 3.33, cardY, cardWidth, cardHeight, [240, 147, 251]);
+      pdf.text('DESPESAS', margin + cardWidth * 1.5 + 3.33, cardY + 8, { align: 'center' });
+      pdf.setFontSize(12);
+      pdf.text(`R$ ${formatCurrency(analises.totalDespesas)}`, margin + cardWidth * 1.5 + 3.33, cardY + 18, { align: 'center' });
+
+      // Card 3 - Lucro
+      addColoredBox(margin + cardWidth * 2 + 6.66, cardY, cardWidth, cardHeight, [67, 233, 123]);
+      pdf.text('LUCRO LÍQUIDO', margin + cardWidth * 2.5 + 6.66, cardY + 8, { align: 'center' });
+      pdf.setFontSize(12);
+      pdf.text(`R$ ${formatCurrency(analises.lucroLiquido)}`, margin + cardWidth * 2.5 + 6.66, cardY + 18, { align: 'center' });
+
+      // Card 4 - Taxa Sucesso
+      addColoredBox(margin + cardWidth * 3 + 10, cardY, cardWidth, cardHeight, [79, 172, 254]);
+      pdf.text('TAXA SUCESSO', margin + cardWidth * 3.5 + 10, cardY + 8, { align: 'center' });
+      pdf.setFontSize(12);
+      pdf.text(`${analises.taxaSucesso.toFixed(1)}%`, margin + cardWidth * 3.5 + 10, cardY + 18, { align: 'center' });
+
+      yPosition += cardHeight + sectionSpacing;
+      pdf.setTextColor(...darkGray);
+
+      // Métricas de Performance
+      checkPageBreak(40);
+      addLine('MÉTRICAS DE PERFORMANCE', 14, true, primaryColor);
+      yPosition += 3;
+
+      const metrics = [
+        ['Dias Trabalhados', analises.diasComTrabalho.toString()],
+        ['Total de Entregas', analises.totalEntregas.toString()],
+        ['Entregas Não Realizadas', analises.totalNaoEntregas.toString()],
+        ['Ganho Médio por Dia', `R$ ${formatCurrency(analises.ganhoMedioDia)}`],
+        ['Despesa Média por Dia', `R$ ${formatCurrency(analises.despesaMediaDia)}`],
+        ['Margem de Lucro', `${analises.totalGanhos > 0 ? ((analises.lucroLiquido / analises.totalGanhos) * 100).toFixed(1) : '0.0'}%`]
+      ];
+
+      metrics.forEach(([label, value]) => {
+        checkPageBreak(lineHeight + 2);
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'normal');
+        pdf.setTextColor(...darkGray);
+        pdf.text(label + ':', margin, yPosition);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setTextColor(...primaryColor);
+        pdf.text(value, pageWidth - margin, yPosition, { align: 'right' });
+        yPosition += lineHeight + 2;
       });
 
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      
-      const imgWidth = 210;
-      const pageHeight = 295;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
+      yPosition += sectionSpacing;
 
-      let position = 0;
+      // Tabela de Dias Trabalhados
+      if (diasTrabalhados.length > 0) {
+        checkPageBreak(30);
+        addLine('DIAS TRABALHADOS', 14, true, primaryColor);
+        yPosition += 5;
 
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+        // Cabeçalho da tabela
+        const tableHeaders = ['Data', 'Horário', 'Entregas', 'Valor'];
+        const colWidths = [40, 35, 30, 40];
+        let xPos = margin;
 
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+        pdf.setFillColor(...lightGray);
+        pdf.rect(margin, yPosition - 5, pageWidth - 2 * margin, 8, 'F');
+        
+        pdf.setFontSize(9);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setTextColor(...darkGray);
+        tableHeaders.forEach((header, index) => {
+          pdf.text(header, xPos + colWidths[index] / 2, yPosition, { align: 'center' });
+          xPos += colWidths[index] + 5;
+        });
+        yPosition += 10;
+
+        // Linhas da tabela
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(8);
+        diasTrabalhados.slice(0, 15).forEach((dia, index) => {
+          checkPageBreak(8);
+          if (index % 2 === 0) {
+            pdf.setFillColor(250, 250, 250);
+            pdf.rect(margin, yPosition - 5, pageWidth - 2 * margin, 8, 'F');
+          }
+          
+          xPos = margin;
+          pdf.setTextColor(...darkGray);
+          pdf.text(dia.data || '-', xPos + 5, yPosition);
+          xPos += colWidths[0] + 5;
+          
+          pdf.text(`${dia.hora_inicio || '-'} - ${dia.hora_fim || '-'}`, xPos + 5, yPosition);
+          xPos += colWidths[1] + 5;
+          
+          pdf.setTextColor(...successColor);
+          pdf.text((dia.quantidade_entregues || 0).toString(), xPos + colWidths[2] / 2, yPosition, { align: 'center' });
+          xPos += colWidths[2] + 5;
+          
+          pdf.setTextColor(...successColor);
+          pdf.text(`R$ ${dia.valor || '0.00'}`, xPos + colWidths[3] / 2, yPosition, { align: 'center' });
+          
+          yPosition += 8;
+        });
+
+        if (diasTrabalhados.length > 15) {
+          checkPageBreak(lineHeight);
+          pdf.setFontSize(9);
+          pdf.setTextColor(...darkGray);
+          pdf.text(`... e mais ${diasTrabalhados.length - 15} registro(s)`, pageWidth / 2, yPosition, { align: 'center' });
+          yPosition += lineHeight;
+        }
+
+        yPosition += sectionSpacing;
       }
 
-      const nomeArquivo = `relatorios_${format(new Date(), 'yyyy-MM-dd_HH-mm-ss')}.pdf`;
+      // Tabela de Despesas
+      if (despesas.length > 0) {
+        checkPageBreak(30);
+        addLine('DESPESAS', 14, true, primaryColor);
+        yPosition += 5;
+
+        // Cabeçalho da tabela
+        const despesaHeaders = ['Data', 'Tipo', 'Descrição', 'Valor'];
+        const despesaColWidths = [35, 40, 70, 35];
+        let xPos = margin;
+
+        pdf.setFillColor(...lightGray);
+        pdf.rect(margin, yPosition - 5, pageWidth - 2 * margin, 8, 'F');
+        
+        pdf.setFontSize(9);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setTextColor(...darkGray);
+        despesaHeaders.forEach((header, index) => {
+          pdf.text(header, xPos + despesaColWidths[index] / 2, yPosition, { align: 'center' });
+          xPos += despesaColWidths[index] + 5;
+        });
+        yPosition += 10;
+
+        // Linhas da tabela
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(8);
+        despesas.slice(0, 15).forEach((despesa, index) => {
+          checkPageBreak(8);
+          if (index % 2 === 0) {
+            pdf.setFillColor(250, 250, 250);
+            pdf.rect(margin, yPosition - 5, pageWidth - 2 * margin, 8, 'F');
+          }
+          
+          xPos = margin;
+          pdf.setTextColor(...darkGray);
+          pdf.text(despesa.data || '-', xPos + 5, yPosition);
+          xPos += despesaColWidths[0] + 5;
+          
+          pdf.text((despesa.tipo_despesa || '-').substring(0, 15), xPos + 5, yPosition);
+          xPos += despesaColWidths[1] + 5;
+          
+          pdf.text((despesa.descricao || '-').substring(0, 30), xPos + 5, yPosition);
+          xPos += despesaColWidths[2] + 5;
+          
+          pdf.setTextColor(...errorColor);
+          pdf.text(`R$ ${despesa.valor || '0.00'}`, xPos + despesaColWidths[3] / 2, yPosition, { align: 'center' });
+          
+          yPosition += 8;
+        });
+
+        if (despesas.length > 15) {
+          checkPageBreak(lineHeight);
+          pdf.setFontSize(9);
+          pdf.setTextColor(...darkGray);
+          pdf.text(`... e mais ${despesas.length - 15} registro(s)`, pageWidth / 2, yPosition, { align: 'center' });
+          yPosition += lineHeight;
+        }
+      }
+
+      // Rodapé
+      const totalPages = pdf.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+        pdf.setFontSize(8);
+        pdf.setTextColor(150, 150, 150);
+        pdf.text(
+          `Página ${i} de ${totalPages}`,
+          pageWidth / 2,
+          pageHeight - 10,
+          { align: 'center' }
+        );
+      }
+
+      const nomeArquivo = `relatorio_${periodo}_${format(new Date(), 'yyyy-MM-dd_HH-mm-ss')}.pdf`;
       pdf.save(nomeArquivo);
       
       console.log('✅ PDF exportado com sucesso!');
