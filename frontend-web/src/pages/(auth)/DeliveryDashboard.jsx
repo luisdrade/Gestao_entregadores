@@ -328,30 +328,8 @@ const DeliveryDashboard = () => {
           )}
         </div>
 
-        {/* Gráfico de Barras - Entregas por Dia */}
-        <div className="chart-card">
-          <h3 className="chart-title">📦 Entregas por Dia da Semana</h3>
-          {dados.entregas_por_dia && dados.entregas_por_dia.length > 0 ? (
-            <div className="chart-container">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={dados.entregas_por_dia}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="dia" tick={{ fontSize: isMobile ? 10 : 12 }} />
-                  <YAxis tick={{ fontSize: isMobile ? 10 : 12 }} />
-                  <Tooltip />
-                  <Bar dataKey="entregas" fill="#8884d8" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            <div className="chart-empty">
-              Nenhuma entrega registrada ainda
-            </div>
-          )}
-        </div>
-
         {/* Gráfico de Linha - Performance Mensal */}
-        <div className="chart-card wide">
+        <div className="chart-card">
           <h3 className="chart-title">📈 Performance Mensal</h3>
           {dados.performance_mensal && dados.performance_mensal.length > 0 ? (
             <div className="chart-container">
