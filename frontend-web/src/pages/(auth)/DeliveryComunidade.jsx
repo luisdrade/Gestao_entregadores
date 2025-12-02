@@ -4,14 +4,12 @@ import {
   Typography,
   Card,
   CardContent,
-  TextField,
   Button,
   Grid,
   Container,
   Paper,
   List,
   ListItem,
-  ListItemText,
   Divider,
   Alert,
   CircularProgress,
@@ -21,32 +19,15 @@ import {
 import {
   PostAdd as PostAddIcon,
   DirectionsCar as CarIcon,
-  Person as PersonIcon,
-  CalendarToday as CalendarIcon
+  Person as PersonIcon
 } from '@mui/icons-material';
-import { api, ENDPOINTS, API_BASE_URL } from '../../services/apiClient';
+import { api, API_BASE_URL } from '../../services/apiClient';
 
 const DeliveryComunidade = () => {
   const [postagens, setPostagens] = useState([]);
   const [anuncios, setAnuncios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [postData, setPostData] = useState({
-    autor: "",
-    titulo: "",
-    conteudo: ""
-  });
-
-  const [anuncioData, setAnuncioData] = useState({
-    modelo: "",
-    ano: "",
-    quilometragem: "",
-    preco: "",
-    localizacao: "",
-    link_externo: "",
-    foto: null,
-  });
 
   useEffect(() => {
     fetchComunidadeData();
@@ -66,85 +47,6 @@ const DeliveryComunidade = () => {
       setError('Erro ao carregar dados da comunidade: ' + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handlePostChange = (e) => {
-    setPostData({ ...postData, [e.target.name]: e.target.value });
-  };
-
-  const handleAnuncioChange = (e) => {
-    if (e.target.name === "foto") {
-      setAnuncioData({ ...anuncioData, foto: e.target.files[0] });
-    } else {
-      setAnuncioData({ ...anuncioData, [e.target.name]: e.target.value });
-    }
-  };
-
-  const handlePostSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formatHandle = (value) => {
-        const raw = (value || '').toString().trim();
-        if (!raw) return '@usuario';
-        const noAt = raw.replace(/^@+/, '');
-        const compact = noAt.replace(/\s+/g, '_');
-        const safe = compact.replace(/[^a-zA-Z0-9_.-]/g, '');
-        return `@${safe || 'usuario'}`;
-      };
-
-      const response = await api.post('/comunidade/api/postagens/', {
-        autor: formatHandle(postData.autor),
-        titulo: postData.titulo,
-        conteudo: postData.conteudo
-      }, {
-        headers: { "Content-Type": "application/json" },
-      });
-      
-      setPostagens([response.data.postagem, ...postagens]);
-      setPostData({ autor: "", titulo: "", conteudo: "" });
-    } catch (err) {
-      setError('Erro ao criar postagem: ' + (err.response?.data?.message || err.message));
-    }
-  };
-
-  const handleAnuncioSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formatHandle = (value) => {
-        const raw = (value || '').toString().trim();
-        if (!raw) return '@usuario';
-        const noAt = raw.replace(/^@+/, '');
-        const compact = noAt.replace(/\s+/g, '_');
-        const safe = compact.replace(/[^a-zA-Z0-9_.-]/g, '');
-        return `@${safe || 'usuario'}`;
-      };
-
-      const formData = new FormData();
-      Object.entries(anuncioData).forEach(([key, value]) => {
-        if (value) formData.append(key, value);
-      });
-      // Normalizar vendedor se existir campo no formulário (opcional)
-      if (formData.has('vendedor')) {
-        formData.set('vendedor', formatHandle(formData.get('vendedor')));
-      }
-
-      const response = await api.post('/comunidade/api/anuncios/', formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      
-      setAnuncios([response.data.anuncio, ...anuncios]);
-      setAnuncioData({
-        modelo: "",
-        ano: "",
-        quilometragem: "",
-        preco: "",
-        localizacao: "",
-        link_externo: "",
-        foto: null,
-      });
-    } catch (err) {
-      setError('Erro ao criar anúncio: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -171,7 +73,7 @@ const DeliveryComunidade = () => {
       <Grid container spacing={3}>
         {/* Fórum */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <Card>
+          <Card sx={{ borderRadius: 3, boxShadow: '0 6px 20px rgba(0,0,0,0.08)' }}>
             <CardContent>
               <Box display="flex" alignItems="center" mb={2}>
                 <PostAddIcon color="primary" sx={{ mr: 1 }} />
@@ -179,53 +81,17 @@ const DeliveryComunidade = () => {
                   Fórum - Compartilhe suas experiências
                 </Typography>
               </Box>
-
-              <Box component="form" onSubmit={handlePostSubmit} sx={{ mb: 3 }}>
-                <TextField
-                  fullWidth
-                  label="Seu nome"
-                  name="autor"
-                  value={postData.autor}
-                  onChange={handlePostChange}
-                  margin="normal"
-                  required
-                />
-                <TextField
-                  fullWidth
-                  label="Título do post"
-                  name="titulo"
-                  value={postData.titulo}
-                  onChange={handlePostChange}
-                  margin="normal"
-                  required
-                />
-                <TextField
-                  fullWidth
-                  label="Conteúdo"
-                  name="conteudo"
-                  value={postData.conteudo}
-                  onChange={handlePostChange}
-                  multiline
-                  rows={4}
-                  margin="normal"
-                  required
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  startIcon={<PostAddIcon />}
-                  sx={{ mt: 2 }}
-                >
-                  Publicar no fórum
-                </Button>
-              </Box>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Veja as últimas conversas da comunidade de entregadores. Esta área é somente leitura, 
+                ideal para acompanhar dicas, histórias e experiências.
+              </Typography>
 
               <Divider sx={{ my: 2 }} />
 
               <Typography variant="h6" gutterBottom>
                 Postagens recentes
               </Typography>
-              <List>
+              <List sx={{ mt: 1 }}>
                 {postagens.length > 0 ? (
                   postagens.map((post) => (
                     <ListItem key={post.id} component={Paper} sx={{ mb: 1, p: 2 }}>
@@ -263,7 +129,7 @@ const DeliveryComunidade = () => {
 
         {/* Anúncios de Veículos */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <Card>
+          <Card sx={{ borderRadius: 3, boxShadow: '0 6px 20px rgba(0,0,0,0.08)' }}>
             <CardContent>
               <Box display="flex" alignItems="center" mb={2}>
                 <CarIcon color="primary" sx={{ mr: 1 }} />
@@ -272,106 +138,17 @@ const DeliveryComunidade = () => {
                 </Typography>
               </Box>
 
-              <Box component="form" onSubmit={handleAnuncioSubmit} sx={{ mb: 3 }}>
-                <Grid container spacing={2}>
-                  <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField
-                      fullWidth
-                      label="Modelo"
-                      name="modelo"
-                      value={anuncioData.modelo}
-                      onChange={handleAnuncioChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField
-                      fullWidth
-                      label="Ano"
-                      name="ano"
-                      type="number"
-                      value={anuncioData.ano}
-                      onChange={handleAnuncioChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField
-                      fullWidth
-                      label="Quilometragem"
-                      name="quilometragem"
-                      type="number"
-                      value={anuncioData.quilometragem}
-                      onChange={handleAnuncioChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField
-                      fullWidth
-                      label="Preço"
-                      name="preco"
-                      type="number"
-                      step="0.01"
-                      value={anuncioData.preco}
-                      onChange={handleAnuncioChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12 }}>
-                    <TextField
-                      fullWidth
-                      label="Localização"
-                      name="localizacao"
-                      value={anuncioData.localizacao}
-                      onChange={handleAnuncioChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12 }}>
-                    <TextField
-                      fullWidth
-                      label="Link externo"
-                      name="link_externo"
-                      type="url"
-                      value={anuncioData.link_externo}
-                      onChange={handleAnuncioChange}
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12 }}>
-                    <Button
-                      variant="outlined"
-                      component="label"
-                      fullWidth
-                      startIcon={<CarIcon />}
-                    >
-                      Foto do veículo
-                      <input
-                        type="file"
-                        name="foto"
-                        onChange={handleAnuncioChange}
-                        accept="image/*"
-                        hidden
-                      />
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  startIcon={<CarIcon />}
-                  sx={{ mt: 2 }}
-                >
-                  Publicar anúncio
-                </Button>
-              </Box>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Explore anúncios de veículos feitos por outros entregadores. 
+                Use esses exemplos como referência para o seu próximo negócio.
+              </Typography>
 
               <Divider sx={{ my: 2 }} />
 
               <Typography variant="h6" gutterBottom>
                 Anúncios recentes
               </Typography>
-              <List>
+              <List sx={{ mt: 1 }}>
                 {anuncios.length > 0 ? (
                   anuncios.map((anuncio) => (
                     <ListItem key={anuncio.id} component={Paper} sx={{ mb: 1, p: 2 }}>
