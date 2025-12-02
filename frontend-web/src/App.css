@@ -1,11 +1,24 @@
 /* Layout base suavizado para páginas inteiras */
-html, body, #root {
+html {
   height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 body {
+  min-height: 100%;
+  height: auto;
   background-color: #e5e5e5;
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#root {
+  min-height: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .logo {

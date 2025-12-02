@@ -10,7 +10,16 @@ import {
   Menu,
   MenuItem,
   Avatar,
-  Container
+  Container,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery,
+  useTheme,
+  Divider
 } from '@mui/material';
 import {
   Home as HomeIcon,
@@ -21,7 +30,8 @@ import {
   Person as PersonIcon,
   AdminPanelSettings as AdminIcon,
   Login as LoginIcon,
-  PersonAdd as RegisterIcon
+  PersonAdd as RegisterIcon,
+  Menu as MenuIcon
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 
@@ -29,7 +39,10 @@ const Header = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -42,7 +55,20 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     handleMenuClose();
+    setMobileMenuOpen(false);
     navigate('/login');
+  };
+
+  const handleMobileMenuToggle = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMenuOpen(false);
+  };
+
+  const handleNavClick = (path) => {
+    handleMobileMenuClose();
   };
 
   const isActive = (path) => {
@@ -85,23 +111,38 @@ const Header = () => {
 
   return (
     <Box sx={{ backgroundColor: '#e5e5e5' }}>
-      <AppBar position="static" elevation={0} sx={{ backgroundColor: 'primary.main', borderRadius: 1, mt: 2, mx: { xs: 1, sm: 2 }, px: 1 }}>
-        <Container maxWidth="xl">
-          <Toolbar sx={{ minHeight: 56 }}>
+      <AppBar position="static" elevation={0} sx={{ backgroundColor: 'primary.main', borderRadius: 1, mt: { xs: 1, sm: 2 }, mx: { xs: 0.5, sm: 2 }, px: { xs: 0.5, sm: 1 } }}>
+        <Container maxWidth="xl" sx={{ px: { xs: 1, sm: 2 } }}>
+          <Toolbar sx={{ minHeight: { xs: 48, sm: 56 }, px: { xs: 0, sm: 2 } }}>
+            {isMobile && (
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={handleMobileMenuToggle}
+                sx={{ mr: 1 }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
+            
             <Typography 
               variant="h6" 
               component="div" 
               sx={{ 
                 flexGrow: 1, 
-                mr: 4,
+                mr: { xs: 1, sm: 4 },
                 fontWeight: 700,
-                fontSize: { xs: '1rem', sm: '1.25rem' }
+                fontSize: { xs: '0.875rem', sm: '1.25rem' },
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
               }}
             >
               {getPageTitle()}
             </Typography>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+            <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 0 }}>
               {getNavItems().map((item) => (
                 <Button
                   key={item.path}
@@ -115,8 +156,7 @@ const Header = () => {
                     borderRadius: 0,
                     borderBottom: isActive(item.path) ? '2px solid rgba(255,255,255,0.9)' : '2px solid transparent',
                     '&:hover': { backgroundColor: 'transparent', borderBottomColor: 'rgba(255,255,255,0.6)' },
-                    display: { xs: 'none', sm: 'inline-flex' },
-                    fontSize: { xs: '0.8rem', sm: '0.9rem' }
+                    fontSize: '0.9rem'
                   }}
                 >
                   {item.label}
@@ -125,9 +165,9 @@ const Header = () => {
             </Box>
 
             {user && (
-              <Box sx={{ ml: 2 }}>
+              <Box sx={{ ml: { xs: 0.5, sm: 2 } }}>
                 <IconButton onClick={handleMenuOpen} color="inherit" sx={{ p: 0 }}>
-                  <Avatar sx={{ width: 28, height: 28, bgcolor: 'rgba(255,255,255,0.2)' }}>
+                  <Avatar sx={{ width: { xs: 24, sm: 28 }, height: { xs: 24, sm: 28 }, bgcolor: 'rgba(255,255,255,0.2)' }}>
                     <PersonIcon fontSize="small" />
                   </Avatar>
                 </IconButton>
@@ -158,6 +198,85 @@ const Header = () => {
           </Toolbar>
         </Container>
       </AppBar>
+
+      {/* Drawer para mobile */}
+      <Drawer
+        anchor="left"
+        open={mobileMenuOpen}
+        onClose={handleMobileMenuClose}
+        PaperProps={{
+          sx: {
+            width: 280,
+            backgroundColor: 'background.paper'
+          }
+        }}
+      >
+        <Box sx={{ width: 280, pt: 2 }}>
+          {user && (
+            <>
+              <Box sx={{ px: 2, pb: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <Avatar sx={{ width: 40, height: 40, bgcolor: 'primary.main', mr: 2 }}>
+                    <PersonIcon />
+                  </Avatar>
+                  <Box>
+                    <Typography variant="subtitle2" fontWeight="bold">
+                      {user?.name || user?.email}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {isAdmin ? 'Administrador' : 'Entregador'}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+              <Divider />
+            </>
+          )}
+          
+          <List>
+            {getNavItems().map((item) => (
+              <ListItem key={item.path} disablePadding>
+                <ListItemButton
+                  component={Link}
+                  to={item.path}
+                  onClick={handleNavClick}
+                  selected={isActive(item.path)}
+                  sx={{
+                    '&.Mui-selected': {
+                      backgroundColor: 'primary.light',
+                      color: 'primary.contrastText',
+                      '&:hover': {
+                        backgroundColor: 'primary.main',
+                      },
+                    },
+                  }}
+                >
+                  <ListItemIcon sx={{ color: isActive(item.path) ? 'inherit' : 'text.secondary', minWidth: 40 }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+
+          {user && (
+            <>
+              <Divider />
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={handleLogout}>
+                    <ListItemIcon sx={{ minWidth: 40 }}>
+                      <LogoutIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Sair" />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </>
+          )}
+        </Box>
+      </Drawer>
     </Box>
   );
 };

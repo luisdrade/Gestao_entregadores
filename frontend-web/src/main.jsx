@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './styles/global.css'
 import App from './App.jsx'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
 
 // Interceptar e suprimir o erro específico de listener assíncrono
 const originalConsoleError = console.error;
@@ -46,12 +47,31 @@ window.addEventListener('error', (event) => {
 const theme = createTheme({
   palette: {
     primary: { main: '#2B2860' }
-  }
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          scrollbarWidth: 'thin',
+        },
+      },
+    },
+  },
 })
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <App />
     </ThemeProvider>
   </StrictMode>,

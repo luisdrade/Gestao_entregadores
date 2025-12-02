@@ -4,9 +4,25 @@ import Header from './Header';
 
 const DeliveryLayout = ({ children }) => {
   return (
-    <Box>
+    <Box sx={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#e5e5e5', 
+      width: '100%', 
+      overflowX: 'hidden',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
       <Header />
-      <Box component="main">
+      <Box 
+        component="main" 
+        sx={{ 
+          width: '100%',
+          flex: 1,
+          pb: { xs: 2, sm: 4 },
+          overflowX: 'hidden',
+          overflowY: 'auto'
+        }}
+      >
         {children}
       </Box>
     </Box>
