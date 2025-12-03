@@ -234,6 +234,41 @@
   box-shadow: 0 0 0 1px #e53e3e;
 }
 
+/* Checkbox LGPD */
+.checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #2B2860;
+  flex-shrink: 0;
+}
+
+.checkbox-label {
+  font-size: 0.9rem;
+  color: #666666;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.terms-link {
+  color: #5B9BD5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.terms-link:hover {
+  text-decoration: underline;
+}
+
 /* Responsive */
 @media (max-width: 400px) {
 

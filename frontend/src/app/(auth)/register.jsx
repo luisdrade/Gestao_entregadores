@@ -11,6 +11,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { httpClient } from '../../services/clientConfig';
@@ -40,6 +41,9 @@ const validacaoRegister = Yup.object().shape({
   confirmarSenha: Yup.string()
     .oneOf([Yup.ref('senha'), null], 'As senhas devem ser iguais')
     .required('Confirmação de senha é obrigatória'),
+  aceitarTermosLGPD: Yup.boolean()
+    .oneOf([true], 'Você deve aceitar os termos da LGPD para continuar')
+    .required('Aceite dos termos da LGPD é obrigatório'),
 });
 
 export default function RegisterScreen() {
@@ -250,6 +254,7 @@ export default function RegisterScreen() {
               telefone: '',
               senha: '',
               confirmarSenha: '',
+              aceitarTermosLGPD: false,
             }}
             validationSchema={validacaoRegister}
             onSubmit={handleRegister}
@@ -408,6 +413,34 @@ export default function RegisterScreen() {
                 )}
                 {fieldErrors.confirmarSenha && (
                   <Text style={styles.error}>{fieldErrors.confirmarSenha}</Text>
+                )}
+
+                {/* Checkbox LGPD */}
+                <TouchableOpacity
+                  style={styles.checkboxContainer}
+                  onPress={() => {
+                    setFieldValue('aceitarTermosLGPD', !values.aceitarTermosLGPD);
+                    handleBlur('aceitarTermosLGPD');
+                    if (fieldErrors.aceitarTermosLGPD) {
+                      setFieldErrors(prev => ({ ...prev, aceitarTermosLGPD: null }));
+                    }
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <View style={[styles.checkbox, values.aceitarTermosLGPD && styles.checkboxChecked]}>
+                    {values.aceitarTermosLGPD && (
+                      <Ionicons name="checkmark" size={16} color="#fff" />
+                    )}
+                  </View>
+                  <Text style={styles.checkboxLabel}>
+                    Aceito os <Text style={styles.termsLink} onPress={() => router.push('/(auth)/termos-lgpd')}>termos da LGPD</Text>
+                  </Text>
+                </TouchableOpacity>
+                {(touched.aceitarTermosLGPD && errors.aceitarTermosLGPD) && (
+                  <Text style={styles.error}>{errors.aceitarTermosLGPD}</Text>
+                )}
+                {fieldErrors.aceitarTermosLGPD && (
+                  <Text style={styles.error}>{fieldErrors.aceitarTermosLGPD}</Text>
                 )}
 
                 {/* Erro geral */}
@@ -583,6 +616,38 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     textAlign: 'center',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderWidth: 2,
+    borderColor: '#666',
+    borderRadius: 4,
+    marginRight: 10,
+    marginTop: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  checkboxChecked: {
+    backgroundColor: '#2B2860',
+    borderColor: '#2B2860',
+  },
+  checkboxLabel: {
+    flex: 1,
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 20,
+  },
+  termsLink: {
+    color: '#5B9BD5',
+    fontWeight: '500',
   },
 });
 

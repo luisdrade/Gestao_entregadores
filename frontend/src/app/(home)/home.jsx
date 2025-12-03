@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';  
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useAuth } from '../../context/AuthContext.jsx';
 import TopNavBar from '../../components/_NavBar_Superior';
 import KPICard from '../../components/_KPICard';
@@ -43,10 +43,6 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [periodo, setPeriodo] = useState('mes'); // 'semana' ou 'mes'
 
-  useEffect(() => {
-    loadDashboardData();
-  }, [periodo]);
-
   // Verificar autenticação e redirecionar se necessário
   useEffect(() => {
     const checkAuthAndRedirect = async () => {
@@ -65,7 +61,7 @@ export default function HomeScreen() {
     checkAuthAndRedirect();
   }, [router]);
 
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     try {
       setIsLoading(true);
 
@@ -79,6 +75,7 @@ export default function HomeScreen() {
       
       if (!token) {
         console.log('⚠️ Debug - Nenhum token encontrado, não carregando dados');
+        setIsLoading(false);
         return;
       }
 
@@ -88,13 +85,18 @@ export default function HomeScreen() {
         console.log('🔍 Debug - Token definido no httpClient:', httpClient.defaults.headers.Authorization);
       }
 
+      // Adicionar timestamp para evitar cache
+      const timestamp = new Date().getTime();
+      const url = `${API_ENDPOINTS.REPORTS.DASHBOARD}?periodo=${periodo}&_t=${timestamp}`;
+      
       // Debug: verificar headers da API
       console.log('🔍 Debug - Headers da API:', httpClient.defaults.headers);
-      console.log('🔍 Debug - URL da requisição:', `${httpClient.defaults.baseURL}${API_ENDPOINTS.REPORTS.DASHBOARD}?periodo=${periodo}`);
+      console.log('🔍 Debug - URL da requisição:', `${httpClient.defaults.baseURL}${url}`);
 
-      const response = await httpClient.get(`${API_ENDPOINTS.REPORTS.DASHBOARD}?periodo=${periodo}`);
+      const response = await httpClient.get(url);
 
       if (response.data.success) {
+        console.log('✅ Dashboard - Dados atualizados:', response.data.data);
         setDashboardData(response.data.data);
       } else {
         Alert.alert('Erro', 'Falha ao carregar dados do dashboard');
@@ -114,7 +116,27 @@ export default function HomeScreen() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [periodo, user, router]);
+
+  // Recarregar dados quando a tela recebe foco (quando o usuário volta para o dashboard)
+  useFocusEffect(
+    useCallback(() => {
+      console.log('🔄 Dashboard - Tela recebeu foco, recarregando dados...');
+      loadDashboardData();
+      
+      // Configurar atualização automática a cada 30 segundos quando a tela está em foco
+      const intervalId = setInterval(() => {
+        console.log('🔄 Dashboard - Atualização automática (30s)...');
+        loadDashboardData();
+      }, 30000); // 30 segundos
+      
+      // Limpar intervalo quando a tela perder o foco
+      return () => {
+        console.log('🔄 Dashboard - Tela perdeu foco, parando atualização automática');
+        clearInterval(intervalId);
+      };
+    }, [loadDashboardData])
+  );
 
   const togglePeriodo = () => {
     setPeriodo(periodo === 'mes' ? 'semana' : 'mes');

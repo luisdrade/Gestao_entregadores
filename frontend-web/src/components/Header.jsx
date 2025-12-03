@@ -40,7 +40,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md')); // Tratar md para baixo como layout mobile
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -110,53 +110,82 @@ const Header = () => {
   };
 
   return (
-    <Box sx={{ backgroundColor: '#e5e5e5' }}>
-      <AppBar position="static" elevation={0} sx={{ backgroundColor: 'primary.main', borderRadius: 1, mt: { xs: 1, sm: 2 }, mx: { xs: 0.5, sm: 2 }, px: { xs: 0.5, sm: 1 } }}>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar
+        position="static"
+        elevation={0}
+        sx={{
+          backgroundColor: 'primary.main',
+          borderRadius: 0,
+          px: 0,
+        }}
+      >
         <Container maxWidth="xl" sx={{ px: { xs: 1, sm: 2 } }}>
-          <Toolbar sx={{ minHeight: { xs: 48, sm: 56 }, px: { xs: 0, sm: 2 } }}>
-            {isMobile && (
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                onClick={handleMobileMenuToggle}
-                sx={{ mr: 1 }}
+          <Toolbar
+            sx={{
+              minHeight: { xs: 56, sm: 64 },
+              px: { xs: 0, sm: 1 },
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 1,
+            }}
+          >
+            {/* Lado esquerdo: menu mobile + título */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 1, minWidth: 0 }}>
+              {isMobile && (
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  onClick={handleMobileMenuToggle}
+                  sx={{ mr: 0.5 }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              )}
+
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: { xs: '0.95rem', sm: '1.15rem' },
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
               >
-                <MenuIcon />
-              </IconButton>
-            )}
-            
-            <Typography 
-              variant="h6" 
-              component="div" 
-              sx={{ 
-                flexGrow: 1, 
-                mr: { xs: 1, sm: 4 },
-                fontWeight: 700,
-                fontSize: { xs: '0.875rem', sm: '1.25rem' },
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
+                {getPageTitle()}
+              </Typography>
+            </Box>
+
+            {/* Navegação desktop */}
+            <Box
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                alignItems: 'center',
+                gap: 0.5,
+                flexShrink: 0,
               }}
             >
-              {getPageTitle()}
-            </Typography>
-
-            <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 0 }}>
               {getNavItems().map((item) => (
                 <Button
                   key={item.path}
                   component={Link}
                   to={item.path}
                   color="inherit"
+                  onClick={() => handleNavClick(item.path)}
                   sx={{
                     textTransform: 'none',
-                    fontWeight: 600,
-                    mx: 0.5,
-                    borderRadius: 0,
-                    borderBottom: isActive(item.path) ? '2px solid rgba(255,255,255,0.9)' : '2px solid transparent',
-                    '&:hover': { backgroundColor: 'transparent', borderBottomColor: 'rgba(255,255,255,0.6)' },
-                    fontSize: '0.9rem'
+                    fontWeight: 500,
+                    px: 1.5,
+                    borderRadius: 999,
+                    fontSize: '0.9rem',
+                    backgroundColor: isActive(item.path) ? 'rgba(255,255,255,0.15)' : 'transparent',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255,255,255,0.22)',
+                    },
                   }}
                 >
                   {item.label}
@@ -164,37 +193,74 @@ const Header = () => {
               ))}
             </Box>
 
-            {user && (
-              <Box sx={{ ml: { xs: 0.5, sm: 2 } }}>
-                <IconButton onClick={handleMenuOpen} color="inherit" sx={{ p: 0 }}>
-                  <Avatar sx={{ width: { xs: 24, sm: 28 }, height: { xs: 24, sm: 28 }, bgcolor: 'rgba(255,255,255,0.2)' }}>
-                    <PersonIcon fontSize="small" />
-                  </Avatar>
-                </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleMenuClose}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            {/* Avatar / Login */}
+            <Box
+              sx={{
+                ml: { xs: 0.5, sm: 1.5 },
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              {user ? (
+                <>
+                  <IconButton onClick={handleMenuOpen} color="inherit" sx={{ p: 0 }}>
+                    <Avatar
+                      sx={{
+                        width: { xs: 28, sm: 32 },
+                        height: { xs: 28, sm: 32 },
+                        bgcolor: 'rgba(255,255,255,0.2)',
+                      }}
+                    >
+                      <PersonIcon fontSize="small" />
+                    </Avatar>
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  >
+                    <MenuItem disabled>
+                      <Typography variant="body2" color="text.secondary">
+                        {user?.name || user?.email}
+                      </Typography>
+                    </MenuItem>
+                    <MenuItem disabled>
+                      <Typography variant="body2" color="text.secondary">
+                        {isAdmin ? 'Administrador' : 'Entregador'}
+                      </Typography>
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      <LogoutIcon sx={{ mr: 1 }} />
+                      Sair
+                    </MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <Button
+                  component={Link}
+                  to="/login"
+                  color="inherit"
+                  size="small"
+                  sx={{
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    borderRadius: 999,
+                    px: 1.5,
+                    py: 0.5,
+                    fontSize: '0.85rem',
+                    backgroundColor: 'rgba(255,255,255,0.12)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255,255,255,0.2)',
+                    },
+                  }}
                 >
-                  <MenuItem disabled>
-                    <Typography variant="body2" color="text.secondary">
-                      {user?.name || user?.email}
-                    </Typography>
-                  </MenuItem>
-                  <MenuItem disabled>
-                    <Typography variant="body2" color="text.secondary">
-                      {isAdmin ? 'Administrador' : 'Entregador'}
-                    </Typography>
-                  </MenuItem>
-                  <MenuItem onClick={handleLogout}>
-                    <LogoutIcon sx={{ mr: 1 }} />
-                    Sair
-                  </MenuItem>
-                </Menu>
-              </Box>
-            )}
+                  Entrar
+                </Button>
+              )}
+            </Box>
           </Toolbar>
         </Container>
       </AppBar>
@@ -206,12 +272,12 @@ const Header = () => {
         onClose={handleMobileMenuClose}
         PaperProps={{
           sx: {
-            width: 280,
-            backgroundColor: 'background.paper'
+            width: 260,
+            backgroundColor: 'background.paper',
           }
         }}
       >
-        <Box sx={{ width: 280, pt: 2 }}>
+        <Box sx={{ width: 260, pt: 2 }}>
           {user && (
             <>
               <Box sx={{ px: 2, pb: 2 }}>

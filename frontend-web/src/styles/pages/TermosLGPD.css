@@ -1,0 +1,141 @@
+/* Termos LGPD Page Styles */
+.termos-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: #E0E0E0;
+  padding: 2rem 1rem;
+}
+
+.termos-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: #5B9BD5;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.back-button:hover {
+  color: #2B2860;
+  text-decoration: underline;
+}
+
+.termos-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2B2860;
+  text-align: center;
+  margin: 0 0 0.5rem 0;
+}
+
+.termos-date {
+  text-align: center;
+  color: #666666;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.termos-content {
+  line-height: 1.8;
+  color: #333333;
+}
+
+.termos-section {
+  margin-bottom: 2rem;
+}
+
+.termos-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2B2860;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+}
+
+.termos-section h2:first-child {
+  margin-top: 0;
+}
+
+.termos-section p {
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.termos-section ul {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+.termos-section li {
+  margin-bottom: 0.75rem;
+  text-align: justify;
+}
+
+.termos-section strong {
+  color: #2B2860;
+  font-weight: 600;
+}
+
+.termos-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #E0E0E0;
+  text-align: center;
+}
+
+.back-button-footer {
+  background-color: #2B2860;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-button-footer:hover {
+  background-color: #1f1f4a;
+  box-shadow: 0 4px 8px rgba(43, 40, 96, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .termos-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .termos-card {
+    padding: 1.5rem;
+    border-radius: 15px;
+  }
+
+  .termos-title {
+    font-size: 1.5rem;
+  }
+
+  .termos-section h2 {
+    font-size: 1.25rem;
+  }
+}
+
+
+

@@ -26,6 +26,9 @@ const validacaoRegister = Yup.object().shape({
   confirmarSenha: Yup.string()
     .oneOf([Yup.ref('senha'), null], 'As senhas devem ser iguais')
     .required('Confirmação de senha é obrigatória'),
+  aceitarTermosLGPD: Yup.boolean()
+    .oneOf([true], 'Você deve aceitar os termos da LGPD para continuar')
+    .required('Aceite dos termos da LGPD é obrigatório'),
 });
 
 // Função para formatar telefone
@@ -115,6 +118,7 @@ export default function Register() {
             telefone: '',
             senha: '',
             confirmarSenha: '',
+            aceitarTermosLGPD: false,
           }}
           validationSchema={validacaoRegister}
           onSubmit={handleRegister}
@@ -283,6 +287,33 @@ export default function Register() {
               {fieldErrors.general && (
                 <div className="register-error">{fieldErrors.general}</div>
               )}
+
+              <div className="form-group">
+                <label className="checkbox-container">
+                  <input
+                    type="checkbox"
+                    name="aceitarTermosLGPD"
+                    checked={values.aceitarTermosLGPD}
+                    onChange={(e) => {
+                      setFieldValue('aceitarTermosLGPD', e.target.checked);
+                      if (fieldErrors.aceitarTermosLGPD) {
+                        setFieldErrors(prev => ({ ...prev, aceitarTermosLGPD: null }));
+                      }
+                    }}
+                    onBlur={handleBlur('aceitarTermosLGPD')}
+                    className="checkbox-input"
+                  />
+                  <span className="checkbox-label">
+                    Aceito os <a href="/termos-lgpd" target="_blank" rel="noopener noreferrer" className="terms-link">termos da LGPD</a>
+                  </span>
+                </label>
+                {(touched.aceitarTermosLGPD && errors.aceitarTermosLGPD) && (
+                  <div className="field-error">{errors.aceitarTermosLGPD}</div>
+                )}
+                {fieldErrors.aceitarTermosLGPD && (
+                  <div className="field-error">{fieldErrors.aceitarTermosLGPD}</div>
+                )}
+              </div>
 
               <button 
                 type="submit" 

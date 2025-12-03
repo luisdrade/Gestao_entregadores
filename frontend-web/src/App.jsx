@@ -7,6 +7,7 @@ import ProtectedRoute from './routes/ProtectedRoute'
 import AdminRoute from './routes/AdminRoute'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import TermosLGPD from './pages/TermosLGPD'
 import AdminDashboard from './pages/(admin)/AdminDashboard'
 import DeliveryDashboard from './pages/(auth)/DeliveryDashboard'
 import DeliveryComunidade from './pages/(auth)/DeliveryComunidade'
@@ -53,6 +54,7 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registrar" element={<Register />} />
+            <Route path="/termos-lgpd" element={<TermosLGPD />} />
             
             {/* Rotas do Admin */}
             <Route path="/admin" element={

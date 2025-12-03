@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, useCallback } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   PieChart,
   Pie,
@@ -19,6 +19,7 @@ import { api } from '../../services/apiClient';
 import '../../styles/pages/DeliveryDashboard.css';
 
 const DeliveryDashboard = () => {
+  const location = useLocation();
   const [periodo, setPeriodo] = useState('mes');
   const [dados, setDados] = useState({
     resumo_diario: {
@@ -49,19 +50,7 @@ const DeliveryDashboard = () => {
   const [error, setError] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    fetchDashboardData();
-  }, [periodo]);
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -70,6 +59,8 @@ const DeliveryDashboard = () => {
       
       const params = new URLSearchParams();
       params.append('periodo', periodo);
+      // Adicionar timestamp para evitar cache
+      params.append('_t', new Date().getTime().toString());
       
       console.log('🔍 Dashboard - Fazendo chamada para /registro/api/dashboard-data/');
       const response = await api.get(`/registro/api/dashboard-data/?${params.toString()}`);
@@ -104,7 +95,7 @@ const DeliveryDashboard = () => {
           ultimos_registros: backendData.ultimos_registros || []
         });
         
-        console.log('✅ Dashboard - Dados carregados com sucesso');
+        console.log('✅ Dashboard - Dados carregados com sucesso:', backendData.resumo_diario);
       } else {
         throw new Error(response.data.error || 'Resposta inválida do servidor');
       }
@@ -115,7 +106,56 @@ const DeliveryDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [periodo]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
+
+  // Recarregar dados quando o usuário navega de volta para o dashboard
+  useEffect(() => {
+    // Só recarregar se estiver na rota do dashboard
+    if (location.pathname === '/dashboard') {
+      console.log('🔄 Dashboard - Navegação detectada, recarregando dados...');
+      fetchDashboardData();
+    }
+  }, [location.pathname, location.key, fetchDashboardData]);
+
+  // Atualização automática quando a página está visível
+  useEffect(() => {
+    if (location.pathname !== '/dashboard') return;
+
+    // Atualizar quando a página volta a ficar visível
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log('🔄 Dashboard - Página ficou visível, recarregando dados...');
+        fetchDashboardData();
+      }
+    };
+
+    // Atualização automática a cada 30 segundos quando a página está visível
+    const intervalId = setInterval(() => {
+      if (!document.hidden) {
+        console.log('🔄 Dashboard - Atualização automática (30s)...');
+        fetchDashboardData();
+      }
+    }, 30000); // 30 segundos
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [location.pathname, fetchDashboardData]);
 
   const handlePeriodoChange = (newPeriodo) => {
     setPeriodo(newPeriodo);
@@ -159,19 +199,41 @@ const DeliveryDashboard = () => {
             Performance e resultados {periodo === 'semana' ? 'da semana' : 'do mês'}
           </p>
         </div>
-        <div className="period-toggle">
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <button
-            className={periodo === 'semana' ? 'active' : ''}
-            onClick={() => handlePeriodoChange('semana')}
+            onClick={fetchDashboardData}
+            disabled={loading}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#2B2860',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontSize: '14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              opacity: loading ? 0.6 : 1
+            }}
+            title="Atualizar dados"
           >
-            Semana
+            {loading ? '⏳' : '🔄'} {loading ? 'Atualizando...' : 'Atualizar'}
           </button>
-          <button
-            className={periodo === 'mes' ? 'active' : ''}
-            onClick={() => handlePeriodoChange('mes')}
-          >
-            Mês
-          </button>
+          <div className="period-toggle">
+            <button
+              className={periodo === 'semana' ? 'active' : ''}
+              onClick={() => handlePeriodoChange('semana')}
+            >
+              Semana
+            </button>
+            <button
+              className={periodo === 'mes' ? 'active' : ''}
+              onClick={() => handlePeriodoChange('mes')}
+            >
+              Mês
+            </button>
+          </div>
         </div>
       </div>
 

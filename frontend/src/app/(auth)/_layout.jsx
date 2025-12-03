@@ -32,6 +32,10 @@ export default function AuthLayout() {
         name="register-verify-code" 
         options={{ headerShown: false }}
       />
+      <Stack.Screen 
+        name="termos-lgpd" 
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }

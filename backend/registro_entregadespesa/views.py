@@ -174,24 +174,44 @@ def registro_trabalho(request):
             
             # Validar formato da data
             try:
-                from datetime import datetime
+                from datetime import date
+                import re
                 
                 # Tentar formato brasileiro primeiro (DD/MM/YYYY)
                 try:
-                    data_obj = datetime.strptime(data['data'], '%d/%m/%Y').date()
-                except ValueError:
+                    # Parse direto da string para evitar problemas de timezone
+                    match = re.match(r'^(\d{2})/(\d{2})/(\d{4})$', data['data'])
+                    if match:
+                        dia, mes, ano = map(int, match.groups())
+                        data_obj = date(ano, mes, dia)
+                        logger.debug(f"Data parseada (DD/MM/YYYY): {data_obj} de {data['data']}")
+                    else:
+                        raise ValueError("Formato inválido")
+                except (ValueError, AttributeError):
                     # Tentar formato internacional (YYYY-MM-DD)
                     try:
-                        data_obj = datetime.strptime(data['data'], '%Y-%m-%d').date()
-                    except ValueError:
+                        match = re.match(r'^(\d{4})-(\d{2})-(\d{2})$', data['data'])
+                        if match:
+                            ano, mes, dia = map(int, match.groups())
+                            data_obj = date(ano, mes, dia)
+                            logger.debug(f"Data parseada (YYYY-MM-DD): {data_obj} de {data['data']}")
+                        else:
+                            raise ValueError("Formato inválido")
+                    except (ValueError, AttributeError):
                         # Tentar outros formatos comuns
                         try:
-                            data_obj = datetime.strptime(data['data'], '%d-%m-%Y').date()
-                        except ValueError:
+                            match = re.match(r'^(\d{2})-(\d{2})-(\d{4})$', data['data'])
+                            if match:
+                                dia, mes, ano = map(int, match.groups())
+                                data_obj = date(ano, mes, dia)
+                                logger.debug(f"Data parseada (DD-MM-YYYY): {data_obj} de {data['data']}")
+                            else:
+                                raise ValueError("Formato inválido")
+                        except (ValueError, AttributeError):
                             raise ValueError(f"Formato de data inválido: {data['data']}. Use DD/MM/YYYY ou YYYY-MM-DD")
                 
             except ValueError as e:
-                logger.warning(f"Erro na data: {data['data']}")
+                logger.warning(f"Erro na data: {data['data']} - {str(e)}")
                 return Response({
                     'success': False, 
                     'error': str(e)
@@ -209,18 +229,61 @@ def registro_trabalho(request):
                 }, status=status.HTTP_400_BAD_REQUEST)
             
             # Criar registro de trabalho
-            registro = RegistroTrabalho.objects.create(
-                data=data_obj,
-                hora_inicio=hora_inicio,
-                hora_fim=hora_fim,
-                quantidade_entregues=quantidade_entregues,
-                quantidade_nao_entregues=quantidade_nao_entregues,
-                tipo_pagamento=data['tipo_pagamento'],
-                valor=float(data['valor']),
-                entregador=user
-            )
+            logger.info(f"📅 ANTES DE SALVAR - Data recebida do frontend: '{data['data']}'")
+            logger.info(f"📅 ANTES DE SALVAR - Data parseada: {data_obj} (tipo: {type(data_obj)}, ano={data_obj.year}, mes={data_obj.month}, dia={data_obj.day})")
             
-            logger.info(f"Registro criado com sucesso! ID: {registro.id}")
+            # Salvar diretamente usando SQL raw para evitar problemas de timezone
+            from django.db import connection
+            from django.utils import timezone
+            
+            logger.info(f"📅 ANTES DE SALVAR NO BANCO - Data parseada: {data_obj} (ano={data_obj.year}, mes={data_obj.month}, dia={data_obj.day})")
+            
+            # Formatar a data como string YYYY-MM-DD para inserção direta no banco
+            data_str = f"{data_obj.year}-{data_obj.month:02d}-{data_obj.day:02d}"
+            logger.info(f"📅 Data formatada para SQL: {data_str}")
+            
+            # Obter o nome correto da tabela
+            table_name = RegistroTrabalho._meta.db_table
+            
+            # Inserir usando SQL raw para garantir que a data seja salva exatamente como queremos
+            # Usar data_obj diretamente (objeto date) em vez de string para evitar problemas
+            with connection.cursor() as cursor:
+                # Primeiro, inserir o registro usando o ORM do Django mas forçando a data
+                registro = RegistroTrabalho(
+                    data=data_obj,
+                    hora_inicio=hora_inicio,
+                    hora_fim=hora_fim,
+                    quantidade_entregues=quantidade_entregues,
+                    quantidade_nao_entregues=quantidade_nao_entregues,
+                    tipo_pagamento=data['tipo_pagamento'],
+                    valor=float(data['valor']),
+                    entregador=user
+                )
+                # Salvar sem usar auto_now para data_criacao
+                registro.save(force_insert=True)
+                
+                # Imediatamente após salvar, verificar e corrigir se necessário
+                registro.refresh_from_db()
+                
+                # Verificar a data salva diretamente do banco usando SQL
+                cursor.execute(f"SELECT data FROM {table_name} WHERE id = %s", [registro.id])
+                row = cursor.fetchone()
+                data_banco_raw = row[0] if row else None
+                logger.info(f"📅 DADOS DO BANCO RAW - Data direta do banco: {data_banco_raw} (tipo: {type(data_banco_raw)})")
+                
+                # Se a data no banco estiver diferente, corrigir
+                if data_banco_raw and str(data_banco_raw) != str(data_obj):
+                    logger.warning(f"⚠️ CORRIGINDO DATA NO BANCO - Data estava errada: {data_banco_raw} vs esperado: {data_obj}")
+                    # Usar o objeto date diretamente no UPDATE
+                    cursor.execute(
+                        f"UPDATE {table_name} SET data = %s WHERE id = %s",
+                        [data_obj, registro.id]
+                    )
+                    registro.refresh_from_db()
+                    logger.info(f"✅ Data corrigida no banco: {registro.data}")
+            
+            logger.info(f"📅 DEPOIS DE SALVAR - Data no objeto: {registro.data} (tipo: {type(registro.data)}, ano={registro.data.year}, mes={registro.data.month}, dia={registro.data.day})")
+            logger.info(f"📅 COMPARAÇÃO - Data original: {data_obj} vs Data salva: {registro.data} - São iguais? {data_obj == registro.data}")
             
             return Response({
                 'success': True, 
@@ -303,24 +366,44 @@ def registro_despesa(request):
             
             # Validar formato da data
             try:
-                from datetime import datetime
+                from datetime import date
+                import re
                 
                 # Tentar formato brasileiro primeiro (DD/MM/YYYY)
                 try:
-                    data_obj = datetime.strptime(data['data'], '%d/%m/%Y').date()
-                except ValueError:
+                    # Parse direto da string para evitar problemas de timezone
+                    match = re.match(r'^(\d{2})/(\d{2})/(\d{4})$', data['data'])
+                    if match:
+                        dia, mes, ano = map(int, match.groups())
+                        data_obj = date(ano, mes, dia)
+                        logger.debug(f"Data parseada (DD/MM/YYYY): {data_obj} de {data['data']}")
+                    else:
+                        raise ValueError("Formato inválido")
+                except (ValueError, AttributeError):
                     # Tentar formato internacional (YYYY-MM-DD)
                     try:
-                        data_obj = datetime.strptime(data['data'], '%Y-%m-%d').date()
-                    except ValueError:
+                        match = re.match(r'^(\d{4})-(\d{2})-(\d{2})$', data['data'])
+                        if match:
+                            ano, mes, dia = map(int, match.groups())
+                            data_obj = date(ano, mes, dia)
+                            logger.debug(f"Data parseada (YYYY-MM-DD): {data_obj} de {data['data']}")
+                        else:
+                            raise ValueError("Formato inválido")
+                    except (ValueError, AttributeError):
                         # Tentar outros formatos comuns
                         try:
-                            data_obj = datetime.strptime(data['data'], '%d-%m-%Y').date()
-                        except ValueError:
+                            match = re.match(r'^(\d{2})-(\d{2})-(\d{4})$', data['data'])
+                            if match:
+                                dia, mes, ano = map(int, match.groups())
+                                data_obj = date(ano, mes, dia)
+                                logger.debug(f"Data parseada (DD-MM-YYYY): {data_obj} de {data['data']}")
+                            else:
+                                raise ValueError("Formato inválido")
+                        except (ValueError, AttributeError):
                             raise ValueError(f"Formato de data inválido: {data['data']}. Use DD/MM/YYYY ou YYYY-MM-DD")
                 
             except ValueError as e:
-                logger.warning(f"Erro na data: {data['data']}")
+                logger.warning(f"Erro na data: {data['data']} - {str(e)}")
                 return Response({
                     'success': False, 
                     'error': str(e)
@@ -355,16 +438,60 @@ def registro_despesa(request):
                     logger.warning(f"Categoria personalizada não encontrada: {data['categoria_personalizada']}")
             
             # Criar registro de despesa
-            despesa = Despesa.objects.create(
-                tipo_despesa=data['tipo_despesa'],
-                categoria_personalizada=categoria_personalizada,
-                descricao=data['descricao'],
-                valor=valor,
-                data=data_obj,
-                entregador=user
-            )
+            logger.info(f"📅 ANTES DE SALVAR - Data recebida do frontend: '{data['data']}'")
+            logger.info(f"📅 ANTES DE SALVAR - Data parseada: {data_obj} (tipo: {type(data_obj)}, ano={data_obj.year}, mes={data_obj.month}, dia={data_obj.day})")
             
-            logger.info(f"Despesa criada com sucesso! ID: {despesa.id}")
+            # Salvar diretamente usando SQL raw para evitar problemas de timezone
+            from django.db import connection
+            from django.utils import timezone
+            
+            logger.info(f"📅 ANTES DE SALVAR NO BANCO - Data parseada: {data_obj} (ano={data_obj.year}, mes={data_obj.month}, dia={data_obj.day})")
+            
+            # Formatar a data como string YYYY-MM-DD para inserção direta no banco
+            data_str = f"{data_obj.year}-{data_obj.month:02d}-{data_obj.day:02d}"
+            logger.info(f"📅 Data formatada para SQL: {data_str}")
+            
+            # Obter o nome correto da tabela
+            table_name = Despesa._meta.db_table
+            
+            # Inserir usando SQL raw para garantir que a data seja salva exatamente como queremos
+            categoria_id = categoria_personalizada.id if categoria_personalizada else None
+            
+            with connection.cursor() as cursor:
+                # Primeiro, inserir o registro usando o ORM do Django mas forçando a data
+                despesa = Despesa(
+                    tipo_despesa=data['tipo_despesa'],
+                    categoria_personalizada=categoria_personalizada,
+                    descricao=data['descricao'],
+                    valor=valor,
+                    data=data_obj,
+                    entregador=user
+                )
+                # Salvar sem usar auto_now para data_criacao
+                despesa.save(force_insert=True)
+                
+                # Imediatamente após salvar, verificar e corrigir se necessário
+                despesa.refresh_from_db()
+                
+                # Verificar a data salva diretamente do banco usando SQL
+                cursor.execute(f"SELECT data FROM {table_name} WHERE id = %s", [despesa.id])
+                row = cursor.fetchone()
+                data_banco_raw = row[0] if row else None
+                logger.info(f"📅 DADOS DO BANCO RAW - Data direta do banco: {data_banco_raw} (tipo: {type(data_banco_raw)})")
+                
+                # Se a data no banco estiver diferente, corrigir
+                if data_banco_raw and str(data_banco_raw) != str(data_obj):
+                    logger.warning(f"⚠️ CORRIGINDO DATA NO BANCO - Data estava errada: {data_banco_raw} vs esperado: {data_obj}")
+                    # Usar o objeto date diretamente no UPDATE
+                    cursor.execute(
+                        f"UPDATE {table_name} SET data = %s WHERE id = %s",
+                        [data_obj, despesa.id]
+                    )
+                    despesa.refresh_from_db()
+                    logger.info(f"✅ Data corrigida no banco: {despesa.data}")
+            
+            logger.info(f"📅 DEPOIS DE SALVAR - Data no objeto: {despesa.data} (tipo: {type(despesa.data)}, ano={despesa.data.year}, mes={despesa.data.month}, dia={despesa.data.day})")
+            logger.info(f"📅 COMPARAÇÃO - Data original: {data_obj} vs Data salva: {despesa.data} - São iguais? {data_obj == despesa.data}")
             
             return Response({
                 'success': True, 
@@ -497,10 +624,10 @@ def dashboard_data(request):
             lucro_liquido = total_ganhos - total_despesas
             dias_trabalhados = registros_trabalho.count()
             
-            # Dados do período filtrado (se for um dia específico, será "hoje")
+            # Dados de HOJE (sempre a data atual, independente do período filtrado)
             registros_hoje = RegistroTrabalho.objects.filter(
                 entregador=user,
-                data=data_fim
+                data=hoje
             )
             
             entregas_hoje = registros_hoje.aggregate(
@@ -517,7 +644,7 @@ def dashboard_data(request):
             
             despesas_hoje = Despesa.objects.filter(
                 entregador=user,
-                data=data_fim
+                data=hoje
             ).aggregate(
                 total=Sum('valor')
             )['total'] or 0
