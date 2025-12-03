@@ -29,9 +29,12 @@ def registro_trabalho_detail(request, registro_id):
 
     if request.method in ['PUT', 'PATCH']:
         data = request.data
+        logger.info(f"📝 ATUALIZANDO REGISTRO {registro_id} - Dados recebidos: {data}")
+        
+        data_obj = None  # Inicializar para uso posterior
+        
         # Atualizar campos permitidos
         for field_map in [
-            ('data', 'data'),
             ('hora_inicio', 'hora_inicio'),
             ('hora_fim', 'hora_fim'),
             ('quantidade_entregues', 'quantidade_entregues'),
@@ -42,7 +45,75 @@ def registro_trabalho_detail(request, registro_id):
             payload_key, model_field = field_map
             if payload_key in data and data[payload_key] is not None:
                 setattr(registro, model_field, data[payload_key])
+        
+        # Tratar data separadamente para evitar problemas de timezone
+        if 'data' in data and data['data'] is not None:
+            from datetime import date
+            import re
+            
+            data_str = data['data']
+            logger.info(f"📅 ATUALIZAÇÃO - Data recebida: '{data_str}'")
+            
+            try:
+                # Parse direto da string para evitar problemas de timezone
+                match = re.match(r'^(\d{2})/(\d{2})/(\d{4})$', data_str)
+                if match:
+                    dia, mes, ano = map(int, match.groups())
+                    data_obj = date(ano, mes, dia)
+                else:
+                    # Tentar formato YYYY-MM-DD
+                    match = re.match(r'^(\d{4})-(\d{2})-(\d{2})$', data_str)
+                    if match:
+                        ano, mes, dia = map(int, match.groups())
+                        data_obj = date(ano, mes, dia)
+                    else:
+                        raise ValueError(f"Formato de data inválido: {data_str}")
+                
+                logger.info(f"📅 ATUALIZAÇÃO - Data parseada: {data_obj} (ano={data_obj.year}, mes={data_obj.month}, dia={data_obj.day})")
+                registro.data = data_obj
+            except (ValueError, AttributeError) as e:
+                logger.warning(f"⚠️ Erro ao parsear data na atualização: {e}")
+                return Response({
+                    'success': False, 
+                    'error': f'Formato de data inválido: {data_str}'
+                }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Salvar e verificar
         registro.save()
+        
+        # Verificar a data salva e corrigir se necessário
+        if data_obj is not None:
+            from django.db import connection
+            registro.refresh_from_db()
+            table_name = RegistroTrabalho._meta.db_table
+            
+            with connection.cursor() as cursor:
+                cursor.execute(f"SELECT data FROM {table_name} WHERE id = %s", [registro.id])
+                row = cursor.fetchone()
+                data_banco_raw = row[0] if row else None
+                log_msg = f"📅 ATUALIZAÇÃO - Data no banco: {data_banco_raw}"
+                logger.info(log_msg)
+                print(log_msg)
+                
+                # Se a data no banco estiver diferente da esperada, corrigir
+                if data_banco_raw and str(data_banco_raw) != str(data_obj):
+                    log_msg = f"⚠️ CORRIGINDO DATA NA ATUALIZAÇÃO - Data estava errada: {data_banco_raw} vs esperado: {data_obj}"
+                    logger.warning(log_msg)
+                    print(log_msg)
+                    cursor.execute(
+                        f"UPDATE {table_name} SET data = %s WHERE id = %s",
+                        [data_obj, registro.id]
+                    )
+                    registro.refresh_from_db()
+                    log_msg = f"✅ Data corrigida na atualização: {registro.data}"
+                    logger.info(log_msg)
+                    print(log_msg)
+        
+        registro.refresh_from_db()
+        log_msg = f"📅 ATUALIZAÇÃO - Data final no objeto: {registro.data}"
+        logger.info(log_msg)
+        print(log_msg)
+        
         return Response({'success': True, 'message': 'Registro atualizado com sucesso'})
 
     if request.method == 'DELETE':
@@ -75,16 +146,87 @@ def registro_despesa_detail(request, despesa_id):
 
     if request.method in ['PUT', 'PATCH']:
         data = request.data
+        logger.info(f"📝 ATUALIZANDO DESPESA {despesa_id} - Dados recebidos: {data}")
+        
+        data_obj = None  # Inicializar para uso posterior
+        
+        # Atualizar campos permitidos (exceto data)
         for field_map in [
             ('tipo_despesa', 'tipo_despesa'),
             ('descricao', 'descricao'),
             ('valor', 'valor'),
-            ('data', 'data'),
         ]:
             payload_key, model_field = field_map
             if payload_key in data and data[payload_key] is not None:
                 setattr(despesa, model_field, data[payload_key])
+        
+        # Tratar data separadamente para evitar problemas de timezone
+        if 'data' in data and data['data'] is not None:
+            from datetime import date
+            import re
+            
+            data_str = data['data']
+            logger.info(f"📅 ATUALIZAÇÃO - Data recebida: '{data_str}'")
+            
+            try:
+                # Parse direto da string para evitar problemas de timezone
+                match = re.match(r'^(\d{2})/(\d{2})/(\d{4})$', data_str)
+                if match:
+                    dia, mes, ano = map(int, match.groups())
+                    data_obj = date(ano, mes, dia)
+                else:
+                    # Tentar formato YYYY-MM-DD
+                    match = re.match(r'^(\d{4})-(\d{2})-(\d{2})$', data_str)
+                    if match:
+                        ano, mes, dia = map(int, match.groups())
+                        data_obj = date(ano, mes, dia)
+                    else:
+                        raise ValueError(f"Formato de data inválido: {data_str}")
+                
+                logger.info(f"📅 ATUALIZAÇÃO - Data parseada: {data_obj} (ano={data_obj.year}, mes={data_obj.month}, dia={data_obj.day})")
+                despesa.data = data_obj
+            except (ValueError, AttributeError) as e:
+                logger.warning(f"⚠️ Erro ao parsear data na atualização: {e}")
+                return Response({
+                    'success': False, 
+                    'error': f'Formato de data inválido: {data_str}'
+                }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Salvar e verificar
         despesa.save()
+        
+        # Verificar a data salva e corrigir se necessário
+        if data_obj is not None:
+            from django.db import connection
+            despesa.refresh_from_db()
+            table_name = Despesa._meta.db_table
+            
+            with connection.cursor() as cursor:
+                cursor.execute(f"SELECT data FROM {table_name} WHERE id = %s", [despesa.id])
+                row = cursor.fetchone()
+                data_banco_raw = row[0] if row else None
+                log_msg = f"📅 ATUALIZAÇÃO - Data no banco: {data_banco_raw}"
+                logger.info(log_msg)
+                print(log_msg)
+                
+                # Se a data no banco estiver diferente da esperada, corrigir
+                if data_banco_raw and str(data_banco_raw) != str(data_obj):
+                    log_msg = f"⚠️ CORRIGINDO DATA NA ATUALIZAÇÃO - Data estava errada: {data_banco_raw} vs esperado: {data_obj}"
+                    logger.warning(log_msg)
+                    print(log_msg)
+                    cursor.execute(
+                        f"UPDATE {table_name} SET data = %s WHERE id = %s",
+                        [data_obj, despesa.id]
+                    )
+                    despesa.refresh_from_db()
+                    log_msg = f"✅ Data corrigida na atualização: {despesa.data}"
+                    logger.info(log_msg)
+                    print(log_msg)
+        
+        despesa.refresh_from_db()
+        log_msg = f"📅 ATUALIZAÇÃO - Data final no objeto: {despesa.data}"
+        logger.info(log_msg)
+        print(log_msg)
         return Response({'success': True, 'message': 'Despesa atualizada com sucesso'})
 
     if request.method == 'DELETE':
@@ -229,8 +371,13 @@ def registro_trabalho(request):
                 }, status=status.HTTP_400_BAD_REQUEST)
             
             # Criar registro de trabalho
-            logger.info(f"📅 ANTES DE SALVAR - Data recebida do frontend: '{data['data']}'")
-            logger.info(f"📅 ANTES DE SALVAR - Data parseada: {data_obj} (tipo: {type(data_obj)}, ano={data_obj.year}, mes={data_obj.month}, dia={data_obj.day})")
+            log_msg = f"📅 ANTES DE SALVAR - Data recebida do frontend: '{data['data']}'"
+            logger.info(log_msg)
+            print(log_msg)  # Garantir que apareça no Render
+            
+            log_msg = f"📅 ANTES DE SALVAR - Data parseada: {data_obj} (tipo: {type(data_obj)}, ano={data_obj.year}, mes={data_obj.month}, dia={data_obj.day})"
+            logger.info(log_msg)
+            print(log_msg)
             
             # Salvar diretamente usando SQL raw para evitar problemas de timezone
             from django.db import connection
@@ -246,44 +393,68 @@ def registro_trabalho(request):
             table_name = RegistroTrabalho._meta.db_table
             
             # Inserir usando SQL raw para garantir que a data seja salva exatamente como queremos
-            # Usar data_obj diretamente (objeto date) em vez de string para evitar problemas
+            # Formatar a data como string YYYY-MM-DD para inserção direta no banco
+            data_str_sql = f"{data_obj.year}-{data_obj.month:02d}-{data_obj.day:02d}"
+            log_msg = f"📅 INSERINDO COM SQL RAW - Data formatada: {data_str_sql}"
+            logger.info(log_msg)
+            print(log_msg)
+            
             with connection.cursor() as cursor:
-                # Primeiro, inserir o registro usando o ORM do Django mas forçando a data
-                registro = RegistroTrabalho(
-                    data=data_obj,
-                    hora_inicio=hora_inicio,
-                    hora_fim=hora_fim,
-                    quantidade_entregues=quantidade_entregues,
-                    quantidade_nao_entregues=quantidade_nao_entregues,
-                    tipo_pagamento=data['tipo_pagamento'],
-                    valor=float(data['valor']),
-                    entregador=user
-                )
-                # Salvar sem usar auto_now para data_criacao
-                registro.save(force_insert=True)
+                # Inserir usando SQL direto para evitar qualquer conversão de timezone
+                cursor.execute(f"""
+                    INSERT INTO {table_name} 
+                    (data, hora_inicio, hora_fim, quantidade_entregues, quantidade_nao_entregues, 
+                     tipo_pagamento, valor, entregador_id, data_criacao)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NOW())
+                """, [
+                    data_str_sql,  # Data como string YYYY-MM-DD
+                    hora_inicio,
+                    hora_fim,
+                    quantidade_entregues,
+                    quantidade_nao_entregues,
+                    data['tipo_pagamento'],
+                    float(data['valor']),
+                    user.id
+                ])
                 
-                # Imediatamente após salvar, verificar e corrigir se necessário
-                registro.refresh_from_db()
+                # Obter o ID do registro inserido
+                registro_id = cursor.lastrowid
+                log_msg = f"📅 REGISTRO INSERIDO - ID: {registro_id}"
+                logger.info(log_msg)
+                print(log_msg)
                 
                 # Verificar a data salva diretamente do banco usando SQL
-                cursor.execute(f"SELECT data FROM {table_name} WHERE id = %s", [registro.id])
+                cursor.execute(f"SELECT data FROM {table_name} WHERE id = %s", [registro_id])
                 row = cursor.fetchone()
                 data_banco_raw = row[0] if row else None
-                logger.info(f"📅 DADOS DO BANCO RAW - Data direta do banco: {data_banco_raw} (tipo: {type(data_banco_raw)})")
+                log_msg = f"📅 DADOS DO BANCO RAW - Data direta do banco: {data_banco_raw} (tipo: {type(data_banco_raw)})"
+                logger.info(log_msg)
+                print(log_msg)
                 
                 # Se a data no banco estiver diferente, corrigir
                 if data_banco_raw and str(data_banco_raw) != str(data_obj):
-                    logger.warning(f"⚠️ CORRIGINDO DATA NO BANCO - Data estava errada: {data_banco_raw} vs esperado: {data_obj}")
-                    # Usar o objeto date diretamente no UPDATE
+                    log_msg = f"⚠️ CORRIGINDO DATA NO BANCO - Data estava errada: {data_banco_raw} vs esperado: {data_obj}"
+                    logger.warning(log_msg)
+                    print(log_msg)
+                    # Usar a string formatada diretamente no UPDATE
                     cursor.execute(
                         f"UPDATE {table_name} SET data = %s WHERE id = %s",
-                        [data_obj, registro.id]
+                        [data_str_sql, registro_id]
                     )
-                    registro.refresh_from_db()
-                    logger.info(f"✅ Data corrigida no banco: {registro.data}")
+                    log_msg = f"✅ Data corrigida no banco"
+                    logger.info(log_msg)
+                    print(log_msg)
+                
+                # Buscar o registro criado usando ORM
+                registro = RegistroTrabalho.objects.get(id=registro_id)
             
-            logger.info(f"📅 DEPOIS DE SALVAR - Data no objeto: {registro.data} (tipo: {type(registro.data)}, ano={registro.data.year}, mes={registro.data.month}, dia={registro.data.day})")
-            logger.info(f"📅 COMPARAÇÃO - Data original: {data_obj} vs Data salva: {registro.data} - São iguais? {data_obj == registro.data}")
+            log_msg = f"📅 DEPOIS DE SALVAR - Data no objeto: {registro.data} (tipo: {type(registro.data)}, ano={registro.data.year}, mes={registro.data.month}, dia={registro.data.day})"
+            logger.info(log_msg)
+            print(log_msg)
+            
+            log_msg = f"📅 COMPARAÇÃO - Data original: {data_obj} vs Data salva: {registro.data} - São iguais? {data_obj == registro.data}"
+            logger.info(log_msg)
+            print(log_msg)
             
             return Response({
                 'success': True, 
@@ -457,41 +628,65 @@ def registro_despesa(request):
             # Inserir usando SQL raw para garantir que a data seja salva exatamente como queremos
             categoria_id = categoria_personalizada.id if categoria_personalizada else None
             
+            # Formatar a data como string YYYY-MM-DD para inserção direta no banco
+            data_str_sql = f"{data_obj.year}-{data_obj.month:02d}-{data_obj.day:02d}"
+            log_msg = f"📅 INSERINDO DESPESA COM SQL RAW - Data formatada: {data_str_sql}"
+            logger.info(log_msg)
+            print(log_msg)
+            
             with connection.cursor() as cursor:
-                # Primeiro, inserir o registro usando o ORM do Django mas forçando a data
-                despesa = Despesa(
-                    tipo_despesa=data['tipo_despesa'],
-                    categoria_personalizada=categoria_personalizada,
-                    descricao=data['descricao'],
-                    valor=valor,
-                    data=data_obj,
-                    entregador=user
-                )
-                # Salvar sem usar auto_now para data_criacao
-                despesa.save(force_insert=True)
+                # Inserir usando SQL direto para evitar qualquer conversão de timezone
+                cursor.execute(f"""
+                    INSERT INTO {table_name} 
+                    (tipo_despesa, categoria_personalizada_id, descricao, valor, data, entregador_id, data_criacao)
+                    VALUES (%s, %s, %s, %s, %s, %s, NOW())
+                """, [
+                    data['tipo_despesa'],
+                    categoria_id,
+                    data['descricao'],
+                    valor,
+                    data_str_sql,  # Data como string YYYY-MM-DD
+                    user.id
+                ])
                 
-                # Imediatamente após salvar, verificar e corrigir se necessário
-                despesa.refresh_from_db()
+                # Obter o ID do registro inserido
+                despesa_id = cursor.lastrowid
+                log_msg = f"📅 DESPESA INSERIDA - ID: {despesa_id}"
+                logger.info(log_msg)
+                print(log_msg)
                 
                 # Verificar a data salva diretamente do banco usando SQL
-                cursor.execute(f"SELECT data FROM {table_name} WHERE id = %s", [despesa.id])
+                cursor.execute(f"SELECT data FROM {table_name} WHERE id = %s", [despesa_id])
                 row = cursor.fetchone()
                 data_banco_raw = row[0] if row else None
-                logger.info(f"📅 DADOS DO BANCO RAW - Data direta do banco: {data_banco_raw} (tipo: {type(data_banco_raw)})")
+                log_msg = f"📅 DADOS DO BANCO RAW - Data direta do banco: {data_banco_raw} (tipo: {type(data_banco_raw)})"
+                logger.info(log_msg)
+                print(log_msg)
                 
                 # Se a data no banco estiver diferente, corrigir
                 if data_banco_raw and str(data_banco_raw) != str(data_obj):
-                    logger.warning(f"⚠️ CORRIGINDO DATA NO BANCO - Data estava errada: {data_banco_raw} vs esperado: {data_obj}")
-                    # Usar o objeto date diretamente no UPDATE
+                    log_msg = f"⚠️ CORRIGINDO DATA NO BANCO - Data estava errada: {data_banco_raw} vs esperado: {data_obj}"
+                    logger.warning(log_msg)
+                    print(log_msg)
+                    # Usar a string formatada diretamente no UPDATE
                     cursor.execute(
                         f"UPDATE {table_name} SET data = %s WHERE id = %s",
-                        [data_obj, despesa.id]
+                        [data_str_sql, despesa_id]
                     )
-                    despesa.refresh_from_db()
-                    logger.info(f"✅ Data corrigida no banco: {despesa.data}")
+                    log_msg = f"✅ Data corrigida no banco"
+                    logger.info(log_msg)
+                    print(log_msg)
+                
+                # Buscar o registro criado usando ORM
+                despesa = Despesa.objects.get(id=despesa_id)
             
-            logger.info(f"📅 DEPOIS DE SALVAR - Data no objeto: {despesa.data} (tipo: {type(despesa.data)}, ano={despesa.data.year}, mes={despesa.data.month}, dia={despesa.data.day})")
-            logger.info(f"📅 COMPARAÇÃO - Data original: {data_obj} vs Data salva: {despesa.data} - São iguais? {data_obj == despesa.data}")
+            log_msg = f"📅 DEPOIS DE SALVAR - Data no objeto: {despesa.data} (tipo: {type(despesa.data)}, ano={despesa.data.year}, mes={despesa.data.month}, dia={despesa.data.day})"
+            logger.info(log_msg)
+            print(log_msg)
+            
+            log_msg = f"📅 COMPARAÇÃO - Data original: {data_obj} vs Data salva: {despesa.data} - São iguais? {data_obj == despesa.data}"
+            logger.info(log_msg)
+            print(log_msg)
             
             return Response({
                 'success': True, 

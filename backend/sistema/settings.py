@@ -286,6 +286,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
+        'registro_entregadespesa': {
+            'handlers': ['console', 'file'] if DEBUG else ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
     },
 }
 
